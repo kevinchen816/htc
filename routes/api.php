@@ -44,17 +44,19 @@ $api->version('v1', function($api) {
     });
 });
 
-$api->version('v1', function($api) {
-    $api->post('report', function(Request $request) {
-        /*{"ResultCode":0,"DateTimeStamp":"2018-03-17 09:06:51"}*/
-
-        //return $request;
-
-        date_default_timezone_set("Asia/Shanghai");
-        $result['ResultCode'] = 0;
-        $result['DateTimeStamp'] = date('Y-m-d H:i:s');
-        return $result;
-    });
+// $api->version('v1', function($api) {
+//     $api->post('report', function(Request $request) {
+//         //return $request;
+//         date_default_timezone_set("Asia/Shanghai");
+//         $result['ResultCode'] = 0;
+//         $result['DateTimeStamp'] = date('Y-m-d H:i:s');
+//         return $result;
+//     });
+// });
+$api->version('v1', [
+    'namespace' => 'App\Http\Controllers\Api'
+], function($api) {
+    $api->post('report', 'CamerasController@report')->name('api.camera.report');
 });
 
 $api->version('v1', function($api) {
@@ -67,12 +69,13 @@ $api->version('v1', function($api) {
     });
 });
 
-/*
-$api->version('v1', function($api) {
-    $api->post('uploadthumb', 'ImagesController@store')->name('api.uploadthumb.store');
-}
-*/
+$api->version('v1', [
+    'namespace' => 'App\Http\Controllers\Api'
+], function($api) {
+    $api->post('uploadthumb', 'CamerasController@uploadthumb')->name('api.camera.uploadthumb');
+});
 
+/*
 $api->version('v1', function($api) {
     $api->post('uploadthumb', function(Request $request) {
     //$api->post('uploadthumb', function(Request $request, ImageUploadHandler $uploader, Image $image) {
@@ -115,25 +118,14 @@ $api->version('v1', function($api) {
         } else {
             $result_code = 900;
         }
-        /*{"ResultCode":0,"DateTimeStamp":"2018-03-17 09:06:51"}*/
+
         date_default_timezone_set("Asia/Shanghai");
         $result['ResultCode'] = $result_code;
         $result['DateTimeStamp'] = date('Y-m-d H:i:s');
         return $result;
-
-/*
-        $user = $this->user();
-
-        $size = $request->type == 'avatar' ? 362 : 1024;
-        $result = $uploader->save($request->image, str_plural($request->type), $user->id, $size);
-
-        $image->path = $result['path'];
-        $image->type = $request->type;
-        $image->user_id = $user->id;
-        $image->save();
-*/
     });
 });
+*/
 
 $api->version('v1', function($api) {
     $api->post('firmware', function(Request $request) {

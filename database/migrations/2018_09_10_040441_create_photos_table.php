@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreatePhotosTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('photos', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('camera_id')->index();
+            //$table->string('module_id');    // iemi
+            //$table->string('iccid');
+            //$table->string('model_id');
+
+            $table->string('filename');
+            $table->integer('upload_resolution'); //$table->string('upload_resolution');
+            $table->string('source');
+            $table->string('datetime', 14);
+
+            $table->string('filepath');
+
+            $table->index(['created_at']);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('photos');
+    }
+}

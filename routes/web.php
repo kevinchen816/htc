@@ -14,3 +14,15 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Route::get('/', 'StaticPagesController@home');
+//Route::get('/help', 'StaticPagesController@help');
+//Route::get('/about', 'StaticPagesController@about');
+
+Route::resource('/users', 'UsersController');
+
+Route::get('/show', 'Api\CamerasController@show');
+Route::get('/show2/{camera}', 'Api\CamerasController@show2');
+
+//Route::get('/test', 'Api\PhotosController@store');
+
