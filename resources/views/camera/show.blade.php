@@ -13,7 +13,7 @@
           @foreach ($photos as $photo)
             {{$photo->filename}}</br>
             {{$photo->filepath}}</br>
-            <img src="uploads/images/{{$photo->filepath}}" alt="{{$photo->filename}} height="320" width="180""/>
+            <img src="uploads/images/{{$photo->filepath}}" alt="{{$photo->filename}} width="320" height="180""/>
             </br>
           @endforeach
         </ol>

@@ -25,10 +25,12 @@ class CamerasController extends Controller
         $id = 1;
         $camera = Camera::findOrFail($id);
 
-        $photos = $camera->photos()->paginate(10);
+        $photos = $camera->photos()
+                         ->orderBy('created_at', 'desc')
+                         ->paginate(10);
         //return $camera; // OK
         //return compact('photos'); // OK
-        return view('camera.show', compact('camera', 'photos')); // OK
+        return view('camera.show3', compact('camera', 'photos')); // OK
 
         // $camera = DB::table('cameras')
         //                 ->where('module_id', $request->module_id)
