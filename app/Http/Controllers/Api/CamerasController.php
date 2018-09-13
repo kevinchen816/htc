@@ -30,7 +30,7 @@ class CamerasController extends Controller
                          ->paginate(10);
         //return $camera; // OK
         //return compact('photos'); // OK
-        return view('camera.show3', compact('camera', 'photos')); // OK
+        return view('camera.show4', compact('camera', 'photos')); // OK
 
         // $camera = DB::table('cameras')
         //                 ->where('module_id', $request->module_id)
