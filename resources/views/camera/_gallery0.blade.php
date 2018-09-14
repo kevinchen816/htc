@@ -308,7 +308,76 @@
 
                             <!-- Begin Row -->
                             <div class="row no-gutters">
-                                @yield('gallery')
+                                <div class="col-xs-3 custom-thumbnail-grid-column column-number-1">
+                                    <div class="image-checkbox">
+                                        <label style="font-size: 1.5em" class="check-label hidden">
+                                            <input type="checkbox" class="image-check" value="90815" id="check_90815" />
+                                            <span class="cr span-cr"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="image-highdef pull-right" hidden id="pending-90815">
+                                        <label style="font-size: 1.0em; margin-right: 4px;">
+                                            <span class="cr">
+                                                <i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <a class="thumb-anchor" data-fancybox="gallery-54" href="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" data-caption="PICT0019.JPG | 09/08/2018 9:20:42 pm | Scheduled Upload | Standard Low(1/20/16136) | Points: 1.00" data-camera="54" data-id="90815" data-highres="0" data-pending="0">
+                                        <img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" class="img-responsive custom-thumb" title="PICT0019.JPG (90815)" alt="PICT0019.JPG" data-description="PICT0019.JPG">
+                                    </a>
+                                    <p class="thumbnail-timestamp pull-right" style="font-size: .70em">
+                                        <a href="/cameras/download/54/90815">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        09/08/2018 9:20:42 pm
+                                    </p>
+                                </div>
+
+                                <div class="col-xs-3 custom-thumbnail-grid-column column-number-2">
+                                    <div class="image-checkbox">
+                                        <label style="font-size: 1.5em" class="check-label hidden">
+                                            <input type="checkbox" class="image-check" value="90809" id="check_90809" />
+                                            <span class="cr span-cr"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="image-highdef pull-right" hidden id="pending-90809">
+                                        <label style="font-size: 1.0em; margin-right: 4px;">
+                                            <span class="cr">
+                                                <i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <a class="thumb-anchor" data-fancybox="gallery-54" href="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90809.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=1d5077f1ac01838988bdda3d6b30dfc85334b17ba5bc87d43dd8c0ee31568ba9" data-caption="PICT0013.JPG | 09/08/2018 8:50:36 pm | Scheduled Upload | Standard Low(1/20/12171) | Points: 1.00" data-camera="54" data-id="90809" data-highres="0" data-pending="0">
+                                        <img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90809.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=1d5077f1ac01838988bdda3d6b30dfc85334b17ba5bc87d43dd8c0ee31568ba9" class="img-responsive custom-thumb" title="PICT0013.JPG (90809)" alt="PICT0013.JPG" data-description="PICT0013.JPG">
+                                    </a>
+                                    <p class="thumbnail-timestamp pull-right" style="font-size: .70em">
+                                        <a href="/cameras/download/54/90809"><i class="fa fa-download"></i></a>
+                                        09/08/2018 8:50:36 pm
+                                    </p>
+                                </div>
+
+                                <div class="col-xs-3 custom-thumbnail-grid-column column-number-3">
+                                    <div class="image-checkbox">
+                                        <label style="font-size: 1.5em" class="check-label hidden">
+                                            <input type="checkbox" class="image-check" value="90774" id="check_90774" />
+                                            <span class="cr span-cr"></span>
+                                        </label>
+                                    </div>
+                                    <div class="image-highdef pull-right" hidden id="pending-90774">
+                                        <label style="font-size: 1.0em; margin-right: 4px;">
+                                            <span class="cr"><i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i></span>
+                                        </label>
+                                    </div>
+                                    <a class="thumb-anchor" data-fancybox="gallery-54" href="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90774.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=a7a0fdc370766fb536db284708bf297e9488ed6eb6d3d645a21a546e3a0cd8e5" data-caption="PICT0008.JPG | 09/08/2018 8:30:12 pm | Motion | Standard Low(1/20/4875) | Points: 1.00" data-camera="54" data-id="90774" data-highres="0" data-pending="0">
+                                        <img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90774.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=a7a0fdc370766fb536db284708bf297e9488ed6eb6d3d645a21a546e3a0cd8e5" class="img-responsive custom-thumb" title="PICT0008.JPG (90774)" alt="PICT0008.JPG" data-description="PICT0008.JPG">
+                                    </a>
+                                    <p class="thumbnail-timestamp pull-right" style="font-size: .70em">
+                                        <a href="/cameras/download/54/90774"><i class="fa fa-download"></i></a>
+                                        09/08/2018 8:30:12 pm
+                                    </p>
+                                </div>
                             </div>
                             <!-- End Row -->
                         </div>
@@ -332,6 +401,181 @@
     </div>
 </div>
 <!-- panel -->
+
+<div id="gallery" class="hidden">
+    <div class="alert alert-sm alert-info help-container">
+        <h4><strong>Media Gallery: How it works</strong></h4>
+
+        <p>
+        <i class="fa fa-info-circle"></i> The primary function of the Media Gallery is to view your uploaded media, both Photos and Video
+            clips. It also provides the means to perform Administrative functions.
+        </p>
+        <hr>
+
+        <h4>
+        <i class="fa fa-image"></i> <strong>Viewing Media</strong>
+        </h4>
+
+        <p>
+        Initially the gallery is presented as a page grid of thumbnails, each representing either a photo or a video clip sent to the portal by your camera.
+        As your camera continues capturing and sending to the server, you can accumulate several pages of thumbnails. To make it easier for you to view
+        on your device, whether it be a desktop computer, tablet or mobile phone, there are two buttons of interest:
+        </p>
+        <ul>
+            <li>Layout</li>
+            <li>Thumbs</li>
+        </ul>
+        <br />
+
+        <p>The <label class="label label-primary"> Layout</label> button provides a way to customize the number of grid columns that you prefer.  Click the button and select a layout option.
+        The thumbnails will auto resize to fit the width, meaning more columns will produce smaller thumbnails and fewer, larger ones.</p>
+        <br />
+
+        <p>The <label class="label label-primary"> Thumbs</label> button provides a way to control the number of thumbnails sent per page by the server.  This is important for several reasons.
+        Fewer thumbs per page will load faster and use less data (if you use a mobile plan for example).  However you may find it more convenient to see more on a
+        page possibly giving you a full day overview  of your activity.
+        </p>
+        <p>
+            <strong><i class="fa fa-arrow-circle-right"></i>Both the Layout and Thumbs options will be remembered per camera in the system and will have these same values the next time you log in.</strong>
+        </p>
+        <br />
+
+        <h5><strong><i class="fa fa-play-circle"></i> The Lightbox</strong></h5>
+        <p>
+        In order to begin to view your media in a larger format simply click one of the thumbnails in the grid.  This will open a "lightbox".  A lightbox is a viewer that is optimized to
+        help you scroll through the media files, in either direction.  To move back and forth you can click the left and right arrows, tap left or right arrow keys on a keyboard, or if
+        your device has a touch screen you can swipe left or right.
+        </p>
+        <p>
+        In order to exit the lightbox mode, press ESC on a keyboard, click or tap the <strong><i class="fa fa-times"></i></strong> in the upper right corner to close.  Clicking or
+        tapping outside the boundry of an image will also close the lightbox viewer.
+        </p>
+        <hr>
+
+        <h4>
+            <i class="fa fa-wrench"></i>  Manage Media
+        </h4>
+        <p>
+            The <label class="label label-primary"><i class="fa fa-wrench"></i>  Manage</label> button toggles the management mode and reveals several additional related buttons.  These are:
+        </p>
+
+        <ul>
+            <li><label class="label label-primary"> Select None</label></li>
+            <li><label class="label label-primary"> Select All</label></li>
+            <li><label class="label label-primary"> With Selected</label></li>
+        </ul>
+        <br />
+
+        <p>
+        Toggling or activating the Manage mode will add a checkbox to each thumbnail in the grid, allowing you to select individual thumbs on the page.
+        Once you have selected one or more thumbs by checking the box(es), you have several options. Use the <label class="label label-primary"> With Selected</label> button
+        to perform the following with your selected media:
+        </p>
+
+        <ul>
+            <li><label class="label label-primary"> Delete</label></li>
+            <li><label class="label label-primary"> Request HighRes MAX</label></li>
+        </ul>
+
+        <br />
+
+        <p>
+        <strong>Delete</strong> will remove this media file from the server permanently.
+        </p>
+
+        <p>
+        <strong>Request HighRes MAX</strong> will queue an action request for each selected thumnail that is a photo event.  When the camera next communicates with
+        the server, it will be instructed one by one to process these requests. Once you have performed this action select the <strong>Action History</strong> tab
+        and the pending requests should be listed.<br />
+        </p>
+
+        <h5><strong><i class="fa fa-arrow-circle-right"></i>Why do I want HighRes MAX?</strong></h5>
+        <p>The purpose of this function is to request from the camera a larger size than was originally uploaded.  HighRes MAX is the largest Photo upload size supported.
+        It is good practice to run the camera in a lower resolution like Standard Low or Standard Medium to achieve better battery life and reduce Image Points consumption.
+        Keep in mind that you can always request a HighRes MAX copy of any thumbnail which you require more detail. Requesting a HighRes Max will consume additional Image Points
+        in your data plan.
+        </p>
+        <br />
+
+        <strong><i class="fa fa-arrow-circle-right"></i>
+        If while selecting thumbs, if you select both Video and Photo targets, and Photos that are already HighRes MAX on the server
+        this will not create any issues as these items will just be skipped in the process.
+        </strong>
+    </div>
+</div>
+
+<div class="modal fade modal-video-container" id="modal-video-dlg" tabindex="-1" role="dialog" aria-labelledby="modal-video-label" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-player" role="document" orig-width="640" orig-height="360">
+        <div class="modal-content modal-video-content">
+            <div class="close custom-video-close" data-dismiss="modal" aria-label="Close" aria-hidden="true">
+                <!--<span aria-hidden="true">&times;</span>-->
+            </div>
+            <div class="modal-body" style="padding: 0px 0px 0px 0px;">
+                <div class="modal-video" id="modal-video-wrapper">
+                    <div class="embed-responsive embed-responsive-16by9">
+
+                        <video autoplay controls="controls" preload="auto" id="video-block">
+                            <source src="" poster="" id="video-source" type="video/mp4" >Your browser doesn't support HTML5 video
+                        </video>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="HighresModal" tabindex="-1" role="dialog" aria-labelledby="HighresModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request HighRes MAX</h4>
+                <h5 class="modal-body" id="HighresModalLabel"> Confirmation</h5>
+            </div>
+            <a aria-hidden="true" class="btn btn-danger cancel-modal" role="button" data-dismiss="modal" aria-label="Cancel">Cancel</a>
+            <a class="btn btn-success confirm-modal" id="button-confirm-highres" role="button" data-dismiss="modal" aria-label="Confirm">Confirm</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="OriginalModal" tabindex="-1" role="dialog" aria-labelledby="OriginalModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request Original Photo from SD Card</h4>
+                <h5 class="modal-body" id="HighresModalLabel"> Confirmation</h5>
+            </div>
+            <a aria-hidden="true" class="btn btn-danger cancel-modal" role="button" data-dismiss="modal" aria-label="Cancel">Cancel</a>
+            <a class="btn btn-success confirm-modal" id="button-confirm-original" role="button" data-dismiss="modal" aria-label="Confirm">Confirm</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="VideoModal" tabindex="-1" role="dialog" aria-labelledby="VideoModalLabel" aria-hidden="true" data-backdrop="false" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request Video</h4>
+                <h5 class="modal-body" id="HighresModalLabel"> Confirmation</h5>
+            </div>
+            <a aria-hidden="true" class="btn btn-danger cancel-modal" role="button" data-dismiss="modal" aria-label="Cancel">Cancel</a>
+            <a class="btn btn-success confirm-modal" id="button-confirm-video" role="button" data-dismiss="modal" aria-label="Confirm">Confirm</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true" data-backdrop="false" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Media</h4>
+                <h5 class="modal-body" id="DeleteModalLabel"> Confirmation</h5>
+            </div>
+            <a aria-hidden="true" class="btn btn-danger cancel-modal" role="button" data-dismiss="modal" aria-label="Cancel">Cancel</a>
+            <a class="btn btn-success confirm-modal" id="button-confirm-delete" role="button" data-dismiss="modal" aria-label="Confirm">Confirm</a>
+        </div>
+    </div>
+</div>
 
 <script>
 /*
