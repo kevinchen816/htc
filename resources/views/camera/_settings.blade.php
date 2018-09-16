@@ -1,13 +1,14 @@
 <!-- SETTINGS TAB -->
-<div class="tab-pane fade  " id="settings-54">
-    <form method="POST" action="http://www.ridgetec.us/cameras/settings" accept-charset="UTF-8" class="form-horizontal" role="form" id="camerasettings-form54">
-        <input name="_token" type="hidden" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
+<div class="tab-pane fade" id="settings-54">
+    <form method="POST" action="{{ route('camera.settings') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="camerasettings-form54">
+        {{ csrf_field() }}
+        <!-- <input name="_token" type="hidden" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
         <input name="id" type="hidden" value="54">
 
         <div class="row">
             <div class="col-md-12">
                 <span class="pull-right" style="margin-top:20px;padding-right:10px;padding-bottom:8px;">
-                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save All Changes</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save All Changes</button>
                 </span>
             </div>
         </div>
@@ -22,21 +23,33 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="inputSmall">Camera Description</label>
                             <div class="col-md-7">
-                                <input type="text" name="54_camera_desc" maxlength="30" value="Truphone #1" id="54_camera_desc" class="form-control input-sm" placeholder="Input Camera Description">
+                                <input type="text"
+                                    name="54_camera_desc"
+                                    maxlength="30"
+                                    value="Truphone #1"
+                                    id="54_camera_desc"
+                                    class="form-control input-sm"
+                                    placeholder="Input Camera Description">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="inputSmall">Camera Location</label>
                             <div class="col-md-7">
-                                <input type="text" name="54_camera_loc" maxlength="30" value="" id="54_camera_loc" class="form-control input-sm" placeholder="Input Camera Location">
+                                <input type="text"
+                                name="54_camera_loc"
+                                maxlength="30"
+                                value=""
+                                id="54_camera_loc"
+                                class="form-control input-sm"
+                                placeholder="Input Camera Location">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="inputSmall">Camera Region</label>
                             <div class="col-md-7">
-                                <select id="54_country" class="bs-select form-control input-sm"   name="54_country">
+                                <select id="54_country" class="bs-select form-control input-sm" name="54_country">
                                     <option value="USA">United States</option>
                                     <option value="CA">Canada</option>
                                     <option value="AU">Australia</option>
@@ -56,7 +69,6 @@
                                 <span class="help-block"> Select the time zone where the camera is located. </span>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -93,31 +105,31 @@
                 </div>
 
                 <div class="panel panel-default panel-primary custom-settings-panel">
-                <div class="panel-heading">
-                    High Activity Suppression
-                    <!--<a class="btn btn-info btn-xs ToggleHelp pull-right" help-id="activity-suppression"><i class="fa fa-question"></i></a>-->
-                    <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="activity-suppression">
-                        <i class="fa fa-question"></i>
-                    </a>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="button-checkbox">
-                                <button type="button" class="btn btn-default btn-xs" data-color="info">Use Activity Suppression</button>
-                                <input type="checkbox" class="hidden" name="54_bw_option" id="54_bw_option"   />
-                            </span>
-                        </div>
+                    <div class="panel-heading">
+                        High Activity Suppression
+                        <!--<a class="btn btn-info btn-xs ToggleHelp pull-right" help-id="activity-suppression"><i class="fa fa-question"></i></a>-->
+                        <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="activity-suppression">
+                            <i class="fa fa-question"></i>
+                        </a>
                     </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="button-checkbox">
+                                    <button type="button" class="btn btn-default btn-xs" data-color="info">Use Activity Suppression</button>
+                                    <input type="checkbox" class="hidden" name="54_bw_option" id="54_bw_option"   />
+                                </span>
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="col-md-6 control-label" for="inputSmall">Average Uploads per Hour</label>
-                        <div class="col-md-5">
-                            <input type="text" name="54_bw_medias_hour_est" maxlength="30" value="0" id="54_bw_medias_hour_est" class="form-control input-sm" placeholder="Input Ceiling Rate">
-                            <span class="help-block"> Reccomended: set Quiet Time from 5s to 30s</span>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="inputSmall">Average Uploads per Hour</label>
+                            <div class="col-md-5">
+                                <input type="text" name="54_bw_medias_hour_est" maxlength="30" value="0" id="54_bw_medias_hour_est" class="form-control input-sm" placeholder="Input Ceiling Rate">
+                                <span class="help-block"> Reccomended: set Quiet Time from 5s to 30s</span>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
@@ -135,6 +147,11 @@
                         Control Settings
                     </div>
                     <div class="panel-body">
+
+                        @yield('settings_control')
+
+                        @inject('menu', 'App\Http\Controllers\Api\CamerasController')
+                        {{$menu->Menu($camera)}}
 
                         <div class="form-group " id="field-wrapper-54-cameramode">
                             <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
@@ -546,16 +563,14 @@
 
         <div class="row">
             <div class="col-md-12">
-
                 <div class="panel panel-default panel-primary custom-settings-panel">
                     <div class="panel-heading">
                         <!--<input type="checkbox"   data-size="normal" class="tog" name="dutytime_54" id="dutytime_54" data-toggle="toggle" data-on="Enabled" data-off="Disabled"> Duty Time/Hours of operation-->
-
-                            <span class="button-checkbox">
-                                <button type="button" class="btn btn-default btn-xs" data-color="info"></button>
-                                <input type="checkbox" class="hidden" name="54_dutytime" id="54_dutytime"   />
-                            </span>
-                            Duty Time/Hours of operation
+                        <span class="button-checkbox">
+                            <button type="button" class="btn btn-default btn-xs" data-color="info"></button>
+                            <input type="checkbox" class="hidden" name="54_dutytime" id="54_dutytime"   />
+                        </span>
+                        Duty Time/Hours of operation
                     </div>
                     <div class="panel-body">
                         <div id="duty-tabs-54" class="tab-set mobile-nopadding-nomargin" >
@@ -1754,9 +1769,9 @@
 
         <div class="row">
             <div class="col-md-12">
-                    <span class="pull-right" style="margin-top:20px;padding-right:10px;">
+                <span class="pull-right" style="margin-top:20px;padding-right:10px;">
                     <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save All Changes</button>
-                    </span>
+                </span>
             </div>
         </div>
     </form>

@@ -35,7 +35,7 @@ class CreateCamerasTable extends Migration
             $table->string('temperature')->default('');
             $table->string('dsp_version')->default('');
             $table->string('mcu_version')->default('');
-            $table->string('cellular')->default('');;
+            $table->string('cellular')->default('');
 
             /* settings */
             $table->string('camera_mode')->default('p');        // p, v

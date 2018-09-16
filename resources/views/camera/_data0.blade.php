@@ -74,6 +74,10 @@
 
                 <div id="myTabContent-54" class="tab-content">
                     @include('camera._overview')
+                    @include('camera._gallery')
+                    @include('camera._settings')
+                    @include('camera._actions')
+                    @include('camera._options')
                 </div>
             </div>
         </div>

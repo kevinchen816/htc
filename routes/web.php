@@ -24,5 +24,13 @@ Route::resource('/users', 'UsersController');
 Route::get('/show', 'Api\CamerasController@show');
 Route::get('/show2/{camera}', 'Api\CamerasController@show2');
 
+Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');;
+
 //Route::get('/test', 'Api\PhotosController@store');
 
+
+Route::get('/test', 'Api\CamerasController@test');
+
+Route::get('/bootstrap', function () {
+    return view('bootstrap');
+});
