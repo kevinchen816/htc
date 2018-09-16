@@ -6,15 +6,9 @@
     @endforeach
 @stop
 
-@section('settings_control')
-    @foreach ($menus as $menu)
-        @include('settings._control')
-    @endforeach
-@stop
-
 @section('content')
 <div id="app">
-    @includeX('layouts._nav')
+    @include('layouts._nav')
 
     <div class="fixed-navbar-container">
         <div class="container">
@@ -29,7 +23,7 @@
         </div>
 
         <div class="row">
-            <!-- @include('camera._list') -->
+            @include('camera._list')
             @include('camera._data')
         </div>
     </div>

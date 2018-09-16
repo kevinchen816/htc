@@ -539,6 +539,7 @@ class CamerasController extends Controller
             ),
 
         );
+
         return $menus;
     }
 
@@ -546,7 +547,7 @@ class CamerasController extends Controller
         //return 'Hello';
 
 
-        $menus = $this->ControlSettings();
+//        $menus = $this->ControlSettings();
         // return $menus;
 
         // //$camera = DB::table('cameras')->first();
@@ -595,23 +596,6 @@ class CamerasController extends Controller
         //return $camera->id; // OK
         //return $camera->first()->id; // OK
     }
-
-/*
-<div class="form-group " id="field-wrapper-54-cameramode">
-    <label class="col-md-4 control-label" for="inputSmall">{{$menu['heading']}}</label>
-    <div class="col-md-7">
-        <select id="54_cameramode" class="bs-select form-control input-sm" name="54_cameramode">
-            @foreach ($menu['options'] as $option)
-                @if ($camera->camera_mode == 'p')
-                    <option value={{$option['value']}} selected="selected">{{$option['name']}}</option>
-                @else
-                    <option value={{$option['value']}}>{{$option['name']}}</option>
-                @endif
-            @endforeach
-        </select>
-    </div>
-</div>
-*/
 
     /*----------------------------------------------------------------------------------*/
     public function test() {
@@ -671,21 +655,6 @@ class CamerasController extends Controller
         print_r($tables);
         return $tables;
     }
-
-    /*----------------------------------------------------------------------------------*/
-    // public function Menu($camera) {
-    //     //return $camera->camera_mode;
-    //     return $camera->module_id;
-
-    //     $id = $camera->id;
-
-    //     $handle = '<div class="form-group" id="field-wrapper-'.$id.'-cameramode">';
-
-    //     $handle .= '</div>';
-
-    //     return $handle;
-    // }
-
 
     /*----------------------------------------------------------------------------------*/
     public function CameraFieldValueConvert($camera, $column, $name) {
@@ -883,4 +852,772 @@ class CamerasController extends Controller
         // return $handle;
         return '';
     }
+
+    /*----------------------------------------------------------------------------------*/
+    /*
+            'xxxx' => array(
+                'title'   => 'xxxx',
+                'options'   => array(
+                    array('name' => '', 'value' => ''),
+                    array('name' => '', 'value' => ''),
+                    array('name' => '', 'value' => ''),
+                    array('name' => '', 'value' => ''),
+                ),
+                'help' => ''
+            ),
+    */
+
+    /*
+    <div class="form-group" id="field-wrapper-54-cameramode">
+        <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
+        <div class="col-md-7">
+            <select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">
+                <option value="p" selected="selected">Photo</option>
+                <option value="v">Video</option>
+            </select>
+
+            <span class="help-block"> .....</span>
+        </div>
+    </div>
+    */
+
+    /*
+    <div class="form-group" id="field-wrapper-54-cellularpw">
+        <label class="col-md-4 control-label" for="inputSmall">Cellular Password</label>
+        <div class="col-md-7">
+            <input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw"
+                pattern="[0-9]{6}"
+                value="xxx" placeholder="Input Cellular Password">
+            <span class="help-block"> .....</span>
+        </div>
+    </div>
+
+            <input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc"
+                maxlength="30"
+                value="Truphone #1" placeholder="Input Camera Description">
+    */
+    public function Camera_Settings_Body($id, $lists) {
+        // $id = $camera->id;
+        $camera = Camera::findOrFail($id);
+
+        $handle = '';
+        foreach ($lists as $key => $value) {
+            $field_mame = $key;
+            $field_value = $camera[$key];
+
+            $title = $value['title'];
+            $help = $value['help'];
+
+            if (!empty($value['type'])) {
+                $type = $value['type'];
+            } else {
+                $type = 'select';
+            }
+
+            if ($type == 'hhmm') {
+                $field_value = substr($field_value, 0, 5); /* 23:59:00 */
+                //$handle .= $field_value; /* debug */
+            } else {
+                $field_value = $camera[$key];
+            }
+
+            $zz = $id.'_'.$field_mame;
+
+            /* Camera Mode:camera_mode=p */
+            // $handle .= '<div>'.$title.':'.$field_mame.'='.$field_value.'</div>';
+
+            $handle .=  '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_mame.'">';
+            $handle .=  '<label class="col-md-4 control-label" for="inputSmall">'.$title.'</label>';
+            $handle .=  '<div class="col-md-7">';
+
+            if ($type == 'input') {
+                $format = $value['format'];
+                $placeholder = $value['placeholder'];
+                // if (!empty($value['pattern']) {
+                //     $pattern = $value['pattern'];
+                //     //<input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw" pattern="[0-9]{6}" value="xxx" placeholder="xxx">
+                //     $handle .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" pattern="'.$pattern.'" value="'.$field_value.'" placeholder="'.$placeholder.'">';
+
+                // } else if (!empty($value['maxlength']) {
+                    // $maxlength = $value['maxlength'];
+
+                    //<input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc" maxlength="30" value="xxx" placeholder="xxx">
+                    $handle .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" '.$format.' value="'.$field_value.'" placeholder="'.$placeholder.'">';
+                // }
+
+
+            } else {
+                $options = $value['options'];
+                // $handle .=  '<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">';
+                $handle .=  '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
+                foreach ($options as $option) {
+                    // $option['name'] = Photo
+                    // $option['value'] = p
+                    // $handle .= '<div>'.$option['name'].'='.$option['value'].'</div>';
+                    if ($option['value'] == $field_value) {
+                        $handle .= '<option value="'.$option['value'].'" selected="selected">'.$option['name'].'</option>';
+                    } else {
+                        $handle .= '<option value="'.$option['value'].'">'.$option['name'].'</option>';
+                    }
+                }
+                $handle .= '</select>';
+            }
+
+            if (!empty($help)) {
+               // $handle .= '<span class="help-block">'.$help.'</span>';
+            }
+            $handle .= '</div>';
+            $handle .= '</div>';
+        }
+        //$handle .= '<hr>';
+        return $handle;
+    }
+
+    public function Camera_Settings_Camera_Identification($camera) {
+        $lists = array(
+            'description' => array(
+                'title' => 'Camera Description',
+                'type' => 'input',
+                'format' => 'maxlength="30"',
+                'placeholder' => 'Input Camera Description',
+                'help' => ''
+            ),
+
+            'location' => array(
+                'title' => 'Camera Location',
+                'type' => 'input',
+                'format' => 'maxlength="30"',
+                'placeholder' => 'Input Camera Location',
+                'help' => ''
+            ),
+
+        );
+
+        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        return $handle;
+    }
+
+    public function Camera_Settings_Control_Settings($camera) {
+        $lists = array(
+            'camera_mode' => array(
+                'title'   => 'Camera Mode',
+                'options'   => array(
+                    array('name' => 'Photo', 'value' => 'p'),
+                    array('name' => 'Video', 'value' => 'v'),
+                ),
+                'help' => ''
+            ),
+
+            /* photo */
+            'photo_resolution' => array(
+                'title'   => 'Photo Resolution',
+                'options'   => array(
+                    array('name' => '4MP 16:9',     'value' => '4'),
+                    array('name' => '6MP 16:9',     'value' => '6'),
+                    array('name' => '8MP 16:9',     'value' => '8'),
+                    array('name' => '12MP 16:9',    'value' => '12'),
+                ),
+                'help' => 'Use this setting to control the size of the Photo saved on the SD Card.'
+            ),
+            'photo_burst' => array(
+                'title'   => 'Photo Burst',
+                'options'   => array(
+                    array('name' => '1', 'value' => '1'),
+                    array('name' => '2', 'value' => '2'),
+                    array('name' => '3', 'value' => '3'),
+                ),
+                'help' => 'Photo Burst is used to set the number of photos captured per event in Photo Mode. It is not used for Video mode. If Cellular mode is ON, then the camera will upload each photo of the burst to the portal.'
+            ),
+            'burst_delay' => array(
+                'title'   => 'Burst Delay',
+                'options'   => array(
+                    array('name' => '250ms', 'value' => '250'),
+                    array('name' => '500ms', 'value' => '500'),
+                    array('name' => '1s',    'value' => '1000'),
+                    array('name' => '3s',    'value' => '3000'),
+                ),
+                'help' => 'The Burst Delay is the elapsed time between each burst photo.'
+            ),
+            'upload_resolution' => array(
+                'title'   => 'Upload Resolution',
+                'options'   => array(
+                    array('name' => 'Standard Low',     'value' => '1'),
+                    array('name' => 'Standard Medium',  'value' => '2'),
+                    array('name' => 'Standard High',    'value' => '3'),
+                    array('name' => 'High Def',         'value' => '4'),
+                ),
+                'help' => 'Use this setting to control the size of the uploaded thumbnail.'
+            ),
+            'photo_quality' => array(
+                'title'   => 'Upload Quality',
+                'options'   => array(
+                    array('name' => 'Standard', 'value' => '1'),
+                    array('name' => 'Medium',   'value' => '2'),
+                    array('name' => 'High',     'value' => '3'),
+                ),
+                'help' => 'Use this setting to control the image quality and size of the uploaded thumbnail. A higher quality means clearer images but larger file sizes when uploaded to the portal. Use a Photo quality that best meets your application and budget. [Standard] quality will reduce the size and cost to upload each photo to the portal and is generally good enough for most applications. Keep in mind that you can request a High-res Max or the Original file from the SD card when/if you need it for more detail on this particular photo event.'
+            ),
+
+            /* video */
+            'video_resolution' => array(
+                'title'   => 'Video Resolution',
+                'options'   => array(
+                    array('name' => 'Standard Low',     'value' => '8'),
+                    array('name' => 'Standard Medium',  'value' => '9'),
+                    array('name' => 'Standard High',    'value' => '10'),
+                    array('name' => 'High Def',         'value' => '11'),
+                ),
+                'help' => 'This determines the frame size of the video in pixels, or how wide it is when viewed on your computer monitor. A higher resolution means the video file saved to the SD card is larger and when uploaded uses more battery and costs more image points from your data plan, but it will have more detail on the other hand.'
+            ),
+            'video_fps' => array(
+                'title'   => 'Capture Rate',
+                'options'   => array(
+                    array('name' => '4fps',     'value' => '4'),
+                    array('name' => '6fps',     'value' => '6'),
+                    array('name' => '8fps',     'value' => '8'),
+                    array('name' => '10fps',    'value' => '10'),
+                    array('name' => '12fps',    'value' => '12'),
+                    array('name' => '15fps',    'value' => '15'),
+                    array('name' => '30fps',    'value' => '30'),
+                ),
+                'help' => 'Capture rate does not affect the size of the video file captured or reduce the points used to upload to the portal. A lower frame rate in low motion will improve the quality of each frame while motion blur may increase. A faster frame rate may reduce motion blur when there is higher motion and may reduce the image quality of each frame. Every environment is different. Please experiment to find the right value for your environment and needs.'
+            ),
+            'video_bitrate' => array(
+                'title'   => 'Quality Level',
+                'options'   => array(
+                    array('name' => '1 (default/smallest)', 'value' => '300'),
+                    array('name' => '2',                    'value' => '400'),
+                    array('name' => '3',                    'value' => '500'),
+                    array('name' => '4',                    'value' => '600'),
+                    array('name' => '5',                    'value' => '700'),
+                    array('name' => '6',                    'value' => '800'),
+                    array('name' => '7',                    'value' => '900'),
+                    array('name' => '8 (balanced)',         'value' => '1000'),
+                    array('name' => '9',                    'value' => '1200'),
+                    array('name' => '10',                   'value' => '1400'),
+                    array('name' => '11',                   'value' => '1800'),
+                    array('name' => '12 (High)',            'value' => '2500'),
+                    array('name' => '13 (Maximum/LARGE!)',  'value' => '5000'),
+                ),
+                'help' => 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.'
+            ),
+            'video_length' => array(
+                'title'   => 'Video Duration',
+                'options'   => array(
+                    array('name' => '2s', 'value' => '2s'),
+                    array('name' => '3s', 'value' => '3s'),
+                    array('name' => '4s', 'value' => '4s'),
+                    array('name' => '5s', 'value' => '5s'),
+                    array('name' => '6s', 'value' => '6s'),
+                    array('name' => '7s', 'value' => '7s'),
+                    array('name' => '8s', 'value' => '8s'),
+                    array('name' => '9s', 'value' => '9s'),
+                    array('name' => '10s', 'value' => '10s'),
+                ),
+                'help' => 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.'
+            ),
+            'video_sound' => array(
+                'title'   => 'Video Sound',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+
+            /* other */
+            'timestamp' => array(
+                'title'   => 'Time Stamp',
+                'options'   => array(
+                    array('name' => 'On',   'value' => 'on'),
+                    array('name' => 'Off',  'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'date_format' => array(
+                'title'   => 'Date Format',
+                'options'   => array(
+                    array('name' => 'mdY', 'value' => 'mdY'),
+                    array('name' => 'Ymd', 'value' => 'Ymd'),
+                    array('name' => 'dmY', 'value' => 'dmY'),
+                ),
+                'help' => ''
+            ),
+            'time_format' => array(
+                'title'   => 'Time Format',
+                'options'   => array(
+                    array('name' => '12 Hour', 'value' => '12'),
+                    array('name' => '24 Hour', 'value' => '24'),
+                ),
+                'help' => ''
+            ),
+            'temp_unit' => array(
+                'title'   => 'Temperature',
+                'options'   => array(
+                    array('name' => 'Fahrenheit', 'value' => 'f'),
+                    array('name' => 'Celsius', 'value' => 'c'),
+                ),
+                'help' => ''
+            ),
+        );
+
+        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        return $handle;
+    }
+
+    public function Camera_Settings_Trigger_Settings($camera) {
+        $lists = array(
+            'quiettime' => array(
+                'title'   => 'Quiet Time',
+                'options'   => array(
+                    array('name' => '0s', 'value' => '0s'),
+                    array('name' => '5s', 'value' => '5s'),
+                    array('name' => '10s', 'value' => '10s'),
+                    array('name' => '15s', 'value' => '15s'),
+                    array('name' => '20s', 'value' => '20s'),
+                    array('name' => '25s', 'value' => '25s'),
+                    array('name' => '30s', 'value' => '30s'),
+                    array('name' => '35s', 'value' => '35s'),
+                    array('name' => '40s', 'value' => '40s'),
+                    array('name' => '45s', 'value' => '45s'),
+                    array('name' => '50s', 'value' => '50s'),
+                    array('name' => '55s', 'value' => '55s'),
+                    array('name' => '1m', 'value' => '1m'),
+                    array('name' => '2m', 'value' => '2m'),
+                    array('name' => '3m', 'value' => '3m'),
+                    array('name' => '4m', 'value' => '4m'),
+                    array('name' => '5m', 'value' => '5m'),
+                    array('name' => '10m', 'value' => '10m'),
+                    array('name' => '15m', 'value' => '15m'),
+                    array('name' => '20m', 'value' => '20m'),
+                    array('name' => '25m', 'value' => '25m'),
+                    array('name' => '30m', 'value' => '30m'),
+                    array('name' => '35m', 'value' => '35m'),
+                    array('name' => '40m', 'value' => '40m'),
+                    array('name' => '45m', 'value' => '45m'),
+                    array('name' => '50m', 'value' => '50m'),
+                    array('name' => '55m', 'value' => '55m'),
+                    array('name' => '60m', 'value' => '60m'),
+                ),
+                'help' => 'Quiet Time is a delay after the current event is complete (photo or video). It can be used to reduce the number of PIR events in a given time. If your camera is taking too many photos or videos, then increase the quiet time to reduce the frequency of PIR (motion) activations. PIR or motion capture, as well as Time Lapse capture is disabled while sleeping in the quiet time period.'
+            ),
+
+        );
+
+        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        return $handle;
+    }
+
+    public function Camera_Settings_Time_Lapse($camera) {
+        $lists = array(
+            'tls_start'     => array(
+                'title'     => 'Timelapse Start Time',
+                'type'      => 'hhmm',
+                'options'   => array(
+                    array('name' => '00:00', 'value' => '00:00'),
+                    array('name' => '00:15', 'value' => '00:15'),
+                    array('name' => '00:30', 'value' => '00:30'),
+                    array('name' => '00:45', 'value' => '00:45'),
+                    array('name' => '01:00', 'value' => '01:00'),
+                    array('name' => '01:15', 'value' => '01:15'),
+                    array('name' => '01:30', 'value' => '01:30'),
+                    array('name' => '01:45', 'value' => '01:45'),
+                    array('name' => '02:00', 'value' => '02:00'),
+                    array('name' => '02:15', 'value' => '02:15'),
+                    array('name' => '02:30', 'value' => '02:30'),
+                    array('name' => '02:45', 'value' => '02:45'),
+                    array('name' => '03:00', 'value' => '03:00'),
+                    array('name' => '03:15', 'value' => '03:15'),
+                    array('name' => '03:30', 'value' => '03:30'),
+                    array('name' => '03:45', 'value' => '03:45'),
+                    array('name' => '04:00', 'value' => '04:00'),
+                    array('name' => '04:15', 'value' => '04:15'),
+                    array('name' => '04:30', 'value' => '04:30'),
+                    array('name' => '04:45', 'value' => '04:45'),
+                    array('name' => '05:00', 'value' => '05:00'),
+                    array('name' => '05:15', 'value' => '05:15'),
+                    array('name' => '05:30', 'value' => '05:30'),
+                    array('name' => '05:45', 'value' => '05:45'),
+                    array('name' => '06:00', 'value' => '06:00'),
+                    array('name' => '06:15', 'value' => '06:15'),
+                    array('name' => '06:30', 'value' => '06:30'),
+                    array('name' => '06:45', 'value' => '06:45'),
+                    array('name' => '07:00', 'value' => '07:00'),
+                    array('name' => '07:15', 'value' => '07:15'),
+                    array('name' => '07:30', 'value' => '07:30'),
+                    array('name' => '07:45', 'value' => '07:45'),
+                    array('name' => '08:00', 'value' => '08:00'),
+                    array('name' => '08:15', 'value' => '08:15'),
+                    array('name' => '08:30', 'value' => '08:30'),
+                    array('name' => '08:45', 'value' => '08:45'),
+                    array('name' => '09:00', 'value' => '09:00'),
+                    array('name' => '09:15', 'value' => '09:15'),
+                    array('name' => '09:30', 'value' => '09:30'),
+                    array('name' => '09:45', 'value' => '09:45'),
+                    array('name' => '10:00', 'value' => '10:00'),
+                    array('name' => '10:15', 'value' => '10:15'),
+                    array('name' => '10:30', 'value' => '10:30'),
+                    array('name' => '10:45', 'value' => '10:45'),
+                    array('name' => '11:00', 'value' => '11:00'),
+                    array('name' => '11:15', 'value' => '11:15'),
+                    array('name' => '11:30', 'value' => '11:30'),
+                    array('name' => '11:45', 'value' => '11:45'),
+                    array('name' => '12:00', 'value' => '12:00'),
+                    array('name' => '12:15', 'value' => '12:15'),
+                    array('name' => '12:30', 'value' => '12:30'),
+                    array('name' => '12:45', 'value' => '12:45'),
+                    array('name' => '13:00', 'value' => '13:00'),
+                    array('name' => '13:15', 'value' => '13:15'),
+                    array('name' => '13:30', 'value' => '13:30'),
+                    array('name' => '13:45', 'value' => '13:45'),
+                    array('name' => '14:00', 'value' => '14:00'),
+                    array('name' => '14:15', 'value' => '14:15'),
+                    array('name' => '14:30', 'value' => '14:30'),
+                    array('name' => '14:45', 'value' => '14:45'),
+                    array('name' => '15:00', 'value' => '15:00'),
+                    array('name' => '15:15', 'value' => '15:15'),
+                    array('name' => '15:30', 'value' => '15:30'),
+                    array('name' => '15:45', 'value' => '15:45'),
+                    array('name' => '16:00', 'value' => '16:00'),
+                    array('name' => '16:15', 'value' => '16:15'),
+                    array('name' => '16:30', 'value' => '16:30'),
+                    array('name' => '16:45', 'value' => '16:45'),
+                    array('name' => '17:00', 'value' => '17:00'),
+                    array('name' => '17:15', 'value' => '17:15'),
+                    array('name' => '17:30', 'value' => '17:30'),
+                    array('name' => '17:45', 'value' => '17:45'),
+                    array('name' => '18:00', 'value' => '18:00'),
+                    array('name' => '18:15', 'value' => '18:15'),
+                    array('name' => '18:30', 'value' => '18:30'),
+                    array('name' => '18:45', 'value' => '18:45'),
+                    array('name' => '19:00', 'value' => '19:00'),
+                    array('name' => '19:15', 'value' => '19:15'),
+                    array('name' => '19:30', 'value' => '19:30'),
+                    array('name' => '19:45', 'value' => '19:45'),
+                    array('name' => '20:00', 'value' => '20:00'),
+                    array('name' => '20:15', 'value' => '20:15'),
+                    array('name' => '20:30', 'value' => '20:30'),
+                    array('name' => '20:45', 'value' => '20:45'),
+                    array('name' => '21:00', 'value' => '21:00'),
+                    array('name' => '21:15', 'value' => '21:15'),
+                    array('name' => '21:30', 'value' => '21:30'),
+                    array('name' => '21:45', 'value' => '21:45'),
+                    array('name' => '22:00', 'value' => '22:00'),
+                    array('name' => '22:15', 'value' => '22:15'),
+                    array('name' => '22:30', 'value' => '22:30'),
+                    array('name' => '22:45', 'value' => '22:45'),
+                    array('name' => '23:00', 'value' => '23:00'),
+                    array('name' => '23:15', 'value' => '23:15'),
+                    array('name' => '23:30', 'value' => '23:30'),
+                    array('name' => '23:45', 'value' => '23:45'),
+                    // array('name' => '23:59', 'value' => '23:59'),
+                ),
+                'help' => '',
+            ),
+
+            'tls_stop'     => array(
+                'title'     => 'Timelapse Stop Time',
+                'type'      => 'hhmm',
+                'options'   => array(
+                    array('name' => '00:00', 'value' => '00:00'),
+                    array('name' => '00:15', 'value' => '00:15'),
+                    array('name' => '00:30', 'value' => '00:30'),
+                    array('name' => '00:45', 'value' => '00:45'),
+                    array('name' => '01:00', 'value' => '01:00'),
+                    array('name' => '01:15', 'value' => '01:15'),
+                    array('name' => '01:30', 'value' => '01:30'),
+                    array('name' => '01:45', 'value' => '01:45'),
+                    array('name' => '02:00', 'value' => '02:00'),
+                    array('name' => '02:15', 'value' => '02:15'),
+                    array('name' => '02:30', 'value' => '02:30'),
+                    array('name' => '02:45', 'value' => '02:45'),
+                    array('name' => '03:00', 'value' => '03:00'),
+                    array('name' => '03:15', 'value' => '03:15'),
+                    array('name' => '03:30', 'value' => '03:30'),
+                    array('name' => '03:45', 'value' => '03:45'),
+                    array('name' => '04:00', 'value' => '04:00'),
+                    array('name' => '04:15', 'value' => '04:15'),
+                    array('name' => '04:30', 'value' => '04:30'),
+                    array('name' => '04:45', 'value' => '04:45'),
+                    array('name' => '05:00', 'value' => '05:00'),
+                    array('name' => '05:15', 'value' => '05:15'),
+                    array('name' => '05:30', 'value' => '05:30'),
+                    array('name' => '05:45', 'value' => '05:45'),
+                    array('name' => '06:00', 'value' => '06:00'),
+                    array('name' => '06:15', 'value' => '06:15'),
+                    array('name' => '06:30', 'value' => '06:30'),
+                    array('name' => '06:45', 'value' => '06:45'),
+                    array('name' => '07:00', 'value' => '07:00'),
+                    array('name' => '07:15', 'value' => '07:15'),
+                    array('name' => '07:30', 'value' => '07:30'),
+                    array('name' => '07:45', 'value' => '07:45'),
+                    array('name' => '08:00', 'value' => '08:00'),
+                    array('name' => '08:15', 'value' => '08:15'),
+                    array('name' => '08:30', 'value' => '08:30'),
+                    array('name' => '08:45', 'value' => '08:45'),
+                    array('name' => '09:00', 'value' => '09:00'),
+                    array('name' => '09:15', 'value' => '09:15'),
+                    array('name' => '09:30', 'value' => '09:30'),
+                    array('name' => '09:45', 'value' => '09:45'),
+                    array('name' => '10:00', 'value' => '10:00'),
+                    array('name' => '10:15', 'value' => '10:15'),
+                    array('name' => '10:30', 'value' => '10:30'),
+                    array('name' => '10:45', 'value' => '10:45'),
+                    array('name' => '11:00', 'value' => '11:00'),
+                    array('name' => '11:15', 'value' => '11:15'),
+                    array('name' => '11:30', 'value' => '11:30'),
+                    array('name' => '11:45', 'value' => '11:45'),
+                    array('name' => '12:00', 'value' => '12:00'),
+                    array('name' => '12:15', 'value' => '12:15'),
+                    array('name' => '12:30', 'value' => '12:30'),
+                    array('name' => '12:45', 'value' => '12:45'),
+                    array('name' => '13:00', 'value' => '13:00'),
+                    array('name' => '13:15', 'value' => '13:15'),
+                    array('name' => '13:30', 'value' => '13:30'),
+                    array('name' => '13:45', 'value' => '13:45'),
+                    array('name' => '14:00', 'value' => '14:00'),
+                    array('name' => '14:15', 'value' => '14:15'),
+                    array('name' => '14:30', 'value' => '14:30'),
+                    array('name' => '14:45', 'value' => '14:45'),
+                    array('name' => '15:00', 'value' => '15:00'),
+                    array('name' => '15:15', 'value' => '15:15'),
+                    array('name' => '15:30', 'value' => '15:30'),
+                    array('name' => '15:45', 'value' => '15:45'),
+                    array('name' => '16:00', 'value' => '16:00'),
+                    array('name' => '16:15', 'value' => '16:15'),
+                    array('name' => '16:30', 'value' => '16:30'),
+                    array('name' => '16:45', 'value' => '16:45'),
+                    array('name' => '17:00', 'value' => '17:00'),
+                    array('name' => '17:15', 'value' => '17:15'),
+                    array('name' => '17:30', 'value' => '17:30'),
+                    array('name' => '17:45', 'value' => '17:45'),
+                    array('name' => '18:00', 'value' => '18:00'),
+                    array('name' => '18:15', 'value' => '18:15'),
+                    array('name' => '18:30', 'value' => '18:30'),
+                    array('name' => '18:45', 'value' => '18:45'),
+                    array('name' => '19:00', 'value' => '19:00'),
+                    array('name' => '19:15', 'value' => '19:15'),
+                    array('name' => '19:30', 'value' => '19:30'),
+                    array('name' => '19:45', 'value' => '19:45'),
+                    array('name' => '20:00', 'value' => '20:00'),
+                    array('name' => '20:15', 'value' => '20:15'),
+                    array('name' => '20:30', 'value' => '20:30'),
+                    array('name' => '20:45', 'value' => '20:45'),
+                    array('name' => '21:00', 'value' => '21:00'),
+                    array('name' => '21:15', 'value' => '21:15'),
+                    array('name' => '21:30', 'value' => '21:30'),
+                    array('name' => '21:45', 'value' => '21:45'),
+                    array('name' => '22:00', 'value' => '22:00'),
+                    array('name' => '22:15', 'value' => '22:15'),
+                    array('name' => '22:30', 'value' => '22:30'),
+                    array('name' => '22:45', 'value' => '22:45'),
+                    array('name' => '23:00', 'value' => '23:00'),
+                    array('name' => '23:15', 'value' => '23:15'),
+                    array('name' => '23:30', 'value' => '23:30'),
+                    array('name' => '23:45', 'value' => '23:45'),
+                    array('name' => '23:59', 'value' => '23:59'),
+                ),
+                'help' => '',
+            ),
+            'tls_interval' => array(
+                'title'   => 'Timelapse Interval',
+                'options'   => array(
+                    array('name' => '5m', 'value' => '5m'),
+                    array('name' => '10m', 'value' => '10m'),
+                    array('name' => '15m', 'value' => '15m'),
+                    array('name' => '20m', 'value' => '20m'),
+                    array('name' => '25m', 'value' => '25m'),
+                    array('name' => '30m', 'value' => '30m'),
+                    array('name' => '35m', 'value' => '35m'),
+                    array('name' => '40m', 'value' => '40m'),
+                    array('name' => '45m', 'value' => '45m'),
+                    array('name' => '50m', 'value' => '50m'),
+                    array('name' => '55m', 'value' => '55m'),
+                    array('name' => '1h', 'value' => '1h'),
+                    array('name' => '2h', 'value' => '2h'),
+                    array('name' => '4h', 'value' => '4h'),
+                    array('name' => '6h', 'value' => '6h'),
+                    array('name' => '8h', 'value' => '8h'),
+                    array('name' => '10h', 'value' => '10h'),
+                    array('name' => '12h', 'value' => '12h'),
+                ),
+                'help' => ''
+            ),
+        );
+
+        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        return $handle;
+    }
+
+    public function Camera_Settings_Wireless_Settings($camera) {
+        $lists = array(
+            'wireless_mode' => array(
+                'title'   => 'Wireless Mode',
+                'options'   => array(
+                    array('name' => 'Instant', 'value' => 'instant'),
+                    array('name' => 'Schedule', 'value' => 'schedule'),
+                ),
+                'help' => 'In [Instant] the camera will capture a photo or video then attach to the network and upload the file. In [Schedule] it will wake up either when the timer is up (Schedule Interval) or when the file limit is reached (File Limit)  and upload the pending files to the server.  Using [Schedule] will save battery because it reduces the handshaking that occurs each time the camera has to connect to the network (5 to 10 seconds per photo in Instant mode).  The mobile app will recieve a notification as each scheduled upload starts and completes.  The Action tab will show the scheduled event and the number of photos uploaded.'
+            ),
+
+            /* schedule */
+            'wm_schedule' => array(
+                'title'   => 'Schedule Interval',
+                'options'   => array(
+                    array('name' => 'Every Hour',       'value' => '1h'),
+                    array('name' => 'Every 2 Hours',    'value' => '2h'),
+                    array('name' => 'Every 4 Hours',    'value' => '4h'),
+                ),
+                'help' => 'The camera will use a timer to wake up and determine if there are files to upload based on the interval you select. If there are pending files, they will be uploaded to the server at that time.'
+            ),
+            'wm_sclimit' => array(
+                'title'   => 'Schedule File Limit',
+                'options'   => array(
+                    array('name' => '20 Files', 'value' => '20'),
+                    array('name' => '30 Files', 'value' => '30'),
+                    array('name' => '40 Files', 'value' => '40'),
+                    array('name' => '50 Files', 'value' => '50'),
+                ),
+                'help' => 'As the camera captures photos or videos, it will maintain a file count. If the file count reaches your selected File Limit, then the camera will attach to the network at that time (not the Scheduled Interval) and upload all pending files. A lower limit may increase network connections and use more battery, while a higher value may reduce network connections and battery usage. File Limit will be more important during periods of high activity. If the File Limit is not reached in a schedule interval period then it has no effect. File Limit is the only way to ensure that all media files captured will get uploaded to the pportal.'
+            ),
+
+            /* other */
+            'hb_interval' => array(
+                'title'   => 'Heartbeat Interval',
+                'options'   => array(
+                    array('name' => 'Every Hour',       'value' => '1h'),
+                    array('name' => 'Every 2 Hours',    'value' => '2h'),
+                    array('name' => 'Every 4 Hours',    'value' => '4h'),
+                    array('name' => 'Every 8 Hours',    'value' => '8h'),
+                    array('name' => 'Every 12 Hours',   'value' => '12h'),
+                ),
+                'help' => 'This timer will fire on the whole hour and will send a status to the server. The mobile app will recieve a notification when this occurs. This lets you know your camera is still functioning and its curent status. It will also process any pending Action items you have queued like High-Res Max, Video, Original, Settings.'
+            ),
+            'online_max_time' => array(
+                'title'   => 'Max Online Time',
+                'options'   => array(
+                    array('name' => '2m', 'value' => '2'),
+                    array('name' => '3m', 'value' => '3'),
+                    array('name' => '4m', 'value' => '4'),
+                    array('name' => '5m', 'value' => '5'),
+                    array('name' => '6m', 'value' => '6'),
+                    array('name' => '7m', 'value' => '7'),
+                    array('name' => '8m', 'value' => '8'),
+                    array('name' => '9m', 'value' => '9'),
+                    array('name' => '10m', 'value' => '10'),
+                ),
+                'help' => 'Use this setting to control the amount of time the camera will remain online, per event, processing queued action requests. A shorter time means the camera can return to PIR mode more quickly and continue capturing Photo and Video, otherwise the camera is busy and may miss PIR events due to queue processing. A longer time means your queued Action items should get completed sooner if the queue is large.'
+            ),
+            'cellularpw' => array(
+                'title' => 'Cellular Password',
+                'type' => 'input',
+                //'pattern' => '[0-9]{6}',
+                'format' => 'pattern="[0-9]{6}"',
+                'placeholder' => 'Input Cellular Password',
+                'help' => 'Input 6 digits. Blank for no password. If you input a password, it is required when you power the camera into Setup mode. This means if your camera is stolen, the thief is not able to set cellular mode to OFF, which means he can only use the camera in cellular mode.'
+            ),
+            'remotecontrol' => array(
+                'title'   => 'Remote Control',
+                'options'   => array(
+                    array('name' => 'Disabled', 'value' => 'off'),
+                    array('name' => '24 Hour', 'value' => '24h'),
+                ),
+                'help' => 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.'
+            ),
+
+        );
+
+        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        return $handle;
+    }
+
+    public function Camera_Settings_Block_Mode_Settings($camera) {
+        $lists = array(
+            'blockmode1'    => array(
+                'title'     => 'Block Mode 1',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode2'    => array(
+                'title'     => 'Block Mode 2',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode3'    => array(
+                'title'     => 'Block Mode 3',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode4'    => array(
+                'title'     => 'Block Mode 4',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode5' => array(
+                'title'   => 'Block Mode 5',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+
+            'blockmode7'    => array(
+                'title'     => 'Block Mode 7',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode8'    => array(
+                'title'     => 'Block Mode 8',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode9'    => array(
+                'title'     => 'Block Mode 9',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode10'   => array(
+                'title'     => 'Block Mode 10',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+            'blockmode11'   => array(
+                'title'     => 'Block Mode 11',
+                'options'   => array(
+                    array('name' => 'On', 'value' => 'on'),
+                    array('name' => 'Off', 'value' => 'off'),
+                ),
+                'help' => ''
+            ),
+        );
+
+        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        return $handle;
+    }
+
 }
