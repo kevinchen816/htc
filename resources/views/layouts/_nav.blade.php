@@ -11,8 +11,8 @@
         </button>
 
         <!-- Branding Image -->
-        <a class="navbar-brand" href="http://www.ridgetecoutdoors.com" target="_blank" title="RidgeTec Home">
-            Private Site
+        <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="RidgeTec Home">
+            10ware Site
         </a>
     </div>
 

@@ -12,7 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    //return view('welcome');
+    return view('10ware');
 });
 
 //Route::get('/', 'StaticPagesController@home');
