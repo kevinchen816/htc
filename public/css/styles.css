@@ -1,0 +1,195 @@
+.navbar-container {
+    background-color: #000000!important;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-bottom: 1px solid #7e2d2d;
+}
+
+.navbar-brand {
+    margin-bottom: 0px!important;
+    margin-bottom: 0px!important;
+    padding-bottom: 0px!important;
+    padding-top: 0px!important;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #ffffff!important;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #fff;
+    background-color: #9d0b0e;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #fff;
+    background-color: #9d0b0e;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #9d0b0e;
+}
+
+.navbar-right {
+    margin-right: 15px!important;
+}
+
+.fixed-navbar-container {
+    margin-top: 60px;
+}
+
+.home-page-wrapper {
+    margin-top: -1450px;
+    margin-left: 0;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.main-logo {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    
+}
+
+#top-footer {
+    background-color: #333;
+    margin-top:20px;
+    border-top: 1px solid #7e2d2d;
+}
+#footer-bottom {
+    background-color: #000;
+    padding: 2em 0;
+    border-top: 4px solid #9d0b0e;
+}
+
+.footer-list .footer-list-item {
+    //border-right: 1px solid #979797;
+    padding-top: 20px;
+}
+
+#top-footer .social-list a {
+    display: block;
+    padding: 1em;
+    color: #9d0b0e;
+}
+
+.alert-footer {
+    background-color: #9d0b0e;
+}
+
+p.teaser {
+    text-indent: 30px; 
+    }
+    
+.custom-panel-button {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 8px;
+    background: #666;
+    color: #fff;
+
+}
+
+.panel-primary > .custom-camera-panel-header {
+    background: #9d0b0e;
+    color: #efefef; 
+    padding-top: 2px;
+    padding-bottom: 12px;
+}
+
+.custom-panel-title {
+    padding-top: 0px;
+    margin-top: 4px;
+}
+.custom-image {
+    margin-bottom: 4px;
+}
+
+.help-block {
+    margin-bottom: 2px;
+    //color: #31b0d5 !important;
+    //color: #99ffff !important;
+    color: lightgreen !important;
+    line-height: 1.0;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    //color: #00bc8c;
+    color: #fff;
+    //background-color: #222222;
+    background-color: #000;
+}
+.nav-tabs>li>a, .nav-pills>li>a {
+    //color: #aaa;
+    background-color: #000;
+    color: #cf584c;
+}
+.custom-panel-body {
+    //background-color: #555;
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: #111;
+}
+.custom-settings-panel {
+    margin-top: 6px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
+.default-help-panel {
+
+}
+
+.default-help-panel > .panel-heading {
+    background-color: #afcdd7;
+    color: #333;
+
+}
+.default-help-panel > .panel-body {
+    background-color: #444;
+    color: #fff;
+}
+
+.tab-pane {
+    //padding-left: 4px;
+    //padding-right: 4px;
+}
+
+.tab-content {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.tab-container {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.pagination {
+    margin: 4px 0;
+    padding-top: 2px;
+    padding-bottom: 2px;}
+
+.pagination > li {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.help-container {
+    margin-left: 30px;
+    border-style: none;
+    //margin-bottom: 60px;
+}

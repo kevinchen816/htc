@@ -1,0 +1,159 @@
+.thumbnail-wrapper2 {
+    padding-left: 2px;
+    padding-right: 3px;
+    margin-top: 0px!important;
+    margin-bottom: 0px!important;
+    padding-bottom: 0px!important;        
+}    
+.thumbnail-timestamp {
+    margin-top: -2px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 4px;
+    color: #fff;
+}    
+
+.custom-thumbnail-grid-column {
+    padding-left: 2px;
+    padding-right: 0px;
+    margin-top: 0px!important;
+    margin-bottom: 0px!important;
+    padding-bottom: 0px!important;        
+}
+
+.custom-thumb {
+    width: 100%;
+}
+
+.image-checkbox {
+    color: #FFD700;
+    //color: #9d0b0e;
+    padding: 0px 0px 0px 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    border-top: 0px;
+    border-left: 0px;
+    border-bottom: 0px;
+    border-right: 0px;
+
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.checkbox {
+    padding-top: 0px!important;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px!important;
+    margin-right: 0px;
+    border-top: 0px;
+    border-left: 0px;
+    border-bottom: 0px!important;
+    border-right: 0px;
+}
+.form-horizontal .checkbox {
+    min-height: 10px!important;
+}    
+.checkbox label:after, 
+.radio label:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.checkbox .cr,
+.radio .cr {
+    position: relative;
+    display: inline-block;
+    //border: 4px solid #a9a9a9;
+    border: 2px solid #66ff00;
+    border-radius: .25em;
+    width: 1.3em;
+    height: 1.3em;
+    float: left;
+    margin-right: 0em;
+
+}
+
+.radio .cr {
+    border-radius: 50%;
+}
+
+.checkbox .cr .cr-icon,
+.radio .cr .cr-icon {
+    position: absolute;
+    font-size: .8em;
+    line-height: 0;
+    top: 50%;
+    left: 20%;
+}
+
+.radio .cr .cr-icon {
+    margin-left: 0em;
+}
+
+.checkbox label input[type="checkbox"],
+.radio label input[type="radio"] {
+    display: none;
+}
+
+.checkbox label input[type="checkbox"] + .cr > .cr-icon,
+.radio label input[type="radio"] + .cr > .cr-icon {
+    transform: scale(3) rotateZ(-20deg);
+    opacity: 0;
+    transition: all .3s ease-in;
+}
+
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+.radio label input[type="radio"]:checked + .cr > .cr-icon {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+}
+
+.checkbox label input[type="checkbox"]:disabled + .cr,
+.radio label input[type="radio"]:disabled + .cr {
+    opacity: .5;
+}    
+
+.checkbox > label {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    border: 0px 0px 0px 0px;
+}
+
+.span-cr {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    border: 0px 0px 0px 0px;
+    background-color: #000;
+    opacity: 80;
+}
+
+.check-label {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    border: 0px 0px 0px 0px;
+
+}
+
+.btn span.glyphicon {    			
+    opacity: 0;				
+}
+.btn.active span.glyphicon {				
+    opacity: 1;				
+}
+
+.image-highdef {
+    position: absolute;
+    height: auto;
+    top: 0;
+    right: 0;
+    padding-right: 10px;
+}    
+
+  
+

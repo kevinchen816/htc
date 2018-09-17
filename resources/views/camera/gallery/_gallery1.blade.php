@@ -108,8 +108,7 @@
             width: 30px;
             height: 30px;
             border: 0;
-            //background-image: url(http://www.ridgetec.us/images/close-icon.png);
-            background-image: url(/images/close-icon.png);
+            background-image: url(http://www.ridgetec.us/images/close-icon.png);
             background-repeat: no-repeat;
             background-size: 100% 100%;
             //background-color:rgba(0, 0, 0, 1.00)!important;
@@ -178,7 +177,7 @@
                         <!-- gallery-toolbar -->
 
                         <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
-                            <input name="_token" type="hidden" value="FLozpJONzCgc7Ue23LdVtrflOcF6otRJicEMdDrh">
+                            <input name="_token" type="hidden" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
                             <input name="id" type="hidden" value="54">
 
                             <div class="thumbnail-gallery" data-token="">
@@ -223,9 +222,6 @@
     </div>
     <!-- panel -->
 
-@include('camera.gallery._help')
-@include('camera.gallery._xx')
-
     <script>
         /*
         var cameraId = '54';
@@ -253,15 +249,9 @@
         */
         //var items = JSON.parse(sessionStorage.getItem('items')) || [];
         //var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
-        function Kevin_Test() {
-            $('#select-all-{{$camera->id}}').removeClass('disabled hidden');
-        }
-
         function IEVersion() {
           var sAgent = window.navigator.userAgent;
           var Idx = sAgent.indexOf("MSIE");
-
-console.log('>>IEVersion');
 
           // If IE, return version number.
           if (Idx > 0)
@@ -277,7 +267,6 @@ console.log('>>IEVersion');
             //console.log(id + ' ' + v);
             var returnValue = false;
             var pos = items.indexOf(id);
-console.log('>>isItemChecked('+id+')'); // kevin
             if (pos >= 0) {
                 returnValue = true;
             }
@@ -287,7 +276,6 @@ console.log('>>isItemChecked('+id+')'); // kevin
         function InitializeCheckBoxes() {
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var checkboxes = document.getElementsByClassName('image-check');
-console.log('>>InitializeCheckBoxes');
             if (checkboxes) {
                 for (var i = 0; i < checkboxes.length; i++) {
                     check = checkboxes[i];
@@ -298,7 +286,6 @@ console.log('>>InitializeCheckBoxes');
         }
 
         function PostGallery(action, items) {
-console.log('>>PostGallery');
             //console.log('PostGallery: starting');
             $('#gallery-form-54').append('<input type="hidden" name="action" value="' + action + '" />');
             $('#gallery-form-54').append('<input type="hidden" name="medialist" id="mediaid-list" value="" />');
@@ -311,7 +298,6 @@ console.log('>>PostGallery');
         function UpdateToolbar() {
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
-console.log('>>UpdateToolbar');
             height = $('.custom-thumbnail-grid-column').height();
             width = $('.custom-thumbnail-grid-column').width();
             if (manageSelected === true) {
@@ -356,7 +342,6 @@ console.log('>>UpdateToolbar');
         }
 
         $(window).on('load', function() {
-console.log('...............load');
             UpdateToolbar();
             //InitializeCheckBoxes();
             windowload = true;
@@ -369,7 +354,6 @@ console.log('...............load');
         $(document).ready(function () {
             var height = '';
             var width = '';
-console.log('...............ready');
             console.log('gallery2-partial - document ready');
             $(window).on('resize', function() {
                 //alert('window on resize 1');
@@ -410,104 +394,84 @@ console.log('...............ready');
             $('#multi-select').on('change', function () {
                 console.log('multi-select change event fired');
                 //alert('multi-select change event fired');
-                console.log(JSON.stringify($(this).prop('checked'))); // kevin
-
                 sessionStorage.setItem('manageOn', JSON.stringify($(this).prop('checked')));
-
                 var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
 
                 if (manageSelected === true && !($('#itemAmount').is(':visible'))) {
-console.log('#multi-select...........1'); // kevin
                     document.getElementById('itemAmount').innerHTML = getbadge(items.length);
-
                     var height = $('.custom-thumbnail-grid-column').height();
                     var width = $('.custom-thumbnail-grid-column').width();
                     $('.check-label .span-cr').height(height);
                     $('.check-label .span-cr').width(width);
                     //$('.check-label').show(100);
                     $('.check-label').removeClass('hidden');
-
                     $('#with-selected').hide();
                     $('#camera-desc').hide();
                     $('#select-all-54').hide();
                     $('#clear-all-54').hide(350);
                     $('#select-none-54').hide();
-
                     $('#with-selected').removeClass('disabled hidden');
                     $('#select-all-54').removeClass('disabled hidden');
                     $('#select-none-54').removeClass('disabled hidden');
                     $('#clear-all-54').removeClass('disabled hidden');
-
                     $('#itemAmount').show();
                     $('#select-all-54').show(350);
                     $('#select-none-54').show(350);
                     $('#clear-all-54').show(350);
                     $('#with-selected').show(350);
-                }
-                else if( manageSelected === false && $('#itemAmount').is(':visible')){
-console.log('#multi-select...........2'); // kevin
+            }
+            else if( manageSelected === false && $('#itemAmount').is(':visible')){
                     $('#with-selected').addClass('disabled');
                     $('#camera-desc').show();
                     $('#select-all-54').addClass('disabled');
                     $('#select-none-54').addClass('disabled');
                     $('#clear-all-54').addClass('disabled');
-
                     //$('.check-label').hide(100);
                     $('.check-label').addClass('hidden');
-
                     $('#select-all-54').hide(350);
                     $('#select-none-54').hide(350);
                     $('#clear-all-54').hide(350);
                     $('#with-selected').hide(350);
                     $('#itemAmount').hide();
-                }
-                else if(manageSelected === true && ($('#itemAmount').is(':visible'))){
-console.log('#multi-select...........3'); // kevin
+
+            }
+            else if(manageSelected === true && ($('#itemAmount').is(':visible'))){
                     sessionStorage.setItem('manageOn', JSON.stringify(false));
                     manageSelected = JSON.parse(sessionStorage.getItem('manageOn'));
                     $('#with-selected').addClass('disabled');
                     $('#camera-desc').show();
-
                     $('#select-all-54').addClass('disabled');
                     $('#select-none-54').addClass('disabled');
                     $('#clear-all-54').addClass('disabled');
-
                     //$('.check-label').hide(100);
                     $('.check-label').addClass('hidden');
-
                     $('#select-all-54').hide(350);
                     $('#clear-all-54').hide(350);
                     $('#select-none-54').hide(350);
                     $('#with-selected').hide(350);
                     $('#itemAmount').hide();
-                }
-                else if(manageSelected === false && !($('#itemAmount').is(':visible'))){
-console.log('#multi-select...........4'); // kevin
+            }
+            else if(manageSelected === false && !($('#itemAmount').is(':visible'))){
                     sessionStorage.setItem('manageOn', JSON.stringify(true));
                     manageSelected = JSON.parse(sessionStorage.getItem('manageOn'));
-
                     $('#itemAmount').show();
                     document.getElementById('itemAmount').innerHTML = getbadge(items.length);
-
                     var height = $('.custom-thumbnail-grid-column').height();
                     var width = $('.custom-thumbnail-grid-column').width();
                     $('.check-label .span-cr').height(height);
                     $('.check-label .span-cr').width(width);
                     //$('.check-label').show(100);
                     $('.check-label').removeClass('hidden');
-
                     $('#with-selected').hide();
                     $('#camera-desc').hide();
                     $('#select-all-54').hide();
                     $('#select-none-54').hide();
                     $('#clear-all-54').hide(350);
-
                     $('#with-selected').removeClass('disabled hidden');
                     $('#select-all-54').removeClass('disabled hidden');
                     $('#clear-all-54').removeClass('disabled hidden');
                     $('#select-none-54').removeClass('disabled hidden');
-
                     $('#select-all-54').show(350);
                     $('#clear-all-54').show(350);
                     $('#select-none-54').show(350);
@@ -521,7 +485,6 @@ console.log('#multi-select...........4'); // kevin
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
                 var modal = $(this);
                 var itemcount = items.length;
-console.log('==> #DeleteModal');
                 //modal.find('.modal-title').text('Delete Media');
                 if (itemcount > 1) {
                     modal.find('.confirm-modal').show();
@@ -541,7 +504,6 @@ console.log('==> #DeleteModal');
             $('#button-confirm-delete').on('click', function() {
                 //console.log('Confirm Button Click multi: Start');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
-console.log('==> #button-confirm-deletel');
                 sessionStorage.removeItem('items');
                 sessionStorage.removeItem('manageOn');
                 if (items.length > 0) {
@@ -558,7 +520,6 @@ console.log('==> #button-confirm-deletel');
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
                 var modal = $(this);
                 var itemcount = items.length;
-console.log('==> #HighresModal');
                 //modal.find('.modal-title').text('Request HighRes MAX');
                 if(itemcount > 10){
                     modal.find('.modal-body').text('You can not request High Res MAX for more than 10 images');
@@ -582,7 +543,6 @@ console.log('==> #HighresModal');
 
             $('#button-confirm-highres').on('click', function() {
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
-console.log('==> #button-confirm-highres');
                 sessionStorage.removeItem('items');
                 sessionStorage.removeItem('manageOn');
                 if (items.length > 0) {
@@ -596,7 +556,6 @@ console.log('==> #button-confirm-highres');
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
                 var modal = $(this);
                 var itemcount = items.length;
-console.log('==> #OriginalModal');
                 //modal.find('.modal-title').text('Request HighRes MAX');
                 if(itemcount > 10){
                     modal.find('.modal-body').text('You can not request Original for more than 10 images');
@@ -619,7 +578,6 @@ console.log('==> #OriginalModal');
             });
 
             $('#button-confirm-original').on('click', function() {
-console.log('==> #button-confirm-original');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 sessionStorage.removeItem('items');
                 sessionStorage.removeItem('manageOn');
@@ -629,7 +587,6 @@ console.log('==> #button-confirm-original');
             });
 
             $('#VideoModal').on('show.bs.modal', function (event) {
-console.log('==> #VideoModal');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 //var button = $(event.relatedTarget); // Button that triggered the modal
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -657,7 +614,6 @@ console.log('==> #VideoModal');
             });
 
             $('#button-confirm-video').on('click', function() {
-console.log('==> #button-confirm-video');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 sessionStorage.removeItem('items');
                 sessionStorage.removeItem('manageOn');
@@ -681,7 +637,6 @@ console.log('==> #button-confirm-video');
             });
 
             $(document).on('click', '#clear-all-54', function() {
-console.log('==> #clear-all-54');
                 //console.log('clear-all clicked');
                 sessionStorage.removeItem("items");
                 //sessionStorage.setItem('items', JSON.stringify([]));
@@ -693,7 +648,6 @@ console.log('==> #clear-all-54');
             $('#select-none-54').click(function () {
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 var checkboxes = $('.thumbnail-gallery .image-check');
-console.log('==> #select-none-54');
                 checkboxes.each(function(){
                     if(this.checked === true){
                         if(isItemChecked(items, this.id)){
@@ -711,7 +665,6 @@ console.log('==> #select-none-54');
             $('.popup-video').click(function () {
                 var url = $(this).attr('video-url');
                 var poster = $(this).attr('data-poster');
-console.log('==> .popup-video');
                 $('#video-source').attr('src', url);
                 $('#video-source').attr('poster', poster);
 
@@ -757,7 +710,6 @@ console.log('==> .popup-video');
 
             $('#modal-video-dlg').on('hide.bs.modal', function () {
                 var video_block = $('#video-block');
-console.log('==> #modal-video-dlgo');
                 //console.log('user is closing video so pause it');
                 if (video_block) {
                     video_block.get(0).pause();
@@ -766,13 +718,11 @@ console.log('==> #modal-video-dlgo');
 
             documentready = true;
             if (windowload) {
-console.log('................A');
                 UpdateToolbar();        // required for IE
             }
 
             $(function(){
                 $(window).resize(function(){
-console.log('................B (resize)');
                     //console.log('gallery2-partial - window resize function for video player');
                     video_w = parseInt($(".modal-dialog-player").attr("orig-width"));
                     video_h = parseInt($(".modal-dialog-player").attr("orig-height"));
@@ -804,6 +754,5 @@ console.log('................B (resize)');
     });
     </script>
 
-    <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
-    <script src="/js/gallery.js"></script>
+    <script src="http://www.ridgetec.us/js/gallery.js"></script>
 </div>

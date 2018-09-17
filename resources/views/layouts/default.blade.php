@@ -11,10 +11,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
 
-    <title>private</title>
+    <title>10ware</title>
 
     <!-- Styles -->
-    <link href="http://www.ridgetec.us/css/app.css" rel="stylesheet">
+    <!--<link href="http://www.ridgetec.us/css/app.css" rel="stylesheet">-->
+    <link href="/css/app.css" rel="stylesheet"> <!-- kevin -->
 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
@@ -25,10 +26,13 @@
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cyborg/bootstrap.min.css" rel="stylesheet"> -->
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/sandstone/bootstrap.min.css" rel="stylesheet"> -->
 
-    <link href="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+    <!--<link href="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">-->
+    <link href="css/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet"> <!-- kevin -->
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
-    <link href="http://www.ridgetec.us/css/styles.css" rel="stylesheet">
+    <!--<link href="http://www.ridgetec.us/css/styles.css" rel="stylesheet">-->
+    <link href="/css/styles.css" rel="stylesheet">  <!-- kevin -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -36,7 +40,8 @@
     <script>
         window.Laravel = {"csrfToken":"ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"};
     </script>
-    <script src="https://use.fontawesome.com/9712be8772.js"></script>
+    <!--<script src="https://use.fontawesome.com/9712be8772.js"></script>-->
+    <script src="/js/9712be8772.js"></script> <!-- kevin -->
 
     <style>
         @media (max-width: 1100px) {
@@ -77,8 +82,11 @@
         }
 
     </style>
-    <link rel="stylesheet" href="http://www.ridgetec.us/css/thumbnail-gallery.css" media="screen">
-    <link rel="stylesheet" href="http://www.ridgetec.us/css/gallery.css" media="screen">
+    <!--<link rel="stylesheet" href="http://www.ridgetec.us/css/thumbnail-gallery.css" media="screen">-->
+    <!--<link rel="stylesheet" href="http://www.ridgetec.us/css/gallery.css" media="screen">-->
+    <link rel="stylesheet" href="/css/thumbnail-gallery.css" media="screen"> <!-- kevin -->
+    <link rel="stylesheet" href="/css/gallery.css" media="screen"> <!-- kevin -->
+
     <style>
         .custom-time-toggle-td {
             padding-right: 2px;
@@ -143,12 +151,20 @@
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <!-- Jquery-ui -->
-    <script src="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.js"></script>
-    <script src="http://www.ridgetec.us/js/button-checkbox.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+    <!--<script src="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.js"></script>-->
+    <!--<script src="http://www.ridgetec.us/js/button-checkbox.js"></script>-->
     <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
-    <script src="http://www.ridgetec.us/js/jquery.slidereveal.min.js"></script>
+    <!--<script src="http://www.ridgetec.us/js/jquery.slidereveal.min.js"></script>-->
+
+    <script src="/js/jquery-ui-1.12.1/jquery-ui.min.js"></script> <!-- kevin -->
+    <script src="/js/button-checkbox.js"></script> <!-- kevin -->
+    <!--<script src="/js/gallery.js"></script>--> <!-- kevin --><!-- _gallery.blade.php -->
+    <script src="/js/jquery.slidereveal.min.js"></script> <!-- kevin -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+
     <script>
         $(document).ready(function(){
             $( ".ToggleHelp" ).click(function() {

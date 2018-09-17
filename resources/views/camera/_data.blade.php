@@ -87,9 +87,16 @@
                         </div>
                     </div>
 
+                    <!-- GALLERY TAB -->
                     @include('camera.gallery._gallery')
+
+                    <!-- SETTINGS TAB -->
                     @include('camera.settings._settings')
+
+                    <!-- ACTION HISTORY TAB -->
                     @include('camera.actions._actions')
+
+                    <!-- OPTIONS TAB -->
                     @include('camera.options._options')
                 </div>
             </div>
