@@ -23,7 +23,11 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function($api) {
     $api->get('version', function() {
-        return response('this is version v1');
+        return response('version v1');
+    });
+
+    $api->get('path', function() {
+        return public_path();
     });
 });
 

@@ -14,14 +14,14 @@
         </label>
     </div>
     <a class="thumb-anchor" data-fancybox="gallery-{{$camera->id}}"
-        href="http://sample.test/uploads/images/{{$photo->filepath}}"
+        href="{{url('uploads/images/'.$photo->filepath)}}"
         data-caption="{{$photo->filename}} | {{$photo->datetime}} | Scheduled Upload | Standard Low(1/20/16136) | Points: 1.00"
         data-camera="{{$camera->id}}"
         data-id="{{$photo->id}}"
         data-highres="0"
         data-pending="0">
 
-        <img src="http://sample.test/uploads/images/{{$photo->filepath}}"
+        <img src="{{url('uploads/images/'.$photo->filepath)}}"
             class="img-responsive custom-thumb"
             title="{{$photo->filename}} ({{$photo->id}})"
             alt="{{$photo->filename}}"
@@ -29,8 +29,8 @@
     </a>
     <p class="thumbnail-timestamp pull-right" style="font-size: .70em">
         <!-- <a href="/cameras/download/54/90815"> -->
-        <a href="/cameras/download/{{$camera->id}}/{{$photo->id}}">
-        <!-- <a href="/uploads/images/{{$photo->filepath}}"> -->
+        <!-- <a href="/cameras/download/{{$camera->id}}/{{$photo->id}}"> -->
+        <a href="/uploads/images/{{$photo->filepath}}">
             <i class="fa fa-download"></i>
         </a>
         09/08/2018 9:20:42 pm
