@@ -50,6 +50,8 @@ class CamerasController extends Controller
 
         $datetime = date('Y-m-d H:i:s');
 
+$new_camera->user_id = 1;
+
         $new_camera->module_id = $request->module_id;
         $new_camera->iccid = $request->iccid;
         $new_camera->model_id = $request->model_id;
@@ -632,7 +634,7 @@ class CamerasController extends Controller
     public function Camera_List() {
         //return 'hello';
 
-        $cameras = DB::table('cameras')->select('id', 'description', 'battery', 'last_contact')->get();
+        $cameras = DB::table('cameras')->select('id', 'description', 'battery', 'last_contact', 'last_filename')->get();
         //return $cameras;
 
         $style = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
@@ -643,7 +645,13 @@ class CamerasController extends Controller
             $description = $camera->description;
             $battery = $this->CameraFieldValueConvert($camera, 'battery', $camera->battery);
             $last_contact = $camera->last_contact;
-            $url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
+
+            if (!empty($camera->last_filename)){
+                $url = 'http://sample.test/uploads/images/'.$camera->last_filename;
+            } else {
+                $url = '';
+            }
+            //$url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
 
             $handle .= '<tr>';
             $handle .= '    <td class="col-sm-1">';
@@ -656,8 +664,10 @@ class CamerasController extends Controller
             $handle .= '        <span style="font-size: .95em">'.$last_contact.'</span>';
             $handle .= '    </td>';
             $handle .= '    <td class="col-sm-6">';
-            // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
-            $handle .= '        <a class="btn thumb-select" data-id="'.$id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
+            if (!empty($url)) {
+                // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
+                $handle .= '        <a class="btn thumb-select" data-id="'.$id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
+            }
             $handle .= '    </td>';
             $handle .= '</tr>';
         }

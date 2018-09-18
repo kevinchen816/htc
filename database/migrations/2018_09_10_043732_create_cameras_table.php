@@ -16,6 +16,8 @@ class CreateCamerasTable extends Migration
         Schema::create('cameras', function (Blueprint $table) {
             $table->increments('id'); // camera_id
 
+            $table->integer('user_id');
+
             $table->string('module_id')->unique();    // iemi
             $table->string('iccid')->default('');
             $table->string('model_id')->default('');
@@ -107,11 +109,13 @@ class CreateCamerasTable extends Migration
             $table->dateTime('last_armed')->nullable();
             $table->integer('arm_photos')->default(0);          // Photos since armed
             $table->integer('arm_points')->default(0);          // Points since armed
+            $table->string('last_filename')->nullable();
 
             $table->dateTime('last_hb')->nullable();
             $table->dateTime('last_photo')->nullable();
             $table->dateTime('last_schedule')->nullable();
             $table->dateTime('last_settings')->nullable();      // Last Downloaded
+
 
             $table->dateTime('expected_contact')->nullable();   // Expected Contact
 
