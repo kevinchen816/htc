@@ -14,8 +14,9 @@ use App\Handlers\ImageUploadHandler;
 
 class CamerasController extends Controller
 {
+    // public $currentCameraID = 1;
+
     public function getErrorMessage($result_code) {
-    //public function ErrorMessageGet($result_code) {
         $error_msg = array(
             900 =>'Invalid or Missing camera Module',
             901 =>'Invalid or Missing camera Model',
@@ -486,10 +487,17 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+    /* Web Function */
+    public function getdetail($cameras_id) {
+        //return $cameras_id;
+
+        //return redirect()->route('cameras', $topic->id)->with('success', '成功创建话题！');
+        return redirect()->route('cameras');
+    }
+
     public function cameras() {
         // $camera = DB::table('cameras')->find(1);
         // return compact('camera'); //return $camera; // NG
-
         $id = 1;
         $camera = Camera::findOrFail($id);
         $photos = $camera->photos()
@@ -522,42 +530,7 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function test() {
-        $id = 1;
-        $camera = Camera::findOrFail($id);
-        //dd($camera);
-        return $camera;
-
-        //return $camera->module_id;
-        //return $camera['module_id'];
-        $field = 'module_id';
-        return $camera[$field];
-
-        $columns = Schema::getColumnListing('cameras');
-        print_r($columns);
-        return $columns;
-
-        $tables = DB::select('show tables');
-        //print_r($tables);
-        //return $tables;
-
-        $tables = array_column($tables, 'Tables_in_htc');
-        $columns = ['email', 'user_name', 'nick_name', 'first_name', 'last_name'];
-        foreach ($tables as $key => $value) {
-            // foreach ($columns as $k => $v) {
-            //     if (Schema::hasColumn($value, $v)) {
-            //         $table[] = $value;
-            //     };
-            // }
-            // $columns[] = Schema::getColumnListing('users');
-            //print_r($key);
-            print_r($value);
-        }
-        print_r($tables);
-        return $tables;
-    }
-
-    /*----------------------------------------------------------------------------------*/
+    /* Common Functions */
     public function CameraFieldValueConvert($camera, $column, $name) {
 
         if ($name == 'off') {
@@ -654,6 +627,97 @@ class CamerasController extends Controller
         return $handle;
     }
 
+    /*----------------------------------------------------------------------------------*/
+    /* Camera List */
+    public function Camera_List() {
+        //return 'hello';
+
+        $cameras = DB::table('cameras')->select('id', 'description', 'battery', 'last_contact')->get();
+        //return $cameras;
+
+        $style = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
+
+        $handle = '';
+        foreach ($cameras as $camera) {
+            $id = $camera->id;
+            $description = $camera->description;
+            $battery = $this->CameraFieldValueConvert($camera, 'battery', $camera->battery);
+            $last_contact = $camera->last_contact;
+            $url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
+
+            $handle .= '<tr>';
+            $handle .= '    <td class="col-sm-1">';
+            $handle .= '        <i class="fa fa-camera"> </i>';
+            $handle .= '    </td>';
+            $handle .= '    <td class="col-sm-5 ">';
+            $handle .= '        <a href="/cameras/getdetail/'.$id.'">'.$description.'</a><br/>';
+            // $handle .= '        <i class="fa fa-battery-full" style="color: lime;"> </i>'.$battery.'<br />';
+            $handle .=              $battery.'<br/>';
+            $handle .= '        <span style="font-size: .95em">'.$last_contact.'</span>';
+            $handle .= '    </td>';
+            $handle .= '    <td class="col-sm-6">';
+            // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
+            $handle .= '        <a class="btn thumb-select" data-id="'.$id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
+            $handle .= '    </td>';
+            $handle .= '</tr>';
+        }
+        return $handle;
+
+        /*
+        description
+        battery
+        last_contact
+        */
+
+/*
+// https://laravelacademy.org/post/6140.html
+$users = DB::table('users')->select('name', 'email as user_email')->get();
+
+// 强制查询返回不重复的结果集
+$users = DB::table('users')->distinct()->get();
+
+$query = DB::table('users')->select('name');
+$users = $query->addSelect('age')->get();
+
+$users = DB::table('users')->where('votes', '=', 100)->get();
+$users = DB::table('users')->where('votes', 100)->get();
+
+$users = DB::table('users')->where([
+    ['status', '=', '1'],
+    ['subscribed', '<>', '1'],
+])->get();
+
+$users = DB::table('users')
+                ->orderBy('name', 'desc')
+                ->get();
+
+// whereDate / whereMonth / whereDay / whereYear
+$users = DB::table('users')
+            ->whereDate('created_at', '2016-10-10')
+            ->get();
+
+// 原生表达式
+$users = DB::table('users')
+                     ->select(DB::raw('count(*) as user_count, status'))
+                     ->where('status', '<>', 1)
+                     ->groupBy('status')
+                     ->get();
+*/
+
+        // 10.3
+        // $statuses = $user->statuses()
+        //                    ->orderBy('created_at', 'desc')
+        //                    ->paginate(30);
+
+        // $topics = $topic->withOrder($request->order)
+        //                 ->where('category_id', $category->id)
+        //                 ->paginate(20);
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    /* Camera Data
+    /*----------------------------------------------------------------------------------*/
+    /* Overview */
     public function OverviewStatus($camera) {
         $lists = array(
             'description'   => 'Description',
@@ -755,6 +819,7 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+    /* Gallery */
     public function Camera_Gallery_Select_Camera() {
         $handle = '';
         $handle .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
@@ -765,19 +830,7 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    /*
-            'xxxx' => array(
-                'title'   => 'xxxx',
-                'options'   => array(
-                    array('name' => '', 'value' => ''),
-                    array('name' => '', 'value' => ''),
-                    array('name' => '', 'value' => ''),
-                    array('name' => '', 'value' => ''),
-                ),
-                'help' => ''
-            ),
-    */
-
+    /* Settings */
     /*
     <div class="form-group" id="field-wrapper-54-cameramode">
         <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
@@ -1529,6 +1582,63 @@ class CamerasController extends Controller
 
         $handle = $this->Camera_Settings_Body($camera->id, $lists);
         return $handle;
+    }
+
+    /*
+            'xxxx' => array(
+                'title'   => 'xxxx',
+                'options'   => array(
+                    array('name' => '', 'value' => ''),
+                    array('name' => '', 'value' => ''),
+                    array('name' => '', 'value' => ''),
+                    array('name' => '', 'value' => ''),
+                ),
+                'help' => ''
+            ),
+    */
+
+    /*----------------------------------------------------------------------------------*/
+    /* Actions */
+
+
+    /*----------------------------------------------------------------------------------*/
+    /* Options */
+
+
+    /*----------------------------------------------------------------------------------*/
+    public function test() {
+        $id = 1;
+        $camera = Camera::findOrFail($id);
+        //dd($camera);
+        return $camera;
+
+        //return $camera->module_id;
+        //return $camera['module_id'];
+        $field = 'module_id';
+        return $camera[$field];
+
+        $columns = Schema::getColumnListing('cameras');
+        print_r($columns);
+        return $columns;
+
+        $tables = DB::select('show tables');
+        //print_r($tables);
+        //return $tables;
+
+        $tables = array_column($tables, 'Tables_in_htc');
+        $columns = ['email', 'user_name', 'nick_name', 'first_name', 'last_name'];
+        foreach ($tables as $key => $value) {
+            // foreach ($columns as $k => $v) {
+            //     if (Schema::hasColumn($value, $v)) {
+            //         $table[] = $value;
+            //     };
+            // }
+            // $columns[] = Schema::getColumnListing('users');
+            //print_r($key);
+            print_r($value);
+        }
+        print_r($tables);
+        return $tables;
     }
 
 }

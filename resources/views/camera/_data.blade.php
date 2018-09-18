@@ -74,11 +74,13 @@
 
                 <ul class="nav nav-tabs" id="cameratabs-54">
                     <!-- <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true"> -->
-                    <li ><a href="#overview-{{$camera->id}}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id )}}" aria-expanded="true">
+                    <li >
+                        <a href="#overview-{{$camera->id}}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id )}}" aria-expanded="true">
                             <span class="glyphicon glyphicon-list-alt"> </span> Overview
                         </a>
                     </li>
-                    <li class="active">
+                    <!--<li class="active">-->
+                    <li>
                         <a href="#gallery-54" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
                         <!-- <a href="#gallery-{{$camera->id}}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true"> -->
                             <span class="glyphicon glyphicon-picture"> </span> Gallery

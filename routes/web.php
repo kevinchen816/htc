@@ -31,7 +31,7 @@ Route::get('/login', function() {
     return view('login');
 });
 
-Route::get('/cameras', 'Api\CamerasController@cameras');
+Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');;
 
 /* default.blade.php */
     // $('#show_cameras').click(function() {
@@ -50,7 +50,7 @@ Route::get('/cameras', 'Api\CamerasController@cameras');
     //     $tab = $_POST['tab'];
     //     return $tab;
     // });
-    Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');;
+    Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
 
     // $("#notify_photo").click(function () {
     // var url = '/cameras/testnotify/photo/' + cam + '/62830';
@@ -58,24 +58,25 @@ Route::get('/cameras', 'Api\CamerasController@cameras');
     // $("#notify_video").click(function () {
     // var url = '/cameras/testnotify/video/' + cam + '/62852';
 
-/* _data.blade.php */
+/* Camera List (_list.blade.php) */
+    // <a href="/cameras/getdetail/50">New Camera</a><br />
+    Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail')->name('camera.getdetail');
+
+/* Camera Data (_data.blade.php) */
     // <li><a href="/cameras/getdetail/50">New Camera</a></li>
     //Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail');
 
     // <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">
-    Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');;
+    Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
 
     // <a href="#action-54" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/54" aria-expanded="false">
     //Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
 
-/* _list.blade.php */
-    // <a href="/cameras/getdetail/50">New Camera</a><br />
-
-/* _gallery.blade.php */
+    /* _gallery.blade.php */
     // <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
     //Route::get('/cameras/gallery', 'Api\CamerasController@xxx');
 
-/* photo.blade.php */
+    /* photo.blade.php */
     // <a href="/cameras/download/54/90815">
     //Route::get('/cameras/download/{camera_id}/{photo_id}', 'Api\CamerasController@download');
 

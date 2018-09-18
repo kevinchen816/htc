@@ -1,5 +1,8 @@
-<div id="camera_list" class="col-md-3 " style="padding-right:0px!important;padding-left:0px!important;">
+<div id="camera_list" class="col-md-3" style="padding-right:0px!important;padding-left:0px!important;">
+
+    <!-- CAMERA LIST -->
     <div class="panel panel-default custom-settings-panel" >
+
         <div class="panel-heading" style="padding-top:4px;padding-bottom:4px;">
             <span class="panel-title">
                 <strong>Cameras</strong>
@@ -9,9 +12,22 @@
                 <a id="btn-refresh" class="btn btn-xs btn-primary pull-right">Refresh</a>
             </span>
         </div>
+
         <div class="panel-body" style="padding-right:2px!important;padding-left:2px!important;">
             <table class="table table-condensed table-bordered camera-list-panel" style="font-size: .90em; margin-left: 0px;">
+
+                <!--<thead>
+                    <tr>
+                      <th>A</th>
+                      <th>B</th>
+                      <th>C</th>
+                    </tr>
+                </thead>-->
+
                 <tbody>
+                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
+                    {!! $cc->Camera_List() !!}
+
                     <tr>
                         <td class="col-sm-1">
                         </td>
@@ -62,6 +78,7 @@
                             <!--<a class="btn thumb-select" data-id="54" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" class="img-responsive" /></a>-->
                         </td>
                     </tr>
+
                 </tbody>
             </table>
         </div>

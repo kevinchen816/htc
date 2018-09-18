@@ -221,7 +221,7 @@
 <!-- panel -->
 
 @include('camera.gallery._help')
-@include('camera.gallery._xx')
+@include('camera.gallery._dlg')
 
 <script>
     /*
