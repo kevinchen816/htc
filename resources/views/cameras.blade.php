@@ -12,7 +12,6 @@
 
     <div class="fixed-navbar-container">
         <div class="container">
-
         </div>
     </div>
 

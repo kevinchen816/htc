@@ -63,10 +63,10 @@
                     <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-none-54" data-action="select-none" data-toggle="tooltip" title="Select None"><i class="far fa-square"></i></a>
 
                     <!-- Select All -->
-                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-all-54" data-action="select-all"data-toggle="tooltip" title="Select All"><i class="fa fa-th"></i></a>
+                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-all-54" data-action="select-all" data-toggle="tooltip" title="Select All"><i class="fa fa-th"></i></a>
 
                     <!-- Clear All -->
-                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="clear-all-54" data-action="clear-all"data-toggle="tooltip" title="Clear All"><i class="fa fa-eraser"></i></a>
+                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="clear-all-54" data-action="clear-all" data-toggle="tooltip" title="Clear All"><i class="fa fa-eraser"></i></a>
 
                     <!-- Columns -->
                     <div class="btn-group" role="group">

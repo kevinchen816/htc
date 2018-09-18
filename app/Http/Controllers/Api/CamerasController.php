@@ -486,160 +486,40 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function ControlSettings() {
-        // $menus = array(
-        //     0 => array( 'name' => 'camera_mode',
-        //                 'type' => 'select',
-        //                 'option' => array (
-        //                         0 => array ('name' => 'Photo', 'value' => 'p'),
-        //                         1 => array ('name' => 'Video', 'value' => 'v'),
-        //                 ),
-        //                 'help'  => ''
-        //     ),
-        //     1 => array( 'name' => 'photo_resolution',
-        //                 'type' => 'select',
-        //                 'option' => array (
-        //                     0 => array ('name' => '4MP 16:9', 'value' => '4'),
-        //                     1 => array ('name' => '6MP 16:9', 'value' => '6'),
-        //                     2 => array ('name' => '8MP 16:9', 'value' => '8'),
-        //                     3 => array ('name' => '12MP 16:9', 'value' => '12'),
-        //                 ),
-        //                 'help'  => ''
-        //     ),
-        // );
-
-        // $menus = array('aaa', 'bbb');
-
-        // $menus = array(
-        //     '0' => array('id' => 1, 'name' => 'name1'),
-        //     '1' => array('id' => 2, 'name' => 'name2'),
-        //     '2' => array('id' => 3, 'name' => 'name3'),
-        //     '3' => array('id' => 4, 'name' => 'name4'),
-        //     '4' => array('id' => 5, 'name' => 'name5'),
-        // );
-
-        $menus = array(
-            array(
-                'name'      => 'camera_mode',
-                'heading'   => 'Camera Mode',
-                'options'   => array (
-                    array ('name' => 'Photo', 'value' => 'p'),
-                    array ('name' => 'Video', 'value' => 'v'),
-                ),
-            ),
-            array(
-                'name'      => 'photo_resolution',
-                'heading'   => 'Photo Resolution',
-                'options'   => array (
-                    array ('name' => '4MP 16:9', 'value' => '4'),
-                    array ('name' => '6MP 16:9', 'value' => '6'),
-                    array ('name' => '8MP 16:9', 'value' => '8'),
-                    array ('name' => '12MP 16:9', 'value' => '12'),
-                ),
-            ),
-
-        );
-
-        return $menus;
-    }
-
-    public function show() {
-        //return 'Hello';
-
-
-//        $menus = $this->ControlSettings();
-        // return $menus;
-
-        // //$camera = DB::table('cameras')->first();
+    public function cameras() {
         // $camera = DB::table('cameras')->find(1);
-        // //return $camera; // NG
-        // return compact('camera'); //OK
+        // return compact('camera'); //return $camera; // NG
 
-
-        // (2)
         $id = 1;
         $camera = Camera::findOrFail($id);
-//return compact('camera');
-//return $camera->module_id;
-
         $photos = $camera->photos()
                          ->orderBy('created_at', 'desc')
                          ->paginate(10);
-        //return $camera; // OK
-        //return compact('photos'); // OK
-        //return view('camera.show5', compact('camera', 'photos')); // OK
-        return view('camera.show5', compact('camera', 'photos', 'menus')); // OK
-
-        // $camera = DB::table('cameras')
-        //                 ->where('module_id', $request->module_id)
-        //                 ->first();
-        // return $camera;
-
-           // $camera = DB::table('cameras')
-           //                 ->first();
-         // return $camera->id;
-
-//$photos = $camera->photos();
-
-//$photos = $camera->photos()->first();
-        // $photos = $camera->photos()
-        //                  ->orderBy('created_at', 'desc')
-        //                  ->paginate(30);
-        //return $photos->filename;
-  //      return view('camera.show', compact('camera', 'photos'));
-        //return view('camera.show', compact('photos'));
-        //return view('camera.show', compact('camera'));
-    }
-
-    public function show2(Camera $camera) {
-        return $camera; // OK
-        //return $camera->id; // OK
-        //return $camera->first()->id; // OK
+        return view('cameras', compact('camera', 'photos')); // OK
     }
 
     /*----------------------------------------------------------------------------------*/
     public function test() {
-
-        // $menus = $this->ControlSettings();
-        // return $menus;
-
         $id = 1;
         $camera = Camera::findOrFail($id);
         //dd($camera);
         return $camera;
+
         //return $camera->module_id;
         //return $camera['module_id'];
         $field = 'module_id';
         return $camera[$field];
 
-
         $columns = Schema::getColumnListing('cameras');
         print_r($columns);
         return $columns;
 
-        /*
-        [
-            {"Tables_in_htc":"cameras"},
-            {"Tables_in_htc":"photos"},
-            .....
-            {"Tables_in_htc":"users"}
-        ]
-        */
         $tables = DB::select('show tables');
         //print_r($tables);
         //return $tables;
 
-        /*
-        [
-            "cameras",
-            "photos",
-            ...
-            "users"
-        ]
-        */
         $tables = array_column($tables, 'Tables_in_htc');
         $columns = ['email', 'user_name', 'nick_name', 'first_name', 'last_name'];
-
         foreach ($tables as $key => $value) {
             // foreach ($columns as $k => $v) {
             //     if (Schema::hasColumn($value, $v)) {
@@ -650,8 +530,6 @@ class CamerasController extends Controller
             //print_r($key);
             print_r($value);
         }
-
-
         print_r($tables);
         return $tables;
     }
@@ -851,6 +729,16 @@ class CamerasController extends Controller
         // $handle = $this->CameraPanelBody($camera->id, $lists);
         // return $handle;
         return '';
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function Camera_Gallery_Select_Camera() {
+        $handle = '';
+        $handle .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
+        $handle .= '<li><a href="/cameras/getdetail/50">Camera #2</a></li>';
+        $handle .= '<li><a href="/cameras/getdetail/59">Camera #3</a></li>';
+        $handle .= '<li><a href="/cameras/getdetail/54">Camera #4</a></li>';
+        return $handle;
     }
 
     /*----------------------------------------------------------------------------------*/

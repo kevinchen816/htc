@@ -173,27 +173,25 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <div class="col-count-4 gallery-manager" data-col="4" data-row="6">
+                    <!-- <div class="col-count-4 gallery-manager" data-col="4" data-row="6"> -->
                         @include('camera.gallery._toolbar')
                         <!-- gallery-toolbar -->
-
-                        <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
-                            <input name="_token" type="hidden" value="FLozpJONzCgc7Ue23LdVtrflOcF6otRJicEMdDrh">
-                            <input name="id" type="hidden" value="54">
+                        <!-- <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54"> -->
+                            <!-- <input name="_token" type="hidden" value="FLozpJONzCgc7Ue23LdVtrflOcF6otRJicEMdDrh"> -->
+                            <!-- <input name="id" type="hidden" value="54"> -->
 
                             <div class="thumbnail-gallery" data-token="">
                                 <div id="info"></div>
 
                                 <!-- Begin Row -->
-                                <div class="row no-gutters">
+                                <!-- <div class="row no-gutters"> -->
                                     @yield('gallery')
-                                </div>
+                                <!-- </div> -->
                                 <!-- End Row -->
                             </div>
                             <!-- thumbnail-gallery -->
-                        </form>
-
-                    </div>
+                        <!-- </form> -->
+                    <!-- </div> -->
                     <!-- gallery-manager -->
 
                 </div>
@@ -207,6 +205,7 @@
             <div class="col-md-12">
                 <div class="well well-sm" style="padding-left:2px;margin-left:2px;">
                     <!-- kevin test -->
+                    <!--
                     <ul class="pagination pagination">
                         <li class="disabled"><span>&laquo;</span></li>
                         <li class="active"><span>1</span></li>
@@ -215,7 +214,7 @@
                         <li><span>...</span></li>
                         <li class="hidden-xs"><a href="/cameras?photos=7">7</a></li>
                         <li><a href="/cameras?photos=2" rel="next">&raquo;</a></li>
-                    </ul>
+                    </ul> -->
                     <!-- kevin test -->
                 </div>
             </div>
@@ -299,12 +298,12 @@ console.log('>>InitializeCheckBoxes');
 
         function PostGallery(action, items) {
 console.log('>>PostGallery');
-            //console.log('PostGallery: starting');
+            console.log('PostGallery: starting'); // kevin
             $('#gallery-form-54').append('<input type="hidden" name="action" value="' + action + '" />');
             $('#gallery-form-54').append('<input type="hidden" name="medialist" id="mediaid-list" value="" />');
             $('#mediaid-list').val(JSON.stringify(items));
             $("#gallery-form-54").submit();
-            //console.log('PostGallery: submitted form');
+            console.log('PostGallery: submitted form'); // kevin
         }
 
 
@@ -356,7 +355,7 @@ console.log('>>UpdateToolbar');
         }
 
         $(window).on('load', function() {
-console.log('...............load');
+console.log('[_gallery]...............load');
             UpdateToolbar();
             //InitializeCheckBoxes();
             windowload = true;
@@ -369,7 +368,7 @@ console.log('...............load');
         $(document).ready(function () {
             var height = '';
             var width = '';
-console.log('...............ready');
+console.log('[_gallery]...............ready');
             console.log('gallery2-partial - document ready');
             $(window).on('resize', function() {
                 //alert('window on resize 1');
@@ -385,6 +384,7 @@ console.log('...............ready');
             });
 
             $('.image-check').on('change', function () {
+console.log('==> .image-check'); // kevin
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 var id = $(this).attr('id');
                 v = $(this).prop('checked');
@@ -410,7 +410,7 @@ console.log('...............ready');
             $('#multi-select').on('change', function () {
                 console.log('multi-select change event fired');
                 //alert('multi-select change event fired');
-                console.log(JSON.stringify($(this).prop('checked'))); // kevin
+console.log(JSON.stringify($(this).prop('checked'))); // kevin
 
                 sessionStorage.setItem('manageOn', JSON.stringify($(this).prop('checked')));
 
@@ -516,12 +516,12 @@ console.log('#multi-select...........4'); // kevin
             });
 
             $('#DeleteModal').on('show.bs.modal', function (event) {
+console.log('==> #DeleteModal');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 //var button = $(event.relatedTarget); // Button that triggered the modal
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
                 var modal = $(this);
                 var itemcount = items.length;
-console.log('==> #DeleteModal');
                 //modal.find('.modal-title').text('Delete Media');
                 if (itemcount > 1) {
                     modal.find('.confirm-modal').show();
@@ -539,9 +539,9 @@ console.log('==> #DeleteModal');
             });
 
             $('#button-confirm-delete').on('click', function() {
+console.log('==> #button-confirm-deletel');
                 //console.log('Confirm Button Click multi: Start');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
-console.log('==> #button-confirm-deletel');
                 sessionStorage.removeItem('items');
                 sessionStorage.removeItem('manageOn');
                 if (items.length > 0) {
@@ -553,12 +553,12 @@ console.log('==> #button-confirm-deletel');
 
 
             $('#HighresModal').on('show.bs.modal', function (event) {
+console.log('==> #HighresModal');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 //var button = $(event.relatedTarget); // Button that triggered the modal
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
                 var modal = $(this);
                 var itemcount = items.length;
-console.log('==> #HighresModal');
                 //modal.find('.modal-title').text('Request HighRes MAX');
                 if(itemcount > 10){
                     modal.find('.modal-body').text('You can not request High Res MAX for more than 10 images');
@@ -581,8 +581,8 @@ console.log('==> #HighresModal');
             });
 
             $('#button-confirm-highres').on('click', function() {
-                var items = JSON.parse(sessionStorage.getItem('items')) || [];
 console.log('==> #button-confirm-highres');
+                var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 sessionStorage.removeItem('items');
                 sessionStorage.removeItem('manageOn');
                 if (items.length > 0) {
@@ -591,12 +591,12 @@ console.log('==> #button-confirm-highres');
             });
 
             $('#OriginalModal').on('show.bs.modal', function (event) {
+console.log('==> #OriginalModal');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 //var button = $(event.relatedTarget); // Button that triggered the modal
                 //var dialogType = button.data('type'); // Extract info from data-* attributes
                 var modal = $(this);
                 var itemcount = items.length;
-console.log('==> #OriginalModal');
                 //modal.find('.modal-title').text('Request HighRes MAX');
                 if(itemcount > 10){
                     modal.find('.modal-body').text('You can not request Original for more than 10 images');
@@ -667,6 +667,7 @@ console.log('==> #button-confirm-video');
             });
 
             $(document).on('click', '#select-all-54', function() {
+console.log('==> #select-all-54');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 var checkboxes = $('.thumbnail-gallery .image-check');
                 checkboxes.each(function(){
@@ -691,10 +692,12 @@ console.log('==> #clear-all-54');
             });
 
             $('#select-none-54').click(function () {
+console.log('==> #select-none-54');
                 var items = JSON.parse(sessionStorage.getItem('items')) || [];
                 var checkboxes = $('.thumbnail-gallery .image-check');
-console.log('==> #select-none-54');
+//console.log(checkboxes);
                 checkboxes.each(function(){
+console.log('...........XXXXX');
                     if(this.checked === true){
                         if(isItemChecked(items, this.id)){
                             items.splice(items.indexOf(this.id), 1)
@@ -709,9 +712,9 @@ console.log('==> #select-none-54');
 
 
             $('.popup-video').click(function () {
+console.log('==> .popup-video');
                 var url = $(this).attr('video-url');
                 var poster = $(this).attr('data-poster');
-console.log('==> .popup-video');
                 $('#video-source').attr('src', url);
                 $('#video-source').attr('poster', poster);
 
@@ -756,8 +759,8 @@ console.log('==> .popup-video');
             });
 
             $('#modal-video-dlg').on('hide.bs.modal', function () {
+console.log('==> #modal-video-dlg');
                 var video_block = $('#video-block');
-console.log('==> #modal-video-dlgo');
                 //console.log('user is closing video so pause it');
                 if (video_block) {
                     video_block.get(0).pause();
@@ -766,13 +769,13 @@ console.log('==> #modal-video-dlgo');
 
             documentready = true;
             if (windowload) {
-console.log('................A');
+console.log('[_gallery]................A');
                 UpdateToolbar();        // required for IE
             }
 
             $(function(){
                 $(window).resize(function(){
-console.log('................B (resize)');
+console.log('[_gallery]................B (resize)');
                     //console.log('gallery2-partial - window resize function for video player');
                     video_w = parseInt($(".modal-dialog-player").attr("orig-width"));
                     video_h = parseInt($(".modal-dialog-player").attr("orig-height"));
@@ -791,8 +794,8 @@ console.log('................B (resize)');
                             var new_w = new_h * video_w / video_h;
                             $('.modal-dialog-player').css('max-width', new_w);
                         }
-            }
-            else {
+                    }
+                    else {
                         if (video_w > (width - 10)) {
                             var new_w = width - 10;
                             $('.modal-dialog-player').css('max-width', new_w);

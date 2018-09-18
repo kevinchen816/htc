@@ -167,21 +167,25 @@
 
     <script>
         $(document).ready(function(){
+console.log('[default].................ready');
             $( ".ToggleHelp" ).click(function() {
-                //alert('Toggle');
+                alert('Toggle'); // kk-debug
                 var id = $(this).attr('help-id');
+console.log('help-id='+id); // kevin
+
                 $(".side-panel").removeClass('hidden');
                 $("#help_content").html($('#' + id).html());
                 $("#help_panel").slideReveal("toggle");
             });
 
             $( ".help_close" ).click(function() {
-                //alert('help close');
+                alert('help close'); // kk-debug
                 $("#help_panel").slideReveal("hide");
             });
 
             $(function() {
                 var ww = $( window ).width();
+console.log('ww='+ww);
                 if (ww < 481) {
                     p = '85%';
                 }
@@ -203,7 +207,7 @@
     </script>
     <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
     <script>
-        //console.log('cameras page just loaded: 54');
+        console.log('cameras page just loaded: 54'); // kk-debug
         function isPortrait() {
             return window.innerHeight > window.innerWidth;
         }
@@ -215,11 +219,11 @@
         var cameraId = '54';
         var lastCamera = JSON.parse(sessionStorage.getItem('currentCam')) || null;
 
-        //console.log('cameraId ' + cameraId);
-        //console.log('lastCamera ' + lastCamera);
+        console.log('cameraId ' + cameraId); // kk-debug
+        console.log('lastCamera ' + lastCamera); // kk-debug
 
         if(cameraId !== lastCamera){
-            //console.log('current camera <> lastcamera');
+            console.log('current camera <> lastcamera'); // kk-debug
             sessionStorage.removeItem('manageOn');
             sessionStorage.removeItem('items');
             sessionStorage.setItem('currentCam', JSON.stringify(cameraId));
@@ -244,10 +248,13 @@
             var height = $('.custom-thumbnail-grid-column').height();
             var width = $('.custom-thumbnail-grid-column').width();
             $('#show_cameras').click(function() {
-                //alert('after open');
+                //alert('after open'); // kk-debug
+alert('#show_cameras'); // kk-debug
                 $.get('/account/showcameralist/open');
+
                 $("#camera_data").removeClass('col-md-12');
                 $("#camera_data").addClass('col-md-9');
+
                 $("#camera_list").removeClass('hidden');
                 $("#show_cameras").addClass('hidden');
                 $("#camera_dropdown").addClass('hidden');
@@ -261,6 +268,7 @@
             });
 
             $('#close_cameras').click(function() {
+alert('#close_cameras'); // kk-debug
                 $("#show_cameras").show();
                 $("#show_cameras").removeClass('hidden');
                 $("#camera_dropdown").removeClass('hidden');
@@ -280,7 +288,7 @@
             });
 
             $("#notify_photo").click(function () {
-                //alert('notify_photo');
+                alert('notify_photo'); // kk-debug
                 var cam = $(this).attr('data-cam');
                 var url = '/cameras/testnotify/photo/' + cam + '/62830';
                 $('#notify-photo-msg').load(url);
@@ -293,6 +301,7 @@
             });
 
             $(".thumb-select").click(function () {
+console.log('==> .thumb-select'); // kevin
                 id = $(this).attr('data-id');
                 url = '/cameras/getdetail/' + id;
                 //alert('thumb-select' + url);
@@ -311,6 +320,7 @@
             // on links that don't even exist yet - i.e. are loaded from the server.
             // respond to tab change
             $('#tabs-54').on('click','.tablink,#cameratabs-54 a',function (e) {
+console.log('==> #tabs-54 (tab change)'); // kevin
                 //alert('tab change');
                 e.preventDefault();
                 var url = $(this).attr("data-url");

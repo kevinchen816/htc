@@ -22,14 +22,83 @@ Route::get('/', function () {
 
 Route::resource('/users', 'UsersController');
 
-Route::get('/show', 'Api\CamerasController@show');
-Route::get('/show2/{camera}', 'Api\CamerasController@show2');
-
 Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');;
 
+/* TODO */
+Route::get('/cameras', 'Api\CamerasController@cameras');
+
+/* default.blade.php */
+    //Route::post('/cameras/activetab', 'Api\CamerasController@activetab');
+
+    // $("#notify_photo").click(function () {
+    // var url = '/cameras/testnotify/photo/' + cam + '/62830';
+
+    // $("#notify_video").click(function () {
+    // var url = '/cameras/testnotify/video/' + cam + '/62852';
+
+/* _data.blade.php */
+    // <li><a href="/cameras/getdetail/50">New Camera</a></li>
+    //Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail');
+
+    // <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">
+    //Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview');
+
+    // <a href="#action-54" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/54" aria-expanded="false">
+    //Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions');
+
+/* _list.blade.php */
+    // <a href="/cameras/getdetail/50">New Camera</a><br />
+
+/* _actions.blade.php */
+    // <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/actionqueue" id="action-formatsd-form-54">
+    //Route::get('/cameras/actionqueue', 'Api\CamerasController@xxx');
+
+    // $(".sms-button").click(function() {
+    //url = '/cameras/sendsms/' + id + '/' + sms;
+
+    // $(".action-queue-54").click(function() {
+    //url = '/cameras/actionqueue/' + id + '/' + action;
+
+    // $( ".action-cancel-54" ).click(function(event) {
+    //url='/cameras/actioncancel/' + actionid;
+
+    // $('#clear-missing').click(function(event) {
+    //var url = '/cameras/clearmissing/54';
+
+    // $('.missing-request').click(function(event) {
+    //var url = '/cameras/requestmissing/54/' + missingid;
+
+    // $('.show-highres').click(function(event) {
+    //url = '/cameras/getmediaurl/' + actionid;
+
+/* _gallery.blade.php */
+    // <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
+    //Route::get('/cameras/gallery', 'Api\CamerasController@xxx');
+
+/* _toolbar.blade.php */
+    // <a href="/cameras/gallerylayout/54/2">
+    // <a href="/cameras/gallerylayout/54/3">
+    // <a href="/cameras/gallerylayout/54/4">
+    // <a href="/cameras/gallerylayout/54/6">
+    // <a href="/cameras/gallerylayout/54/12">
+    //Route::get('/cameras/gallerythumbs/{camera_id}/{xx}', 'Api\CamerasController@gallerythumbs');
+
+    // <li><a href="/cameras/gallerythumbs/54/10">10 Per Page</a></li>
+    // <li><a href="/cameras/gallerythumbs/54/10">20 Per Page</a></li>
+    // <li><a href="/cameras/gallerythumbs/54/10">30 Per Page</a></li>
+    // <li><a href="/cameras/gallerythumbs/54/10">40 Per Page</a></li>
+    // <li><a href="/cameras/gallerythumbs/54/10">60 Per Page</a></li>
+    // <li><a href="/cameras/gallerythumbs/54/10">80 Per Page</a></li>
+    //Route::get('/cameras/gallerythumbs/{camera_id}/{pagination}', 'Api\CamerasController@pagination');
+
+/* photo.blade.php */
+    // <a href="/cameras/download/54/90815">
+    //Route::get('/cameras/download/{camera_id}/{photo_id}', 'Api\CamerasController@download');
+
+
+
+
 //Route::get('/test', 'Api\PhotosController@store');
-
-
 Route::get('/test', 'Api\CamerasController@test');
 
 Route::get('/bootstrap', function () {
