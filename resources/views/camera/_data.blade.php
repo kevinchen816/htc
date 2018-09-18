@@ -73,59 +73,62 @@
             <div id="tabs-54" class="tab-container">
 
                 <ul class="nav nav-tabs" id="cameratabs-54">
-                    <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">
+                    <!-- <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true"> -->
+                    <li ><a href="#overview-{{$camera->id}}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id )}}" aria-expanded="true">
                             <span class="glyphicon glyphicon-list-alt"> </span> Overview
                         </a>
                     </li>
                     <li class="active">
                         <a href="#gallery-54" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
+                        <!-- <a href="#gallery-{{$camera->id}}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true"> -->
                             <span class="glyphicon glyphicon-picture"> </span> Gallery
                         </a>
                     </li>
                     <li>
                         <a href="#settings-54" data-toggle="tab" data-tab="settings" aria-expanded="false">
+                        <!-- <a href="#settings-{{$camera->id}}" data-toggle="tab" data-tab="settings" aria-expanded="false"> -->
                             <span class="glyphicon glyphicon-edit"> </span> Settings
                         </a>
                     </li>
                     <li>
                         <a href="#action-54" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/54" aria-expanded="false">
+                        <!-- <a href="#action-{{$camera->id}}" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/{{$camera->id}}" aria-expanded="false"> -->
                             <span class="glyphicon glyphicon-tasks"> </span> Actions
                         </a>
                     </li>
                     <li>
                         <a href="#options-54" data-toggle="tab" data-tab="options" aria-expanded="false">
+                        <!-- <a href="#options-{{$camera->id}}" data-toggle="tab" data-tab="options" aria-expanded="false"> -->
                             <span class="glyphicon glyphicon-cog"> </span> Options
                         </a>
                     </li>
                 </ul>
 
-
                 <div class="tab-content" id="myTabContent-54">
-
                     <!-- OVERVIEW TAB -->
-                    <div class="tab-pane fade" id="overview-54">
-                        <div class="col-md-6 mobile-nopadding-nomargin">
-                            @include('camera.overview._status')
-                            @include('camera.overview._settings')
-                        </div>
-
-                        <div class="col-md-6 mobile-nopadding-nomargin">
-                            @include('camera.overview._event')
-                            @include('camera.overview._statistics')
-                        </div>
+                    <div class="tab-pane fade" id="overview-{{$camera->id}}">
                     </div>
 
                     <!-- GALLERY TAB -->
-                    @include('camera.gallery._gallery')
+                    <div class="tab-pane fade active in" id="gallery-54">
+                    @include('camera.tab_gallery')
+                    </div>
 
                     <!-- SETTINGS TAB -->
-                    @include('camera.settings._settings')
+                    <div class="tab-pane fade" id="settings-54">
+                    @include('camera.tab_settings')
+                    </div>
 
                     <!-- ACTION HISTORY TAB -->
-                    @include('camera.actions._actions')
+                    <div class="tab-pane fade  " id="action-54">
+                    @include('camera.tab_actions')
+                    </div>
 
-                    <!-- OPTIONS TAB -->
-                    @include('camera.options._options')
+                    <!-- OPTIONS TAB s -->
+                    <div class="tab-pane fade" id="options-54">
+                    @include('camera.tab_options')
+                    </div>
+                    <!-- OPTIONS TAB e -->
 
                 </div>
 

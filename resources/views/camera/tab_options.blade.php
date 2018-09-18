@@ -1,52 +1,49 @@
-<!-- OPTIONS TAB -->
-<div class="tab-pane fade" id="options-54">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default panel-primary custom-settings-panel">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Camera Options</h4>
-                </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default panel-primary custom-settings-panel">
+            <div class="panel-heading">
+                <h4 class="panel-title">Camera Options</h4>
+            </div>
 
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="panel panel-default panel-primary custom-settings-panel">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <i class="fa fa-times-circle" style="color:red"></i> Delete this Camera
-                                        <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="delete-camera"><i class="fa fa-question"></i></a>
-                                    </h4>
-                                </div>
-                                <div class="panel-body">
-                                    <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/delete" id="delete-camera-form-54">
-                                        <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-default panel-primary custom-settings-panel">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <i class="fa fa-times-circle" style="color:red"></i> Delete this Camera
+                                    <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="delete-camera"><i class="fa fa-question"></i></a>
+                                </h4>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/delete" id="delete-camera-form-54">
+                                    <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
 
-                                        <input name="id" type="hidden" value="54">
+                                    <input name="id" type="hidden" value="54">
 
-                                        <div class="form-group">
-                                            <label for="password inputSmall" class="col-md-5 control-label">Account Password</label>
-                                            <div class="col-md-6">
-                                                <input id="54_password_delete" type="password" class="form-control input-sm" name="password" required>
-                                                <button type="submit" class="btn btn-sm btn-primary">Delete Camera</button>
-                                            </div>
+                                    <div class="form-group">
+                                        <label for="password inputSmall" class="col-md-5 control-label">Account Password</label>
+                                        <div class="col-md-6">
+                                            <input id="54_password_delete" type="password" class="form-control input-sm" name="password" required>
+                                            <button type="submit" class="btn btn-sm btn-primary">Delete Camera</button>
                                         </div>
-                                        <div class="alert alert-sm alert-info">
-                                            <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the delete camera button.</p>
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <div class="alert alert-sm alert-info">
+                                        <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the delete camera button.</p>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="panel panel-default panel-primary custom-settings-panel">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        Other Options
-                                    </h4>
-                                </div>
-                                <div class="panel-body">
-                                    <a href="/cameras/apilog/54" class="btn btn-sm btn-primary">View Camera Activity Log</a>
-                                </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default panel-primary custom-settings-panel">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    Other Options
+                                </h4>
+                            </div>
+                            <div class="panel-body">
+                                <a href="/cameras/apilog/54" class="btn btn-sm btn-primary">View Camera Activity Log</a>
                             </div>
                         </div>
                     </div>

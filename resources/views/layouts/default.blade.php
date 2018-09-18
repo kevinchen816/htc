@@ -167,11 +167,11 @@
 
     <script>
         $(document).ready(function(){
-console.log('[default].................ready');
+            console.log('>> ready #1.................[default.blade.php]');
             $( ".ToggleHelp" ).click(function() {
                 alert('Toggle'); // kk-debug
                 var id = $(this).attr('help-id');
-console.log('help-id='+id); // kevin
+                console.log('help-id='+id); // kevin
 
                 $(".side-panel").removeClass('hidden');
                 $("#help_content").html($('#' + id).html());
@@ -185,7 +185,7 @@ console.log('help-id='+id); // kevin
 
             $(function() {
                 var ww = $( window ).width();
-console.log('ww='+ww);
+                console.log('ww='+ww);
                 if (ww < 481) {
                     p = '85%';
                 }
@@ -203,8 +203,10 @@ console.log('ww='+ww);
 
                 $("#help_panel").slideReveal(params);
             });
+            console.log('<< ready #1.................[default.blade.php]');
         });
     </script>
+
     <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
     <script>
         console.log('cameras page just loaded: 54'); // kk-debug
@@ -243,24 +245,26 @@ console.log('ww='+ww);
         var documentready = false;
         var is_landscape = isLandscape();
 
-        $(document).ready(function(){
+        $(document).ready(function() {
+            console.log('>> ready #2 .................[default.blade.php]');
             console.log('document ready just fired');
             var height = $('.custom-thumbnail-grid-column').height();
             var width = $('.custom-thumbnail-grid-column').width();
+
             $('#show_cameras').click(function() {
                 //alert('after open'); // kk-debug
-alert('#show_cameras'); // kk-debug
+                alert('click -> #show_cameras'); // kk-debug
                 $.get('/account/showcameralist/open');
 
                 $("#camera_data").removeClass('col-md-12');
                 $("#camera_data").addClass('col-md-9');
-
-                $("#camera_list").removeClass('hidden');
                 $("#show_cameras").addClass('hidden');
                 $("#camera_dropdown").addClass('hidden');
 
+                $("#camera_list").removeClass('hidden');
                 $("#camera_list").hide();
                 $("#camera_list").show(500);
+
                 height = $('.custom-thumbnail-grid-column').height();
                 width = $('.custom-thumbnail-grid-column').width();
                 $('.check-label .span-cr').height(height);
@@ -268,15 +272,19 @@ alert('#show_cameras'); // kk-debug
             });
 
             $('#close_cameras').click(function() {
-alert('#close_cameras'); // kk-debug
-                $("#show_cameras").show();
+                alert('click -> #close_cameras'); // kk-debug
+                //$("#show_cameras").show(); // kevin del
                 $("#show_cameras").removeClass('hidden');
                 $("#camera_dropdown").removeClass('hidden');
+
                 $("#camera_list").hide();
+
                 $("#camera_data").addClass('col-md-12');
                 $("#camera_data").removeClass('col-md-9');
                 $("#show_cameras").show();
+
                 $.get('/account/showcameralist/close');
+
                 height = $('.custom-thumbnail-grid-column').height();
                 width = $('.custom-thumbnail-grid-column').width();
                 $('.check-label .span-cr').height(height);
@@ -301,7 +309,7 @@ alert('#close_cameras'); // kk-debug
             });
 
             $(".thumb-select").click(function () {
-console.log('==> .thumb-select'); // kevin
+                console.log('==> .thumb-select'); // kevin
                 id = $(this).attr('data-id');
                 url = '/cameras/getdetail/' + id;
                 //alert('thumb-select' + url);
@@ -313,59 +321,71 @@ console.log('==> .thumb-select'); // kevin
                     //alert("Data: " + data + "\nStatus: " + status);
                     window.location.href = url;
                 });
-
             });
 
             //the reason for the odd-looking selector is to listen for the click event
             // on links that don't even exist yet - i.e. are loaded from the server.
             // respond to tab change
+
             $('#tabs-54').on('click','.tablink,#cameratabs-54 a',function (e) {
-console.log('==> #tabs-54 (tab change)'); // kevin
+alert('>> #tabs-54 ...click');
+
                 //alert('tab change');
                 e.preventDefault();
                 var url = $(this).attr("data-url");
                 var tabname = $(this).attr("data-tab");
                 var data = '';
 
+console.log('tabname = ' + tabname); // overview
+console.log('url = ' + url); // http://sample.test/cameras/overview/1
                 //alert('tabname = ' + tabname);
                 //alert('url = ' + url);
                 $.post("/cameras/activetab",
                 {
-                  tab: tabname,
+                    _token: '{{csrf_token()}}',  // kevin add ?
+                    tab: tabname,
                 },
                 function(data, status){
+console.log('data = ' + data); // overview
+console.log('status = ' + status);
                      //alert("Data: " + data + "\nStatus: " + status);
                 });
 
                 //alert('hold on');
                 if (typeof url !== "undefined") {
                     var pane = $(this), href = this.hash;
-                    setTimeout(function() {
+console.log('pane = ' + pane);
+console.log('href = ' + href); // #overview-1
+
+                    setTimeout(function(){
                         if (url == "reload") {
                             //alert('reload');
                             location.reload();
-                        } else {
+                        }
+                        else {
                             //alert('ajax');
                             // ajax load from data-url
-                            $(href).load(url,data, function(result) {
+                            $(href).load(url,data,function(result){
                                 //alert(result);
                                 n = result.search("Unauthenticated");
                                 //alert('n = ' + n);
                                 if (n == -1) {
                                     pane.tab('show');
-                                } else {
+                                }
+                                else {
                                     //alert('reload');
                                     location.reload();
                                 }
                             });
                         }
+
                     }, 500);
-                    //alert('url = ' + url);
-                    $(this).tab('show');
+
                 } else {
                     $(this).tab('show');
                 }
             });
+            console.log('<< ready #2 .................[default.blade.php]');
         });
     </script>
 </body>

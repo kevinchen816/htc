@@ -498,6 +498,29 @@ class CamerasController extends Controller
         return view('cameras', compact('camera', 'photos')); // OK
     }
 
+    public function activetab() {
+        $tab = $_POST['tab'];
+        return $tab;
+
+        // $ret['a'] = 1;
+        // $ret['b'] = 2;
+        // $ret['c'] = 3;
+        // return json_encode($ret); // OK
+    }
+
+    public function overview($cameras_id) {
+        //$ret = '/cameras/overview/'.$cameras_id;
+        //return $ret;
+
+        $camera = Camera::findOrFail($cameras_id);
+        return view('camera.tab_overview', compact('camera'));
+    }
+
+    public function actions($cameras_id) {
+        $ret = '/cameras/actions/'.$cameras_id;
+        return $ret;
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function test() {
         $id = 1;
