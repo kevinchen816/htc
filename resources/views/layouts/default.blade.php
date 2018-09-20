@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="robots" content="noindex,nofollow">
-        <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <meta name="robots" content="noindex,nofollow">
+
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/ico" href="/favicon.ico"  />
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
+    <!-- <meta name="csrf-token" content="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
+    <meta name="csrf-token" content="csrf_token()">
 
-    <title>10ware</title>
+
+    <title>@yield('title', '10ware')</title>
 
     <!-- Styles -->
     <!--<link href="http://www.ridgetec.us/css/app.css" rel="stylesheet">-->
@@ -27,7 +30,7 @@
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/sandstone/bootstrap.min.css" rel="stylesheet"> -->
 
     <!--<link href="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">-->
-    <link href="css/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet"> <!-- kevin -->
+    <link href="/css/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet"> <!-- kevin -->
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
@@ -38,7 +41,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <!-- Scripts -->
     <script>
-        window.Laravel = {"csrfToken":"ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"};
+        // window.Laravel = {"csrfToken":"ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"};
+        window.Laravel = {"csrfToken":"{{ csrf_token() }}"};
     </script>
     <!--<script src="https://use.fontawesome.com/9712be8772.js"></script>-->
     <script src="/js/9712be8772.js"></script> <!-- kevin -->
@@ -147,69 +151,75 @@
     </style>
 </head>
 <body>
-    @yield('content')
+    <div id="app">
+        @include('layouts._nav')
+        @include('shared._messages')
+        @yield('content')
+    </div>
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Jquery-ui -->
     <!--<script src="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.js"></script>-->
-    <!--<script src="http://www.ridgetec.us/js/button-checkbox.js"></script>-->
-    <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
-    <!--<script src="http://www.ridgetec.us/js/jquery.slidereveal.min.js"></script>-->
-
     <script src="/js/jquery-ui-1.12.1/jquery-ui.min.js"></script> <!-- kevin -->
+
+    <!--<script src="http://www.ridgetec.us/js/button-checkbox.js"></script>-->
     <script src="/js/button-checkbox.js"></script> <!-- kevin -->
-    <!--<script src="/js/gallery.js"></script>--> <!-- kevin --><!-- _gallery.blade.php -->
-    <script src="/js/jquery.slidereveal.min.js"></script> <!-- kevin -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
 
+    <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
+    <!--<script src="/js/gallery.js"></script>--> <!-- kevin --><!-- _gallery.blade.php -->
+
+    <!--<script src="http://www.ridgetec.us/js/jquery.slidereveal.min.js"></script>-->
+    <script src="/js/jquery.slidereveal.min.js"></script> <!-- kevin -->
     <script>
-        $(document).ready(function(){
-            console.log('>> ready #1.................[default.blade.php]');
-            $( ".ToggleHelp" ).click(function() {
-                alert('Toggle'); // kk-debug
-                var id = $(this).attr('help-id');
-                console.log('help-id='+id); // kevin
+    $(document).ready(function(){
+        console.log('>> ready #1.................[default.blade.php]');
+        $( ".ToggleHelp" ).click(function() {
+            alert('Toggle'); // kk-debug
+            var id = $(this).attr('help-id');
+            console.log('help-id='+id); // kevin
 
-                $(".side-panel").removeClass('hidden');
-                $("#help_content").html($('#' + id).html());
-                $("#help_panel").slideReveal("toggle");
-            });
+            $(".side-panel").removeClass('hidden');
 
-            $( ".help_close" ).click(function() {
-                alert('help close'); // kk-debug
-                $("#help_panel").slideReveal("hide");
-            });
-
-            $(function() {
-                var ww = $( window ).width();
-                console.log('ww='+ww);
-                if (ww < 481) {
-                    p = '85%';
-                }
-                else {
-                    p = '50%';
-                }
-                var params = {
-                  push: false,
-                  overlay: true,
-                  width: p,
-                  position: "right",
-                  //top: 60,
-                  speed: 500
-                };
-
-                $("#help_panel").slideReveal(params);
-            });
-            console.log('<< ready #1.................[default.blade.php]');
+            $("#help_content").html($('#' + id).html());
+            $("#help_panel").slideReveal("toggle");
         });
+
+        $( ".help_close" ).click(function() {
+            alert('help close'); // kk-debug
+            $("#help_panel").slideReveal("hide");
+        });
+
+        $(function() {
+            var ww = $( window ).width();
+            console.log('ww='+ww);
+            if (ww < 481) {
+                p = '85%';
+            }
+            else {
+                p = '50%';
+            }
+            var params = {
+              push: false,
+              overlay: true,
+              width: p,
+              position: "right",
+              //top: 60,
+              speed: 500
+            };
+
+            $("#help_panel").slideReveal(params);
+        });
+        console.log('<< ready #1.................[default.blade.php]');
+    });
     </script>
 
     <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
     <script>
-        console.log('cameras page just loaded: 54'); // kk-debug
+        console.log('cameras page just loaded: {{ $camera->id }}'); // kk-debug
         function isPortrait() {
             return window.innerHeight > window.innerWidth;
         }
@@ -218,7 +228,7 @@
             return (window.orientation === 90 || window.orientation === -90);
         }
 
-        var cameraId = '54';
+        var cameraId = {{ $camera->id }}; //'54';
         var lastCamera = JSON.parse(sessionStorage.getItem('currentCam')) || null;
 
         console.log('cameraId ' + cameraId); // kk-debug
@@ -233,7 +243,6 @@
             if (el) {
                document.getElementById('itemAmount').innerHTML = getbadge(0);
             }
-
         }
 
         var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
@@ -311,10 +320,13 @@
             $(".thumb-select").click(function () {
                 console.log('==> .thumb-select'); // kevin
                 id = $(this).attr('data-id');
+console.log('id='+id); // kevin
+
                 url = '/cameras/getdetail/' + id;
                 //alert('thumb-select' + url);
                 $.post("/cameras/activetab",
                 {
+                  _token: '{{csrf_token()}}',  // kevin add ?
                   tab: 'gallery'
                 },
                 function(data, status){
@@ -327,8 +339,9 @@
             // on links that don't even exist yet - i.e. are loaded from the server.
             // respond to tab change
 
-            $('#tabs-54').on('click','.tablink,#cameratabs-54 a',function (e) {
-alert('>> #tabs-54 ...click');
+            // $('#tabs-54').on('click','.tablink,#cameratabs-54 a',function (e) {
+            $('#tabs-{{ $camera->id }}').on('click','.tablink,#cameratabs-{{ $camera->id }} a',function (e) {
+alert('>> #tabs-{{ $camera->id }} ...click');
 
                 //alert('tab change');
                 e.preventDefault();

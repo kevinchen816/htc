@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+//use App\Http\Requests;
+
 //use App\Models\User;
 //use App\Models\Status;
 use App\User;
@@ -10,101 +13,83 @@ use App\Status;
 
 class UsersController extends Controller
 {
-    public function index()
-    {
+    // {{ csrf_field() }}
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth', [
+    //         'except' => ['show', 'create', 'store']
+    //     ]);
+    // }
+
+    /*----------------------------------------------------------------------------------*/
+    /*
+        GET    /users               -> index()      // 显示所有用户页面
+        GET    /users/create        -> create()     // 创建用户页面 (Register)
+        POST   /users               -> store()      // 创建用户
+        GET    /users/{user}        -> show()       // 显示用户页面
+        GET    /users/{user}/edit   -> edit()       // 编辑用户页面
+        PATCH  /users/{user}        -> update()     // 更新用户
+        DELETE /users/{user}        -> destroy()    // 删除用户
+    */
+
+    /* GET /users - 显示所有用户页面 */
+    public function index() {
         $users = User::paginate(30);
         //return view('users.index', compact('users'));
 //        return $user; // NG
-
-/*
-{"users":{"
-    current_page":1,
-    "data":[
-        {"id":1,"name":"Aufree","email":"aufree@yousails.com","created_at":"2018-09-10 18:48:00","updated_at":"2018-09-10 18:48:00"},
-        {"id":3,"name":"kevin","email":"kevin@10ware.com","created_at":"2018-09-10 19:13:26","updated_at":"2018-09-10 19:13:26"}
-    ],
-    "first_page_url":"http:\/\/sample.test\/users?page=1","from":1,"last_page":1,
-    "last_page_url":"http:\/\/sample.test\/users?page=1",
-    "next_page_url":null,"path":"http:\/\/sample.test\/users",
-    "per_page":30,
-    "prev_page_url":null,
-    "to":2,
-    "total":2}}
-*/
         return compact('users');
     }
 
-    public function show_x(User $user, Status $status)
-    {
-        /*{"status":[]}*/
-        //return compact('status');
+    /* GET /users/create - 创建用户页面 (Register) */
+    public function create() {
+        return view('users.create');
+    }
+    // public function register() {
+    //     return view('users.register');
+    // }
 
-        /*[]*/
-        //return $status;
+    /* POST /users - 创建用户 */
+    public function store(Request $request) {
+
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'email' => 'required|email|unique:users|max:255',
+            'password' => 'required|confirmed|min:6'
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        session()->flash('success', 'Register Success !!');
+
+        return redirect()->route('users.show', [$user]);
     }
 
-    //public function show(User $user)
-    public function show($id)
-    {
-        /*{"id":1,"name":"Aufree","email":"aufree@yousails.com","created_at":"2018-09-10 13:54:20","updated_at":"2018-09-10 13:54:20"}*/
-        //return $user;
-
-        /*{"user":{"id":1,"name":"Aufree","email":"aufree@yousails.com","created_at":"2018-09-10 13:54:20","updated_at":"2018-09-10 13:54:20"}}*/
-        //return compact('user');
-
-        /*{"id":1,"name":"Aufree","email":"aufree@yousails.com","created_at":"2018-09-10 13:54:20","updated_at":"2018-09-10 13:54:20"}*/
-        //return view('users.show', compact('user'));
-
-//         $user = User::findOrFail($id);
-//         $user->statuses()->create([
-//             'content' => 'this is a test.'
-//         ]);
-// return $user;
-//        $user = User::findOrFail($id);
-        // $user->statuses()->create([
-        //     'content' => 'this is a test.'
-        // ]);
-
-        // $user = User::all();
-        // return $user; // OK
-
-         $user = User::findOrFail($id);
-// return $user;
-//return compact('user');
-
-//         //$statuses = $user->statuses()->first();
-//         $statuses = $user->statuses()
-//                             ->orderBy('created_at', 'desc')
-//                             ->first();
-
-// return $statuses; // OK
-
-        $statuses = $user->statuses()
-                           ->orderBy('created_at', 'desc')
-                           ->paginate(3);
-//return $statuses; // NG
-//return compact('statuses'); /*{"statuses":{}}*/
-return view('users.show', compact('user', 'statuses'));
-
-//return compact('user');
-        //return $statuses; // NG
-
-        /*{"statuses":{}}*/
-//        return compact('statuses');
-
+    /* GET /users/{user} - 显示用户页面 (Profile) */
+    public function show(User $user) {
+        // 将用户对象 $user 通过 compact 方法转化为一个关联数组
         return view('users.show', compact('user'));
-//        return view('users.show', compact('user', 'statuses'));
+    }
+    // public function profile() {
+    //     return view('users.profile');
+    // }
 
-        // $statuses = $user->statuses()
-        //                    ->orderBy('created_at', 'desc')
-        //                    ->paginate(30);
-        // return view('users.show', compact('user', 'statuses'));
+    /* GET /users/{user}/edit - 编辑用户页面 (Edit) */
+    public function edit(User $user) {
+        return 'edit';
+    }
 
-//        $statuses = $user->statuses();
-        //return view('users.show', compact('user', 'statuses'));
+    /* PATCH /users/{user} - 更新用户 (Update) */
+    public function update(User $user) {
+        return 'update';
+    }
 
-//        return view('users.show', compact('user'));
-        //return view('users.show');
-        //return 'hello';
+    /* DELETE /users/{user} - 删除用户 (Delete) */
+    public function destroy(User $user) {
+        return 'destroy';
     }
 }

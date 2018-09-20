@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Auth;
 use DB;
 use Schema;
 
@@ -14,7 +15,17 @@ use App\Handlers\ImageUploadHandler;
 
 class CamerasController extends Controller
 {
-    // public $currentCameraID = 1;
+    // var $camera_id;
+    // function __construct() {
+    //     $this->camera_id = 999;
+    // }
+    // static function setCameraID($id) {
+    //     echo 'XXX';
+    //     $camera_id = $id;
+    // }
+    // static function getCameraID() {
+    //     return $camera_id;
+    // }
 
     public function getErrorMessage($result_code) {
         $error_msg = array(
@@ -50,6 +61,7 @@ class CamerasController extends Controller
 
         $datetime = date('Y-m-d H:i:s');
 
+// search iccid to find the user_id ??
 $new_camera->user_id = 1;
 
         $new_camera->module_id = $request->module_id;
@@ -109,19 +121,19 @@ $new_camera->user_id = 1;
 
     /*----------------------------------------------------------------------------------*/
     /*
-    {
-        "iccid":"89860117851014783481","module_id":"861107030190590","model_id":"lookout-na",
-        "DataList":{
-            "Battery":"f",
-            "SignalValue":"31",
-            "Cardspace":"7848MB",
-            "Cardsize":"7854MB",
-            "Temperature":"41C",
-            "mcu":"4.1",
-            "FirmwareVersion":"20180313",
-            "cellular":"4G LTE"
+        {
+            "iccid":"89860117851014783481","module_id":"861107030190590","model_id":"lookout-na",
+            "DataList":{
+                "Battery":"f",
+                "SignalValue":"31",
+                "Cardspace":"7848MB",
+                "Cardsize":"7854MB",
+                "Temperature":"41C",
+                "mcu":"4.1",
+                "FirmwareVersion":"20180313",
+                "cellular":"4G LTE"
+            }
         }
-    }
     */
     //public function report(Request $request, Camera $new_camera) {
     public function report(Request $request) {
@@ -275,17 +287,17 @@ $new_camera->user_id = 1;
 
     /*----------------------------------------------------------------------------------*/
     /*
-    $request =
-    {
-        "iccid": "89860117851014783481",
-        "module_id": "861107032685597",
-        "model_id": "lookout-na",
-        "FileName": "PICT0001.JPG",
-        "upload_resolution": "1",
-        "Source": "setup",
-        "DateTime": "20180910123456",
-        "Image": []
-    }
+        $request =
+        {
+            "iccid": "89860117851014783481",
+            "module_id": "861107032685597",
+            "model_id": "lookout-na",
+            "FileName": "PICT0001.JPG",
+            "upload_resolution": "1",
+            "Source": "setup",
+            "DateTime": "20180910123456",
+            "Image": []
+        }
     */
     //public function uploadthumb(Request $request, ImageUploadHandler $uploader) {
     //public function uploadthumb(Request $request, Camera $camera, Photo $photo, ImageUploadHandler $uploader) {
@@ -490,24 +502,68 @@ $new_camera->user_id = 1;
 
     /*----------------------------------------------------------------------------------*/
     /* Web Function */
-    public function getdetail($cameras_id) {
-        //return $cameras_id;
+    // https://blog.csdn.net/woshihaiyong168/article/details/52992812
+    //public function cameras() {
+    public function cameras($camera_id) {
+        //return 'id='.$camera_id;
 
-        //return redirect()->route('cameras', $topic->id)->with('success', '成功创建话题！');
-        return redirect()->route('cameras');
+        //if (Auth::user()) {
+        if (Auth::check()) {
+            session()->flash('success', 'Welcome !!');
+
+            //$user_id = Auth::user()->id;
+            //$camera = DB::table('cameras')->where('user_id', $user_id)->first();
+            //return $camera->description;
+
+            $user = Auth::user();
+            $user_id = $user->id;
+            //$cameras = DB::table('cameras')->where('user_id', $user_id)->get();
+            // foreach ($cameras as $camera) {
+            //     echo $camera->description;
+            //     echo '<br/>';
+            // }
+            //return;
+
+            //$camera = DB::table('cameras')->where('user_id', $user_id)->first();
+            //$camera_id = $camera->id;
+            //$camera_id = 8; // for test
+            $camera = Camera::findOrFail($camera_id);
+            $photos = $camera->photos()
+                             ->orderBy('created_at', 'desc')
+                             ->paginate(10);
+
+            return view('cameras', compact('user', 'camera', 'photos'));
+
+        } else {
+            session()->flash('warning', 'Please login first.');
+            return redirect()->route('login');
+        }
     }
 
-    public function cameras() {
-        // $camera = DB::table('cameras')->find(1);
-        // return compact('camera'); //return $camera; // NG
-        $id = 1;
-        $camera = Camera::findOrFail($id);
+    // public function cameras_ex($camera_id) {
+    //     $user = Auth::user();
+    //     $camera = Camera::findOrFail($camera_id);
+    //     $photos = $camera->photos()
+    //                      ->orderBy('created_at', 'desc')
+    //                      ->paginate(10);
+    //     // /return view('cameras', compact('camera', 'photos')); // OK
+    //     return view('cameras', compact('user', 'camera', 'photos')); // OK
+    // }
+
+    /* /cameras/getdetail/{camera_id} */
+    public function getdetail($camera_id) {
+        $user = Auth::user();
+        $camera = Camera::findOrFail($camera_id);
         $photos = $camera->photos()
                          ->orderBy('created_at', 'desc')
                          ->paginate(10);
-        return view('cameras', compact('camera', 'photos')); // OK
+        //return view('cameras', compact('camera', 'photos')); // OK
+        return view('cameras', compact('user', 'camera', 'photos')); // OK
+
+        //return redirect()->route('cameras_ex', $camera_id);
     }
 
+    /* /cameras/activetab */
     public function activetab() {
         $tab = $_POST['tab'];
         return $tab;
@@ -631,97 +687,77 @@ $new_camera->user_id = 1;
 
     /*----------------------------------------------------------------------------------*/
     /* Camera List */
-    public function Camera_List() {
-        //return 'hello';
+    /*
+        <tr>
+            <td class="col-sm-1">
+            </td>
+            <td class="col-sm-5 ">
+                <a href="/cameras/getdetail/50">New Camera</a><br />
+                <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
+                <span style="font-size: .95em">07/12/2018 5:49:00 am</span>
+            </td>
+            <td class="col-sm-6">
+                <!--<a class="btn thumb-select" data-id="54" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" class="img-responsive" /></a>-->
+            </td>
+        </tr>
+    */
+    public function Camera_List($active_camera_id) {
 
-        $cameras = DB::table('cameras')->select('id', 'description', 'battery', 'last_contact', 'last_filename')->get();
-        //return $cameras;
+//return $active_camera_id;
+
+        $user = Auth::user();
+        $user_id = $user->id;
+        $cameras = DB::table('cameras')
+                        ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
+                        ->where('user_id', $user_id)
+                        ->get();
 
         $style = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
-
         $handle = '';
         foreach ($cameras as $camera) {
-            $id = $camera->id;
+            $camera_id = $camera->id;
             $description = $camera->description;
             $battery = $this->CameraFieldValueConvert($camera, 'battery', $camera->battery);
             $last_contact = $camera->last_contact;
 
             if (!empty($camera->last_filename)){
-                $url = 'http://sample.test/uploads/images/'.$camera->last_filename;
+                //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;
+                //$url = url('/uploads/images/').$camera->last_filename; // NG
+                $url = url('/uploads/images/').'/'.$camera->last_filename;
             } else {
                 $url = '';
             }
             //$url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
 
             $handle .= '<tr>';
+
             $handle .= '    <td class="col-sm-1">';
-            $handle .= '        <i class="fa fa-camera"> </i>';
+            if ($camera_id == $active_camera_id) {
+                $handle .= '<i class="fa fa-camera"> </i>';
+            }
             $handle .= '    </td>';
-            $handle .= '    <td class="col-sm-5 ">';
-            $handle .= '        <a href="/cameras/getdetail/'.$id.'">'.$description.'</a><br/>';
+
+            if ($camera_id == $active_camera_id) {
+                $handle .= '    <td class="col-sm-5 active">';
+            } else {
+                $handle .= '    <td class="col-sm-5">';
+            }
+
+            $handle .= '        <a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             // $handle .= '        <i class="fa fa-battery-full" style="color: lime;"> </i>'.$battery.'<br />';
             $handle .=              $battery.'<br/>';
             $handle .= '        <span style="font-size: .95em">'.$last_contact.'</span>';
             $handle .= '    </td>';
+
             $handle .= '    <td class="col-sm-6">';
             if (!empty($url)) {
                 // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
-                $handle .= '        <a class="btn thumb-select" data-id="'.$id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
+                $handle .= '        <a class="btn thumb-select" data-id="'.$camera_id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
             }
             $handle .= '    </td>';
             $handle .= '</tr>';
         }
         return $handle;
-
-        /*
-        description
-        battery
-        last_contact
-        */
-
-/*
-// https://laravelacademy.org/post/6140.html
-$users = DB::table('users')->select('name', 'email as user_email')->get();
-
-// 强制查询返回不重复的结果集
-$users = DB::table('users')->distinct()->get();
-
-$query = DB::table('users')->select('name');
-$users = $query->addSelect('age')->get();
-
-$users = DB::table('users')->where('votes', '=', 100)->get();
-$users = DB::table('users')->where('votes', 100)->get();
-
-$users = DB::table('users')->where([
-    ['status', '=', '1'],
-    ['subscribed', '<>', '1'],
-])->get();
-
-$users = DB::table('users')
-                ->orderBy('name', 'desc')
-                ->get();
-
-// whereDate / whereMonth / whereDay / whereYear
-$users = DB::table('users')
-            ->whereDate('created_at', '2016-10-10')
-            ->get();
-
-// 原生表达式
-$users = DB::table('users')
-                     ->select(DB::raw('count(*) as user_count, status'))
-                     ->where('status', '<>', 1)
-                     ->groupBy('status')
-                     ->get();
-*/
-
-        // 10.3
-        // $statuses = $user->statuses()
-        //                    ->orderBy('created_at', 'desc')
-        //                    ->paginate(30);
-
-        // $topics = $topic->withOrder($request->order)
-        //                 ->where('category_id', $category->id)
-        //                 ->paginate(20);
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -831,40 +867,55 @@ $users = DB::table('users')
     /*----------------------------------------------------------------------------------*/
     /* Gallery */
     public function Camera_Gallery_Select_Camera() {
+        // $handle = '';
+        // $handle .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
+        // $handle .= '<li><a href="/cameras/getdetail/50">Camera #2</a></li>';
+        // $handle .= '<li><a href="/cameras/getdetail/59">Camera #3</a></li>';
+        // $handle .= '<li><a href="/cameras/getdetail/54">Camera #4</a></li>';
+
+        $user = Auth::user();
+        $user_id = $user->id;
+        $cameras = DB::table('cameras')
+                        ->select('id', 'description')
+                        ->where('user_id', $user_id)
+                        ->get();
+
+        $style = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
         $handle = '';
-        $handle .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
-        $handle .= '<li><a href="/cameras/getdetail/50">Camera #2</a></li>';
-        $handle .= '<li><a href="/cameras/getdetail/59">Camera #3</a></li>';
-        $handle .= '<li><a href="/cameras/getdetail/54">Camera #4</a></li>';
+        foreach ($cameras as $camera) {
+            $camera_id = $camera->id;
+            $description = $camera->description;
+            $handle .= '<li><a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a></li>';
+        }
         return $handle;
     }
 
     /*----------------------------------------------------------------------------------*/
     /* Settings */
     /*
-    <div class="form-group" id="field-wrapper-54-cameramode">
-        <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
-        <div class="col-md-7">
-            <select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">
-                <option value="p" selected="selected">Photo</option>
-                <option value="v">Video</option>
-            </select>
+        <div class="form-group" id="field-wrapper-54-cameramode">
+            <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
+            <div class="col-md-7">
+                <select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">
+                    <option value="p" selected="selected">Photo</option>
+                    <option value="v">Video</option>
+                </select>
 
-            <span class="help-block"> .....</span>
+                <span class="help-block"> .....</span>
+            </div>
         </div>
-    </div>
     */
 
     /*
-    <div class="form-group" id="field-wrapper-54-cellularpw">
-        <label class="col-md-4 control-label" for="inputSmall">Cellular Password</label>
-        <div class="col-md-7">
-            <input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw"
-                pattern="[0-9]{6}"
-                value="xxx" placeholder="Input Cellular Password">
-            <span class="help-block"> .....</span>
+        <div class="form-group" id="field-wrapper-54-cellularpw">
+            <label class="col-md-4 control-label" for="inputSmall">Cellular Password</label>
+            <div class="col-md-7">
+                <input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw"
+                    pattern="[0-9]{6}"
+                    value="xxx" placeholder="Input Cellular Password">
+                <span class="help-block"> .....</span>
+            </div>
         </div>
-    </div>
 
             <input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc"
                 maxlength="30"
@@ -1651,4 +1702,47 @@ $users = DB::table('users')
         return $tables;
     }
 
+/*
+    // https://laravelacademy.org/post/6140.html
+    $users = DB::table('users')->select('name', 'email as user_email')->get();
+
+    // 强制查询返回不重复的结果集
+    $users = DB::table('users')->distinct()->get();
+
+    $query = DB::table('users')->select('name');
+    $users = $query->addSelect('age')->get();
+
+    $users = DB::table('users')->where('votes', '=', 100)->get();
+    $users = DB::table('users')->where('votes', 100)->get();
+
+    $users = DB::table('users')->where([
+        ['status', '=', '1'],
+        ['subscribed', '<>', '1'],
+    ])->get();
+
+    $users = DB::table('users')
+                    ->orderBy('name', 'desc')
+                    ->get();
+
+    // whereDate / whereMonth / whereDay / whereYear
+    $users = DB::table('users')
+                ->whereDate('created_at', '2016-10-10')
+                ->get();
+
+    // 原生表达式
+    $users = DB::table('users')
+                         ->select(DB::raw('count(*) as user_count, status'))
+                         ->where('status', '<>', 1)
+                         ->groupBy('status')
+                         ->get();
+
+    // 10.3
+    $statuses = $user->statuses()
+                     ->orderBy('created_at', 'desc')
+                     ->paginate(30);
+
+    $topics = $topic->withOrder($request->order)
+                    ->where('category_id', $category->id)
+                    ->paginate(20);
+*/
 }

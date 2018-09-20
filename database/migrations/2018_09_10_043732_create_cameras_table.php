@@ -23,7 +23,7 @@ class CreateCamerasTable extends Migration
             $table->string('model_id')->default('');
 
             /* infomation */
-            $table->string('description')->default('');
+            $table->string('description')->default('New Camera');
             $table->string('location')->default('');
 
             $table->integer('points')->default(0);

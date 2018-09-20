@@ -70,9 +70,11 @@
             </div>
 
             <!-- CAMERA DATA - TAB -->
-            <div id="tabs-54" class="tab-container">
+            <!-- <div id="tabs-54" class="tab-container"> -->
+            <div id="tabs-{{ $camera->id}}" class="tab-container">
 
-                <ul class="nav nav-tabs" id="cameratabs-54">
+                <!-- <ul class="nav nav-tabs" id="cameratabs-54"> -->
+                <ul class="nav nav-tabs" id="cameratabs-{{ $camera->id}}">
                     <!-- <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true"> -->
                     <li >
                         <a href="#overview-{{$camera->id}}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id )}}" aria-expanded="true">
