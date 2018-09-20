@@ -15,7 +15,7 @@
 
 <div class="container-fluid">
     <!-- kevin test-->
-    <div class="row">
+<!--     <div class="row">
         <div class="col-md-12">
             <form action="{{ route('logout') }}" method="POST">
               {{ csrf_field() }}
@@ -23,7 +23,7 @@
             </form>
         </div>
     </div>
-
+ -->
     <div class="row">
         @include('camera._list')
         @include('camera._data')

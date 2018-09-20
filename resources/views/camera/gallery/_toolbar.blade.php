@@ -30,8 +30,7 @@
                             aria-expanded="false">
                             <span>
                                 <i class="fa fa-bolt"></i>
-                                    Action
-                                <span class="caret"></span>
+                                    Action <span class="caret"></span>
                             </span>
                         </button>
 
@@ -60,13 +59,13 @@
                     </div>
 
                     <!-- Select None -->
-                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-none-54" data-action="select-none" data-toggle="tooltip" title="Select None"><i class="far fa-square"></i></a>
+                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-none-{{ $camera->id }}" data-action="select-none" data-toggle="tooltip" title="Select None"><i class="far fa-square"></i></a>
 
                     <!-- Select All -->
-                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-all-54" data-action="select-all" data-toggle="tooltip" title="Select All"><i class="fa fa-th"></i></a>
+                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-all-{{ $camera->id }}" data-action="select-all" data-toggle="tooltip" title="Select All"><i class="fa fa-th"></i></a>
 
                     <!-- Clear All -->
-                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="clear-all-54" data-action="clear-all" data-toggle="tooltip" title="Clear All"><i class="fa fa-eraser"></i></a>
+                    <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="clear-all-{{ $camera->id }}" data-action="clear-all" data-toggle="tooltip" title="Clear All"><i class="fa fa-eraser"></i></a>
 
                     <!-- Columns -->
                     <div class="btn-group" role="group">
@@ -84,23 +83,14 @@
                         </button>
                         <ul class="dropdown-menu layout-grid">
                             <li>
-                                <a href="/cameras/gallerylayout/54/2"  >
+                                <a href="/cameras/gallerylayout/{{ $camera->id }}/2"  >
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
                                 </a>
                             </li>
 
                             <li>
-                                <a href="/cameras/gallerylayout/54/3"  >
-                                    <span class="grid-block"></span>
-                                    <span class="grid-block"></span>
-                                    <span class="grid-block"></span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="/cameras/gallerylayout/54/4" class="current-item">
-                                    <span class="grid-block"></span>
+                                <a href="/cameras/gallerylayout/{{ $camera->id }}/3"  >
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
@@ -108,9 +98,7 @@
                             </li>
 
                             <li>
-                                <a href="/cameras/gallerylayout/54/6"  >
-                                    <span class="grid-block"></span>
-                                    <span class="grid-block"></span>
+                                <a href="/cameras/gallerylayout/{{ $camera->id }}/4" class="current-item">
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
@@ -119,7 +107,18 @@
                             </li>
 
                             <li>
-                                <a href="/cameras/gallerylayout/54/12"   >
+                                <a href="/cameras/gallerylayout/{{ $camera->id }}/6"  >
+                                    <span class="grid-block"></span>
+                                    <span class="grid-block"></span>
+                                    <span class="grid-block"></span>
+                                    <span class="grid-block"></span>
+                                    <span class="grid-block"></span>
+                                    <span class="grid-block"></span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="/cameras/gallerylayout/{{ $camera->id }}/12"   >
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
                                     <span class="grid-block"></span>
@@ -152,12 +151,12 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu layout-grid">
-                            <li><a href="/cameras/gallerythumbs/54/10">10 Per Page</a></li>
-                            <li><a href="/cameras/gallerythumbs/54/20">20 Per Page</a></li>
-                            <li><a href="/cameras/gallerythumbs/54/30">30 Per Page</a></li>
-                            <li><a href="/cameras/gallerythumbs/54/40">40 Per Page</a></li>
-                            <li><a href="/cameras/gallerythumbs/54/60">60 Per Page</a></li>
-                            <li><a href="/cameras/gallerythumbs/54/80">80 Per Page</a></li>
+                            <li><a href="/cameras/gallerythumbs/{{ $camera->id }}/10">10 Per Page</a></li>
+                            <li><a href="/cameras/gallerythumbs/{{ $camera->id }}/20">20 Per Page</a></li>
+                            <li><a href="/cameras/gallerythumbs/{{ $camera->id }}/30">30 Per Page</a></li>
+                            <li><a href="/cameras/gallerythumbs/{{ $camera->id }}/40">40 Per Page</a></li>
+                            <li><a href="/cameras/gallerythumbs/{{ $camera->id }}/60">60 Per Page</a></li>
+                            <li><a href="/cameras/gallerythumbs/{{ $camera->id }}/80">80 Per Page</a></li>
                         </ul>
                     </div>
                 </div>

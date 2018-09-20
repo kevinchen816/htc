@@ -16,15 +16,15 @@
                                 </h4>
                             </div>
                             <div class="panel-body">
-                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/delete" id="delete-camera-form-54">
-                                    <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
-
-                                    <input name="id" type="hidden" value="54">
+                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/delete" id="delete-camera-form-{{ $camera->id }}">
+                                    <!-- <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
+                                    {{ csrf_field() }}
+                                    <input name="id" type="hidden" value="{{ $camera->id }}">
 
                                     <div class="form-group">
                                         <label for="password inputSmall" class="col-md-5 control-label">Account Password</label>
                                         <div class="col-md-6">
-                                            <input id="54_password_delete" type="password" class="form-control input-sm" name="password" required>
+                                            <input id="{{ $camera->id }}_password_delete" type="password" class="form-control input-sm" name="password" required>
                                             <button type="submit" class="btn btn-sm btn-primary">Delete Camera</button>
                                         </div>
                                     </div>
@@ -43,7 +43,7 @@
                                 </h4>
                             </div>
                             <div class="panel-body">
-                                <a href="/cameras/apilog/54" class="btn btn-sm btn-primary">View Camera Activity Log</a>
+                                <a href="/cameras/apilog/{{ $camera->id }}" class="btn btn-sm btn-primary">View Camera Activity Log</a>
                             </div>
                         </div>
                     </div>

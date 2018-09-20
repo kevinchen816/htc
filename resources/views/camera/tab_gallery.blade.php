@@ -162,6 +162,7 @@
             <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="gallery"><i class="fa fa-question"></i></a>
             <span class="pull-right" style="font-size: .70em; margin-top: 6px;">
                 <strong>(2 thumbs this page) | Page 1 of 1</strong>
+                <!-- <strong>(0 thumbs this page) | Page 1 of 0</strong> -->
             </span>
         </h4>
     </div>
@@ -174,9 +175,16 @@
                 <!-- <div class="col-count-4 gallery-manager" data-col="4" data-row="6"> -->
                     @include('camera.gallery._toolbar')
                     <!-- gallery-toolbar -->
-                    <!-- <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54"> -->
+                    <form method="POST" action="{{ route('camera.gallery') }}"
+                        accept-charset="UTF-8"
+                        class="form-horizontal"
+                        role="form"
+                        name="pictureForm"
+                        id="gallery-form-{{ $camera->id }}">
                         <!-- <input name="_token" type="hidden" value="FLozpJONzCgc7Ue23LdVtrflOcF6otRJicEMdDrh"> -->
                         <!-- <input name="id" type="hidden" value="54"> -->
+                        {{ csrf_field() }}
+                        <input name="id" type="hidden" value="{{ $camera->id }}">
 
                         <div class="thumbnail-gallery" data-token="">
                             <div id="info"></div>
@@ -188,7 +196,7 @@
                             <!-- End Row -->
                         </div>
                         <!-- thumbnail-gallery -->
-                    <!-- </form> -->
+                    </form>
                 <!-- </div> -->
                 <!-- gallery-manager -->
 
@@ -284,7 +292,7 @@
     function InitializeCheckBoxes() {
         var items = JSON.parse(sessionStorage.getItem('items')) || [];
         var checkboxes = document.getElementsByClassName('image-check');
-        console.log('>>InitializeCheckBoxes'); // kk-debug
+        alert('>>InitializeCheckBoxes'); // kk-debug
         if (checkboxes) {
             for (var i = 0; i < checkboxes.length; i++) {
                 check = checkboxes[i];
@@ -295,12 +303,12 @@
     }
 
     function PostGallery(action, items) {
-        console.log('>>PostGallery'); // kk-debug
+        alert('>>PostGallery'); // kk-debug
         console.log('PostGallery: starting'); // kevin
-        $('#gallery-form-54').append('<input type="hidden" name="action" value="' + action + '" />');
-        $('#gallery-form-54').append('<input type="hidden" name="medialist" id="mediaid-list" value="" />');
+        $('#gallery-form-{{ $camera->id }}').append('<input type="hidden" name="action" value="' + action + '" />');
+        $('#gallery-form-{{ $camera->id }}').append('<input type="hidden" name="medialist" id="mediaid-list" value="" />');
         $('#mediaid-list').val(JSON.stringify(items));
-        $("#gallery-form-54").submit();
+        $("#gallery-form-{{ $camera->id }}").submit();
         console.log('PostGallery: submitted form'); // kevin
     }
 
@@ -308,7 +316,7 @@
     function UpdateToolbar() {
         var items = JSON.parse(sessionStorage.getItem('items')) || [];
         var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
-        console.log('>>UpdateToolbar'); // kk-debug
+        alert('>>UpdateToolbar'); // kk-debug
         height = $('.custom-thumbnail-grid-column').height();
         width = $('.custom-thumbnail-grid-column').width();
         if (manageSelected === true) {
@@ -320,16 +328,16 @@
             //$('.check-label').show(100);
             $('#with-selected').hide();
             $('#camera-desc').hide();
-            $('#select-all-54').hide();
-            $('#clear-all-54').hide(350);
-            $('#select-none-54').hide();
+            $('#select-all-{{ $camera->id }}').hide();
+            $('#clear-all-{{ $camera->id }}').hide(350);
+            $('#select-none-{{ $camera->id }}').hide();
             $('#with-selected').removeClass('disabled hidden');
-            $('#select-all-54').removeClass('disabled hidden');
-            $('#select-none-54').removeClass('disabled hidden');
-            $('#clear-all-54').removeClass('disabled hidden');
-            $('#select-all-54').show(350);
-            $('#select-none-54').show(350);
-            $('#clear-all-54').show(350);
+            $('#select-all-{{ $camera->id }}').removeClass('disabled hidden');
+            $('#select-none-{{ $camera->id }}').removeClass('disabled hidden');
+            $('#clear-all-{{ $camera->id }}').removeClass('disabled hidden');
+            $('#select-all-{{ $camera->id }}').show(350);
+            $('#select-none-{{ $camera->id }}').show(350);
+            $('#clear-all-{{ $camera->id }}').show(350);
             $('#with-selected').show(350);
             document.getElementById('itemAmount').innerHTML = getbadge(items.length);
         }
@@ -338,14 +346,14 @@
             //$('.image-check').prop('checked', false).change();
             $('#with-selected').addClass('disabled');
             $('#camera-desc').show();
-            $('#select-all-54').addClass('disabled');
-            $('#select-none-54').addClass('disabled');
-            $('#clear-all-54').addClass('disabled');
+            $('#select-all-{{ $camera->id }}').addClass('disabled');
+            $('#select-none-{{ $camera->id }}').addClass('disabled');
+            $('#clear-all-{{ $camera->id }}').addClass('disabled');
             //$('.check-label').hide(100);
             $('.check-label').addClass('hidden');
-            $('#select-all-54').hide(350);
-            $('#clear-all-54').hide(350);
-            $('#select-none-54').hide(350);
+            $('#select-all-{{ $camera->id }}').hide(350);
+            $('#clear-all-{{ $camera->id }}').hide(350);
+            $('#select-none-{{ $camera->id }}').hide(350);
             $('#with-selected').hide(350);
             $('#itemAmount').hide();
         }
@@ -369,7 +377,7 @@
         console.log('[_gallery]...............ready'); // kk-debug
         console.log('gallery2-partial - document ready');
         $(window).on('resize', function() {
-            //alert('window on resize 1');
+            alert('window on resize 1');
             height = $('.custom-thumbnail-grid-column').height();
             width = $('.custom-thumbnail-grid-column').width();
             $('.check-label .span-cr').height(height);
@@ -382,7 +390,7 @@
         });
 
         $('.image-check').on('change', function () {
-            console.log('==> .image-check'); // // kk-debug
+            alert('==> .image-check'); // // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var id = $(this).attr('id');
             v = $(this).prop('checked');
@@ -406,8 +414,8 @@
         });
 
         $('#multi-select').on('change', function () {
-            console.log('multi-select change event fired');
-            //alert('multi-select change event fired');
+            //console.log('multi-select change event fired');
+            alert('multi-select change event fired');
             console.log(JSON.stringify($(this).prop('checked'))); // // kk-debug
 
             sessionStorage.setItem('manageOn', JSON.stringify($(this).prop('checked')));
@@ -416,7 +424,7 @@
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
 
             if (manageSelected === true && !($('#itemAmount').is(':visible'))) {
-                console.log('#multi-select...........1'); // // kk-debug
+                alert('#multi-select...........1'); // // kk-debug
                 document.getElementById('itemAmount').innerHTML = getbadge(items.length);
 
                 var height = $('.custom-thumbnail-grid-column').height();
@@ -428,60 +436,60 @@
 
                 $('#with-selected').hide();
                 $('#camera-desc').hide();
-                $('#select-all-54').hide();
-                $('#clear-all-54').hide(350);
-                $('#select-none-54').hide();
+                $('#select-all-{{ $camera->id }}').hide();
+                $('#clear-all-{{ $camera->id }}').hide(350);
+                $('#select-none-{{ $camera->id }}').hide();
 
                 $('#with-selected').removeClass('disabled hidden');
-                $('#select-all-54').removeClass('disabled hidden');
-                $('#select-none-54').removeClass('disabled hidden');
-                $('#clear-all-54').removeClass('disabled hidden');
+                $('#select-all-{{ $camera->id }}').removeClass('disabled hidden');
+                $('#select-none-{{ $camera->id }}').removeClass('disabled hidden');
+                $('#clear-all-{{ $camera->id }}').removeClass('disabled hidden');
 
                 $('#itemAmount').show();
-                $('#select-all-54').show(350);
-                $('#select-none-54').show(350);
-                $('#clear-all-54').show(350);
+                $('#select-all-{{ $camera->id }}').show(350);
+                $('#select-none-{{ $camera->id }}').show(350);
+                $('#clear-all-{{ $camera->id }}').show(350);
                 $('#with-selected').show(350);
             }
             else if( manageSelected === false && $('#itemAmount').is(':visible')){
-                console.log('#multi-select...........2'); // // kk-debug
+                alert('#multi-select...........2'); // // kk-debug
                 $('#with-selected').addClass('disabled');
                 $('#camera-desc').show();
-                $('#select-all-54').addClass('disabled');
-                $('#select-none-54').addClass('disabled');
-                $('#clear-all-54').addClass('disabled');
+                $('#select-all-{{ $camera->id }}').addClass('disabled');
+                $('#select-none-{{ $camera->id }}').addClass('disabled');
+                $('#clear-all-{{ $camera->id }}').addClass('disabled');
 
                 //$('.check-label').hide(100);
                 $('.check-label').addClass('hidden');
 
-                $('#select-all-54').hide(350);
-                $('#select-none-54').hide(350);
-                $('#clear-all-54').hide(350);
+                $('#select-all-{{ $camera->id }}').hide(350);
+                $('#select-none-{{ $camera->id }}').hide(350);
+                $('#clear-all-{{ $camera->id }}').hide(350);
                 $('#with-selected').hide(350);
                 $('#itemAmount').hide();
             }
             else if(manageSelected === true && ($('#itemAmount').is(':visible'))){
-                console.log('#multi-select...........3'); // // kk-debug
+                alert('#multi-select...........3'); // // kk-debug
                 sessionStorage.setItem('manageOn', JSON.stringify(false));
                 manageSelected = JSON.parse(sessionStorage.getItem('manageOn'));
                 $('#with-selected').addClass('disabled');
                 $('#camera-desc').show();
 
-                $('#select-all-54').addClass('disabled');
-                $('#select-none-54').addClass('disabled');
-                $('#clear-all-54').addClass('disabled');
+                $('#select-all-{{ $camera->id }}').addClass('disabled');
+                $('#select-none-{{ $camera->id }}').addClass('disabled');
+                $('#clear-all-{{ $camera->id }}').addClass('disabled');
 
                 //$('.check-label').hide(100);
                 $('.check-label').addClass('hidden');
 
-                $('#select-all-54').hide(350);
-                $('#clear-all-54').hide(350);
-                $('#select-none-54').hide(350);
+                $('#select-all-{{ $camera->id }}').hide(350);
+                $('#clear-all-{{ $camera->id }}').hide(350);
+                $('#select-none-{{ $camera->id }}').hide(350);
                 $('#with-selected').hide(350);
                 $('#itemAmount').hide();
             }
             else if(manageSelected === false && !($('#itemAmount').is(':visible'))){
-                console.log('#multi-select...........4'); // // kk-debug
+                alert('#multi-select...........4'); // // kk-debug
                 sessionStorage.setItem('manageOn', JSON.stringify(true));
                 manageSelected = JSON.parse(sessionStorage.getItem('manageOn'));
 
@@ -497,24 +505,25 @@
 
                 $('#with-selected').hide();
                 $('#camera-desc').hide();
-                $('#select-all-54').hide();
-                $('#select-none-54').hide();
-                $('#clear-all-54').hide(350);
+                $('#select-all-{{ $camera->id }}').hide();
+                $('#select-none-{{ $camera->id }}').hide();
+                $('#clear-all-{{ $camera->id }}').hide(350);
 
                 $('#with-selected').removeClass('disabled hidden');
-                $('#select-all-54').removeClass('disabled hidden');
-                $('#clear-all-54').removeClass('disabled hidden');
-                $('#select-none-54').removeClass('disabled hidden');
+                $('#select-all-{{ $camera->id }}').removeClass('disabled hidden');
+                $('#clear-all-{{ $camera->id }}').removeClass('disabled hidden');
+                $('#select-none-{{ $camera->id }}').removeClass('disabled hidden');
 
-                $('#select-all-54').show(350);
-                $('#clear-all-54').show(350);
-                $('#select-none-54').show(350);
+                $('#select-all-{{ $camera->id }}').show(350);
+                $('#clear-all-{{ $camera->id }}').show(350);
+                $('#select-none-{{ $camera->id }}').show(350);
                 $('#with-selected').show(350);
             }
         });
 
+        /* Action - Delete */
         $('#DeleteModal').on('show.bs.modal', function (event) {
-            console.log('==> #DeleteModal'); // kk-debug
+            alert('==> #DeleteModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -537,7 +546,7 @@
         });
 
         $('#button-confirm-delete').on('click', function() {
-            console.log('==> #button-confirm-deletel'); // kk-debug
+            alert('==> #button-confirm-deletel'); // kk-debug
             //console.log('Confirm Button Click multi: Start');
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
@@ -549,9 +558,9 @@
             //console.log('Confirm Button Click: : return from PostGallery multi');
         });
 
-
+        /* Action - Request HighRes MAX */
         $('#HighresModal').on('show.bs.modal', function (event) {
-            console.log('==> #HighresModal'); // kk-debug
+            alert('==> #HighresModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -579,7 +588,7 @@
         });
 
         $('#button-confirm-highres').on('click', function() {
-            console.log('==> #button-confirm-highres'); // kk-debug
+            alert('==> #button-confirm-highres'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
             sessionStorage.removeItem('manageOn');
@@ -588,8 +597,9 @@
             }
         });
 
+        /* Action - Request Original */
         $('#OriginalModal').on('show.bs.modal', function (event) {
-            console.log('==> #OriginalModal'); // kk-debug
+            alert('==> #OriginalModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -617,7 +627,7 @@
         });
 
         $('#button-confirm-original').on('click', function() {
-            console.log('==> #button-confirm-original'); // kk-debug
+            alert('==> #button-confirm-original'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
             sessionStorage.removeItem('manageOn');
@@ -626,8 +636,9 @@
             }
         });
 
+        /* Action - Request Video */
         $('#VideoModal').on('show.bs.modal', function (event) {
-            console.log('==> #VideoModal'); // kk-debug
+            alert('==> #VideoModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -655,7 +666,7 @@
         });
 
         $('#button-confirm-video').on('click', function() {
-            console.log('==> #button-confirm-video'); // kk-debug
+            alert('==> #button-confirm-video'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
             sessionStorage.removeItem('manageOn');
@@ -664,8 +675,9 @@
             }
         });
 
-        $(document).on('click', '#select-all-54', function() {
-            console.log('==> #select-all-54'); // kk-debug
+        /* Select All */
+        $(document).on('click', '#select-all-{{ $camera->id }}', function() {
+            alert('==> #select-all-{{ $camera->id }}'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var checkboxes = $('.thumbnail-gallery .image-check');
             checkboxes.each(function(){
@@ -679,8 +691,9 @@
             document.getElementById('itemAmount').innerHTML = getbadge(items.length);
         });
 
-        $(document).on('click', '#clear-all-54', function() {
-            console.log('==> #clear-all-54'); // kk-debug
+        /* Clear All */
+        $(document).on('click', '#clear-all-{{ $camera->id }}', function() {
+            alert('==> #clear-all-{{ $camera->id }}'); // kk-debug
             //console.log('clear-all clicked');
             sessionStorage.removeItem("items");
             //sessionStorage.setItem('items', JSON.stringify([]));
@@ -689,8 +702,9 @@
             InitializeCheckBoxes();
         });
 
-        $('#select-none-54').click(function () {
-            console.log('==> #select-none-54'); // kk-debug
+        /* Select None */
+        $('#select-none-{{ $camera->id }}').click(function () {
+            alert('==> #select-none-{{ $camera->id }}'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var checkboxes = $('.thumbnail-gallery .image-check');
             checkboxes.each(function(){
@@ -708,7 +722,7 @@
 
 
         $('.popup-video').click(function () {
-            console.log('==> .popup-video'); // kk-debug
+            alert('==> .popup-video'); // kk-debug
             var url = $(this).attr('video-url');
             var poster = $(this).attr('data-poster');
             $('#video-source').attr('src', url);
@@ -755,7 +769,7 @@
         });
 
         $('#modal-video-dlg').on('hide.bs.modal', function () {
-            console.log('==> #modal-video-dlg'); // kk-debug
+            alert('==> #modal-video-dlg'); // kk-debug
             var video_block = $('#video-block');
             //console.log('user is closing video so pause it');
             if (video_block) {

@@ -563,6 +563,41 @@ $new_camera->user_id = 1;
         //return redirect()->route('cameras_ex', $camera_id);
     }
 
+    public function gallery() {
+        $token = $_POST['_token'];
+        $camera_id = $_POST['id'];
+        $action = $_POST['action'];
+        $medialist = $_POST['medialist'];
+        echo $token;
+        echo '<br/>';
+        echo $camera_id;
+        echo '<br/>';
+        echo $action;
+        echo '<br/>';
+        echo $medialist;
+        echo '<br/>';
+
+        /* push to Action queue .... */
+
+        return;
+    }
+
+    public function gallerylayout($camera_id, $number) {
+        echo $camera_id;
+        echo '<br/>';
+        echo $number;
+        echo '<br/>';
+        return;
+    }
+
+    public function gallerythumbs($camera_id, $number) {
+        echo $camera_id;
+        echo '<br/>';
+        echo $number;
+        echo '<br/>';
+        return;
+    }
+
     /* /cameras/activetab */
     public function activetab() {
         $tab = $_POST['tab'];
@@ -585,6 +620,16 @@ $new_camera->user_id = 1;
     public function actions($cameras_id) {
         $ret = '/cameras/actions/'.$cameras_id;
         return $ret;
+    }
+
+    public function emailpolicy() {
+        $user = Auth::user();
+        $camera = Camera::findOrFail($camera_id);
+        $photos = $camera->photos()
+                         ->orderBy('created_at', 'desc')
+                         ->paginate(10);
+
+        return view('support.emailpolicy', compact('user', 'camera', 'photos'));
     }
 
     /*----------------------------------------------------------------------------------*/

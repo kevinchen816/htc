@@ -1,6 +1,7 @@
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid navbar-container">
         <div class="navbar-header">
+
             <!-- Collapsed Hamburger -->
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
                 <span class="sr-only">Toggle Navigation</span>
@@ -10,7 +11,7 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="RidgeTec Home">
+            <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="10ware Home">
                 <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
             </a>
         </div>

@@ -1,7 +1,7 @@
-<form method="POST" action="{{ route('camera.settings') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="camerasettings-form54">
+<form method="POST" action="{{ route('camera.settings') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="camerasettings-form{{ $camera->id }}">
     {{ csrf_field() }}
     <!-- <input name="_token" type="hidden" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
-    <input name="id" type="hidden" value="54">
+    <input name="id" type="hidden" value="{{ $camera->id }}">
 
     <div class="row">
         <div class="col-md-12">
@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="inputSmall">Camera Region</label>
                         <div class="col-md-7">
-                            <select id="54_country" class="bs-select form-control input-sm" name="54_country">
+                            <select id="{{ $camera->id }}_country" class="bs-select form-control input-sm" name="54_country">
                                 <option value="USA">United States</option>
                                 <option value="CA">Canada</option>
                                 <option value="AU">Australia</option>
@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="inputSmall">Time Zone</label>
                         <div class="col-md-7">
-                            <select id="54_timezone" class="bs-select form-control input-sm"   name="54_timezone">
+                            <select id="{{ $camera->id }}_timezone" class="bs-select form-control input-sm"   name="{{ $camera->id }}_timezone">
                                 <option value="Asia/Hong_Kong" selected="selected">Hong_Kong</option>
                             </select>
                             <span class="help-block"> Select the time zone where the camera is located. </span>

@@ -11,10 +11,9 @@
     <link rel="icon" type="image/ico" href="/favicon.ico"  />
     <!-- CSRF Token -->
     <!-- <meta name="csrf-token" content="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
-    <meta name="csrf-token" content="csrf_token()">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
-    <title>@yield('title', '10ware')</title>
+    <title>@yield('title', '10ware Portal')</title>
 
     <!-- Styles -->
     <!--<link href="http://www.ridgetec.us/css/app.css" rel="stylesheet">-->
@@ -152,7 +151,7 @@
 </head>
 <body>
     <div id="app">
-        @include('layouts._nav')
+        @include('layouts._header2')
         @include('shared._messages')
         @yield('content')
     </div>

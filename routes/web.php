@@ -82,6 +82,17 @@ Route::get('/cameras_xx', 'Api\CamerasController@cameras_xx')->name('cameras_xx'
 //Route::get('/cameras_ex/{camera_id}', 'Api\CamerasController@cameras_ex')->name('cameras_ex'); /* for test */
 Route::get('/cameras/{camera_id}', 'Api\CamerasController@cameras')->name('cameras'); /* for test */
 
+/* tab_gallery.blade.php */
+// <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
+// <form method="POST" action="{{ route('camera.gallery')" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-{{ $camerta->id }}">
+Route::post('/cameras/gallery', 'Api\CamerasController@gallery')->name('camera.gallery');
+
+// <a href="/cameras/gallerylayout/54/2"> // 2,3,4,6,12
+Route::get('/cameras/gallerylayout/{camera_id}/{number}', 'Api\CamerasController@gallerylayout')->name('camera.gallerylayout');
+
+// <li><a href="/cameras/gallerythumbs/54/10">10 Per Page</a></li> // 10,20,30,40,60.80
+Route::get('/cameras/gallerythumbs/{camera_id}/{number}', 'Api\CamerasController@gallerythumbs')->name('camera.gallerythumbs');
+
 Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');
 
 Route::get('/account/profile', function() {return '/account/profile';})->name('account.profile');
@@ -94,10 +105,12 @@ Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.pr
 Route::get('/help/terms', function() {return '/help/terms';})->name('help.terms');
 Route::get('/help/privacy', function() {return '/help/plans';})->name('help.privacy');
 
-//Route::get('/support/emailpolicy', function() {return '/support/emailpolicy';})->name('support.emailpolicy');
-//Route::get('/support/contact', function() {return '/support/contact';})->name('support.contact');
-Route::get('/support/emailpolicy', function() {return view('support.emailpolicy');})->name('support.emailpolicy');
-Route::get('/support/contact', function() {return view('support.contact');})->name('support.contact');
+Route::get('/support/emailpolicy', function() {return '/support/emailpolicy';})->name('support.emailpolicy');
+//Route::get('/support/emailpolicy', function() {return view('support.emailpolicy');})->name('support.emailpolicy');
+//Route::get('/support/emailpolicy', function() {'Api\CamerasController@emailpolicy';})->name('support.emailpolicy');
+
+Route::get('/support/contact', function() {return '/support/contact';})->name('support.contact');
+//Route::get('/support/contact', function() {return view('support.contact');})->name('support.contact');
 Route::post('/support/contact', function() {return '/support/contact';})->name('support.contact');
 
 Route::get('/email/optin', function() {return '/email/optin';})->name('email.optin');
@@ -141,29 +154,9 @@ Route::get('/email/optout', function() {return '/email/optout';})->name('email.o
     // <a href="#action-54" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/54" aria-expanded="false">
     //Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
 
-    /* _gallery.blade.php */
-    // <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
-    //Route::get('/cameras/gallery', 'Api\CamerasController@xxx');
-
     /* photo.blade.php */
     // <a href="/cameras/download/54/90815">
     //Route::get('/cameras/download/{camera_id}/{photo_id}', 'Api\CamerasController@download');
-
-/* _toolbar.blade.php */
-    // <a href="/cameras/gallerylayout/54/2">
-    // <a href="/cameras/gallerylayout/54/3">
-    // <a href="/cameras/gallerylayout/54/4">
-    // <a href="/cameras/gallerylayout/54/6">
-    // <a href="/cameras/gallerylayout/54/12">
-    //Route::get('/cameras/gallerylayout/{camera_id}/{xx}', 'Api\CamerasController@gallerythumbs');
-
-    // <li><a href="/cameras/gallerythumbs/54/10">10 Per Page</a></li>
-    // <li><a href="/cameras/gallerythumbs/54/10">20 Per Page</a></li>
-    // <li><a href="/cameras/gallerythumbs/54/10">30 Per Page</a></li>
-    // <li><a href="/cameras/gallerythumbs/54/10">40 Per Page</a></li>
-    // <li><a href="/cameras/gallerythumbs/54/10">60 Per Page</a></li>
-    // <li><a href="/cameras/gallerythumbs/54/10">80 Per Page</a></li>
-    //Route::get('/cameras/gallerythumbs/{camera_id}/{pagination}', 'Api\CamerasController@pagination');
 
 /* _actions.blade.php */
     // <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/actionqueue" id="action-formatsd-form-54">

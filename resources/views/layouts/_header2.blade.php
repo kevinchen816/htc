@@ -11,8 +11,8 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="Home">
-                10ware Site
+            <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="10ware Home">
+                <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
             </a>
         </div>
 
@@ -24,19 +24,20 @@
             </ul>-->
 
             <!-- Right Side Of Navbar -->
-
             <ul class="nav navbar-nav navbar-right">
-@if (Auth::check())
+<!--                 <li class=""><a href="http://www.ridgetec.us/plans/add-plan"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
+                <li class="active"><a href="http://www.ridgetec.us/cameras"><i class="fa fa-camera"></i> My Cameras</a></li>
+                <li class=""><a href="http://www.ridgetec.us/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
+                <li class=""><a href="http://www.ridgetec.us/help/plans">PLAN INFO</a></li>
+ -->
                 <li class=""><a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
-                <li class="active"><a href="{{ route('cameras_xx') }}"><i class="fa fa-camera"></i> My Cameras</a></li>
+                <li class="active"><a href="{{ route('cameras', $camera->id) }}"><i class="fa fa-camera"></i> My Cameras</a></li>
                 <li class=""><a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a></li>
                 <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
-
-                <li class="dropdown ">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                       Support <span class="caret"></span>
+                         Support <span class="caret"></span>
                     </a>
-
                     <ul class="dropdown-menu" role="menu">
                         <li>
                         <a href="{{ route('support.emailpolicy') }}">Email Policy</a>
@@ -67,26 +68,6 @@
                         </li>
                     </ul>
                 </li>
-
-@else
-                <li class=""><a href="{{ route('tour.start') }}">DEMO</a></li>
-                <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
-                <li class="dropdown ">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                       Support <span class="caret"></span>
-                    </a>
-
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                        <a href="{{ route('support.emailpolicy') }}">Email Policy</a>
-                        <a href="{{ route('support.contact') }}">Contact Us</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li><a href="{{ route('login') }}">Login</a></li>
-
-@endif
             </ul>
         </div>
     </div>

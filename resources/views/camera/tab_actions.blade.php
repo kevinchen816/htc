@@ -10,18 +10,19 @@
                     </a>
                 </div>
             </div>
-            <div class="panel-body  " id="commandhistory-54">
+            <div class="panel-body  " id="commandhistory-{{ $camera->id }}">
                 <table class="table" id="action-table">
                     <tbody>
                         <tr>
                             <td>
-                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/actionqueue" id="action-formatsd-form-54">
-                                    <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl">
-                                    <input name="id" type="hidden" value="54">
+                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/actionqueue" id="action-formatsd-form-{{ $camera->id }}">
+                                    <!-- <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
+                                    {{ csrf_field() }}
+                                    <input name="id" type="hidden" value="{{ $camera->id }}">
                                     <input name="action" type="hidden" value="FC">
                                     <div class="form-group">
                                         <label for="password inputSmall" class="control-label">Account Password:</label>
-                                        <input id="54_password_format" type="password" class="form-control input-sm" name="password" required>
+                                        <input id="{{ $camera->id }}_password_format" type="password" class="form-control input-sm" name="password" required>
                                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-trash"></i> Erase SD Card</button>
                                     </div>
                                     <div class="alert alert-sm alert-info">
@@ -31,13 +32,13 @@
                                     </div>
                                 </form>
                             </td>
-                            <!-- <td><a href="/cameras/actionqueue/54/FC" class="btn btn-sm btn-success">Format SD Card</a></td>-->
+                            <!-- <td><a href="/cameras/actionqueue/{{ $camera->id }}/FC" class="btn btn-sm btn-success">Format SD Card</a></td>-->
                         </tr>
 
                         <tr>
                             <td>
-                                <a data-param="LD" class="btn btn-sm btn-success action-queue-54" camera-id="54">Log Disable</a>
-                                <a data-param="LU" class="btn btn-sm btn-success action-queue-54" camera-id="54">Log Upload</a>
+                                <a data-param="LD" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Disable</a>
+                                <a data-param="LU" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Upload</a>
                             </td>
                         </tr>
                     </tbody>
@@ -51,7 +52,7 @@
             <div class="panel-heading">
                 <h4 class="panel-title">Action History</h4>
             </div>
-            <div class="panel-body" id="commandhistory-54" style="padding-left: 1px; padding-right: 1px;">
+            <div class="panel-body" id="commandhistory-{{ $camera->id }}" style="padding-left: 1px; padding-right: 1px;">
                 <table class="table table-striped table-condensed" style="font-size: .80em; margin-left: 0px;">
                     <thead>
                         <tr>
@@ -115,70 +116,70 @@
 <script type="text/javascript">
 $(document).ready(function () {
     $(".sms-button").click(function() {
-        //alert('action queue');
+        alert('action queue');
         sms = $(this).attr('data-param');
         id = $(this).attr('camera-id');
-                    url = '/cameras/sendsms/' + id + '/' + sms;
+        url = '/cameras/sendsms/' + id + '/' + sms;
 
         $("#sms-message").load(url);
     });
 
-    $(".action-queue-54").click(function() {
-        //alert('action queue');
+    $(".action-queue-{{ $camera->id }}").click(function() {
+        alert('action queue');
         action = $(this).attr('data-param');
         id = $(this).attr('camera-id');
-                    url = '/cameras/actionqueue/' + id + '/' + action;
-                //alert(url);
+        url = '/cameras/actionqueue/' + id + '/' + action;
+        //alert(url);
 
         $('#action-' + id).load(url);
         //alert(url);
     });
 
-    $( ".action-cancel-54" ).click(function(event) {
+    $( ".action-cancel-{{ $camera->id }}" ).click(function(event) {
         event.preventDefault();
-        //alert('actioncancel');
+        alert('actioncancel');
         actionid = $(this).attr('data-param');
-                    url='/cameras/actioncancel/' + actionid;
-                //alert(url);
-        $('#action-54').load(url);
+        url='/cameras/actioncancel/' + actionid;
+        //alert(url);
+        $('#action-{{ $camera->id }}').load(url);
     });
 
     $('#clear-missing').click(function(event) {
-                    var url = '/cameras/clearmissing/54';
-                console.log('url = ' + url);
-        $('#action-54').load(url);
+        var url = '/cameras/clearmissing/{{ $camera->id }}';
+        console.log('url = ' + url);
+        $('#action-{{ $camera->id }}').load(url);
 
     });
 
     $('.missing-request').click(function(event) {
         missingid = $(this).attr('missing-id');
         //console.log('.missingid ' + missingid);
-                    var url = '/cameras/requestmissing/54/' + missingid;
-                //console.log('url = ' + url);
-        $('#action-54').load(url);
+        var url = '/cameras/requestmissing/{{ $camera->id }}/' + missingid;
+        //console.log('url = ' + url);
+        $('#action-{{ $camera->id }}').load(url);
 
     });
 
     $('.show-highres').click(function(event) {
         actionid = $(this).attr('action-id');
         console.log('.showhighres ' + actionid);
-                    url = '/cameras/getmediaurl/' + actionid;
-                $(this).addClass('hidden');
+        url = '/cameras/getmediaurl/' + actionid;
+        $(this).addClass('hidden');
         $('#action-img-' + actionid).load(url);
     });
 
     $('#action-show').click(function() {
-        val = $("#commandhistory-54").hasClass('hidden');
+        val = $("#commandhistory-{{ $camera->id }}").hasClass('hidden');
         //console.log('action show click ' + val);
 
         if (val) {
-            $("#commandhistory-54").show(250);
-            $("#commandhistory-54").removeClass('hidden');
+            $("#commandhistory-{{ $camera->id }}").show(250);
+            $("#commandhistory-{{ $camera->id }}").removeClass('hidden');
             $('#action-show').html('<i class="fa fa-angle-up"></i> Commands');
         }
         else {
-            $("#commandhistory-54").hide(250);
-            $("#commandhistory-54").addClass('hidden');
+            $("#commandhistory-{{ $camera->id }}").hide(250);
+            $("#commandhistory-{{ $camera->id }}").addClass('hidden');
             $('#action-show').html('<i class="fa fa-angle-down"></i> Commands');
         };
     })
