@@ -30,7 +30,8 @@ class CamerasController extends Controller
     public function getErrorMessage($result_code) {
         $error_msg = array(
             900 =>'Invalid or Missing camera Module',
-            901 =>'Invalid or Missing camera Model',
+            901 =>'Invalid SIM card',
+            // 901 =>'Invalid or Missing camera Model',
             902 =>'test or Missing camera Model',
             999 =>'Unknown Error');
         //return ($error_msg[$result_code]) ? $error_msg[$result_code] : $status[500];
@@ -137,6 +138,11 @@ $new_camera->user_id = 1;
     */
     //public function report(Request $request, Camera $new_camera) {
     public function report(Request $request) {
+        $iccid = $request->iccid;
+
+
+        $module_id = $request->module_id;
+
         $cameras = DB::table('cameras')->where('module_id', $request->module_id);
         $camera = $cameras->first();
         if ($camera) {
@@ -748,7 +754,7 @@ $new_camera->user_id = 1;
     */
     public function Camera_List($active_camera_id) {
 
-//return $active_camera_id;
+        //return $active_camera_id;
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -1710,6 +1716,49 @@ $new_camera->user_id = 1;
     /*----------------------------------------------------------------------------------*/
     /* Options */
 
+
+    /*----------------------------------------------------------------------------------*/
+    public function account_profile() {
+        if (Auth::check()) {
+            $user = Auth::user();
+            return view('account.profile', compact('user'));
+        } else {
+            return view('account.profile');
+        }
+        // return view('help.plans');
+    }
+
+    public function plans_addplan_create() {
+        // if (Auth::check()) {
+        //     $user = Auth::user();
+        //     return view('account.profile', compact('user'));
+        // } else {
+        //     return view('account.profile');
+        // }
+        return view('plans.add-plan');
+    }
+
+    public function plans_addplan_store() {
+        // if (Auth::check()) {
+        //     $user = Auth::user();
+        //     return view('account.profile', compact('user'));
+        // } else {
+        //     return view('account.profile');
+        // }
+        // return view('plans.add-plan');
+
+        session()->flash('danger', 'Error: Please input an ICCID.');
+        return redirect()->back();
+    }
+    public function help_plans() {
+        if (Auth::check()) {
+            $user = Auth::user();
+            return view('help.plans', compact('user'));
+        } else {
+            return view('help.plans');
+        }
+        // return view('help.plans');
+    }
 
     /*----------------------------------------------------------------------------------*/
     public function test() {

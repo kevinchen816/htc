@@ -95,12 +95,19 @@ Route::get('/cameras/gallerythumbs/{camera_id}/{number}', 'Api\CamerasController
 
 Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');
 
-Route::get('/account/profile', function() {return '/account/profile';})->name('account.profile');
-Route::get('/plans/add-plan', function() {return 'add-plan';})->name('add.plan');
+// Route::get('/account/profile', function() { return view('account.profile'); })->name('account.profile');
+Route::get('/account/profile', 'Api\CamerasController@account_profile')->name('account.profile');
 
+// Route::get('/plans/add-plan', function() {return 'add-plan';})->name('add.plan');
+Route::get('/plans/add-plan','Api\CamerasController@plans_addplan_create')->name('add.plan');
+Route::post('/plans/add-plan','Api\CamerasController@plans_addplan_store')->name('add.plan');
 
 Route::get('/tour/start', function() {return '/tour/plans';})->name('tour.start');
-Route::get('/help/plans', function() {return '/help/plans';})->name('help.plans');
+
+// Route::get('/help/plans', function() {return '/help/plans';})->name('help.plans');
+// Route::get('/help/plans', function() { return view('help.plans'); })->name('help.plans');
+Route::get('/help/plans', 'Api\CamerasController@help_plans')->name('help.plans');
+
 Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
 Route::get('/help/terms', function() {return '/help/terms';})->name('help.terms');
 Route::get('/help/privacy', function() {return '/help/plans';})->name('help.privacy');
