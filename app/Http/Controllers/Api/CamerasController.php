@@ -369,6 +369,8 @@ $new_camera->user_id = 1;
                     $data['mcu_version'] = $request->mcu;
                     $data['cellular'] = $request->cellular;
 
+                    $data['last_filename'] = $ret['filename'];
+
                     // $data['last_contact'] = $datetime;
                     // $data['last_hb'] = $datetime;
                     $cameras->update($data);

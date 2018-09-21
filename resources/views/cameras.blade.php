@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default2')
 @section('title', 'Cameras')
 
 @section('gallery')
