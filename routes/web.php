@@ -11,12 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    //return view('welcome');
-    //return view('10ware');
-    return view('home');
-})->name('home');
+// Route::get('/', function () {
+//     //return view('welcome');
+//     //return view('10ware');
+//     return view('home');
+// })->name('home');
 
+Route::get('/', 'SessionsController@create')->name('home');
 
 /*
 /register
