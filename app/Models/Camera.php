@@ -10,6 +10,10 @@ class Camera extends Model
         'module_id', 'iccid', 'model_id',
     ];
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     public function photos() {
         return $this->hasMany(Photo::class);
     }

@@ -26,16 +26,17 @@ class SessionsController extends Controller
             'password' => 'required'
         ]);
 
-        //{"email":"kevin@10ware.com","password":"kevin816"}
+        //$credentials = {"email":"kevin@10ware.com","password":"kevin816"}
         //return $credentials;
 
         // $email = $request->email;
         // $password = $request->password;
         // if (Auth::attempt(['email' => $email, 'password' => $password])) {
-        if (Auth::attempt($credentials)) {
+        // if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->has('remember'))) {
             // 该用户存在于数据库，且邮箱和密码相符合
             session()->flash('success', '欢迎回来！');
-            //return redirect()->route('users.show', [Auth::user()]);
+            return redirect()->route('users.show', [Auth::user()]);
 
             $user = Auth::user();
             $user_id = $user->id;

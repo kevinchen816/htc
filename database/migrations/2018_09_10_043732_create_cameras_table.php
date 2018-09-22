@@ -16,7 +16,7 @@ class CreateCamerasTable extends Migration
         Schema::create('cameras', function (Blueprint $table) {
             $table->increments('id'); // camera_id
 
-            $table->integer('user_id');
+            $table->integer('user_id')->index();
 
             $table->string('module_id')->unique();    // iemi
             $table->string('iccid')->default('');

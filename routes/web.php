@@ -67,15 +67,16 @@ Route::get('/', 'SessionsController@create')->name('home');
 */
 
 Route::resource('/users', 'UsersController');
+// Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
 Route::get('/signup', 'UsersController@create')->name('signup');
 //Route::get('/register', 'UsersController@register')->name('register');
 
 Route::get('/login', 'SessionsController@create')->name('login');
 Route::post('/login', 'SessionsController@store')->name('login');
+Route::delete('/logout', 'SessionsController@destroy')->name('logout');
+// Route::post('/logout', 'SessionsController@destroy')->name('logout');
 
-//Route::delete('/logout', 'SessionsController@destroy')->name('logout');
-Route::post('/logout', 'SessionsController@destroy')->name('logout');
 Route::get('/admin', function() {return '/admin';})->name('admin');
 
 Route::get('/cameras_xx', 'Api\CamerasController@cameras_xx')->name('cameras_xx');

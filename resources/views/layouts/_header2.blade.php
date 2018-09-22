@@ -69,8 +69,8 @@
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    <!-- <input type="hidden" name="_token" value="A4hLFV1eAcOZtJJeuaj1JNvjXa9AZJiAjLM1tbNL"> -->
                                     {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
                                 </form>
                             </li>
                         </ul>

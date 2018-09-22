@@ -8,7 +8,6 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/ico" href="/favicon.ico"  />
     <!-- CSRF Token -->
-    <!-- <meta name="csrf-token" content="A4hLFV1eAcOZtJJeuaj1JNvjXa9AZJiAjLM1tbNL"> -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', '10ware Portal')</title>
@@ -33,7 +32,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <!-- Scripts -->
     <script>
-        // window.Laravel = {"csrfToken":"A4hLFV1eAcOZtJJeuaj1JNvjXa9AZJiAjLM1tbNL"};
         window.Laravel = {"csrfToken":"{{ csrf_token() }}"};
     </script>
     <!-- <script src="https://use.fontawesome.com/9712be8772.js"></script> -->
@@ -81,13 +79,42 @@
 
 </head>
 <body>
-
     <div id="app">
         @include('layouts._header')
+        <div class="fixed-navbar-container">
+            <div class="container">
+            </div>
+        </div>
+
+@if (!Auth::check())
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-footer" style="margin-top:3px; padding-top:1px;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3><i class="fa fa-camera"></i> Welcome to the 10ware Camera Portal</h3>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="pull-right" style="margin-top:20px;">Take a Tour of the portal today!
+                                    <a href="/tour/start" class="btn btn-xs btn-success"><i class="fa fa-camera"> </i> Start the tour! </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+@endif
+
+        @include('shared._messages')
+
         @yield('content')
+
         <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
             <div style="position: fixed;">
-                <a class="btn btn-sm btn-default btn-info help_close" style="border-radius: 25px 0px 0px 25px;"><i class="fa fa-times"></i>
+                <a class="btn btn-sm btn-default btn-info help_close" style="border-radius: 25px 0px 0px 25px;">
+                    <i class="fa fa-times"></i>
                 </a>
             </div>
             <div id="help_content">

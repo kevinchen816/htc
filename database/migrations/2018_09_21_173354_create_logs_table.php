@@ -16,7 +16,7 @@ class CreateLogsTable extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('camera_id');
+            $table->integer('camera_id')->index();
 
             $table->string('api');
             $table->integer('result'); // 0:success, 1:fail

@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 
 //use App\Http\Requests;
 
-//use App\Models\User;
-//use App\Models\Status;
+
 use App\User;
-use App\Status;
+use App\Models\Camera;
+
+use Auth;
+use DB;
 
 class UsersController extends Controller
 {
@@ -64,15 +66,39 @@ class UsersController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        session()->flash('success', 'Register Success !!');
+        Auth::Login($user);
 
+        session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
         return redirect()->route('users.show', [$user]);
+        // return redirect()->route('users.show', [$user->id]);
+
+        if (Auth::check()) {
+            session()->flash('success', 'Register Success !!');
+
+            $user = Auth::user();
+            $camera = DB::table('cameras')->where('user_id', $user->id)->first();
+            // $camera_id = $camera->id;
+            $camera_id = 0; // for test
+            // $camera = Camera::findOrFail($camera_id);
+            return redirect()->route('cameras', $camera_id);
+        } else {
+            session()->flash('warning', 'Login Fail !!');
+            return redirect()->back();
+        }
+        // return redirect()->route('users.show', [$user]);
     }
 
     /* GET /users/{user} - 显示用户页面 (Profile) */
     public function show(User $user) {
         // 将用户对象 $user 通过 compact 方法转化为一个关联数组
-        return view('users.show', compact('user'));
+        // return view('users.show', compact('user'));
+
+        // $cameras = $user->cameras()
+        //                  ->orderBy('created_at', 'desc')
+        //                  ->paginate(30);
+        // $cameras = $user->cameras()->paginate(30);
+        $cameras = $user->cameras()->get();
+        return view('users.show', compact('user', 'cameras'));
     }
     // public function profile() {
     //     return view('users.profile');

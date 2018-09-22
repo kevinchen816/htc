@@ -13,6 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 // use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 // use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+use App\Models\Camera;
+
 //class User extends Model
 class User extends Authenticatable
 {
@@ -36,9 +38,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
-    public function statuses()
-    {
-        return $this->hasMany(Status::class);
+    public function cameras() {
+        return $this->hasMany(Camera::class);
     }
+
 }
