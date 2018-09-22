@@ -11,7 +11,7 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="10ware Home">
+                <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="10ware Home">
                     <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
                 </a>
             </div>
@@ -32,8 +32,10 @@
                     <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
                     <li class=""><a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
+@if (Auth::check())
                     <li class="active"><a href="#"><i class="fa fa-camera"></i> My Cameras</a></li>
                     <li class=""><a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a></li>
+@endif
                     <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -54,12 +56,15 @@
                         </ul>
                     </li>
 @if (Auth::check())
+                    <li class=""><a href="{{ route('users.index') }}">Users</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ $user->name }}  <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ route('users.show', Auth::user()->id) }}">个人中心</a></li>
+                            <li><a href="{{ route('users.edit', Auth::user()->id) }}">编辑资料</a></li>
                             <li>
                                 <!-- <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a> -->
                                 <a href="{{ route('logout') }}"
@@ -75,6 +80,8 @@
                             </li>
                         </ul>
                     </li>
+@else
+                    <li class=""><a href="{{ route('login') }}">Log in</a></li>
 @endif
                 </ul>
             </div>

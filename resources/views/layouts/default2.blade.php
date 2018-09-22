@@ -87,7 +87,9 @@
             </div>
         </div>
 
+        <div class="container">
         @yield('content')
+        </div>
 
         <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
             <div style="position: fixed;">

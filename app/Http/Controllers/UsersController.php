@@ -17,12 +17,17 @@ class UsersController extends Controller
 {
     // {{ csrf_field() }}
 
-    // public function __construct()
-    // {
-    //     $this->middleware('auth', [
-    //         'except' => ['show', 'create', 'store']
-    //     ]);
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth', [
+            // 'except' => ['show', 'create', 'store']
+            'except' => ['show', 'create', 'store', 'index']
+        ]);
+
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
 
     /*----------------------------------------------------------------------------------*/
     /*
@@ -37,10 +42,9 @@ class UsersController extends Controller
 
     /* GET /users - 显示所有用户页面 */
     public function index() {
-        $users = User::paginate(30);
-        //return view('users.index', compact('users'));
-//        return $user; // NG
-        return compact('users');
+        // $users = User::all();
+        $users = User::paginate(5);
+        return view('users.index', compact('users'));
     }
 
     /* GET /users/create - 创建用户页面 (Register) */
@@ -106,16 +110,39 @@ class UsersController extends Controller
 
     /* GET /users/{user}/edit - 编辑用户页面 (Edit) */
     public function edit(User $user) {
-        return 'edit';
+        $this->authorize('update', $user);
+        return view('users.edit', compact('user'));
     }
 
     /* PATCH /users/{user} - 更新用户 (Update) */
-    public function update(User $user) {
-        return 'update';
+    public function update(User $user, Request $request) {
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            // 'password' => 'required|confirmed|min:6'
+            'password' => 'nullable|confirmed|min:6'
+        ]);
+
+        // $user->update([
+        //     'name' => $request->name,
+        //     'password' => bcrypt($request->password),
+        // ]);
+
+        $data = [];
+        $data['name'] = $request->name;
+        if ($request->password) {
+            $data['password'] = bcrypt($request->password);
+        }
+        $user->update($data);
+
+        session()->flash('success', '个人资料更新成功！');
+
+        return redirect()->route('users.show', $user->id);
     }
 
     /* DELETE /users/{user} - 删除用户 (Delete) */
     public function destroy(User $user) {
-        return 'destroy';
+        $user->delete();
+        session()->flash('success', '成功删除用户！');
+        return back();
     }
 }

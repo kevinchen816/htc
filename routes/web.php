@@ -11,13 +11,17 @@
 |
 */
 
-// Route::get('/', function () {
-//     //return view('welcome');
-//     //return view('10ware');
-//     return view('home');
-// })->name('home');
+Route::get('/', function () {
+    //return view('welcome');
+    // return view('10ware');
+    return view('home');
+})->name('home');
 
-Route::get('/', 'SessionsController@create')->name('home');
+// Route::get('/', 'SessionsController@create')->name('home');
+
+Route::get('/test', function () {
+    return view('test');
+})->name('test');
 
 /*
 /register
@@ -189,8 +193,8 @@ Route::get('/email/optout', function() {return '/email/optout';})->name('email.o
     // $(".sms-button").click(function() {
     //url = '/cameras/sendsms/' + id + '/' + sms;
 
-//Route::get('/test', 'Api\PhotosController@store');
-Route::get('/test', 'Api\CamerasController@test');
+//Route::get('/camera/test', 'Api\PhotosController@store');
+Route::get('/camera/test', 'Api\CamerasController@test');
 
 Route::get('/bootstrap', function () {
     return view('bootstrap');

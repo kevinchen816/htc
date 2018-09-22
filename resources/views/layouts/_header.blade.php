@@ -11,7 +11,7 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="http://www.10ware.com" target="_blank" title="10ware Home">
+                <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="10ware Home">
                     <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
                 </a>
             </div>
@@ -47,7 +47,24 @@
                             </li>
                         </ul>
                     </li>
+                    <li class=""><a href="{{ route('users.index') }}">Users</a></li>
+@if (Auth::check())
+                    <li>
+                        <!-- <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a> -->
+                        <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
+                    </li>
+@else
                     <li class=""><a href="{{ route('login') }}">Log in</a></li>
+@endif
                 </ul>
             </div>
         </div>
