@@ -31,15 +31,15 @@ class CamerasController extends Controller
         $error_msg = array(
             801 =>'Invalid SIM card',
             802 =>'Plan points empty',
-
-
+            803 =>'Not Camera Owner',
+            804 =>'Invalid Camera Module',
 
             900 =>'Invalid or Missing camera Module',
             901 =>'Invalid SIM card',
             // 901 =>'Invalid or Missing camera Model',
             902 =>'test or Missing camera Model',
-            991 =>'991',
-            992 =>'992',
+            991 =>'add Camera',
+            992 =>'update Camera',
             993 =>'993',
             994 =>'994',
             995 =>'995',
@@ -66,15 +66,29 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+    public function checkPlanPoints(Request $request) {
+        $plan = DB::table('plans')->where('iccid', $request->iccid)->first();
+        if ($plan) {
+            if ($plan->points_usedd < $plan->points) {
+                $result = 0;
+            } else {
+                $result = 802;
+            }
+        } else {
+            $result = 801;
+        }
+        return $result;
+    }
+
     //public function addCamera($new_camera, $request) {
     public function addCamera($user_id, $request) {
         $new_camera = new Camera;
 
         $datetime = date('Y-m-d H:i:s');
 
-// search iccid to find the user_id ??
-// $new_camera->user_id = 1;
-$new_camera->user_id = $user_id;
+        // search iccid to find the user_id ??
+        // $new_camera->user_id = 1;
+        $new_camera->user_id = $user_id;
 
         $new_camera->module_id = $request->module_id;
         $new_camera->iccid = $request->iccid;
@@ -153,24 +167,30 @@ $new_camera->user_id = $user_id;
         $iccid = $request->iccid;
         $module_id = $request->module_id;
 
-        // $plan = DB::table('plans')->where('iccid', $request->iccid)->first();
-        $plan = DB::table('plans')->where('iccid', $request->iccid)->first();
+        $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
             $user_id = $plan->user_id;
             $points = $plan->points;
             $points_used = $plan->points_used;
 
             if ($points_used < $points) {
-                $cameras = DB::table('cameras')->where('module_id', $request->module_id);
+                $cameras = DB::table('cameras')->where('module_id', $module_id);
                 $camera = $cameras->first();
 
                 if ($camera) {
-                    $ret = $this->updateCamera($cameras, $camera, $request);
+                    if ($camera->user_id == $user_id) {
+                        $ret = $this->updateCamera($cameras, $camera, $request);
+                        return $this->responseResult($ret);
+                    } else {
+                        $result = 803;
+                    }
+
                 } else {
                     $ret = $this->addCamera($user_id, $request);
+                    return $this->responseResult($ret);
                 }
-                // $result = 0;
-                return $this->responseResult($ret);
+                // // $result = 0;
+                // return $this->responseResult($ret);
 
             } else {
                 $result = 802;
@@ -182,50 +202,52 @@ $new_camera->user_id = $user_id;
         $ret['result'] = $result;
         $response = $this->responseResult($ret);
         return $response;
-
-
-        $module_id = $request->module_id;
-
-        // $cameras = DB::table('cameras')->where('module_id', $request->module_id);
-        // $camera = $cameras->first();
-        // if ($camera) {
-        //     $ret = $this->updateCamera($cameras, $camera, $request);
-        // } else {
-        //     $ret = $this->addCamera($request);
-        // }
-        // return $this->responseResult($ret);
     }
 
     /*----------------------------------------------------------------------------------*/
-    //public function report(Request $request) {
-    public function status(Request $request, Camera $new_camera) {
-        $cameras = DB::table('cameras')->where('module_id', $request->module_id);
-        $camera = $cameras->first();
+    public function status(Request $request) {
+        $iccid = $request->iccid;
+        $module_id = $request->module_id;
 
-        if ($camera) {
-            $ret = $this->updateCamera($cameras, $camera, $request);
+        $plan = DB::table('plans')->where('iccid', $iccid)->first();
+        if ($plan) {
+            $user_id = $plan->user_id;
+            $points = $plan->points;
+            $points_used = $plan->points_used;
+
+            if ($points_used < $points) {
+                $cameras = DB::table('cameras')->where('module_id', $module_id);
+                $camera = $cameras->first();
+
+                if ($camera) {
+                    if ($camera->user_id == $user_id) {
+                        $ret = $this->updateCamera($cameras, $camera, $request);
+                        return $this->responseResult($ret);
+                    } else {
+                        $result = 803;
+                    }
+                } else {
+                    $ret = $this->addCamera($user_id, $request);
+                    return $this->responseResult($ret);
+                }
+                // // $result = 0;
+                // return $this->responseResult($ret);
+
+            } else {
+                $result = 802;
+            }
+
         } else {
-            $ret = $this->addCamera($request);
+            $result = 801;
         }
-        return $this->responseResult($ret);
+        $ret['result'] = $result;
+        $response = $this->responseResult($ret);
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
     public function downloadsettings(Request $request) {
         //date_default_timezone_set("Asia/Shanghai");
-
-        $error_msg = array (
-            '900' =>'Invalid or Missing camera Module',
-            '901' =>'Invalid or Missing camera Model',
-            '902' =>'test or Missing camera Model',
-        );
-
-        //$cameras = DB::table('cameras')->select('module_id')->get();
-        //return $cameras;
-
-        //$cameras = DB::table('cameras')->first();
-        //$cameras = DB::table('cameras')->select('module_id')->first();
-        //return $cameras->module_id;
 
         //$cameras = DB::table('cameras')->where('module_id', $request->module_id);
         //return $cameras->count();
@@ -296,8 +318,7 @@ $new_camera->user_id = $user_id;
             $result = 0;
 
         } else {
-            $result = 900;
-            //$result = 901;
+            $result = 804;
         }
 
         $datetime = date('Y-m-d H:i:s');
@@ -365,13 +386,16 @@ $new_camera->user_id = $user_id;
         //                 ->where('module_id', $request->module_id)
         //                 ->first();
 
-        $cameras = DB::table('cameras')->where('module_id', $request->module_id);
+        $module_id = $request->module_id;
+        $cameras = DB::table('cameras')->where('module_id', $module_id);
         $camera = $cameras->first();
-
         if ($camera) {
+            $camera_id = $camera->id;
+
             $file = $request->Image;
             if ($file && $file->isValid()) {
-                $ret = $uploader->save_file($file);
+                // $ret = $uploader->save_file($file);
+                $ret = $uploader->save_file_ex($camera_id, $file);
                 /*
                 $ret =
                 {
