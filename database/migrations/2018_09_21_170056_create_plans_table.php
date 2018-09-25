@@ -15,12 +15,12 @@ class CreatePlansTable extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('iccid');
+            $table->string('iccid')->unique();
             $table->integer('user_id')->index();
-            $table->integer('camera_id');
-            $table->integer('points');
-            $table->integer('points_used');
-            $table->integer('sms_sent');
+            $table->integer('camera_id')->nullable();
+            $table->integer('points')->default(0);
+            $table->integer('points_used')->default(0);
+            $table->integer('sms_sent')->default(0);
             $table->timestamps();
         });
     }

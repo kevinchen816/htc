@@ -29,10 +29,20 @@ class CamerasController extends Controller
 
     public function getErrorMessage($result_code) {
         $error_msg = array(
+            801 =>'Invalid SIM card',
+            802 =>'Plan points empty',
+
+
+
             900 =>'Invalid or Missing camera Module',
             901 =>'Invalid SIM card',
             // 901 =>'Invalid or Missing camera Model',
             902 =>'test or Missing camera Model',
+            991 =>'991',
+            992 =>'992',
+            993 =>'993',
+            994 =>'994',
+            995 =>'995',
             999 =>'Unknown Error');
         //return ($error_msg[$result_code]) ? $error_msg[$result_code] : $status[500];
         return ($error_msg[$result_code]) ? $error_msg[$result_code] : $error_msg[999];
@@ -57,13 +67,14 @@ class CamerasController extends Controller
 
     /*----------------------------------------------------------------------------------*/
     //public function addCamera($new_camera, $request) {
-    public function addCamera($request) {
+    public function addCamera($user_id, $request) {
         $new_camera = new Camera;
 
         $datetime = date('Y-m-d H:i:s');
 
 // search iccid to find the user_id ??
-$new_camera->user_id = 1;
+// $new_camera->user_id = 1;
+$new_camera->user_id = $user_id;
 
         $new_camera->module_id = $request->module_id;
         $new_camera->iccid = $request->iccid;
@@ -84,7 +95,7 @@ $new_camera->user_id = 1;
 
         $new_camera->save();
 
-        $ret['result'] = 0;
+        $ret['result'] = 991; //0;
         $ret['datetime'] = $datetime;
         return $ret;
     }
@@ -108,8 +119,9 @@ $new_camera->user_id = 1;
         $data['last_contact'] = $datetime;
         $data['last_hb'] = $datetime;
         $cameras->update($data);
+        // $camera->update($data); // NG
 
-        $ret['result'] = 0;
+        $ret['result'] = 992; //0;
         $ret['datetime'] = $datetime;
         return $ret;
     }
@@ -139,18 +151,49 @@ $new_camera->user_id = 1;
     //public function report(Request $request, Camera $new_camera) {
     public function report(Request $request) {
         $iccid = $request->iccid;
+        $module_id = $request->module_id;
+
+        // $plan = DB::table('plans')->where('iccid', $request->iccid)->first();
+        $plan = DB::table('plans')->where('iccid', $request->iccid)->first();
+        if ($plan) {
+            $user_id = $plan->user_id;
+            $points = $plan->points;
+            $points_used = $plan->points_used;
+
+            if ($points_used < $points) {
+                $cameras = DB::table('cameras')->where('module_id', $request->module_id);
+                $camera = $cameras->first();
+
+                if ($camera) {
+                    $ret = $this->updateCamera($cameras, $camera, $request);
+                } else {
+                    $ret = $this->addCamera($user_id, $request);
+                }
+                // $result = 0;
+                return $this->responseResult($ret);
+
+            } else {
+                $result = 802;
+            }
+
+        } else {
+            $result = 801;
+        }
+        $ret['result'] = $result;
+        $response = $this->responseResult($ret);
+        return $response;
 
 
         $module_id = $request->module_id;
 
-        $cameras = DB::table('cameras')->where('module_id', $request->module_id);
-        $camera = $cameras->first();
-        if ($camera) {
-            $ret = $this->updateCamera($cameras, $camera, $request);
-        } else {
-            $ret = $this->addCamera($request);
-        }
-        return $this->responseResult($ret);
+        // $cameras = DB::table('cameras')->where('module_id', $request->module_id);
+        // $camera = $cameras->first();
+        // if ($camera) {
+        //     $ret = $this->updateCamera($cameras, $camera, $request);
+        // } else {
+        //     $ret = $this->addCamera($request);
+        // }
+        // return $this->responseResult($ret);
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1737,7 +1780,8 @@ $new_camera->user_id = 1;
         // } else {
         //     return view('account.profile');
         // }
-        return view('plans.add-plan');
+        $user = Auth::user();
+        return view('plans.add-plan', compact('user'));
     }
 
     public function plans_addplan_store() {
