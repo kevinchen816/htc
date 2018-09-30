@@ -12,6 +12,14 @@ use DB;
 use Illuminate\Http\Request;
 use Schema;
 
+/*
+ICCID:
+UniCOM #1   - 89860117851014783481
+UniCOM #2   - 89860117851014783507
+Truphone #1 - 8944503540145562672 F
+Truphone #2 - 8944503540145561039 F
+*/
+
 class CamerasController extends Controller
 {
     // var $camera_id;
@@ -107,6 +115,7 @@ class CamerasController extends Controller
     }
 
     public function Action_Failed($param) {
+        $ret = 0;
         $request_id = $param['request_id'];
         if ($request_id) {
             $actions = DB::table('actions')->where('id', $request_id);
@@ -115,47 +124,29 @@ class CamerasController extends Controller
                 if (($action->camera_id == $param['camera_id']) &&
                     ($action->action == $param['action_code']) &&
                     ($action->status == 1)) {
-                    $data['status']    = 4; // 1:requested, 2:completed, 3:cancelled, 4:failed
+                    $data['status'] = 4; // 1:requested, 2:completed, 3:cancelled, 4:failed
                     $data['completed'] = date('Y-m-d H:i:s');
                     $actions->update($data);
+                    $ret = 1;
                 }
             }
         }
-        return 0;
+        return $ret;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function responseResult($ret) {
-        // date_default_timezone_set("Asia/Shanghai");
-        $result = $ret['result'];
-        $response['ResultCode'] = $result;
-        if ($result) {
-            $response['ErrorMsg'] = $this->getErrorMessage($result);
-        }
-
-        if (empty($ret['datetime'])) {
-            $datetime = date('Y-m-d H:i:s');
-        } else {
-            $datetime = $ret['datetime'];
-        }
-        $response['DateTimeStamp'] = $datetime;
-        return $response;
-    }
-
-    /*
-    {
-    "ResultCode": 0,
-    "ActionCode": "DS",
-    "ParameterList": {
-    "REQUESTID": 6
-    },
-    "DateTimeStamp": "2018-09-28 11:33:57"
-    }
-     */
-    public function Response_Result($err, $camera = null) {
+    /*{"ResultCode": 0,
+     "ActionCode": "DS", "ParameterList": {"REQUESTID": 6},
+     "DateTimeStamp": "2018-09-28 11:33:57"}*/
+    public function Response_Result($err, $camera = null, $datalist = null) {
         // date_default_timezone_set("Asia/Shanghai");
         $ret['ResultCode'] = $err;
-        if ($err == 0) {
+        //if ($err == 0) {
+        if (($err == 0)||($err == 1)||($err == 2)) {
+            if ($datalist) {
+                $ret['DataList'] = $datalist;
+            }
+
             if ($camera) {
                 $action = $this->Action_FindFirst($camera->id);
                 if ($action) {
@@ -163,10 +154,10 @@ class CamerasController extends Controller
                     $ret['ParameterList'] = ["REQUESTID" => $action->id];
                 }
             }
-        } else if ($err == 1) {
+        //} else if ($err == 1) {
             // do nothing
 
-        } else if ($err == 2) {
+        //} else if ($err == 2) {
             // do nothing
 
         } else {
@@ -208,7 +199,8 @@ class CamerasController extends Controller
             $camera = $this->Camera_Find($param->module_id);
             if ($camera) {
                 if ($camera->user_id == $user_id) {
-                    $this->Camera_Update($param);
+                    //$this->Camera_Status_Update($param);
+                    $err = 0;
                 } else {
                     $err = 803;
                 }
@@ -249,7 +241,7 @@ class CamerasController extends Controller
         return 0;
     }
 
-    public function Camera_Update($param) {
+    public function Camera_Status_Update($param, $api_type = null) {
         $module_id = $param->module_id;
         $cameras = DB::table('cameras')->where('module_id', $module_id);
         $camera = $cameras->first();
@@ -257,24 +249,46 @@ class CamerasController extends Controller
         $data['iccid'] = $param->iccid;
         $data['model_id'] = $param->model_id;
 
-        $datalist = $param->DataList;
-        if ($datalist) {
-            $data['battery']      = $datalist['Battery'];
-            $data['signal_value'] = $datalist['SignalValue'];
-            $data['card_space']   = $datalist['Cardspace'];
-            $data['card_size']    = $datalist['Cardsize'];
-            $data['temperature']  = $datalist['Temperature'];
-            $data['dsp_version']  = $datalist['FirmwareVersion'];
-            $data['mcu_version']  = $datalist['mcu'];
-            $data['cellular']     = $datalist['cellular'];
+        if ($api_type == 'upload') {
+            $data['battery']      = $param->Battery;
+            $data['signal_value'] = $param->SignalValue;
+            $data['card_space']   = $param->Cardspace;
+            $data['card_size']    = $param->Cardsize;
+            $data['temperature']  = $param->Temperature;
+            $data['dsp_version']  = $param->FirmwareVersion;
+            $data['mcu_version']  = $param->mcu;
+            $data['cellular']     = $param->cellular;
+
+            $data['last_filename'] = $param->filename;
+
+        } else {
+            $datalist = $param->DataList;
+            if ($datalist) {
+                $data['battery']      = $datalist['Battery'];
+                $data['signal_value'] = $datalist['SignalValue'];
+                $data['card_space']   = $datalist['Cardspace'];
+                $data['card_size']    = $datalist['Cardsize'];
+                $data['temperature']  = $datalist['Temperature'];
+                $data['dsp_version']  = $datalist['FirmwareVersion'];
+                $data['mcu_version']  = $datalist['mcu'];
+                $data['cellular']     = $datalist['cellular'];
+            }
         }
 
         $datetime = date('Y-m-d H:i:s');
         $data['last_contact'] = $datetime;
-
-        if ($param->hb) {
-            $data['last_hb'] = $datetime; // TODO
+        if ($api_type == 'arm') {
+            $data['last_armed'] = $datetime;    // status with Arm='Y'
+        } else if ($api_type == 'report') {
+            $data['last_hb'] = $datetime;       // report
+        } else if ($api_type == 'upload') {
+            $data['last_photo'] = $datetime;    // upload_xxx
+        } else if ($api_type == 'schedule') {
+            $data['last_schedule'] = $datetime; // schedule
+        } else if ($api_type == 'settings') {
+            $data['last_settings'] = $datetime; // downloadsettings
         }
+        //$data['expected_contact'] = ; // TODO
 
         $cameras->update($data);
         // $camera->update($data); // NG
@@ -282,59 +296,55 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+    public function Photo_Add($param) {
+        $photo = new Photo;
+        $photo->camera_id         = $param->camera_id; // TODO
+        $photo->filename          = $param->FileName;
+        $photo->upload_resolution = $param->upload_resolution;
+        $photo->photo_quality     = $param->photo_quality;
+        $photo->photo_compression = $param->photo_compression;
+        $photo->source            = $param->Source;
+        $photo->datetime          = $param->DateTime;
+        $photo->filepath          = $param->filename;
+        $photo->save();
+        //return $photo;
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function hello(Request $request) {
-        $result['ResultCode'] = 0;
-        return $result;
+        $ret['ResultCode'] = 0;
+        return $ret;
     }
 
     /*----------------------------------------------------------------------------------*/
     /*
-    {
-    "iccid":"89860117851014783481","module_id":"861107030190590","model_id":"lookout-na",
-    "DataList":{
-    "Battery":"f",
-    "SignalValue":"31",
-    "Cardspace":"7848MB",
-    "Cardsize":"7854MB",
-    "Temperature":"41C",
-    "mcu":"4.1",
-    "FirmwareVersion":"20180313",
-    "cellular":"4G LTE"
-    }
-    }
-     */
+        {"iccid":"89860117851014783481","module_id":"861107030190590","model_id":"lookout-na",
+         "DataList":{
+             "Battery":"f",
+             "SignalValue":"31",
+             "Cardspace":"7848MB",
+             "Cardsize":"7854MB",
+             "Temperature":"41C",
+             "mcu":"4.1",
+             "FirmwareVersion":"20180313",
+             "cellular":"4G LTE"}
+        }
+    */
     public function report(Request $request) {
         $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
-        $err = $ret['err'];
+
         if ($err == 804) {
             $err = $this->Camera_Add($user_id, $request);
             $camera = $this->Camera_Find($request->module_id);
         }
-        return $this->Response_Result($err, $camera);
 
-        /*
-        $camera = null;
-        $ret = $this->Plan_Check($request->iccid);
-        $err = $ret['err'];
         if ($err == 0) {
-            $plan_user_id = $ret['user_id'];
-            $camera = $this->Camera_Find($request->module_id);
-            if ($camera) {
-                if ($camera->user_id == $plan_user_id) {
-                    $err = $this->Camera_Update($request);
-                } else {
-                    $err = 803;
-                }
-
-            } else {
-                $err = $this->Camera_Add($plan_user_id, $request);
-                $camera = $this->Camera_Find($request->module_id);
-            }
+            $this->Camera_Status_Update($request, 'report');
         }
         return $this->Response_Result($err, $camera);
-        */
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -350,36 +360,18 @@ class CamerasController extends Controller
     */
     public function status(Request $request) {
         $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
-        $err = $ret['err'];
+
         if ($err == 804) {
             $err = $this->Camera_Add($user_id, $request);
             $camera = $this->Camera_Find($request->module_id);
         }
 
-        /*
-        $camera = null;
-        $ret = $this->Plan_Check($request->iccid);
-        $err = $ret['err'];
         if ($err == 0) {
-            $plan_user_id = $ret['user_id'];
-            $camera = $this->Camera_Find($request->module_id);
-            if ($camera) {
-                if ($camera->user_id == $plan_user_id) {
-                    $this->Camera_Update($request);
-                } else {
-                    $err = 803;
-                }
+            $this->Camera_Status_Update($request, 'arm');
 
-            } else {
-                $this->Camera_Add($plan_user_id, $request);
-                $camera = $this->Camera_Find($request->module_id);
-            }
-        }
-        */
-
-        if ($err == 0) {
             if ($request->Arm == 'Y') {
                 if ($this->Action_Search($camera->id, 'DS') == 0) {
                     $this->Action_Add($camera->id, 'DS');
@@ -407,9 +399,12 @@ class CamerasController extends Controller
     /*----------------------------------------------------------------------------------*/
     public function downloadsettings(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
+            $this->Camera_Status_Update($request, 'settings');
+
             $datalist['cameramode']        = $camera->camera_mode;
             $datalist['photoresolution']   = $camera->photo_resolution;
             $datalist['video_resolution']  = $camera->video_resolution;
@@ -467,39 +462,18 @@ class CamerasController extends Controller
             $datalist['blockmode10'] = $camera->blockmode10;
             $datalist['blockmode11'] = $camera->blockmode11;
 
-            $param = array(
-                'request_id'  => $request->RequestID,
-                'camera_id'   => $camera->id,
-                'action_code' => 'DS',
-                'photo_id'    => null,
-                'photo_cnt'   => null,
-            );
-            $this->Action_Completed($param);
-        }
-
-        $datetime = date('Y-m-d H:i:s');
-
-        $response['ResultCode'] = $err;
-        if ($err == 0) {
-            $response['DataList'] = $datalist;
-
-            $action = $this->Action_FindFirst($camera->id);
-            if ($action) {
-                $response['ActionCode'] = $action->action;
-                $response['ParameterList'] = ["REQUESTID" => $action->id];
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'DS',
+                    'photo_id'    => null,
+                    'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
             }
-
-            $cameras = DB::table('cameras')->where('module_id', $request->module_id);
-            $data['last_contact']  = $datetime;
-            $data['last_settings'] = $datetime;
-            $cameras->update($data);
-
-        } else {
-            $response['ErrorMsg'] = $this->getErrorMessage($err);
         }
-        $response['DateTimeStamp'] = $datetime;
-        return $response;
-        //return $this->Response_Result($err, $camera);
+        return $this->Response_Result($err, $camera, $datalist);
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -550,25 +524,13 @@ class CamerasController extends Controller
             if ($file && $file->isValid()) {
                 // $ret = $uploader->save_file($file);
                 $ret = $uploader->save_file_ex($camera_id, $file);
-                /*
-                $ret =
-                {
-                "clientName": "PICT0001.JPG",
-                "extension": "JPG",
-                "tmpName": "phpYfxl7a",
-                "realPath": "/tmp/phpYfxl7a",
-                "mimeTye": "image/jpeg",
-                "filename": "1536576315_VWraupBCZT.JPG",
-                "result": 0
-                }
-                 */
                 $err = $ret['result'];
                 if ($err == 0) {
                     $param = $request;
                     $param['camera_id'] = $camera_id;
                     $param['filename'] = $ret['filename'];
                     $this->Photo_Add($param);
-                    $this->Camera_Status_Update($cameras, $param);
+                    $this->Camera_Status_Update($request, 'upload');
 return $param;
                 }
 
@@ -580,10 +542,8 @@ return $param;
             $err = 900;
         }
 
-        $ret['result'] = $err;
-        $response = $this->responseResult($ret);
-        return $response;
-        //return $this->Response_Result($err, $camera);
+        return $this->Response_Result($err, $camera);
+
     }
 
     public function uploadthumb(Request $request, ImageUploadHandler $uploader) {
@@ -602,81 +562,51 @@ return $param;
         //                 ->where('module_id', $request->module_id)
         //                 ->first();
 
-        $module_id = $request->module_id;
-        $cameras   = DB::table('cameras')->where('module_id', $module_id);
-        $camera    = $cameras->first();
-        if ($camera) {
+
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $camera = $ret['camera'];
+
+        if ($err == 0) {
             $camera_id = $camera->id;
 
             $file = $request->Image;
             if ($file && $file->isValid()) {
                 // $ret = $uploader->save_file($file);
                 $ret = $uploader->save_file_ex($camera_id, $file);
-                /*
-                $ret =
-                {
-                "clientName": "PICT0001.JPG",
-                "extension": "JPG",
-                "tmpName": "phpYfxl7a",
-                "realPath": "/tmp/phpYfxl7a",
-                "mimeTye": "image/jpeg",
-                "filename": "1536576315_VWraupBCZT.JPG",
-                "result": 0
-                }
-                 */
+                /* $ret = {
+                        "clientName": "PICT0001.JPG",
+                        "extension": "JPG",
+                        "tmpName": "phpYfxl7a",
+                        "realPath": "/tmp/phpYfxl7a",
+                        "mimeTye": "image/jpeg",
+                        "filename": "1536576315_VWraupBCZT.JPG",
+                        "result": 0
+                    }
+                */
                 $err = $ret['result'];
                 if ($err == 0) {
                     $param = $request;
                     $param['camera_id'] = $camera_id;
                     $param['filename'] = $ret['filename'];
                     $this->Photo_Add($param);
-                    $this->Camera_Status_Update($cameras, $param);
+                    $this->Camera_Status_Update($request, 'upload');
                 }
             }
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'PS',
+                    'photo_id'    => null,
+                    'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
+            }
         }
-
-        $ret['result'] = $err;
-        $response = $this->responseResult($ret);
-        return $response;
-        //return $this->Response_Result($err, $camera);
+        return $this->Response_Result($err, $camera);
     }
-
-
-public function Photo_Add($param) {
-   $photo = new Photo;
-   $photo->camera_id         = $param->camera_id; // TODO
-   $photo->filename          = $param->FileName;
-   $photo->upload_resolution = $param->upload_resolution;
-   $photo->photo_quality     = $param->photo_quality;
-   $photo->photo_compression = $param->photo_compression;
-   $photo->source            = $param->Source;
-   $photo->datetime          = $param->DateTime;
-   $photo->filepath          = $param->filename;
-   $photo->save();
-   //return $photo;
-}
-
-public function Camera_Status_Update($cameras, $param) {
-   $data['iccid']    = $param->iccid;
-   $data['model_id'] = $param->model_id;
-
-   //$datalist = $request->DataList;
-   $data['battery']      = $param->Battery;
-   $data['signal_value'] = $param->SignalValue;
-   $data['card_space']   = $param->Cardspace;
-   $data['card_size']    = $param->Cardsize;
-   $data['temperature']  = $param->Temperature;
-   $data['dsp_version']  = $param->FirmwareVersion;
-   $data['mcu_version']  = $param->mcu;
-   $data['cellular']     = $param->cellular;
-
-   $data['last_filename'] = $param->filename;
-
-   $datetime = date('Y-m-d H:i:s');
-   $data['last_contact'] = $datetime;
-   $data['last_photo'] = $datetime;
-   $cameras->update($data);
-}
 
 /*
 {
@@ -706,34 +636,44 @@ public function Camera_Status_Update($cameras, $param) {
     /*----------------------------------------------------------------------------------*/
     public function imagemissing(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            $param = array(
-                'request_id'  => $request->RequestID,
-                'camera_id'   => $camera->id,
-                'action_code' => 'UO',
-                'photo_id'    => null,
-                'photo_cnt'   => null,
-            );
-            $this->Action_Completed($param);
+            $this->Camera_Status_Update($request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'UO',
+                    'photo_id'    => null,
+                    'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
+            }
         }
         return $this->Response_Result($err, $camera);
     }
 
     public function videomissing(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            $param = array(
-                'request_id'  => $request->RequestID,
-                'camera_id'   => $camera->id,
-                'action_code' => 'UV',
-                'photo_id'    => null,
-                'photo_cnt'   => null,
-            );
-            $this->Action_Completed($param);
+            $this->Camera_Status_Update($request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'UV',
+                    'photo_id'    => null,
+                    'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
+            }
         }
         return $this->Response_Result($err, $camera);
     }
@@ -746,10 +686,13 @@ public function Camera_Status_Update($cameras, $param) {
     */
     public function firmwareinfo(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            $version = '20180816';
+            $this->Camera_Status_Update($request);
+
+            $version = '20180816'; // TODO
             if ($request->version < $version) {
                 $freespace =  (integer) ($request->Cardspace);
                 if ($freespace < 10) {
@@ -765,7 +708,6 @@ public function Camera_Status_Update($cameras, $param) {
                 $err = 0;
             }
         }
-        $ret['err'] = $err;
         return $this->Response_Result($err, $camera);
     }
 
@@ -783,32 +725,42 @@ public function Camera_Status_Update($cameras, $param) {
 
     public function firmwaredone(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            $param = array(
-                'request_id'  => $request->RequestID,
-                'camera_id'   => $camera->id,
-                'action_code' => 'FW',
-                'photo_id'    => null,
-                'photo_cnt'   => null,
-            );
-            $this->Action_Completed($param);
+            $this->Camera_Status_Update($request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'FW',
+                    'photo_id'    => null,
+                    'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
+            }
         }
         return $this->Response_Result($err, $camera);
     }
 
     public function firmwarefail(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            $param = array(
-               'request_id'  => $request->RequestID,
-               'camera_id'   => $camera->id,
-               'action_code' => 'FW',
-            );
-            $this->Action_Failed($param);
+            $this->Camera_Status_Update($request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'FW',
+                );
+                $this->Action_Failed($param);
+            }
         }
         return $this->Response_Result($err, $camera);
     }
@@ -816,12 +768,14 @@ public function Camera_Status_Update($cameras, $param) {
     /*----------------------------------------------------------------------------------*/
     public function cardfull(Request $request) {
         $ret = $this->Camera_Check($request);
-        //return $ret; /* for debug */
-
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            // send email
+            $this->Camera_Status_Update($request);
+
+            /* send email */
+
         }
         return $this->Response_Result($err, $camera);
     }
@@ -829,25 +783,36 @@ public function Camera_Status_Update($cameras, $param) {
     /*----------------------------------------------------------------------------------*/
     public function formatdone(Request $request) {
         $ret = $this->Camera_Check($request);
-        $camera = $ret['camera'];
         $err = $ret['err'];
+        $camera = $ret['camera'];
+
         if ($err == 0) {
-            $param = array(
-                'request_id'  => $request->RequestID,
-                'camera_id'   => $camera->id,
-                'action_code' => 'FC',
-                'photo_id'    => null,
-                'photo_cnt'   => null,
-            );
-            $this->Action_Completed($param);
+            $this->Camera_Status_Update($request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'FC',
+                    'photo_id'    => null,
+                    'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
+            }
         }
         return $this->Response_Result($err, $camera);
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function schedule(Request $request)
-    {
-        return $this->Response_Result(0);
+    public function schedule(Request $request) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $camera = $ret['camera'];
+
+        if ($err == 0) {
+            $this->Camera_Status_Update($request, 'schedule');
+        }
+        return $this->Response_Result($err, $camera);
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -855,8 +820,7 @@ public function Camera_Status_Update($cameras, $param) {
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812
     //public function cameras() {
-    public function cameras($camera_id)
-    {
+    public function cameras($camera_id) {
         //return 'id='.$camera_id;
 
         //if (Auth::user()) {
@@ -903,8 +867,7 @@ public function Camera_Status_Update($cameras, $param) {
     // }
 
     /* /cameras/getdetail/{camera_id} */
-    public function getdetail($camera_id)
-    {
+    public function getdetail($camera_id) {
         $user   = Auth::user();
         $camera = Camera::findOrFail($camera_id);
         $photos = $camera->photos()
@@ -916,8 +879,7 @@ public function Camera_Status_Update($cameras, $param) {
         //return redirect()->route('cameras_ex', $camera_id);
     }
 
-    public function gallery()
-    {
+    public function gallery() {
         $token     = $_POST['_token'];
         $camera_id = $_POST['id'];
         $action    = $_POST['action'];
@@ -936,8 +898,7 @@ public function Camera_Status_Update($cameras, $param) {
         return;
     }
 
-    public function gallerylayout($camera_id, $number)
-    {
+    public function gallerylayout($camera_id, $number) {
         echo $camera_id;
         echo '<br/>';
         echo $number;
@@ -945,8 +906,7 @@ public function Camera_Status_Update($cameras, $param) {
         return;
     }
 
-    public function gallerythumbs($camera_id, $number)
-    {
+    public function gallerythumbs($camera_id, $number) {
         echo $camera_id;
         echo '<br/>';
         echo $number;
@@ -955,8 +915,7 @@ public function Camera_Status_Update($cameras, $param) {
     }
 
     /* /cameras/activetab */
-    public function activetab()
-    {
+    public function activetab() {
         $tab = $_POST['tab'];
         return $tab;
 
