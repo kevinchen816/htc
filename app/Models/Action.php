@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Action extends Model
 {
-    //
+    public function camera() {
+        return $this->belongsTo(Camera::class);
+    }
 }

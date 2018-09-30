@@ -17,10 +17,13 @@ class CreateActionsTable extends Migration
             $table->increments('id');
             $table->integer('camera_id')->index();
             $table->string('action');
-            $table->integer('status'); // cancel, pending, completed
-            $table->dateTime('request');    // -> requested
-            $table->dateTime('complet');    // -> completed
-            $table->integer('sc_photos');   // schedule photos uploaded
+            $table->integer('status')->default(0); // 1:request, 2:cancel, 3:pending, 4:completed
+            $table->dateTime('requested');
+            $table->dateTime('completed')->nullable();
+
+            $table->string('filename')->nullable();
+            $table->integer('photo_id')->default(0);    // UO
+            $table->integer('photo_cnt')->default(0);   // photo count for schedule uploaded
             $table->timestamps();
         });
     }
