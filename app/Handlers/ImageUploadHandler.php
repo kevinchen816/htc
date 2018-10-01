@@ -2,6 +2,8 @@
 
 namespace App\Handlers;
 
+/* reference vendor/symfony/http-foundation/File/UploadedFile.php */
+
 class ImageUploadHandler
 {
     // 只允许以下后缀名的图片文件上传
@@ -78,11 +80,18 @@ class ImageUploadHandler
 
     public function save_file_ex($camera_id, $file)
     {
-        $ret['clientName'] = $file->getClientOriginalName();     // PICT0001.JPG
-        $ret['extension'] = $file->getClientOriginalExtension(); // JPG
-        $ret['tmpName'] = $file->getFileName();                  // php5qf3fj
-        $ret['realPath'] = $file->getRealPath();                 // /tmp/php5qf3fj
-        $ret['mimeTye'] = $file->getMimeType();                  // image/jpeg
+        //$ret['clientName'] = $file->getClientOriginalName();        // PICT0001.JPG
+        //$ret['extension'] = $file->getClientOriginalExtension();    // JPG
+        //$ret['tmpName'] = $file->getFileName();                   // php5qf3fj
+        //$ret['realPath'] = $file->getRealPath();                  // /tmp/php5qf3fj
+        //$ret['mimeTye'] = $file->getMimeType();                     // image/jpeg
+        //$ret['client_ext'] = $file->guessClientExtension();       // jpeg
+
+        //$ret['filesize'] = $file->getClientSize();                  // 7032
+        //$ret['max_size'] = $file->getMaxFilesize();               // 104857600
+
+        //$ret['err'] = $file->getError();
+        //$ret['err_msg'] = $file->getErrorMessage();
 
         // 获取文件的后缀名，因图片从剪贴板里黏贴时后缀名为空，所以此处确保后缀一直存在
         //$extension = strtolower($file->getClientOriginalExtension()) ?: 'png';
@@ -105,14 +114,15 @@ class ImageUploadHandler
         //$filename = md5(date('ymdhis').$clientName).".".$extension; // 0be0fa46c2062453c8e0a375fe68f5fd.JPG
         //$filename = $file_prefix . '_' . time() . '_' . str_random(10) . '.' . $extension;
         $filename = time() . '_' . str_random(10) . '.' . $extension;
-        $ret['filename'] = $filename;
 
-        // "path": "/home/vagrant/Code/htc/public/uploads/images/1536563485_lFE1T17eap.JPG",
+        /* /home/vagrant/Code/htc/public/uploads/1/1538422610_nHRsYCi1YG.JPG" */
         $path = $file->move($upload_path, $filename);
-        $ret['path'] = "$path";
 
-        $ret['result'] = 0;
-
+        $ret['clientName'] = $file->getClientOriginalName();    // "PICT0001.JPG"
+        $ret['filename'] = $filename;                           // "1538422239_Cf7PQK04w4.JPG"
+        $ret['filesize'] = $file->getClientSize();              // 7032
+        //$ret['path'] = "$path";
+        $ret['err'] = 0;
         return $ret;
     }
 }

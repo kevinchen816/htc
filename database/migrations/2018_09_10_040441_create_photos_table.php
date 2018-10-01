@@ -22,10 +22,22 @@ class CreatePhotosTable extends Migration
             //$table->string('model_id');
 
             $table->string('filename');
-            $table->integer('upload_resolution'); //$table->string('upload_resolution');
-            $table->integer('photo_quality');
-            $table->integer('photo_compression');
-            $table->string('source');
+            $table->integer('resolution'); //$table->string('upload_resolution');
+            $table->integer('filesize')->nullable();
+
+            /* photo */
+            $table->integer('photo_quality')->nullable();
+            $table->integer('photo_compression')->nullable();
+
+            /* video */
+            //$table->integer('video_resolution')->nullable();
+            $table->integer('video_length')->nullable();
+            $table->string('video_sound')->nullable();
+            $table->integer('video_rate')->nullable();
+            $table->integer('video_bitrate')->nullable();
+            //$table->integer('video_filesize')->nullable();
+
+            $table->string('source')->nullable();
 
             //$table->string('datetime', 14);
             //$table->timestamp('datetime');  // 1970-01-01 00:00:01 ~ 2038-01-19 03:14:07 UTC
