@@ -18,8 +18,12 @@ class CreatePlansTable extends Migration
             $table->string('iccid')->unique();
             $table->integer('user_id')->index();
             $table->integer('camera_id')->nullable();
-            $table->integer('points')->default(0);
-            $table->integer('points_used')->default(0);
+
+            $table->string('status')->nullable();
+            $table->float('points')->default(0);
+            $table->float('points_used')->default(0);
+
+            $table->integer('sms')->default(0);
             $table->integer('sms_sent')->default(0);
             $table->timestamps();
         });

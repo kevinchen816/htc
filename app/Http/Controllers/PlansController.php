@@ -52,6 +52,7 @@ class PlansController extends Controller
         if (Auth::check()) {
             $plan = Plan::create([
                 'iccid' => $request->iccid,
+                'status' => 'active',
                 'points' => $request->points,
                 'user_id' => Auth::user()->id,
             ]);

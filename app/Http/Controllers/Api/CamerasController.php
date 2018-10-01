@@ -25,6 +25,7 @@ const ERR_INVALID_SIM_CARD          = 801;
 const ERR_PLAN_EMPTY                = 802;
 const ERR_INVALID_CAMERA            = 803;
 const ERR_NOT_CAMERA_OWNER          = 804;
+const ERR_NO_UPLOAD_FILE            = 805;
 
 class CamerasController extends Controller
 {
@@ -60,6 +61,7 @@ class CamerasController extends Controller
             ERR_PLAN_EMPTY => 'Plan points empty',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
+            ERR_NO_UPLOAD_FILE => 'Not Upload File',
 
             //801 => 'Invalid SIM card',
             //802 => 'Plan points empty',
@@ -218,6 +220,43 @@ class CamerasController extends Controller
             $ret['err'] = ERR_INVALID_SIM_CARD;
         }
         return $ret;
+    }
+
+    public function Plan_Update($param, $original = 0) {
+        $point_photo_thumb = array(
+            array( 1.0,  1.5 ,  2.0 ),  // 1
+            array( 2.5,  3.25,  4.25),  // 2
+            array( 4.0,  6.75,  8.25),  // 3
+            array( 7.0, 10.0 , 14.5 ),  // 4
+            array(13.0, 15.5 , 19.5 ),  // 5
+        );
+
+        $point_video_thumb = array(1.0, 2.0, 3.0, 6.0);
+
+        $resolution = (integer) ($param->upload_resolution);
+        $quality = (integer) ($param->photo_quality);
+        $points = 0;
+
+        if ($original) {
+            $points = $param->filesize/(30*1024);
+        } else {
+            if ($resolution > 6) {
+                $resolution -= 8;
+                $points = $point_video_thumb[$resolution];
+            } else {
+                $resolution -= 1;
+                $quality -= 1;
+                $points = $point_photo_thumb[$resolution][$quality];
+            }
+        }
+
+        $plans = DB::table('plans')->where('iccid', $param['iccid']);
+        $plan = $plans->first();
+        if ($plan) {
+            $data['points_used'] = $plan->points_used + $points;
+            $plans->update($data);
+        }
+        return $plan;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -397,7 +436,7 @@ class CamerasController extends Controller
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
 
-        if ($err == 804) {
+        if ($err == ERR_INVALID_CAMERA) {
             $err = $this->Camera_Add($user_id, $request);
             $camera = $this->Camera_Find($request->module_id);
         }
@@ -425,7 +464,7 @@ class CamerasController extends Controller
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
 
-        if ($err == 804) {
+        if ($err == ERR_INVALID_CAMERA) {
             $err = $this->Camera_Add($user_id, $request);
             $camera = $this->Camera_Find($request->module_id);
         }
@@ -595,7 +634,9 @@ class CamerasController extends Controller
                     $param['filename'] = $ret['filename'];
                     $param['filesize'] = $ret['filesize'];
                     $photo = $this->Photo_Add($param);
-                    $this->Camera_Status_Update($request, 'upload');
+
+                    $this->Camera_Status_Update($param, 'upload');
+                    $this->Plan_Update($param);
 
                     if ($request->RequestID) {
                         $param = array(
@@ -609,6 +650,9 @@ class CamerasController extends Controller
                         $this->Action_Completed($param);
                     }
                 }
+
+            } else {
+                $err = ERR_NO_UPLOAD_FILE;
             }
         }
         return $this->Response_Result($err, $camera);
@@ -658,7 +702,9 @@ HighRes Max
                     $param['filename'] = $ret['filename'];
                     $param['filesize'] = $ret['filesize'];
                     $photo = $this->Photo_Add($param);
-                    $this->Camera_Status_Update($request, 'upload');
+
+                    $this->Camera_Status_Update($param, 'upload');
+                    $this->Plan_Update($param, 1);
 
                     if ($request->RequestID) {
                         $param = array(
@@ -672,6 +718,9 @@ HighRes Max
                         $this->Action_Completed($param);
                     }
                 }
+
+            } else {
+                $err = ERR_NO_UPLOAD_FILE;
             }
         }
         return $this->Response_Result($err, $camera);
@@ -723,7 +772,9 @@ HighRes Max
                     $param['filename'] = $ret['filename'];
                     $param['filesize'] = $ret['filesize'];
                     $photo = $this->Video_Add($param);
-                    $this->Camera_Status_Update($request, 'upload');
+
+                    $this->Camera_Status_Update($param, 'upload');
+                    $this->Plan_Update($param);
 
                     if ($request->RequestID) {
                         $param = array(
@@ -737,6 +788,9 @@ HighRes Max
                         $this->Action_Completed($param);
                     }
                 }
+
+            } else {
+                $err = ERR_NO_UPLOAD_FILE;
             }
         }
         return $this->Response_Result($err, $camera);
@@ -800,7 +854,9 @@ HighRes Max
                     $param['filename'] = $ret['filename'];
                     $param['filesize'] = $ret['filesize'];
                     $photo = $this->Video_Add($param);
-                    $this->Camera_Status_Update($request, 'upload');
+
+                    $this->Camera_Status_Update($param, 'upload');
+                    $this->Plan_Update($param, 1);
 
                     if ($request->RequestID) {
                         $param = array(
@@ -814,6 +870,9 @@ HighRes Max
                         $this->Action_Completed($param);
                     }
                 }
+
+            } else {
+                $err = ERR_NO_UPLOAD_FILE;
             }
         }
         return $this->Response_Result($err, $camera);
