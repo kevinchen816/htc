@@ -27,6 +27,14 @@ const ERR_INVALID_CAMERA            = 803;
 const ERR_NOT_CAMERA_OWNER          = 804;
 const ERR_NO_UPLOAD_FILE            = 805;
 
+/* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
+const ACTION_REQUESTED              = 1;
+const ACTION_COMPLETED              = 2;
+const ACTION_CANCELLED              = 3;
+const ACTION_FAILED                 = 4;
+const ACTION_PENDING                = 5;
+//const ACTION_ABORT                = 6;
+
 class CamerasController extends Controller
 {
     //const ERR_INVALID_SIM_CARD = 801;
@@ -62,6 +70,8 @@ class CamerasController extends Controller
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
             ERR_NO_UPLOAD_FILE => 'Not Upload File',
+
+// 910 => "The Request ID sent is for an non-pending Action."
 
             //801 => 'Invalid SIM card',
             //802 => 'Plan points empty',
@@ -99,86 +109,200 @@ class CamerasController extends Controller
         return ($action) ? 1 : 0;
     }
 
-    public function Action_FindFirst($camera_id) {
+    public function Action_FindFirst($camera_id, $status = 1) {
         $query['camera_id'] = $camera_id;
-        $query['status'] = 1;
+        $query['status'] = $status;
         $actions = DB::table('actions')->where($query);
         $action = $actions->first();
         return $action;
     }
 
-    public function Action_Add($camera_id, $action_code, $status = 1) {
+//    public function Action_AddX($camera_id, $action_code, $status = 1) {
+//        $action = new Action;
+//        $action->camera_id = $camera_id;
+//        $action->action = $action_code;
+//        $action->status = $status; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
+//        $action->requested = date('Y-m-d H:i:s');
+//        $action->save();
+//    }
+
+    public function Action_Add($param) {
         $action = new Action;
-        $action->camera_id = $camera_id;
-        $action->action = $action_code;
-        $action->status = $status; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
+        $action->camera_id = $param['camera_id'];
+        $action->action = $param['action_code'];
+        $action->status = $param['status']; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
         $action->requested = date('Y-m-d H:i:s');
+
+        if (isset($param['first_number'])) {
+            $action->first_number = $param['first_number'];
+        }
+
+        if (isset($param['last_number'])) {
+            $action->last_number = $param['last_number'];
+        }
+
         $action->save();
     }
 
-    public function Action_Completed($param) {
+    public function Action_Update($param) {
         $ret = 0;
         $request_id = $param['request_id'];
         if ($request_id) {
-            //$actions = DB::table('actions')->find($request_id);
-            //$action  = DB::table('actions')->first();
             $actions = DB::table('actions')->where('id', $request_id);
             $action  = $actions->first();
             if ($action) {
                 if (($action->camera_id == $param['camera_id']) &&
                     ($action->action == $param['action_code'])) {
+                    /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
+                    $data['status'] = $param['status'];
+                    $data['completed'] = date('Y-m-d H:i:s');
 
-                    if (($action->status == 1) || ($action->status == 5)) {
-                        $data['status'] = 2; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
-                        $data['completed'] = date('Y-m-d H:i:s');
-
-                        if (isset($param['filename'])) { // isset, empty, is_null
-                            $data['filename'] = $param['filename'];
-                        }
-
-                        if (isset($param['photo_id'])) {
-                            $data['photo_id'] = $param['photo_id'];
-                        }
-
-                        if (isset($param['photo_cnt'])) {
-                            $data['photo_cnt'] = $param['photo_cnt'];
-                        }
-
-                        $actions->update($data);
-                        $ret = 1;
+                    if (isset($param['filename'])) { // isset, empty, is_null
+                        $data['filename'] = $param['filename'];
                     }
+
+                    if (isset($param['photo_id'])) {
+                        $data['photo_id'] = $param['photo_id'];
+                    }
+
+                    if (isset($param['photo_cnt'])) {
+                        $data['photo_cnt'] = $param['photo_cnt'];
+                    }
+
+                    $actions->update($data);
+                    $ret = 1;
                 }
             }
         }
         return $ret;
+    }
+
+    public function Action_Completed($param) {
+        $param['status'] = ACTION_COMPLETED;
+        return $this->Action_Update($param);
+    }
+
+    public function Action_Cancelled($param) {
+        $param['status'] = ACTION_CANCELLED;
+        return $this->Action_Update($param);
     }
 
     public function Action_Failed($param) {
-        $ret = 0;
-        $request_id = $param['request_id'];
-        if ($request_id) {
-            $actions = DB::table('actions')->where('id', $request_id);
-            $action  = $actions->first();
-            if ($action) {
-                if (($action->camera_id == $param['camera_id']) &&
-                    ($action->action == $param['action_code'])) {
-
-                    if (($action->status == 1) || ($action->status == 5)) {
-                        $data['status'] = 4; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
-                        $data['completed'] = date('Y-m-d H:i:s');
-                        $actions->update($data);
-                        $ret = 1;
-                    }
-                }
-            }
-        }
-        return $ret;
+        $param['status'] = ACTION_FAILED;
+        return $this->Action_Update($param);
     }
+
+    public function Action_Pending($param) {
+        $param['status'] = ACTION_PENDING;
+        return $this->Action_Update($param);
+    }
+
+    //public function Action_Completed($param) {
+    //    $ret = 0;
+    //    $request_id = $param['request_id'];
+    //    if ($request_id) {
+    //        //$actions = DB::table('actions')->find($request_id);
+    //        //$action  = DB::table('actions')->first();
+    //        $actions = DB::table('actions')->where('id', $request_id);
+    //        $action  = $actions->first();
+    //        if ($action) {
+    //            if (($action->camera_id == $param['camera_id']) &&
+    //                ($action->action == $param['action_code'])) {
+    //
+    //                if (($action->status == ACTION_REQUESTED) || ($action->status ==ACTION_PENDING)) {
+    //                    /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
+    //                    $data['status'] = ACTION_COMPLETED;
+    //                    $data['completed'] = date('Y-m-d H:i:s');
+    //
+    //                    if (isset($param['filename'])) { // isset, empty, is_null
+    //                        $data['filename'] = $param['filename'];
+    //                    }
+    //
+    //                    if (isset($param['photo_id'])) {
+    //                        $data['photo_id'] = $param['photo_id'];
+    //                    }
+    //
+    //                    if (isset($param['photo_cnt'])) {
+    //                        $data['photo_cnt'] = $param['photo_cnt'];
+    //                    }
+    //
+    //                    $actions->update($data);
+    //                    $ret = 1;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    return $ret;
+    //}
+
+    public function Action_CancellAll($camera_id) {
+        /*
+        $query['camera_id'] = $camera_id;
+        $query['status'] = ACTION_REQUESTED; //$status;
+        $actions = DB::table('actions')->where($query);
+        //$action = $actions->first();
+
+        $data['status'] = ACTION_CANCELLED;
+        $actions->update($data);
+        return $actions;
+        */
+
+        $affected = DB::update(
+            'update actions set status = ? where camera_id = ? AND (status = ? OR status = ?)',
+            [ACTION_CANCELLED, $camera_id, ACTION_REQUESTED, ACTION_PENDING]
+        );
+        return $affected;
+    }
+
+    public function Action_CancellSchedulePending($camera_id) {
+        $query['camera_id'] = $camera_id;
+        $query['status'] = ACTION_PENDING;
+        $actions = DB::table('actions')->where($query);
+        //$action = $actions->first();
+
+        $data['status'] = ACTION_CANCELLED;
+        $actions->update($data);
+        return $actions;
+    }
+
+//    public function Action_Failed($param) {
+//        $ret = 0;
+//        $request_id = $param['request_id'];
+//        if ($request_id) {
+//            $actions = DB::table('actions')->where('id', $request_id);
+//            $action  = $actions->first();
+//            if ($action) {
+//                if (($action->camera_id == $param['camera_id']) &&
+//                    ($action->action == $param['action_code'])) {
+//
+//                    //if (($action->status == 1) || ($action->status == 5)) {
+//                        $data['status'] = 4; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
+//                        $data['completed'] = date('Y-m-d H:i:s');
+//                        $actions->update($data);
+//                        $ret = 1;
+//                    //}
+//                }
+//            }
+//        }
+//        return $ret;
+//    }
 
     /*----------------------------------------------------------------------------------*/
     /*{"ResultCode": 0,
-     "ActionCode": "DS", "ParameterList": {"REQUESTID": 6},
-     "DateTimeStamp": "2018-09-28 11:33:57"}*/
+       "ActionCode": "DS", "ParameterList": {"REQUESTID": 6},
+       "DateTimeStamp": "2018-09-28 11:33:57"}*/
+
+    /*
+    {
+        "RequestID": "18679",
+        "ResultCode": 0,
+        "ActionCode": "DS",
+        "ParameterList": {
+            "REQUESTID": "18677"
+        },
+        "DateTimeStamp": "2018-10-03 18:23:28"
+    }
+    */
     public function Response_Result($err, $camera = null, $datalist = null) {
         // date_default_timezone_set("Asia/Shanghai");
         $ret['ResultCode'] = $err;
@@ -477,13 +601,35 @@ class CamerasController extends Controller
             $this->Camera_Status_Update($request, 'arm');
 
             if ($request->Arm == 'Y') {
-                if ($this->Action_Search($camera->id, 'DS', 1) == 0) {
-                    $this->Action_Add($camera->id, 'DS');
-                }
+                //if ($this->Action_Search($camera->id, 'DS', 1) == 0) {
+                //    $param = array(
+                //        'camera_id'   => $camera->id,
+                //        'action_code' => 'DS',
+                //        'status'      => 1,
+                //    );
+                //    $this->Action_Add($param);
+                //}
 
-                if ($this->Action_Search($camera->id, 'PS', 1) == 0) {
-                    $this->Action_Add($camera->id, 'PS');
-                }
+                //if ($this->Action_Search($camera->id, 'PS', 1) == 0) {
+                //    $param = array(
+                //        'camera_id'   => $camera->id,
+                //        'action_code' => 'PS',
+                //        'status'      => 1,
+                //    );
+                //    $this->Action_Add($param);
+                //}
+
+                $this->Action_CancellAll($camera->id);
+
+                $param = array(
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'DS',
+                    'status'      => 1,
+                );
+                $this->Action_Add($param);
+
+                $param['action_code'] = 'PS';
+                $this->Action_Add($param);
             }
 
             if ($request->RequestID) {
@@ -491,8 +637,6 @@ class CamerasController extends Controller
                     'request_id'  => $request->RequestID,
                     'camera_id'   => $camera->id,
                     'action_code' => 'SR',
-                    //'photo_id'    => null,
-                    //'photo_cnt'   => null,
                 );
                 $this->Action_Completed($param);
             }
@@ -1007,8 +1151,9 @@ HighRes Max
                     'request_id'  => $request->RequestID,
                     'camera_id'   => $camera->id,
                     'action_code' => 'FW',
+                    'status' => 4, // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
                 );
-                $this->Action_Failed($param);
+                $this->Action_Update($param);
             }
         }
         return $this->Response_Result($err, $camera);
@@ -1071,6 +1216,18 @@ HighRes Max
         	"RequestID": "7583"
         }
     */
+
+/*
+{
+    "RequestID": "18679",
+    "ResultCode": 0,
+    "ActionCode": "DS",
+    "ParameterList": {
+        "REQUESTID": "18677"
+    },
+    "DateTimeStamp": "2018-10-03 18:23:28"
+}
+*/
     public function schedule(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -1079,35 +1236,46 @@ HighRes Max
         if ($err == 0) {
             $this->Camera_Status_Update($request, 'schedule');
 
+            $param = array(
+                'camera_id'   => $camera->id,
+                'action_code' => 'SC',
+            );
+
+            //if ($request->RequestID) {
+            //    $param['request_id'] = $request->RequestID;
+            //}
+
             if ($request->status == 'start') {
-                if ($this->Action_Search($camera->id, 'SC', 5) == 0) {
-                    $this->Action_Add($camera->id, 'SC', 5);
+                $this->Action_CancellSchedulePending($camera->id);
+
+                $param['status'] = ACTION_PENDING;
+                $this->Action_Add($param);
+
+                $ret = $this->Response_Result($err, $camera);
+                $action = $this->Action_FindFirst($camera->id, ACTION_PENDING);
+                if ($action) {
+                    $ret['RequestID'] = $action->id;
                 }
+
             } else if ($request->status == 'finish') {
                 if ($request->RequestID) {
-                    $param = array(
-                        'request_id'  => $request->RequestID,
-                        'camera_id'   => $camera->id,
-                        'action_code' => 'SC',
-                        //'photo_id'    => null,
-                        //'photo_cnt'   => null, // TODO
-                    );
+                    $param['request_id'] = $request->RequestID;
+                    //$param['photo_id'] = ;
+                    //$param['photo_cnt'] = ;
                     $this->Action_Completed($param);
                 }
+                $ret = $this->Response_Result($err, $camera);
+
             } else if ($request->status == 'abort') {
                 if ($request->RequestID) {
-                    $param = array(
-                        'request_id'  => $request->RequestID,
-                        'camera_id'   => $camera->id,
-                        'action_code' => 'SC',
-                        //'photo_id'    => null,
-                        //'photo_cnt'   => null, // TODO
-                    );
+                    $param['request_id'] = $request->RequestID;
                     $this->Action_Failed($param);
                 }
+                $ret = $this->Response_Result($err, $camera);
             }
         }
-        return $this->Response_Result($err, $camera);
+        //return $this->Response_Result($err, $camera);
+        return $ret;
     }
 
     /*----------------------------------------------------------------------------------*/
