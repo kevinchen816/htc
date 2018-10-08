@@ -10,7 +10,9 @@ use App\Models\Photo;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Schema;
+//use Storage;
 
 /*
 ICCID:
@@ -26,6 +28,11 @@ const ERR_PLAN_EMPTY                = 802;
 const ERR_INVALID_CAMERA            = 803;
 const ERR_NOT_CAMERA_OWNER          = 804;
 const ERR_NO_UPLOAD_FILE            = 805;
+
+const ERR_NO_BLOCK_NUMBER           = 806;
+const ERR_NO_CRC32                  = 807;
+const ERR_CRC32_FAIL                = 808;
+const ERR_NO_FILE_BUFFER            = 809;
 
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
@@ -71,17 +78,21 @@ class CamerasController extends Controller
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
             ERR_NO_UPLOAD_FILE => 'Not Upload File',
 
-// 910 => "The Request ID sent is for an non-pending Action."
-
-            //801 => 'Invalid SIM card',
-            //802 => 'Plan points empty',
-            //803 => 'Not Camera Owner',
-            //804 => 'Invalid Camera Module',
+            ERR_NO_BLOCK_NUMBER => 'Missing blocknbr',
+            ERR_NO_CRC32 => 'Missing CRC32',
+            ERR_CRC32_FAIL => 'CRC32 hash failure',
+            ERR_NO_FILE_BUFFER => 'Missing file buffer',
 
             //900 => 'Invalid or Missing camera Module',
             //901 => 'Invalid SIM card',
             //// 901 =>'Invalid or Missing camera Model',
             //902 => 'test or Missing camera Model',
+
+//902-> "ErrorMsg":"Required parameter(s) missing: [blocknbr, crc32]"
+//904-> "ErrorMsg":"CRC32 hash failure"
+//907-> "ErrorMsg":"file buffer is missing"
+//907-> "ErrorMsg": "Invalid Block ID or No Blocks Uploaded",
+//910-> "The Request ID sent is for an non-pending Action."
 
             //991 => 'add Camera',
             //992 => 'update Camera',
@@ -726,8 +737,125 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function uploadblock(Request $request) {
-        return $this->Response_Result(0);
+    /*
+        {"ResultCode":0,
+         "blockid":"rt5b4ee59befce2",
+         "blocknbr":1,
+         "DateTimeStamp":"2018-07-18 03:00:43"}
+    */
+/*
+const ERR_NO_BLOCK_NUMBER           = 806;
+const ERR_NO_CRC32                  = 807;
+const ERR_CRC32_FAIL                = 808;
+const ERR_NO_FILE_BUFFER            = 809;
+*/
+    public function uploadblock_response($blockid, $blocknbr) {
+        // date_default_timezone_set("Asia/Shanghai");
+        $ret['ResultCode'] = 0; //$err;
+        $ret['blockid'] = $blockid;
+        $ret['blocknbr'] = $blocknbr;
+        $ret['DateTimeStamp'] = date('Y-m-d H:i:s');
+        return $ret;
+    }
+
+/*
+PICT0001.JPG    336098999   140876b7
+PICT0002.JPG    1184126564  46945664
+*/
+    public function uploadblock(Request $request, ImageUploadHandler $uploader) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $camera = $ret['camera'];
+
+        if ($err == 0) {
+            $camera_id = $camera->id;
+
+            if (!isset($request->blocknbr)) {
+                return $this->Response_Result(ERR_NO_BLOCK_NUMBER, $camera);
+            }
+
+            if (!isset($request->crc32)) {
+                return $this->Response_Result(ERR_NO_CRC32, $camera);
+            }
+
+            if (!isset($request->buffer)) {
+                return $this->Response_Result(ERR_NO_FILE_BUFFER, $camera);
+            }
+
+            $blocknbr = $request->blocknbr;
+            $crc32 = $request->crc32;
+
+            if ($blocknbr == 1) {
+                $blockid = 'rt5bb7b9586d6fb';
+            } else {
+                $blockid = $request->blockid;
+            }
+
+/*
+//return storage_path(); // /home/vagrant/Code/htc/storage
+$ret = [];
+//$files = Storage::allFiles('.');
+//$files = Storage::allFiles('./public/1');
+//$directory = '/';
+$directory = 'public/1/rt5bb7b9586d6fb';
+$files = Storage::files($directory);
+$ret['files'] = $files;
+return $ret;
+*/
+
+//$ret = $uploader->merge($camera_id, $blockid, $crc32);
+//return $ret;
+            $file = $request->buffer; // $request->Image;
+            if ($file && $file->isValid()) {
+                $ret = $uploader->save_buffer($camera_id, $file, $blockid, $blocknbr, $crc32);
+                $err = $ret['err'];
+                if ($err == 0) {
+
+//$ret = hash_file('crc32b', $ret['path']); // https://www.cnblogs.com/mslagee/p/6223140.html
+//$ret = hexdec($ret);
+
+//$folder_name = $ret['folder_name'].'/';
+//$directory = $ret['upload_path'].'/';
+//$ret['directory'] = $directory;
+//return $directory;
+
+//$files = Storage::files($folder_name);
+//$files = Storage::files('/storage/1/rt5bb7b9586d6fb/');
+//$files = Storage::files($directory);
+//$files = Storage::files('/');
+
+//$files = Storage::allFiles($directory);
+//$files = Storage::allFiles('.');
+//$ret['files'] = $files;
+
+//$size = Storage::size($ret['path']);
+//$ret['size'] = $size;
+
+//$ret['local'] = Storage::disk('local');
+return $ret;
+
+                    ////$OriginalName = $ret['OriginalName'];
+                    //$OriginalName = $request->FileName;     // PICT0001.JPG
+                    //$filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                    //$filesize = $ret['filesize'];
+
+                    //$param = $request;
+                    //$param['camera_id'] = $camera_id;
+                    //$param['filename'] = $filename;
+                    //$param['filesize'] = $filesize;
+                    //$photo = $this->Photo_Add($param);
+
+                    //$this->Camera_Status_Update($param, 'upload');
+                    //$this->Plan_Update($param);
+
+                    return $this->uploadblock_response($blockid, $blocknbr);
+                }
+
+            } else {
+                $err = ERR_NO_FILE_BUFFER;
+            }
+        }
+        return $this->Response_Result($err, $camera);
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -771,31 +899,66 @@ class CamerasController extends Controller
         if ($err == 0) {
             $camera_id = $camera->id;
 
+            if (isset($request->blockid)) {
+                $ret = $uploader->merge($camera_id, $request->blockid, $request->crc32);
+                //return $request;
+                return $ret;
+            }
+
             $file = $request->Image;
             if ($file && $file->isValid()) {
                 // $ret = $uploader->save_file($file);
                 $ret = $uploader->save_file_ex($camera_id, $file);
                 $err = $ret['err'];
                 if ($err == 0) {
+                    //$OriginalName = $ret['OriginalName'];
+                    $OriginalName = $request->FileName;     // PICT0001.JPG
+                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                    $filesize = $ret['filesize'];
+
                     $param = $request;
                     $param['camera_id'] = $camera_id;
-                    $param['filename'] = $ret['filename'];
-                    $param['filesize'] = $ret['filesize'];
+                    $param['filename'] = $filename;
+                    $param['filesize'] = $filesize;
                     $photo = $this->Photo_Add($param);
 
                     $this->Camera_Status_Update($param, 'upload');
                     $this->Plan_Update($param);
 
                     if ($request->RequestID) {
-                        $param = array(
-                            'request_id'  => $request->RequestID,
-                            'camera_id'   => $camera->id,
-                            'action_code' => 'PS',
-                            'filename'    => $ret['clientName'],
-                            'photo_id'    => $photo->id,
-                            'photo_cnt'   => 1,
-                        );
-                        $this->Action_Completed($param);
+//                        $param = array(
+//                            'request_id'  => $request->RequestID,
+//                            'camera_id'   => $camera_id,
+//                            'action_code' => 'PS',
+//                            'filename'    => $OriginalName,
+//                            'photo_id'    => $photo->id,
+//                            'photo_cnt'   => 1,
+//                        );
+//                        $this->Action_Completed($param);
+
+                        $request_id = $request->RequestID;
+                        $actions = DB::table('actions')->where('id', $request_id);
+                        $action  = $actions->first();
+                        if ($action) {
+                            if ($action->camera_id == $camera_id) {
+                                if ($action->action == 'PS') {
+                                    $data['filename'] = $OriginalName;
+                                    $data['photo_id'] = $photo->id;
+                                    $data['photo_cnt'] = 1;
+                                    $data['status'] = ACTION_COMPLETED;
+
+                                } else if ($action->action == 'SC') {
+                                    $data['filename'] = $OriginalName;
+                                    $data['photo_id'] = $photo->id;
+                                    //if ($OriginalName != $action->filename) {
+                                    if ($request->FileName != $action->filename) {
+                                        $data['photo_cnt'] = $action->photo_cnt + 1;
+                                    }
+                                }
+                                $data['completed'] = date('Y-m-d H:i:s');
+                                $actions->update($data);
+                            }
+                        }
                     }
                 }
 
@@ -845,10 +1008,15 @@ HighRes Max
                 $ret = $uploader->save_file_ex($camera_id, $file);
                 $err = $ret['err'];
                 if ($err == 0) {
+                    //$OriginalName = $ret['OriginalName'];
+                    $OriginalName = $request->FileName;     // PICT0001.JPG
+                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                    $filesize = $ret['filesize'];
+
                     $param = $request;
                     $param['camera_id'] = $camera_id;
-                    $param['filename'] = $ret['filename'];
-                    $param['filesize'] = $ret['filesize'];
+                    $param['filename'] = $filename;
+                    $param['filesize'] = $filesize;
                     $photo = $this->Photo_Add($param);
 
                     $this->Camera_Status_Update($param, 'upload');
@@ -859,7 +1027,7 @@ HighRes Max
                             'request_id'  => $request->RequestID,
                             'camera_id'   => $camera->id,
                             'action_code' => 'UO',
-                            'filename'    => $ret['clientName'],
+                            'filename'    => $OriginalName,
                             'photo_id'    => $photo->id,
                             'photo_cnt'   => 1,
                         );
@@ -915,25 +1083,54 @@ HighRes Max
                 $ret = $uploader->save_file_ex($camera_id, $file);
                 $err = $ret['err'];
                 if ($err == 0) {
+                    //$OriginalName = $ret['OriginalName'];
+                    $OriginalName = $request->FileName;     // PICT0001.JPG
+                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                    $filesize = $ret['filesize'];
+
                     $param = $request;
                     $param['camera_id'] = $camera_id;
-                    $param['filename'] = $ret['filename'];
-                    $param['filesize'] = $ret['filesize'];
+                    $param['filename'] = $filename;
+                    $param['filesize'] = $filesize;
                     $photo = $this->Video_Add($param);
 
                     $this->Camera_Status_Update($param, 'upload');
                     $this->Plan_Update($param);
 
                     if ($request->RequestID) {
-                        $param = array(
-                            'request_id'  => $request->RequestID,
-                            'camera_id'   => $camera->id,
-                            'action_code' => 'PS',
-                            'filename'    => $ret['clientName'],
-                            'photo_id'    => $photo->id,
-                            'photo_cnt'   => 1,
-                        );
-                        $this->Action_Completed($param);
+                        //$param = array(
+                        //    'request_id'  => $request->RequestID,
+                        //    'camera_id'   => $camera->id,
+                        //    'action_code' => 'PS',
+                        //    'filename'    => $ret['OriginalName'],
+                        //    'photo_id'    => $photo->id,
+                        //    'photo_cnt'   => 1,
+                        //);
+                        //$this->Action_Completed($param);
+
+                        $request_id = $request->RequestID;
+                        $actions = DB::table('actions')->where('id', $request_id);
+                        $action  = $actions->first();
+                        if ($action) {
+                            if ($action->camera_id == $camera_id) {
+                                if ($action->action == 'PS') {
+                                    $data['filename'] = $OriginalName;
+                                    $data['photo_id'] = $photo->id;
+                                    $data['photo_cnt'] = 1;
+                                    $data['status'] = ACTION_COMPLETED;
+
+                                } else if ($action->action == 'SC') {
+                                    $data['filename'] = $OriginalName;
+                                    $data['photo_id'] = $photo->id;
+                                    //if ($OriginalName != $action->filename) {
+                                    if ($request->FileName != $action->filename) {
+                                        $data['photo_cnt'] = $action->photo_cnt + 1;
+                                    }
+                                }
+                                $data['completed'] = date('Y-m-d H:i:s');
+                                $actions->update($data);
+                            }
+                        }
                     }
                 }
 
@@ -997,10 +1194,15 @@ HighRes Max
                 $ret = $uploader->save_file_ex($camera_id, $file);
                 $err = $ret['err'];
                 if ($err == 0) {
+                    //$OriginalName = $ret['OriginalName'];
+                    $OriginalName = $request->FileName;     // PICT0001.JPG
+                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                    $filesize = $ret['filesize'];
+
                     $param = $request;
                     $param['camera_id'] = $camera_id;
-                    $param['filename'] = $ret['filename'];
-                    $param['filesize'] = $ret['filesize'];
+                    $param['filename'] = $filename;
+                    $param['filesize'] = $filesize;
                     $photo = $this->Video_Add($param);
 
                     $this->Camera_Status_Update($param, 'upload');
@@ -1011,7 +1213,7 @@ HighRes Max
                             'request_id'  => $request->RequestID,
                             'camera_id'   => $camera->id,
                             'action_code' => 'UV',
-                            'filename'    => $ret['clientName'],
+                            'filename'    => $OriginalName,
                             'photo_id'    => $photo->id,
                             'photo_cnt'   => 1,
                         );
@@ -1248,6 +1450,8 @@ HighRes Max
             if ($request->status == 'start') {
                 $this->Action_CancellSchedulePending($camera->id);
 
+                $param['first_number'] = $request->first_number;
+                $param['last_number'] = $request->last_number;
                 $param['status'] = ACTION_PENDING;
                 $this->Action_Add($param);
 

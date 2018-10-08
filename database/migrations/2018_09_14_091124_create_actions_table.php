@@ -24,6 +24,8 @@ class CreateActionsTable extends Migration
             $table->string('filename')->nullable();
             $table->integer('photo_id')->default(0);    // UO
             $table->integer('photo_cnt')->default(0);   // photo count for schedule uploaded
+            $table->integer('first_number')->default(0);
+            $table->integer('last_number')->default(0);
             $table->timestamps();
         });
     }
