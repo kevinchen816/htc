@@ -22,6 +22,8 @@ class CreateActionsTable extends Migration
             $table->dateTime('completed')->nullable();
 
             $table->string('filename')->nullable();
+            $table->integer('image_size')->nullable();
+            $table->integer('compression')->nullable();
             $table->integer('photo_id')->default(0);    // UO
             $table->integer('photo_cnt')->default(0);   // photo count for schedule uploaded
             $table->integer('first_number')->default(0);

@@ -95,35 +95,21 @@ class ImageUploadHandler
         //$ret['err'] = $file->getError();
         //$ret['err_msg'] = $file->getErrorMessage();
 
-        // 获取文件的后缀名，因图片从剪贴板里黏贴时后缀名为空，所以此处确保后缀一直存在
-        //$extension = strtolower($file->getClientOriginalExtension()) ?: 'png';
         $OriginalName = $file->getClientOriginalName();
-        $extension = strtoupper($file->getClientOriginalExtension()); // JPG
+        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
 
         // 构建存储的文件夹规则，值如：uploads/images/avatars/201709/21/
         // 文件夹切割能让查找效率更高。
-        //$folder_name = "uploads/images/$folder/" . date("Ym/d", time());
-        // $folder_name = "uploads/images";
-        $folder_name = "uploads/".$camera_id;
-        //$folder_name = "storage/".$camera_id;
-
-        // 文件具体存储的物理路径，`public_path()` 获取的是 `public` 文件夹的物理路径。
-        // 值如：/home/vagrant/Code/larabbs/public/uploads/images/avatars/201709/21/
-        // 值如：/home/vagrant/Code/larabbs/public + / + uploads/images/
-        $upload_path = public_path() . '/' . $folder_name;
-
-        // 拼接文件名，加前缀是为了增加辨析度，前缀可以是相关数据模型的 ID
-        // 值如：1_1493521050_7BVc9v9ujP.png
+        //$folder_name = "uploads/images/$folder/".date("Ym/d", time());
         //$filename = md5(date('ymdhis').$OriginalName).".".$extension; // 0be0fa46c2062453c8e0a375fe68f5fd.JPG
-        //$filename = $file_prefix . '_' . time() . '_' . str_random(10) . '.' . $extension;
+        $path_upload = public_path().'/uploads/'.$camera_id;
         $filename = time() . '_' . str_random(10) . '.' . $extension;
 
-        /* /home/vagrant/Code/htc/public/uploads/1/1538422610_nHRsYCi1YG.JPG" */
-        $path = $file->move($upload_path, $filename);
+        $path = $file->move($path_upload, $filename);
 
-        $ret['OriginalName'] = $file->getClientOriginalName();  // "PICT0001.JPG"
-        $ret['filename'] = $filename;                           // "1538422239_Cf7PQK04w4.JPG"
-        $ret['filesize'] = $file->getClientSize();              // 7032
+        $ret['OriginalName'] = $OriginalName;       // "PICT0001.JPG"
+        $ret['filename'] = $filename;               // "1538422239_Cf7PQK04w4.JPG"
+        $ret['filesize'] = $file->getClientSize();  // 7032
         //$ret['path'] = "$path";
         $ret['err'] = 0;
         return $ret;
@@ -173,18 +159,18 @@ class ImageUploadHandler
         //return Storage::files('.');
         //return Storage::allFiles('.');
 
-        $folder_name = public_path().'/uploads/block/'.$blockid;
-        if (!file_exists($folder_name)) {
-            $ret['err'] = 1; //$err;
+        $path_block = public_path().'/uploads/block/'.$blockid;
+        if (!file_exists($path_block)) {
+            $ret['err'] = 1;
             return $ret;
         }
 
-        $tagert_name =  $folder_name .'/'. $filename;
+        $tagert_name =  $path_block .'/'. $filename;
         if (file_exists($tagert_name)) {
             unlink($tagert_name);
         }
 
-        $files = $this->dirTree($folder_name);
+        $files = $this->dirTree($path_block);
         sort($files);
 
         $fp = fopen($tagert_name, 'w+b');
@@ -200,6 +186,9 @@ class ImageUploadHandler
         /* https://www.cnblogs.com/mslagee/p/6223140.html */
         $crc32_check = hexdec(hash_file('crc32b', $tagert_name));
         if ($crc32_check == $crc32) {
+            //$extension = strtoupper($file->getClientOriginalExtension()); // JPG
+            $extension = 'JPG';
+            $filename = time() . '_' . str_random(10) . '.' . $extension;
             $to_file = public_path().'/uploads/'.$camera_id.'/'.$filename;
             $ret = copy($tagert_name, $to_file);
             if($ret == true) {
@@ -211,19 +200,21 @@ class ImageUploadHandler
             $err = 2/*1*/;
         }
 
+        $ret = [];
+        $ret['err'] = $err;
+        $ret['CRC32'] = $crc32_check;
         if ($err == 0) {
             foreach ($files as $file) {
                 unlink($file);
             }
             unlink($tagert_name);
-            rmdir($folder_name);
-        }
+            rmdir($path_block);
 
-        $ret = [];
-        $ret['path'] = "$tagert_name";
-        $ret['to_file'] = "$to_file";
-        $ret['CRC32'] = $crc32_check;
-        $ret['err'] = $err;
+            //$ret['path'] = "$tagert_name";
+            //$ret['to_file'] = "$to_file";
+            $ret['filename'] = $filename;   // 1538422239_Cf7PQK04w4.JPG
+            $ret['filesize'] = filesize($to_file);
+        }
         return $ret;
     }
 

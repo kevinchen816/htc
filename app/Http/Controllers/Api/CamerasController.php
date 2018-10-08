@@ -28,15 +28,18 @@ const ERR_PLAN_EMPTY                = 802;
 const ERR_INVALID_CAMERA            = 803;
 const ERR_NOT_CAMERA_OWNER          = 804;
 const ERR_NO_UPLOAD_FILE            = 805;
+const ERR_NO_REQUEST_ID             = 806;
+const ERR_INVALID_REQUEST_ID        = 807;
+const ERR_INVALID_PHOTO_ID          = 808;
 
-const ERR_NO_BLOCK_NUMBER           = 806;
-const ERR_NO_BLOCK_ID               = 807;
-const ERR_NO_CRC32                  = 808;
-const ERR_NO_FILE_BUFFER            = 809;
-const ERR_CRC32_FAIL                = 810;
-const ERR_INVALID_BLOCK_NUMBER      = 811;
-const ERR_INVALID_BLOCK_ID          = 812;
-const ERR_COPY_MERGE_FILE_FAIL      = 813;
+const ERR_NO_BLOCK_NUMBER           = 811;
+const ERR_NO_BLOCK_ID               = 812;
+const ERR_NO_CRC32                  = 813;
+const ERR_NO_FILE_BUFFER            = 814;
+const ERR_CRC32_FAIL                = 815;
+const ERR_INVALID_BLOCK_NUMBER      = 816;
+const ERR_INVALID_BLOCK_ID          = 817;
+const ERR_COPY_MERGE_FILE_FAIL      = 818;
 
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
@@ -80,7 +83,10 @@ class CamerasController extends Controller
             ERR_PLAN_EMPTY => 'Plan points empty',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
-            ERR_NO_UPLOAD_FILE => 'Not Upload File',
+            ERR_NO_UPLOAD_FILE => 'No Upload File',
+            ERR_NO_REQUEST_ID => 'No Request ID',
+            ERR_INVALID_REQUEST_ID => 'Invalid Request ID',
+            ERR_INVALID_PHOTO_ID => 'Invalid Photo ID',
 
             ERR_NO_BLOCK_NUMBER => 'Missing blocknbr',
             ERR_NO_BLOCK_ID => 'Missing blockid',
@@ -96,6 +102,7 @@ class CamerasController extends Controller
             //// 901 =>'Invalid or Missing camera Model',
             //902 => 'test or Missing camera Model',
 
+//900-> "Unknown Exception: Creating default object from empty value",
 //902-> "Required parameter(s) missing: [blocknbr, crc32]"
 //902-> "Invalid blocknbr: 0",
 //904-> "CRC32 hash failure"
@@ -165,36 +172,43 @@ class CamerasController extends Controller
     }
 
     public function Action_Update($param) {
-        $ret = 0;
+        //$ret = 0;
         $request_id = $param['request_id'];
-        if ($request_id) {
-            $actions = DB::table('actions')->where('id', $request_id);
-            $action  = $actions->first();
-            if ($action) {
-                if (($action->camera_id == $param['camera_id']) &&
-                    ($action->action == $param['action_code'])) {
-                    /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
-                    $data['status'] = $param['status'];
-                    $data['completed'] = date('Y-m-d H:i:s');
+        $actions = DB::table('actions')->where('id', $request_id);
+        $action  = $actions->first();
+        if ($action) {
+            if (($action->camera_id == $param['camera_id']) &&
+                ($action->action == $param['action_code'])) {
+                /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
+                $data['status'] = $param['status'];
+                $data['completed'] = date('Y-m-d H:i:s');
 
-                    if (isset($param['filename'])) { // isset, empty, is_null
-                        $data['filename'] = $param['filename'];
-                    }
-
-                    if (isset($param['photo_id'])) {
-                        $data['photo_id'] = $param['photo_id'];
-                    }
-
-                    if (isset($param['photo_cnt'])) {
-                        $data['photo_cnt'] = $param['photo_cnt'];
-                    }
-
-                    $actions->update($data);
-                    $ret = 1;
+                if (isset($param['filename'])) { // isset, empty, is_null
+                    $data['filename'] = $param['filename'];
                 }
+
+                if (isset($param['image_size'])) {
+                    $data['image_size'] = $param['image_size'];
+                }
+
+                if (isset($param['compression'])) {
+                    $data['compression'] = $param['compression'];
+                }
+
+                if (isset($param['photo_id'])) {
+                    $data['photo_id'] = $param['photo_id'];
+                }
+
+                if (isset($param['photo_cnt'])) {
+                    $data['photo_cnt'] = $param['photo_cnt'];
+                }
+
+                $actions->update($data);
+                //$ret = 1;
             }
         }
-        return $ret;
+        //return $ret;
+        return $action;
     }
 
     public function Action_Completed($param) {
@@ -308,19 +322,18 @@ class CamerasController extends Controller
 //    }
 
     /*----------------------------------------------------------------------------------*/
-    /*{"ResultCode": 0,
-       "ActionCode": "DS", "ParameterList": {"REQUESTID": 6},
-       "DateTimeStamp": "2018-09-28 11:33:57"}*/
-
     /*
     {
-        "RequestID": "18679",
+        "RequestID": "18679", <-- schedule
         "ResultCode": 0,
-        "ActionCode": "DS",
+        "ActionCode": "UO",
         "ParameterList": {
-            "REQUESTID": "18677"
+            "FILENAME": "PICT0089.JPG",
+            "IMAGESIZE": "5",
+            "COMPRESSION": "28",
+            "REQUESTID": "18372"
         },
-        "DateTimeStamp": "2018-10-03 18:23:28"
+        "DateTimeStamp": "2018-10-01 20:45:55"
     }
     */
     public function Response_Result($err, $camera = null, $datalist = null) {
@@ -335,8 +348,20 @@ class CamerasController extends Controller
             if ($camera) {
                 $action = $this->Action_FindFirst($camera->id);
                 if ($action) {
-                    $ret['ActionCode'] = $action->action;
-                    $ret['ParameterList'] = ["REQUESTID" => $action->id];
+                    $action_code = $action->action;
+                    if ($action_code == 'UO') {
+                        $param_list["FILENAME"] = $action->filename;
+                        $param_list["IMAGESIZE"] = (string) $action->image_size;
+                        if ($action->compression) {
+                            $param_list["COMPRESSION"] = (string) $action->compression;
+                        }
+                    } else if ($action_code == 'UV') {
+                        $param_list["FILENAME"] = $action->filename;
+                    }
+                    $param_list["REQUESTID"] = (string) $action->id;
+
+                    $ret['ActionCode'] = $action_code;
+                    $ret['ParameterList'] = $param_list;
                 }
             }
         //} else if ($err == 1) {
@@ -382,15 +407,21 @@ class CamerasController extends Controller
         $point_video_thumb = array(1.0, 2.0, 3.0, 6.0);
 
         $resolution = (integer) ($param->upload_resolution);
-        $quality = (integer) ($param->photo_quality);
+        if (isset($param->photo_quality)) {
+            $quality = (integer) ($param->photo_quality);
+        } else {
+            $quality = 1;
+        }
         $points = 0;
 
         if ($original) {
             $points = $param->filesize/(30*1024);
         } else {
-            if ($resolution > 6) {
+            if ($resolution >= 8) {
                 $resolution -= 8;
                 $points = $point_video_thumb[$resolution];
+            } else if ($resolution == 6) {
+                $points = $param->filesize/(30*1024);
             } else {
                 $resolution -= 1;
                 $quality -= 1;
@@ -404,7 +435,8 @@ class CamerasController extends Controller
             $data['points_used'] = $plan->points_used + $points;
             $plans->update($data);
         }
-        return $plan;
+        //return $plan;
+        return $points;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -485,6 +517,11 @@ class CamerasController extends Controller
 
             $data['last_filename'] = $param->filename;
 
+            if ($param->Source != 'setup') {
+                $data['arm_photos'] = $camera->arm_photos+1;
+                $data['arm_points'] = $camera->arm_points + $param->points;
+            }
+
         } else {
             $datalist = $param->DataList;
             if ($datalist) {
@@ -524,8 +561,9 @@ class CamerasController extends Controller
         $photo = new Photo;
         $photo->camera_id         = $param->camera_id; // TODO
         $photo->filename          = $param->FileName;
-        $photo->resolution        = $param->upload_resolution;
+        $photo->filetype          = 1;
         $photo->filesize          = $param->filesize;
+        $photo->resolution        = $param->upload_resolution;
 
         $photo->photo_quality     = $param->photo_quality;
         $photo->photo_compression = $param->photo_compression;
@@ -541,9 +579,9 @@ class CamerasController extends Controller
         $photo = new Photo;
         $photo->camera_id       = $param->camera_id; // TODO
         $photo->filename        = $param->FileName;
+        $photo->filetype        = 2;
+        $photo->filesize        = $param->filesize; // $param->video_filesize;
         $photo->resolution      = $param->upload_resolution;
-        $photo->filesize        = $param->filesize;
-        //$photo->filesize        = $param->video_filesize;
 
         $photo->photo_quality   = $param->photo_quality;
         $photo->video_length    = (integer) ($param->video_length);
@@ -767,15 +805,13 @@ class CamerasController extends Controller
         $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
         $err = $ret['err'];
         if ($err == 0) {
-            $ret = $this->Response_Result($err, $camera);
+            $ret['err'] = 0;
         } else if ($err == 1) {
-            $ret = $this->Response_Result(ERR_INVALID_BLOCK_ID, $camera);
+            $ret['err'] = ERR_INVALID_BLOCK_ID;
         } else if ($err == 2) {
-            $crc32 = $ret['CRC32'];
-            $ret = $this->Response_Result(ERR_CRC32_FAIL, $camera);
-            $ret['CRC32'] = $crc32;
+            $ret['err'] = ERR_CRC32_FAIL;
         } else if ($err == 3) {
-            $ret = $this->Response_Result(ERR_COPY_MERGE_FILE_FAIL, $camera);
+            $ret['err'] = ERR_COPY_MERGE_FILE_FAIL;
         }
         return $ret;
     }
@@ -808,8 +844,7 @@ PICT0002.JPG    1184126564  46945664
             if ($blocknbr <= 0) {
                 return $this->Response_Result(ERR_INVALID_BLOCK_NUMBER, $camera);
             } else if ($blocknbr == 1) {
-                //$blockid = 'rt5bb7b9586d6fb';
-                $blockid = date('ymdhis').'_'.$camera_id;
+                $blockid = date('ymdhis').'_'.$camera_id; // 'rt5bb7b9586d6fb'
             } else {
                 if (!isset($request->blockid)) {
                     return $this->Response_Result(ERR_NO_BLOCK_ID, $camera);
@@ -838,9 +873,6 @@ PICT0002.JPG    1184126564  46945664
                     } else {
                         $ret = $this->uploadblock_response($blockid, $blocknbr);
                     }
-
-                    //$this->Camera_Status_Update($param, 'upload');
-                    //$this->Plan_Update($param);
                     return $ret;
                 }
 
@@ -876,7 +908,8 @@ PICT0002.JPG    1184126564  46945664
             "Image": {}
         }
     */
-    public function uploadthumb(Request $request, ImageUploadHandler $uploader) {
+    //public function uploadfile(Request $request, ImageUploadHandler $uploader) {
+    public function uploadfile($request, $api) {
         //$camera = $camera->find(1);
         //return $camera;
 
@@ -884,6 +917,8 @@ PICT0002.JPG    1184126564  46945664
         // $camera = DB::table('cameras')
         //                 ->where('module_id', $request->module_id)
         //                 ->first();
+
+        $uploader = new ImageUploadHandler;
 
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -893,71 +928,80 @@ PICT0002.JPG    1184126564  46945664
             $camera_id = $camera->id;
 
             if (isset($request->blockid)) {
-                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                $err = $ret['err'];
+            } else {
+                $file = $request->Image;
+                if ($file && $file->isValid()) {
+                    // $ret = $uploader->save_file($file);
+                    $ret = $uploader->save_file_ex($camera_id, $file);
+                    $err = $ret['err'];
+                } else {
+                    $err = ERR_NO_UPLOAD_FILE;
+                }
             }
 
-            $file = $request->Image;
-            if ($file && $file->isValid()) {
-                // $ret = $uploader->save_file($file);
-                $ret = $uploader->save_file_ex($camera_id, $file);
-                $err = $ret['err'];
-                if ($err == 0) {
-                    //$OriginalName = $ret['OriginalName'];
-                    $OriginalName = $request->FileName;     // PICT0001.JPG
-                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
-                    $filesize = $ret['filesize'];
+            if ($err == 0) {
+                //$OriginalName = $ret['OriginalName'];
+                $OriginalName = $request->FileName;     // PICT0001.JPG
+                $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                $filesize = $ret['filesize'];
 
-                    $param = $request;
-                    $param['camera_id'] = $camera_id;
-                    $param['filename'] = $filename;
-                    $param['filesize'] = $filesize;
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['filename'] = $filename;
+                $param['filesize'] = $filesize;
+
+                if ($api == 'video_thumb') {
+                    $photo = $this->Video_Add($param);
+                } else {
                     $photo = $this->Photo_Add($param);
+                }
 
-                    $this->Camera_Status_Update($param, 'upload');
-                    $this->Plan_Update($param);
+                $points = $this->Plan_Update($param);
+                $param['points'] = $points;
+                $this->Camera_Status_Update($param, 'upload');
 
-                    if ($request->RequestID) {
-//                        $param = array(
-//                            'request_id'  => $request->RequestID,
-//                            'camera_id'   => $camera_id,
-//                            'action_code' => 'PS',
-//                            'filename'    => $OriginalName,
-//                            'photo_id'    => $photo->id,
-//                            'photo_cnt'   => 1,
-//                        );
-//                        $this->Action_Completed($param);
+                if ($request->RequestID) {
+                    $request_id = $request->RequestID;
+                    $actions = DB::table('actions')->where('id', $request_id);
+                    $action  = $actions->first();
+                    if ($action) {
+                        if ($action->camera_id == $camera_id) {
+                            if ($action->action == 'PS') {
+                                $data['filename'] = $OriginalName;
+                                $data['photo_id'] = $photo->id;
+                                $data['photo_cnt'] = 1;
+                                $data['status'] = ACTION_COMPLETED;
 
-                        $request_id = $request->RequestID;
-                        $actions = DB::table('actions')->where('id', $request_id);
-                        $action  = $actions->first();
-                        if ($action) {
-                            if ($action->camera_id == $camera_id) {
-                                if ($action->action == 'PS') {
-                                    $data['filename'] = $OriginalName;
-                                    $data['photo_id'] = $photo->id;
-                                    $data['photo_cnt'] = 1;
-                                    $data['status'] = ACTION_COMPLETED;
-
-                                } else if ($action->action == 'SC') {
-                                    $data['filename'] = $OriginalName;
-                                    $data['photo_id'] = $photo->id;
-                                    //if ($OriginalName != $action->filename) {
-                                    if ($request->FileName != $action->filename) {
-                                        $data['photo_cnt'] = $action->photo_cnt + 1;
-                                    }
+                            } else if ($action->action == 'SC') {
+                                $data['filename'] = $OriginalName;
+                                $data['photo_id'] = $photo->id;
+                                if ($OriginalName != $action->filename) {
+                                    $data['photo_cnt'] = $action->photo_cnt + 1;
                                 }
-                                $data['completed'] = date('Y-m-d H:i:s');
-                                $actions->update($data);
                             }
+                            $data['completed'] = date('Y-m-d H:i:s');
+                            $actions->update($data);
                         }
                     }
                 }
-
-            } else {
-                $err = ERR_NO_UPLOAD_FILE;
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        if ($err == ERR_CRC32_FAIL) {
+            $crc32 = $ret['CRC32'];
+            $ret = $this->Response_Result($err, $camera);
+            $ret['CRC32'] = $crc32;
+        } else {
+            $ret = $this->Response_Result($err, $camera);
+        }
+        return $ret;
+    }
+
+    //public function uploadthumb(Request $request, ImageUploadHandler $uploader) {
+    public function uploadthumb(Request $request) {
+        return $this->uploadfile($request, 'photo_thumb');
     }
 
 /*
@@ -993,45 +1037,80 @@ HighRes Max
         if ($err == 0) {
             $camera_id = $camera->id;
 
-            if (isset($request->blockid)) {
-                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+            if (!isset($request->RequestID)) {
+                return $this->Response_Result(ERR_NO_REQUEST_ID, $camera);
             }
 
-            $file = $request->Image;
-            if ($file && $file->isValid()) {
-                //$file->move($directory, $name = null);
-                $ret = $uploader->save_file_ex($camera_id, $file);
+            /* search Action */
+            $request_id = $request->RequestID;
+            $query = array(
+                'id' => $request_id,
+                'camera_id' => $camera_id,
+                'action' => 'UO',
+                'status' => ACTION_REQUESTED,
+            );
+            $actions = DB::table('actions')->where($query);
+            $action  = $actions->first();
+            if (!$action) {
+                return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
+            }
+            $photo_id = $action->photo_id;
+
+            /* search Photo */
+            $query = array(
+                'id' => $photo_id,
+                'camera_id' => $camera_id,
+            );
+            $photos = DB::table('photos')->where($query);
+            $photo = $photos->first();
+            if (!$photo) {
+                return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
+            }
+
+            if (isset($request->blockid)) {
+                $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
                 $err = $ret['err'];
-                if ($err == 0) {
-                    //$OriginalName = $ret['OriginalName'];
-                    $OriginalName = $request->FileName;     // PICT0001.JPG
-                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
-                    $filesize = $ret['filesize'];
-
-                    $param = $request;
-                    $param['camera_id'] = $camera_id;
-                    $param['filename'] = $filename;
-                    $param['filesize'] = $filesize;
-                    $photo = $this->Photo_Add($param);
-
-                    $this->Camera_Status_Update($param, 'upload');
-                    $this->Plan_Update($param, 1);
-
-                    if ($request->RequestID) {
-                        $param = array(
-                            'request_id'  => $request->RequestID,
-                            'camera_id'   => $camera->id,
-                            'action_code' => 'UO',
-                            'filename'    => $OriginalName,
-                            'photo_id'    => $photo->id,
-                            'photo_cnt'   => 1,
-                        );
-                        $this->Action_Completed($param);
-                    }
-                }
-
             } else {
-                $err = ERR_NO_UPLOAD_FILE;
+                $file = $request->Image;
+                if ($file && $file->isValid()) {
+                    $ret = $uploader->save_file_ex($camera_id, $file);
+                    $err = $ret['err'];
+                } else {
+                    $err = ERR_NO_UPLOAD_FILE;
+                }
+            }
+
+            if ($err == 0) {
+                //$OriginalName = $ret['OriginalName'];
+                $OriginalName = $request->FileName;     // PICT0001.JPG
+                $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                $filesize = $ret['filesize'];
+
+                /* update Photo */
+                $data = [];
+                $data['resolution'] = $request->upload_resolution;
+                $data['filesize'] = $filesize;
+                $data['photo_compression'] = $request->photo_compression;
+                $data['filepath'] = $filename;
+                $photos->update($data);
+
+                /* update Plan */
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['filename'] = $filename;
+                $param['filesize'] = $filesize;
+                $points = $this->Plan_Update($param);
+
+                /* update Camera Status */
+                $param['points'] = $points;
+                $this->Camera_Status_Update($param, 'upload');
+
+                /* update Action */
+                $data = [];
+                $data['status'] = ACTION_COMPLETED;
+                $data['completed'] = date('Y-m-d H:i:s');
+                $data['photo_cnt'] = 1;
+                $actions->update($data);
             }
         }
         return $this->Response_Result($err, $camera);
@@ -1054,6 +1133,8 @@ HighRes Max
             "Source": "tl",
             "DateTime": "20181001213044",
 
+            "RequestID": "7574",
+
             "Battery": "f",
             "SignalValue": "22",
             "Cardspace": "30039MB",
@@ -1065,121 +1146,21 @@ HighRes Max
             "Image": {}
         }
     */
-    public function uploadvideothumb(Request $request, ImageUploadHandler $uploader) {
-        $ret = $this->Camera_Check($request);
-        $err = $ret['err'];
-        $camera = $ret['camera'];
-
-        if ($err == 0) {
-            $camera_id = $camera->id;
-
-            if (isset($request->blockid)) {
-                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
-            }
-
-            $file = $request->Image;
-            if ($file && $file->isValid()) {
-                $ret = $uploader->save_file_ex($camera_id, $file);
-                $err = $ret['err'];
-                if ($err == 0) {
-                    //$OriginalName = $ret['OriginalName'];
-                    $OriginalName = $request->FileName;     // PICT0001.JPG
-                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
-                    $filesize = $ret['filesize'];
-
-                    $param = $request;
-                    $param['camera_id'] = $camera_id;
-                    $param['filename'] = $filename;
-                    $param['filesize'] = $filesize;
-                    $photo = $this->Video_Add($param);
-
-                    $this->Camera_Status_Update($param, 'upload');
-                    $this->Plan_Update($param);
-
-                    if ($request->RequestID) {
-                        //$param = array(
-                        //    'request_id'  => $request->RequestID,
-                        //    'camera_id'   => $camera->id,
-                        //    'action_code' => 'PS',
-                        //    'filename'    => $ret['OriginalName'],
-                        //    'photo_id'    => $photo->id,
-                        //    'photo_cnt'   => 1,
-                        //);
-                        //$this->Action_Completed($param);
-
-                        $request_id = $request->RequestID;
-                        $actions = DB::table('actions')->where('id', $request_id);
-                        $action  = $actions->first();
-                        if ($action) {
-                            if ($action->camera_id == $camera_id) {
-                                if ($action->action == 'PS') {
-                                    $data['filename'] = $OriginalName;
-                                    $data['photo_id'] = $photo->id;
-                                    $data['photo_cnt'] = 1;
-                                    $data['status'] = ACTION_COMPLETED;
-
-                                } else if ($action->action == 'SC') {
-                                    $data['filename'] = $OriginalName;
-                                    $data['photo_id'] = $photo->id;
-                                    //if ($OriginalName != $action->filename) {
-                                    if ($request->FileName != $action->filename) {
-                                        $data['photo_cnt'] = $action->photo_cnt + 1;
-                                    }
-                                }
-                                $data['completed'] = date('Y-m-d H:i:s');
-                                $actions->update($data);
-                            }
-                        }
-                    }
-                }
-
-            } else {
-                $err = ERR_NO_UPLOAD_FILE;
-            }
-        }
-        return $this->Response_Result($err, $camera);
+    public function uploadvideothumb(Request $request) {
+        return $this->uploadfile($request, 'video_thumb');
     }
 
-/*
-{
-	"iccid": "89860117851014783481",
-	"module_id": "861107032685597",
-	"model_id": "lookout-na",
-
-	"FileName": "PICT0475.MP4",
-	"upload_resolution": "8",
-	"video_resolution": "8",
-	"video_length": "5s",
-	"video_sound": "on",
-	"video_rate": "4",
-	"video_bitrate": "1000",
-	"video_filesize": "600877",
-	"Source": "tl",
-	"DateTime": "20181002003110",
-
-	"RequestID": "7574",
-	"Battery": "f",
-	"SignalValue": "31",
-	"Cardspace": "30015MB",
-	"Cardsize": "30432MB",
-	"Temperature": "28C",
-	"mcu": "4.36",
-	"FirmwareVersion": "20180912",
-	"cellular": "4G LTE",
-	"Image": {}
-}
-*/
-/*
-{
-    "ResultCode": 0,
-    "ActionCode": "UV",
-    "ParameterList": {
-        "FILENAME": "PICT0478.MP4",
-        "REQUESTID": "7576"
-    },
-    "DateTimeStamp": "2018-10-02 01:00:10"
-}
-*/
+    /*
+    {
+        "ResultCode": 0,
+        "ActionCode": "UV",
+        "ParameterList": {
+            "FILENAME": "PICT0478.MP4",
+            "REQUESTID": "7576"
+        },
+        "DateTimeStamp": "2018-10-02 01:00:10"
+    }
+    */
     public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -1188,44 +1169,80 @@ HighRes Max
         if ($err == 0) {
             $camera_id = $camera->id;
 
-            if (isset($request->blockid)) {
-                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+            if (!isset($request->RequestID)) {
+                return $this->Response_Result(ERR_NO_REQUEST_ID, $camera);
             }
 
-            $file = $request->Image;
-            if ($file && $file->isValid()) {
-                $ret = $uploader->save_file_ex($camera_id, $file);
+            /* search Action */
+            $request_id = $request->RequestID;
+            $query = array(
+                'id' => $request_id,
+                'camera_id' => $camera_id,
+                'action' => 'UV',
+                'status' => ACTION_REQUESTED,
+            );
+            $actions = DB::table('actions')->where($query);
+            $action  = $actions->first();
+            if (!$action) {
+                return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
+            }
+            $photo_id = $action->photo_id;
+
+            /* search Photo */
+            $query = array(
+                'id' => $photo_id,
+                'camera_id' => $camera_id,
+            );
+            $photos = DB::table('photos')->where($query);
+            $photo = $photos->first();
+            if (!$photo) {
+                return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
+            }
+
+            if (isset($request->blockid)) {
+                $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
                 $err = $ret['err'];
-                if ($err == 0) {
-                    //$OriginalName = $ret['OriginalName'];
-                    $OriginalName = $request->FileName;     // PICT0001.JPG
-                    $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
-                    $filesize = $ret['filesize'];
-
-                    $param = $request;
-                    $param['camera_id'] = $camera_id;
-                    $param['filename'] = $filename;
-                    $param['filesize'] = $filesize;
-                    $photo = $this->Video_Add($param);
-
-                    $this->Camera_Status_Update($param, 'upload');
-                    $this->Plan_Update($param, 1);
-
-                    if ($request->RequestID) {
-                        $param = array(
-                            'request_id'  => $request->RequestID,
-                            'camera_id'   => $camera->id,
-                            'action_code' => 'UV',
-                            'filename'    => $OriginalName,
-                            'photo_id'    => $photo->id,
-                            'photo_cnt'   => 1,
-                        );
-                        $this->Action_Completed($param);
-                    }
-                }
-
             } else {
-                $err = ERR_NO_UPLOAD_FILE;
+            $file = $request->Image;
+                if ($file && $file->isValid()) {
+                    $ret = $uploader->save_file_ex($camera_id, $file);
+                    $err = $ret['err'];
+                } else {
+                    $err = ERR_NO_UPLOAD_FILE;
+                }
+            }
+
+            if ($err == 0) {
+                //$OriginalName = $ret['OriginalName'];
+                $OriginalName = $request->FileName;     // PICT0001.JPG
+                $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
+                $filesize = $ret['filesize'];
+
+                /* update Photo */
+                $data = [];
+                $data['resolution'] = $request->upload_resolution;
+                $data['filesize'] = $filesize;
+                //$data['photo_compression'] = $request->photo_compression;
+                $data['filepath'] = $filename;
+                $photos->update($data);
+
+                /* update Plan */
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['filename'] = $filename;
+                $param['filesize'] = $filesize;
+                $points = $this->Plan_Update($param, 1);
+
+                /* update Camera Status */
+                $param['points'] = $points;
+                $this->Camera_Status_Update($param, 'upload');
+
+                /* update Action */
+                $data = [];
+                $data['status'] = ACTION_COMPLETED;
+                $data['completed'] = date('Y-m-d H:i:s');
+                $data['photo_cnt'] = 1;
+                $actions->update($data);
             }
         }
         return $this->Response_Result($err, $camera);
@@ -1236,7 +1253,6 @@ HighRes Max
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
@@ -1245,8 +1261,6 @@ HighRes Max
                     'request_id'  => $request->RequestID,
                     'camera_id'   => $camera->id,
                     'action_code' => 'UO',
-                    //'photo_id'    => null,
-                    //'photo_cnt'   => null,
                 );
                 $this->Action_Completed($param);
             }
@@ -1258,7 +1272,6 @@ HighRes Max
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
@@ -1267,8 +1280,6 @@ HighRes Max
                     'request_id'  => $request->RequestID,
                     'camera_id'   => $camera->id,
                     'action_code' => 'UV',
-                    //'photo_id'    => null,
-                    //'photo_cnt'   => null,
                 );
                 $this->Action_Completed($param);
             }

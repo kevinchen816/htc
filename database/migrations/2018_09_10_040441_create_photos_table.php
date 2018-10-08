@@ -22,6 +22,7 @@ class CreatePhotosTable extends Migration
             //$table->string('model_id');
 
             $table->string('filename');
+            $table->integer('filetype')->nullable();
             $table->integer('resolution'); //$table->string('upload_resolution');
             $table->integer('filesize')->nullable();
 
