@@ -104,8 +104,8 @@ class ImageUploadHandler
         // 文件夹切割能让查找效率更高。
         //$folder_name = "uploads/images/$folder/" . date("Ym/d", time());
         // $folder_name = "uploads/images";
-        //$folder_name = "uploads/".$camera_id;
-        $folder_name = "storage/".$camera_id;
+        $folder_name = "uploads/".$camera_id;
+        //$folder_name = "storage/".$camera_id;
 
         // 文件具体存储的物理路径，`public_path()` 获取的是 `public` 文件夹的物理路径。
         // 值如：/home/vagrant/Code/larabbs/public/uploads/images/avatars/201709/21/
@@ -129,35 +129,21 @@ class ImageUploadHandler
         return $ret;
     }
 
-    public function save_buffer($camera_id, $file, $blockid, $blocknbr, $crc32) {
-        //$OriginalName = $file->getClientOriginalName();
-        //$extension = strtoupper($file->getClientOriginalExtension()); // JPG
-
-        /* /home/vagrant/Code/htc/public/uploads/camera_id/blockid/ */
-        /* /home/vagrant/Code/htc/public/storage + /camera_id/blockid/ */
-        //$folder_name = "uploads/" . $camera_id .'/'. $blockid;
-        //$folder_name = storage_path() .'/' . $camera_id .'/'. $blockid;
-        //$folder_name = '/storage/' . $camera_id .'/'. $blockid;
-        //$folder_name = '/storage/' . $camera_id .'/'. $blockid;
-
-//"upload_path": "/home/vagrant/Code/htc/public//home/vagrant/Code/htc/storage/1/rt5bb7b9586d6fb",
-
-        /* /home/vagrant/Code/htc/public/storage + /camera_id/blockid/ */
-        //$folder_name = public_path() . '/storage/' . $camera_id .'/'. $blockid;
-        $folder_name = public_path() . '/uploads/' . $camera_id .'/'. $blockid;
-        $filename = $blocknbr . '.BIN';
-
+    public function save_buffer($camera_id, $file, $blockid, $blocknbr) {
+        //$folder_name = public_path() . '/uploads/block/' . $camera_id .'/'. $blockid;
+        $folder_name = public_path().'/uploads/block/'.$blockid;
+        //$filename = $blocknbr . '.BIN';
+        $filename = sprintf("%05u.BIN", $blocknbr);
         $path = $file->move($folder_name, $filename);
 
         //$ret['OriginalName'] = $file->getClientOriginalName();  // "PICT0001.JPG"
-        //$ret['filename'] = $filename;                           // "1538422239_Cf7PQK04w4.JPG"
-        $ret['filesize'] = $file->getClientSize();              // 7032
-        $ret['folder_name'] = "$folder_name";
+        //$ret['filename'] = $filename;
+        //$ret['filesize'] = $file->getClientSize();
+        //$ret['folder_name'] = "$folder_name";
         $ret['path'] = "$path";
         $ret['err'] = 0;
         return $ret;
     }
-
 
     public function dirTree($path) {
         if(!is_dir($path)) return [];
@@ -170,62 +156,75 @@ class ImageUploadHandler
             $new_path = $path.'/'.trim($file, '/');
             //$new_path = trim($file, '/');
             $files[] = $new_path;
+            /*
             if (is_dir($new_path))  {
                 $files = array_merge($files, $this->ergodicDir2($new_path));
             }
+            */
         }
         closedir($dir);
         return $files;
     }
 
-/*
-$directory = './public/1/rt5bb7b9586d6fb';
-$files = Storage::files($directory);
-$ret['files'] = $files;
+    public function merge($camera_id, $filename, $blockid, $crc32) {
+        $err = 0;
+        $to_file = '';
+        //return storage_path();
+        //return Storage::files('.');
+        //return Storage::allFiles('.');
 
-        "public/1/rt5bb7b9586d6fb/1.BIN",
-        "public/1/rt5bb7b9586d6fb/2.BIN"
-*/
-    public function merge($camera_id, $blockid, $crc32) {
-        //$hash = file_get_contents("cut_msg.txt");
-        //$list = explode("\r\n", $hash);
-        //$files = array('1.BIN', '2.BIN');
+        $folder_name = public_path().'/uploads/block/'.$blockid;
+        if (!file_exists($folder_name)) {
+            $ret['err'] = 1; //$err;
+            return $ret;
+        }
 
-        /* /home/vagrant/Code/htc/public/storage/1/rt5bb7b9586d6fb */
-        //$folder_name = public_path() . '/storage/' . $camera_id .'/'. $blockid;
+        $tagert_name =  $folder_name .'/'. $filename;
+        if (file_exists($tagert_name)) {
+            unlink($tagert_name);
+        }
 
-        /* /home/vagrant/Code/htc/public/uploads/1/rt5bb7b9586d6fb */
-        $folder_name = public_path() . '/uploads/' . $camera_id .'/'. $blockid;
-//return public_path();
-        /*
-            "home/vagrant/Code/htc/public/uploads/1/rt5bb7b9586d6fb/1.BIN",
-            "home/vagrant/Code/htc/public/uploads/1/rt5bb7b9586d6fb/2.BIN",
-        */
-        //$files = Storage::files($folder_name);
         $files = $this->dirTree($folder_name);
-        //return $files;
+        sort($files);
 
-        /* /home/vagrant/Code/htc/public/uploads/1/rt5bb7b9586d6fb/TEST.JPG */
-        $tagert_name =  $folder_name .'/'. 'TEST.JPG';
-        //return $tagert_name;
-
-        $fp = fopen($tagert_name, 'ab');
+        $fp = fopen($tagert_name, 'w+b');
         foreach ($files as $file) {
-            //$handle = fopen($value, "rb");
-            //fwrite($fp, fread($handle, filesize($value)));
-
-            //$fiename = $folder_name . $file;
             $handle = fopen($file, "rb");
             fwrite($fp, fread($handle, filesize($file)));
-
-            //$handle = fopen($file, "rb");
-            //fwrite($fp, fread($handle, filesize($file)));
-
             fclose($handle);
             unset($handle);
-
+            //unlink($file);
         }
         fclose($fp);
+
+        /* https://www.cnblogs.com/mslagee/p/6223140.html */
+        $crc32_check = hexdec(hash_file('crc32b', $tagert_name));
+        if ($crc32_check == $crc32) {
+            $to_file = public_path().'/uploads/'.$camera_id.'/'.$filename;
+            $ret = copy($tagert_name, $to_file);
+            if($ret == true) {
+                $err = 0;
+            } else {
+                $err = 3/*2*/;
+            }
+        } else {
+            $err = 2/*1*/;
+        }
+
+        if ($err == 0) {
+            foreach ($files as $file) {
+                unlink($file);
+            }
+            unlink($tagert_name);
+            rmdir($folder_name);
+        }
+
+        $ret = [];
+        $ret['path'] = "$tagert_name";
+        $ret['to_file'] = "$to_file";
+        $ret['CRC32'] = $crc32_check;
+        $ret['err'] = $err;
+        return $ret;
     }
 
 }

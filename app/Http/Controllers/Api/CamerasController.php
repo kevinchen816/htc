@@ -30,9 +30,13 @@ const ERR_NOT_CAMERA_OWNER          = 804;
 const ERR_NO_UPLOAD_FILE            = 805;
 
 const ERR_NO_BLOCK_NUMBER           = 806;
-const ERR_NO_CRC32                  = 807;
-const ERR_CRC32_FAIL                = 808;
+const ERR_NO_BLOCK_ID               = 807;
+const ERR_NO_CRC32                  = 808;
 const ERR_NO_FILE_BUFFER            = 809;
+const ERR_CRC32_FAIL                = 810;
+const ERR_INVALID_BLOCK_NUMBER      = 811;
+const ERR_INVALID_BLOCK_ID          = 812;
+const ERR_COPY_MERGE_FILE_FAIL      = 813;
 
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
@@ -79,19 +83,24 @@ class CamerasController extends Controller
             ERR_NO_UPLOAD_FILE => 'Not Upload File',
 
             ERR_NO_BLOCK_NUMBER => 'Missing blocknbr',
+            ERR_NO_BLOCK_ID => 'Missing blockid',
             ERR_NO_CRC32 => 'Missing CRC32',
-            ERR_CRC32_FAIL => 'CRC32 hash failure',
             ERR_NO_FILE_BUFFER => 'Missing file buffer',
+            ERR_CRC32_FAIL => 'CRC32 hash failure',
+            ERR_INVALID_BLOCK_NUMBER => 'Invalid blocknbr',
+            ERR_INVALID_BLOCK_ID => 'Invalid blockid',
+            ERR_COPY_MERGE_FILE_FAIL => 'Copy merge file failure',
 
             //900 => 'Invalid or Missing camera Module',
             //901 => 'Invalid SIM card',
             //// 901 =>'Invalid or Missing camera Model',
             //902 => 'test or Missing camera Model',
 
-//902-> "ErrorMsg":"Required parameter(s) missing: [blocknbr, crc32]"
-//904-> "ErrorMsg":"CRC32 hash failure"
-//907-> "ErrorMsg":"file buffer is missing"
-//907-> "ErrorMsg": "Invalid Block ID or No Blocks Uploaded",
+//902-> "Required parameter(s) missing: [blocknbr, crc32]"
+//902-> "Invalid blocknbr: 0",
+//904-> "CRC32 hash failure"
+//907-> "file buffer is missing"
+//907-> "Invalid Block ID or No Blocks Uploaded",
 //910-> "The Request ID sent is for an non-pending Action."
 
             //991 => 'add Camera',
@@ -743,18 +752,31 @@ class CamerasController extends Controller
          "blocknbr":1,
          "DateTimeStamp":"2018-07-18 03:00:43"}
     */
-/*
-const ERR_NO_BLOCK_NUMBER           = 806;
-const ERR_NO_CRC32                  = 807;
-const ERR_CRC32_FAIL                = 808;
-const ERR_NO_FILE_BUFFER            = 809;
-*/
     public function uploadblock_response($blockid, $blocknbr) {
         // date_default_timezone_set("Asia/Shanghai");
         $ret['ResultCode'] = 0; //$err;
         $ret['blockid'] = $blockid;
         $ret['blocknbr'] = $blocknbr;
         $ret['DateTimeStamp'] = date('Y-m-d H:i:s');
+        return $ret;
+    }
+
+    public function uploadblock_merge($camera, $filename, $blockid, $crc32) {
+        $uploader = new ImageUploadHandler;
+        $camera_id = $camera->id;
+        $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
+        $err = $ret['err'];
+        if ($err == 0) {
+            $ret = $this->Response_Result($err, $camera);
+        } else if ($err == 1) {
+            $ret = $this->Response_Result(ERR_INVALID_BLOCK_ID, $camera);
+        } else if ($err == 2) {
+            $crc32 = $ret['CRC32'];
+            $ret = $this->Response_Result(ERR_CRC32_FAIL, $camera);
+            $ret['CRC32'] = $crc32;
+        } else if ($err == 3) {
+            $ret = $this->Response_Result(ERR_COPY_MERGE_FILE_FAIL, $camera);
+        }
         return $ret;
     }
 
@@ -783,72 +805,43 @@ PICT0002.JPG    1184126564  46945664
             }
 
             $blocknbr = $request->blocknbr;
-            $crc32 = $request->crc32;
-
-            if ($blocknbr == 1) {
-                $blockid = 'rt5bb7b9586d6fb';
+            if ($blocknbr <= 0) {
+                return $this->Response_Result(ERR_INVALID_BLOCK_NUMBER, $camera);
+            } else if ($blocknbr == 1) {
+                //$blockid = 'rt5bb7b9586d6fb';
+                $blockid = date('ymdhis').'_'.$camera_id;
             } else {
+                if (!isset($request->blockid)) {
+                    return $this->Response_Result(ERR_NO_BLOCK_ID, $camera);
+                }
                 $blockid = $request->blockid;
             }
 
-/*
-//return storage_path(); // /home/vagrant/Code/htc/storage
-$ret = [];
-//$files = Storage::allFiles('.');
-//$files = Storage::allFiles('./public/1');
-//$directory = '/';
-$directory = 'public/1/rt5bb7b9586d6fb';
-$files = Storage::files($directory);
-$ret['files'] = $files;
-return $ret;
-*/
-
-//$ret = $uploader->merge($camera_id, $blockid, $crc32);
-//return $ret;
             $file = $request->buffer; // $request->Image;
             if ($file && $file->isValid()) {
-                $ret = $uploader->save_buffer($camera_id, $file, $blockid, $blocknbr, $crc32);
+                /* https://www.cnblogs.com/mslagee/p/6223140.html */
+                //$crc32 = hexdec(hash_file('crc32b', $file->getRealPath()));
+                //if ($crc32 != $request->crc32) {
+                //    $ret = $this->Response_Result(ERR_CRC32_FAIL, $camera);
+                //    $ret['CRC32'] = $crc32;
+                //    return $ret;
+                //}
+
+                $ret = $uploader->save_buffer($camera_id, $file, $blockid, $blocknbr);
                 $err = $ret['err'];
                 if ($err == 0) {
-
-//$ret = hash_file('crc32b', $ret['path']); // https://www.cnblogs.com/mslagee/p/6223140.html
-//$ret = hexdec($ret);
-
-//$folder_name = $ret['folder_name'].'/';
-//$directory = $ret['upload_path'].'/';
-//$ret['directory'] = $directory;
-//return $directory;
-
-//$files = Storage::files($folder_name);
-//$files = Storage::files('/storage/1/rt5bb7b9586d6fb/');
-//$files = Storage::files($directory);
-//$files = Storage::files('/');
-
-//$files = Storage::allFiles($directory);
-//$files = Storage::allFiles('.');
-//$ret['files'] = $files;
-
-//$size = Storage::size($ret['path']);
-//$ret['size'] = $size;
-
-//$ret['local'] = Storage::disk('local');
-return $ret;
-
-                    ////$OriginalName = $ret['OriginalName'];
-                    //$OriginalName = $request->FileName;     // PICT0001.JPG
-                    //$filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
-                    //$filesize = $ret['filesize'];
-
-                    //$param = $request;
-                    //$param['camera_id'] = $camera_id;
-                    //$param['filename'] = $filename;
-                    //$param['filesize'] = $filesize;
-                    //$photo = $this->Photo_Add($param);
+                    /* https://www.cnblogs.com/mslagee/p/6223140.html */
+                    $crc32 = hexdec(hash_file('crc32b', $ret['path']));
+                    if ($crc32 != $request->crc32) {
+                        $ret = $this->Response_Result(ERR_CRC32_FAIL, $camera);
+                        $ret['CRC32'] = $crc32;
+                    } else {
+                        $ret = $this->uploadblock_response($blockid, $blocknbr);
+                    }
 
                     //$this->Camera_Status_Update($param, 'upload');
                     //$this->Plan_Update($param);
-
-                    return $this->uploadblock_response($blockid, $blocknbr);
+                    return $ret;
                 }
 
             } else {
@@ -900,9 +893,7 @@ return $ret;
             $camera_id = $camera->id;
 
             if (isset($request->blockid)) {
-                $ret = $uploader->merge($camera_id, $request->blockid, $request->crc32);
-                //return $request;
-                return $ret;
+                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
             }
 
             $file = $request->Image;
@@ -1002,6 +993,10 @@ HighRes Max
         if ($err == 0) {
             $camera_id = $camera->id;
 
+            if (isset($request->blockid)) {
+                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+            }
+
             $file = $request->Image;
             if ($file && $file->isValid()) {
                 //$file->move($directory, $name = null);
@@ -1077,6 +1072,10 @@ HighRes Max
 
         if ($err == 0) {
             $camera_id = $camera->id;
+
+            if (isset($request->blockid)) {
+                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+            }
 
             $file = $request->Image;
             if ($file && $file->isValid()) {
@@ -1188,6 +1187,10 @@ HighRes Max
 
         if ($err == 0) {
             $camera_id = $camera->id;
+
+            if (isset($request->blockid)) {
+                return $this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+            }
 
             $file = $request->Image;
             if ($file && $file->isValid()) {
