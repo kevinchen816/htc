@@ -1500,8 +1500,8 @@ HighRes Max
     /* Web Function */
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812
-    //public function cameras() {
-    public function cameras($camera_id) {
+    public function cameras() {
+    //public function cameras($camera_id) {
         //return 'id='.$camera_id;
 
         //if (Auth::user()) {
@@ -1521,13 +1521,43 @@ HighRes Max
             // }
             //return;
 
-            //$camera = DB::table('cameras')->where('user_id', $user_id)->first();
+/*
+            //$camera = DB::table('cameras')->where('user_id', $user_id);
             //$camera_id = $camera->id;
-            //$camera_id = 8; // for test
             $camera = Camera::findOrFail($camera_id);
             $photos = $camera->photos()
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
+*/
+
+            $camera = DB::table('cameras')
+                ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
+                ->where('user_id', $user_id)
+                ->first();
+            if ($camera) {
+                $camera_id = $camera->id;
+
+                $camera = Camera::findOrFail($camera_id);
+                $photos = $camera->photos()
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            } else {
+//return 'No Camera';
+                //$camera = Camera::findOrFail(1);
+                $camera = Camera::find(0);
+//return 'No Camera';
+//                $photos = $camera->photos()
+//                    ->orderBy('created_at', 'desc')
+//                    ->paginate(10);
+//return 'No Camera';
+$photos = null;
+            }
+
+            /* search Photo */
+            //$query = array(
+            //    'camera_id' => $camera_id,
+            //);
+            //$photos = DB::table('photos')->where($query);
 
             return view('cameras', compact('user', 'camera', 'photos'));
 

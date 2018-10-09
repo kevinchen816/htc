@@ -33,7 +33,7 @@
 
                     <li class=""><a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
 @if (Auth::check())
-                    <li class="active"><a href="#"><i class="fa fa-camera"></i> My Cameras</a></li>
+                    <li class="active"><a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a></li>
                     <li class=""><a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a></li>
 @endif
                     <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>

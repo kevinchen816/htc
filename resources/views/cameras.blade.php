@@ -2,9 +2,11 @@
 @section('title', 'Cameras')
 
 @section('gallery')
+    @if ($photos)
     @foreach ($photos as $photo)
         @include('photos.photo')
     @endforeach
+    @endif
 @stop
 
 @section('content')

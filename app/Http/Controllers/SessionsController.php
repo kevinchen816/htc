@@ -49,7 +49,7 @@ class SessionsController extends Controller
                 intended 方法，该方法可将页面重定向到上一次请求尝试访问的页面上，
                 并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上。
             */
-            return redirect()->intended(route('users.show', [Auth::user()]));
+            //return redirect()->intended(route('users.show', [Auth::user()]));
 
             $user = Auth::user();
             $user_id = $user->id;
@@ -60,7 +60,8 @@ class SessionsController extends Controller
             } else {
                 $camera_id = 0;
             }
-            return redirect()->route('cameras', $camera_id);
+            //return redirect()->route('cameras', $camera_id);
+            return redirect()->route('cameras');
 
         } else {
             session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');

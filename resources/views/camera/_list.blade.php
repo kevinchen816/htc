@@ -25,8 +25,10 @@
                 </thead>-->
 
                 <tbody>
+                    @if ($camera)
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->Camera_List($camera->id) !!}
+                    @endif
 
 <!--                     <tr>
                         <td class="col-sm-1">

@@ -60,7 +60,9 @@
                                 </div>
 
                                 <div class="btn-group" role="group" style="margin-left:8px;font-size: 1.10em;padding-top:3px;">
+                                     @if ($camera)
                                      {{$camera->description}} |
+                                     @endif
                                 </div>
                             </div>
 
@@ -69,6 +71,7 @@
                 </div>
             </div>
 
+@if ($camera)
             <!-- CAMERA DATA - TAB -->
             <!-- <div id="tabs-54" class="tab-container"> -->
             <div id="tabs-{{ $camera->id}}" class="tab-container">
@@ -135,6 +138,67 @@
                 </div>
 
             </div>
+@else
+            <!-- CAMERA DATA - TAB -->
+            <!-- <div id="tabs-54" class="tab-container"> -->
+            <div id="tabs-" class="tab-container">
+
+                <!-- <ul class="nav nav-tabs" id="cameratabs-54"> -->
+                <ul class="nav nav-tabs" id="cameratabs">
+                    <li >
+                        <a href="#overview" data-toggle="tab" data-tab="overview" aria-expanded="true">
+                            <span class="glyphicon glyphicon-list-alt"> </span> Overview
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="#gallery" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
+                            <span class="glyphicon glyphicon-picture"> </span> Gallery
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" data-toggle="tab" data-tab="settings" aria-expanded="false">
+                            <span class="glyphicon glyphicon-edit"> </span> Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#action" data-toggle="tab" data-tab="commands" aria-expanded="false">
+                            <span class="glyphicon glyphicon-tasks"> </span> Actions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#options" data-toggle="tab" data-tab="options" aria-expanded="false">
+                            <span class="glyphicon glyphicon-cog"> </span> Options
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <!-- OVERVIEW TAB -->
+                    <div class="tab-pane fade" id="overview">
+                    </div>
+
+                    <!-- GALLERY TAB -->
+                    <div class="tab-pane fade active in" id="gallery">
+                    </div>
+
+                    <!-- SETTINGS TAB -->
+                    <div class="tab-pane fade" id="settings">
+                    </div>
+
+                    <!-- ACTION HISTORY TAB -->
+                    <div class="tab-pane fade  " id="action">
+                    </div>
+
+                    <!-- OPTIONS TAB s -->
+                    <div class="tab-pane fade" id="options">
+                    </div>
+                    <!-- OPTIONS TAB e -->
+
+                </div>
+
+            </div>
+
+@endif
         </div>
     </div>
 </div>
