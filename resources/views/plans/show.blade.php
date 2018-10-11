@@ -1,4 +1,4 @@
-@extends('layouts.default-admin')
+@extends('layouts.default2')
 
 @section('content')
 <h1>Read</h1>

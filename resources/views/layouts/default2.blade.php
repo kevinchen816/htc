@@ -76,6 +76,66 @@
         }
 
     </style>
+    <link rel="stylesheet" href="https://portal.ridgetec.com/css/thumbnail-gallery.css" media="screen">
+<link rel="stylesheet" href="https://portal.ridgetec.com/css/gallery.css" media="screen">
+<style>
+    .custom-time-toggle-td {
+        padding-right: 2px;
+        padding-bottom: 6px;
+    }
+    .tab-set {
+        background-color: #888;
+    }
+    .tab-headers {
+        background-color: #aaa;
+    }
+    .custom-duty-col {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    .duty-time-button {
+        margin-right: 6px;
+        margin-bottom: 4px;
+    }
+
+
+    .custom-image {
+        width: 98%;
+    }
+
+    table.collapse.in {
+       display: table;
+    }
+
+    .panel > .camera-data-heading {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 0px;
+        color: #fff;
+        background-color: #9d0b0e;
+    }
+
+    .camera-list-panel {
+        background-color: #222;
+    }
+    .camera-list-panel a {
+        color: #fff!important;
+    }
+
+    .navbar-camera {
+        background-color: #9d0b0e;
+        //min-height: 20px!important;
+        padding-left: 0px;
+        padding-bottom: 0px;
+    }
+
+    .camera-toolbar {
+        background-color: #9d0b0e;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        margin-bottom:6px;
+    }
+</style>
 
 </head>
 <body>
@@ -83,12 +143,40 @@
         @include('layouts._header2')
         <div class="fixed-navbar-container">
             <div class="container">
-                @include('shared._messages')
             </div>
         </div>
 
-        <div class="container">
-        @yield('content')
+@if (!Auth::check())
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-footer" style="margin-top:3px; padding-top:1px;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3><i class="fa fa-camera"></i> Welcome to the 10ware Camera Portal</h3>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="pull-right" style="margin-top:20px;">Take a Tour of the portal today!
+                                    <a href="/tour/start" class="btn btn-xs btn-success"><i class="fa fa-camera"> </i> Start the tour! </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+@endif
+
+        @include('shared._messages')
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 pull-right">
+
+                </div>
+            </div>
+
+            @yield('content')
         </div>
 
         <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
@@ -107,16 +195,20 @@
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
     <!-- Jquery-ui -->
-    <script src="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <!-- <script src="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.js"></script> -->
+    <script src="/js/jquery-ui-1.12.1/jquery-ui.min.js"></script> <!-- kevin -->
 
-    <script src="https://portal.ridgetec.com/js/button-checkbox.js"></script>
+    <!-- <script src="https://portal.ridgetec.com/js/button-checkbox.js"></script> -->
+    <script src="/js/button-checkbox.js"></script> <!-- kevin -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
 
     <!--<script src="https://portal.ridgetec.com/js/gallery.js"></script>-->
-    <script src="https://portal.ridgetec.com/js/jquery.slidereveal.min.js"></script>
+    <!--<script src="/js/gallery.js"></script>--> <!-- kevin --><!-- tab_gallery.blade.php -->
+
+    <!-- <script src="https://portal.ridgetec.com/js/jquery.slidereveal.min.js"></script> -->
+    <script src="/js/jquery.slidereveal.min.js"></script> <!-- kevin -->
     <script>
     $(document).ready(function(){
 
@@ -154,8 +246,8 @@
             };
 
             $("#help_panel").slideReveal(
-                    params
-                    );
+                params
+            );
         });
 
     });

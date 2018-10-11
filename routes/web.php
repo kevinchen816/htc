@@ -11,11 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    //return view('welcome');
-    // return view('10ware');
-    return view('home');
-})->name('home');
+//Route::get('/', function () {
+//    //return view('welcome');
+//    // return view('10ware');
+//    return view('home');
+//})->name('home');
+
+Route::get('/', 'Api\CamerasController@cameras')->name('home');
 
 // Route::get('/', 'SessionsController@create')->name('home');
 
@@ -87,10 +89,7 @@ Route::delete('/logout', 'SessionsController@destroy')->name('logout');
 // Route::get('/admin', function() {return '/admin';})->name('admin');
 Route::get('/admin', function() {return view('/admin/home');})->name('admin');
 
-Route::get('/cameras_xx', 'Api\CamerasController@cameras_xx')->name('cameras_xx');
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
-//Route::get('/cameras_ex/{camera_id}', 'Api\CamerasController@cameras_ex')->name('cameras_ex'); /* for test */
-//Route::get('/cameras/{camera_id}', 'Api\CamerasController@cameras')->name('cameras'); /* for test */
 
 /* tab_gallery.blade.php */
 // <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">

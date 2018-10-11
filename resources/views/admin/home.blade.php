@@ -1,4 +1,4 @@
-@extends('layouts.default-admin')
+@extends('layouts.default2')
 @section('content')
 <h1>{{ Auth::user()->name }}</h1>
 <h4>{{ Auth::user()->email }}</h4>

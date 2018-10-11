@@ -1500,19 +1500,10 @@ HighRes Max
     /* Web Function */
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812
-    public function cameras() {
     //public function cameras($camera_id) {
-        //return 'id='.$camera_id;
-
-        //if (Auth::user()) {
+    public function cameras() {
         if (Auth::check()) {
-            session()->flash('success', 'Welcome !!');
-
-            //$user_id = Auth::user()->id;
-            //$camera = DB::table('cameras')->where('user_id', $user_id)->first();
-            //return $camera->description;
-
-            $user    = Auth::user();
+            $user = Auth::user();
             $user_id = $user->id;
             //$cameras = DB::table('cameras')->where('user_id', $user_id)->get();
             // foreach ($cameras as $camera) {
@@ -1521,15 +1512,6 @@ HighRes Max
             // }
             //return;
 
-/*
-            //$camera = DB::table('cameras')->where('user_id', $user_id);
-            //$camera_id = $camera->id;
-            $camera = Camera::findOrFail($camera_id);
-            $photos = $camera->photos()
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-*/
-
             $camera = DB::table('cameras')
                 ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
                 ->where('user_id', $user_id)
@@ -1537,45 +1519,29 @@ HighRes Max
             if ($camera) {
                 $camera_id = $camera->id;
 
+                /* search Photo */
+                //$query = array(
+                //    'camera_id' => $camera_id,
+                //);
+                //$photos = DB::table('photos')->where($query);
+
                 $camera = Camera::findOrFail($camera_id);
                 $photos = $camera->photos()
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
+
+                //session()->flash('success', 'Welcome !!');
+                return view('cameras', compact('user', 'camera', 'photos'));
+
             } else {
-//return 'No Camera';
-                //$camera = Camera::findOrFail(1);
-                $camera = Camera::find(0);
-//return 'No Camera';
-//                $photos = $camera->photos()
-//                    ->orderBy('created_at', 'desc')
-//                    ->paginate(10);
-//return 'No Camera';
-$photos = null;
+                return view('cameras_empty', compact('user'));
             }
-
-            /* search Photo */
-            //$query = array(
-            //    'camera_id' => $camera_id,
-            //);
-            //$photos = DB::table('photos')->where($query);
-
-            return view('cameras', compact('user', 'camera', 'photos'));
 
         } else {
             session()->flash('warning', 'Please login first.');
             return redirect()->route('login');
         }
     }
-
-    // public function cameras_ex($camera_id) {
-    //     $user = Auth::user();
-    //     $camera = Camera::findOrFail($camera_id);
-    //     $photos = $camera->photos()
-    //                      ->orderBy('created_at', 'desc')
-    //                      ->paginate(10);
-    //     // /return view('cameras', compact('camera', 'photos')); // OK
-    //     return view('cameras', compact('user', 'camera', 'photos')); // OK
-    // }
 
     /* /cameras/getdetail/{camera_id} */
     public function getdetail($camera_id) {

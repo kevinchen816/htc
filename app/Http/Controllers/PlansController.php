@@ -24,18 +24,22 @@ class PlansController extends Controller
 
     /* All - GET /xxx */
     public function index() {
-        // return view('plans.index');
+        if (Auth::check()) {
+            $user = Auth::user();
 
-        // $plans = Plan::all();
-        $plans = Plan::paginate(5);
-        return view('plans.index', compact('plans'));
+            // $plans = Plan::all();
+            $plans = Plan::paginate(5);
+            return view('plans.index', compact('user', 'plans'));
+        } else {
+            session()->flash('warning', 'Please login first.');
+            return redirect()->route('login');
+        }
     }
 
     /* Create Page - GET /xxx/create  */
     public function create() {
-        return view('plans.create');
-
-        // return view('plans.create');
+        $user = Auth::user();
+        return view('plans.create', compact('user'));
     }
 
     /* Create - POST /xxx  */
@@ -50,6 +54,8 @@ class PlansController extends Controller
         ]);
 
         if (Auth::check()) {
+            $user = Auth::user();
+
             $plan = Plan::create([
                 'iccid' => $request->iccid,
                 'status' => 'active',
@@ -58,17 +64,18 @@ class PlansController extends Controller
             ]);
 
             session()->flash('success', 'Create Success');
-            return redirect()->route('plans.show', [$plan]);
+            //return redirect()->route('plans.show', [$plan]);
+            return view('plans.show', compact('user', 'plan'));
         } else {
             session()->flash('warning', 'Please Login first');
-            return redirect()->route('plans.index');
+            return redirect()->route('login');
         }
     }
 
     /* Read - GET /xxx/{id} */
     public function show(Plan $plan) {
-        // return 'show';
-        return view('plans.show', compact('plan'));
+        $user = Auth::user();
+        return view('plans.show', compact('user', 'plan'));
 
         // 将用户对象 $user 通过 compact 方法转化为一个关联数组
         // return view('users.show', compact('user'));
@@ -84,8 +91,8 @@ class PlansController extends Controller
 
     /* Edit - GET /xxx/{id}/edit */
     public function edit(Plan $plan) {
-        // return 'edit';
-        return view('plans.edit', compact('plan'));
+        $user = Auth::user();
+        return view('plans.edit', compact('user', 'plan'));
 
         // $this->authorize('update', $plan);
         // return view('plans.edit', compact('plan'));
@@ -104,19 +111,20 @@ class PlansController extends Controller
         $plan->update($data);
 
         session()->flash('success', 'Update Success');
-
         return redirect()->route('plans.show', $plan->id);
     }
 
     /* Delete - DELETE /xxx/{id} */
     public function destroy(Plan $plan) {
-        // return 'delete';
-        $plan->delete();
-        session()->flash('success', 'Delete Success');
+        $user = Auth::user();
 
+        $plan->delete();
         // return back();
+
         // $plans = Plan::all();
         $plans = Plan::paginate(5);
-        return view('plans.index', compact('plans'));
+
+        session()->flash('success', 'Delete Success');
+        return view('plans.index', compact('user', 'plans'));
     }
 }

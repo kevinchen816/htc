@@ -51,11 +51,6 @@
                                     <ul class="dropdown-menu">
                                         @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                                         {!! $cc->Camera_Gallery_Select_Camera() !!}
-                                        <!--
-                                        <li><a href="/cameras/getdetail/15">Mountaineer</a></li>
-                                        <li><a href="/cameras/getdetail/50">New Camera</a></li>
-                                        <li><a href="/cameras/getdetail/59">New Camera</a></li>
-                                        <li><a href="/cameras/getdetail/54">Truphone #1</a></li> -->
                                     </ul>
                                 </div>
 
@@ -112,6 +107,7 @@
                 <div class="tab-content" id="myTabContent-{{ $camera->id }}">
                     <!-- OVERVIEW TAB -->
                     <div class="tab-pane fade" id="overview-{{$camera->id}}">
+                    @include('camera.tab_overview')
                     </div>
 
                     <!-- GALLERY TAB -->
