@@ -15,7 +15,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/actionqueue" id="action-formatsd-form-{{ $camera->id }}">
+                                <form class="form-horizontal" role="form" method="POST" action="{{ route('camera.actionqueue_post') }}" id="action-formatsd-form-{{ $camera->id }}">
                                     <!-- <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
                                     {{ csrf_field() }}
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
@@ -128,7 +128,7 @@ $(document).ready(function () {
     });
 
     $(".action-queue-{{ $camera->id }}").click(function() {
-        alert('action queue');
+        //alert('action queue');
         action = $(this).attr('data-param');
         id = $(this).attr('camera-id');
         url = '/cameras/actionqueue/' + id + '/' + action;
@@ -140,7 +140,7 @@ $(document).ready(function () {
 
     $( ".action-cancel-{{ $camera->id }}" ).click(function(event) {
         event.preventDefault();
-        alert('actioncancel');
+        //alert('actioncancel');
         actionid = $(this).attr('data-param');
         url='/cameras/actioncancel/' + actionid;
         //alert(url);
@@ -149,9 +149,9 @@ $(document).ready(function () {
 
     $('#clear-missing').click(function(event) {
         var url = '/cameras/clearmissing/{{ $camera->id }}';
+        alert(url);
         console.log('url = ' + url);
         $('#action-{{ $camera->id }}').load(url);
-
     });
 
     $('.missing-request').click(function(event) {

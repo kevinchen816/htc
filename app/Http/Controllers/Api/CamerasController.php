@@ -682,7 +682,7 @@ class CamerasController extends Controller
                 $param = array(
                     'camera_id'   => $camera->id,
                     'action_code' => 'DS',
-                    'status'      => 1,
+                    'status'      => ACTION_REQUESTED, //1,
                 );
                 $this->Action_Add($param);
 
@@ -1488,6 +1488,7 @@ HighRes Max
                 if ($request->RequestID) {
                     $param['request_id'] = $request->RequestID;
                     $this->Action_Failed($param);
+                    //$this->Action_Aborted($param);
                 }
                 $ret = $this->Response_Result($err, $camera);
             }
@@ -1615,14 +1616,97 @@ HighRes Max
         return $request;
     }
 
+    /* Action */
     public function actions($cameras_id) {
         $ret = '/cameras/actions/' . $cameras_id;
         return $ret;
     }
 
+    public function sendsms($cameras_id, $sms) {
+        $ret = '/cameras/sendsms/'.$cameras_id.'/'.$sms;
+        return $ret;
+    }
+
+    public function actionqueue($camera_id, $action) {
+        /* /cameras/actionqueue/2/LD */
+        //$ret = '/cameras/actionqueue/'.$cameras_id.'/'.$action;
+        //return $ret;
+
+        $param = array(
+            'camera_id'   => $camera_id,
+            'action_code' => $action, //'DS',
+            'status'      => ACTION_REQUESTED, //1,
+        );
+        $this->Action_Add($param);
+
+        //$user   = Auth::user();
+        //$camera = Camera::find($camera_id);
+        //$photos = $camera->photos()
+        //    ->orderBy('created_at', 'desc')
+        //    ->paginate(10);
+        //return view('camera.tab_actions', compact('user', 'camera', 'photos'));
+
+        $camera = Camera::find($camera_id);
+        return view('camera.tab_actions', compact('camera'));
+    }
+
+    public function actionqueue_post(Request $request) {
+        /*
+            {
+                "_token":"D6RyLJ5esCNGbgPPcw6D18sAgY9X3UZQNsesJDvO",
+                "id":"2",
+                "action":"FC",
+                "password":"12345"
+            }
+        */
+        //return $request;
+
+        $camera_id = $request->id;
+        $action = $request->action;
+        $param = array(
+            'camera_id'   => $camera_id,
+            'action_code' => $action,
+            'status'      => ACTION_REQUESTED,
+        );
+        $this->Action_Add($param);
+
+        //$camera = Camera::find($camera_id);
+        //return view('camera.tab_actions', compact('camera'));
+        return redirect()->back();
+    }
+
+    public function actioncancel($action_id) {
+        /* /cameras/actioncancel/18 */
+        //$ret = '/cameras/actioncancel/'.$action_id;
+        //return $ret;
+
+        $actions = DB::table('actions')->where('id', $action_id);
+        $action  = $actions->first();
+        if ($action) {
+            $camera_id = $action->camera_id;
+            $data['status'] = ACTION_CANCELLED;
+            $data['completed'] = date('Y-m-d H:i:s');
+            $actions->update($data);
+        }
+
+        $camera = Camera::find($camera_id);
+        return view('camera.tab_actions', compact('camera'));
+    }
+
+    public function clearmissing($cameras_id) {
+        $ret = '/cameras/clearmissing/'.$cameras_id;
+        return $ret;
+    }
+
+    public function requestmissing($cameras_id, $missing_id) {
+        $ret = '/cameras/requestmissing/'.$cameras_id.'/'.$missing_id;
+        return $ret;
+    }
+
     public function emailpolicy() {
         $user   = Auth::user();
-        $camera = Camera::findOrFail($camera_id);
+        //$camera = Camera::findOrFail($camera_id);
+        $camera = Camera::find($camera_id);
         $photos = $camera->photos()
             ->orderBy('created_at', 'desc')
             ->paginate(10);

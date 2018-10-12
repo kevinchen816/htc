@@ -174,6 +174,11 @@ class AccountsController extends Controller
     }
 
     public function Emails_Save(Request $request) {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
         $user = Auth::user();
         $user_id = $user->id;
 
