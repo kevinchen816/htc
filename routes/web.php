@@ -75,6 +75,10 @@ Route::get('/test', function () {
 Route::resource('/users', 'UsersController');
 // Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
+//Route::get('/plans/add-plan','Api\CamerasController@plans_addplan_create')->name('add.plan');
+Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
+Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
+Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
 Route::resource('/plans', 'PlansController');
 Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
@@ -104,22 +108,16 @@ Route::get('/cameras/gallerythumbs/{camera_id}/{number}', 'Api\CamerasController
 
 Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');
 
-// Route::get('/account/profile', function() { return view('account.profile'); })->name('account.profile');
-Route::get('/account/profile', 'Api\CamerasController@account_profile')->name('account.profile');
-
-// Route::get('/plans/add-plan', function() {return 'add-plan';})->name('add.plan');
-Route::get('/plans/add-plan','Api\CamerasController@plans_addplan_create')->name('add.plan');
-Route::post('/plans/add-plan','Api\CamerasController@plans_addplan_store')->name('add.plan');
+Route::get('/account/profile', 'AccountsController@profile')->name('account.profile');
+Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
+Route::post('/account/profile-emails', 'AccountsController@Emails_Save')->name('account.profile-emails');
 
 Route::get('/tour/start', function() {return '/tour/plans';})->name('tour.start');
 
-// Route::get('/help/plans', function() {return '/help/plans';})->name('help.plans');
-// Route::get('/help/plans', function() { return view('help.plans'); })->name('help.plans');
-Route::get('/help/plans', 'Api\CamerasController@help_plans')->name('help.plans');
-
-Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
-Route::get('/help/terms', function() {return '/help/terms';})->name('help.terms');
-Route::get('/help/privacy', function() {return '/help/plans';})->name('help.privacy');
+Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
+Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
+Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick-start');
+//Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
 
 Route::get('/support/emailpolicy', function() {return '/support/emailpolicy';})->name('support.emailpolicy');
 //Route::get('/support/emailpolicy', function() {return view('support.emailpolicy');})->name('support.emailpolicy');
@@ -131,8 +129,6 @@ Route::post('/support/contact', function() {return '/support/contact';})->name('
 
 Route::get('/email/optin', function() {return '/email/optin';})->name('email.optin');
 Route::get('/email/optout', function() {return '/email/optout';})->name('email.optout');
-
-
 
 /* TODO */
 /* default.blade.php */

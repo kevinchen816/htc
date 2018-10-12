@@ -11,6 +11,66 @@ use DB;
 
 class PlansController extends Controller
 {
+    public function view() {
+        // if (Auth::check()) {
+        //     $user = Auth::user();
+        //     return view('account.profile', compact('user'));
+        // } else {
+        //     return view('account.profile');
+        // }
+        $user = Auth::user();
+        return view('plans.add-plan', compact('user'));
+    }
+
+    public function add(Request $request) {
+//return $request;
+
+//Error: Please input an ICCID.
+//Error: Invalid ICCID. Verify that you have input the ICCID correctly.
+//Error: Please read and agree to the TERMS and CONDITIONS.
+//Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
+
+        //$result = $this->validate($request, [
+        //    'iccid' => 'required|unique:plans|max:20',
+        //]);
+
+//$ret['result'] = $result;
+//return $ret;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            if (!$request->iccid) {
+                session()->flash('danger', 'Error: Please input an ICCID.');
+                return redirect()->back();
+            }
+
+            $plan = DB::table('plans')
+                ->where('iccid', $request->iccid)
+                ->first();
+            if ($plan) {
+                session()->flash('danger', 'Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.');
+                return redirect()->back();
+            }
+
+            $plan = Plan::create([
+                'iccid' => $request->iccid,
+                'status' => 'active',
+                //'points' => $request->points,
+                'user_id' => Auth::user()->id,
+            ]);
+
+            //session()->flash('success', 'Create Success');
+            //return redirect()->route('plans.show', [$plan]);
+            //return view('plans.show', compact('user', 'plan'));
+            return redirect()->route('account.profile');
+
+        } else {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+    }
+
     /*----------------------------------------------------------------------------------*/
     /*
         GET    /users               -> index()      // 显示所有用户页面
@@ -48,6 +108,7 @@ class PlansController extends Controller
     */
     public function store(Request $request) {
         // return 'store';
+//return $request;
 
         $this->validate($request, [
             'iccid' => 'required|unique:plans|max:20',

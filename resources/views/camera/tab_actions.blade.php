@@ -64,6 +64,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
+                        {!! $actions_ctrl->History($camera) !!}
+
                         <tr>
                             <td>Scheduled Update</td>
                             <td>Completed</td>

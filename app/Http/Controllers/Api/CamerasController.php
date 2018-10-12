@@ -2716,40 +2716,6 @@ HighRes Max
         // return view('help.plans');
     }
 
-    public function plans_addplan_create() {
-        // if (Auth::check()) {
-        //     $user = Auth::user();
-        //     return view('account.profile', compact('user'));
-        // } else {
-        //     return view('account.profile');
-        // }
-        $user = Auth::user();
-        return view('plans.add-plan', compact('user'));
-    }
-
-    public function plans_addplan_store() {
-        // if (Auth::check()) {
-        //     $user = Auth::user();
-        //     return view('account.profile', compact('user'));
-        // } else {
-        //     return view('account.profile');
-        // }
-        // return view('plans.add-plan');
-
-        session()->flash('danger', 'Error: Please input an ICCID.');
-        return redirect()->back();
-    }
-
-    public function help_plans() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('help.plans', compact('user'));
-        } else {
-            return view('help.plans');
-        }
-        // return view('help.plans');
-    }
-
     /*----------------------------------------------------------------------------------*/
     public function test() {
         $id     = 1;

@@ -1,6 +1,14 @@
 @extends('layouts.default2')
+@section('header')
+<div class="row">
+    <h4>
+    <ol class="breadcrumb">
+        <li class="active">Add Camera Data Plan</li>
+    </ol>
+    </h4>
+</div>
+@stop
 @section('content')
-
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -39,7 +47,7 @@
                                     </span>
                                     <div>
                                         <i class="glyphicon glyphicon-warning-sign"></i>
-                                        <a href="/help/terms" target="_blank">TERMS AND CONDITIONS</a>
+                                        <a href="{{ route('help.terms') }}" target="_blank">TERMS AND CONDITIONS</a>
                                     </div>
                                 </div>
                             </div>
@@ -48,11 +56,11 @@
                                 <div class="col-md-3">
                                 </div>
                                 <div class="col-md-7">
-                                    <button type="submit" class="btn btn-warning btn-sm" name="submit-new-plan" value="update">
+                                    <button type="submit" class="btn btn-primary  btn-sm" name="submit-new-plan" value="update">
                                         <i class="glyphicon glyphicon-plus"></i>
                                         Create New Plan
                                     </button>
-                                    <a href="/plans/cancel" class="btn btn-sm btn-warning">Cancel</a>
+                                    <a href="{{ route('plans.cancel') }}" class="btn btn-sm btn-warning">Cancel</a>
                                 </div>
                             </div>
                         </form>
@@ -194,6 +202,7 @@
         </div>
     </div>
 
+<!--
     <div id="find-iccid" class="hidden">
         <div class="alert alert-sm alert-info help-container">
             <h4>
@@ -205,5 +214,6 @@
             </div>
         </div>
     </div>
+-->
 </div>
 @stop

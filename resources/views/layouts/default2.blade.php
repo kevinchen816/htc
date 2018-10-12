@@ -76,7 +76,7 @@
         }
 
     </style>
-    <link rel="stylesheet" href="https://portal.ridgetec.com/css/thumbnail-gallery.css" media="screen">
+<link rel="stylesheet" href="https://portal.ridgetec.com/css/thumbnail-gallery.css" media="screen">
 <link rel="stylesheet" href="https://portal.ridgetec.com/css/gallery.css" media="screen">
 <style>
     .custom-time-toggle-td {
@@ -141,8 +141,11 @@
 <body>
     <div id="app">
         @include('layouts._header2')
+
         <div class="fixed-navbar-container">
             <div class="container">
+                @include('shared._messages')
+                @yield('header')
             </div>
         </div>
 
@@ -167,17 +170,7 @@
         </div>
 @endif
 
-        @include('shared._messages')
-
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 pull-right">
-
-                </div>
-            </div>
-
-            @yield('content')
-        </div>
+        @yield('content')
 
         <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
             <div style="position: fixed;">

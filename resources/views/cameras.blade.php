@@ -8,8 +8,10 @@
 @stop
 
 @section('content')
+<div class="container-fluid">
     <div class="row">
         @include('camera._list')
         @include('camera._data')
     </div>
+</div>
 @stop

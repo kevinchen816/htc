@@ -1,26 +1,17 @@
 @extends('layouts.default2')
-@section('content')
-<div id="app">
-    @include('layouts._header2')
-
-        <div class="fixed-navbar-container">
-            <div class="container">
-                                <div class="container">
-    <div class="row">
-        <h4>
-                    <ol class="breadcrumb">
-
-									<li><a href="https://portal.ridgetec.com">Home</a></li>
-												<li class="active">Data Plan Information</li>
-					                	</ol>
-
-                </h4>
-    </div>
-</div>
-            </div>
-        </div>
-        <div class="container">
+@section('header')
 <div class="row">
+    <h4>
+    <ol class="breadcrumb">
+        <li><a href="{{ route('home') }}">Home</a></li>
+        <li class="active">Data Plan Information</li>
+    </ol>
+    </h4>
+</div>
+@stop
+@section('content')
+<div class="container">
+    <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default panel-primary default-help-panel">
             <div class="panel-heading">
@@ -272,14 +263,4 @@
     </div>
 </div>
 </div>
-
-        <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
-
-                <div style="position: fixed;"><a class="btn btn-sm btn-default btn-info help_close" style="border-radius: 25px 0px 0px 25px;"><i class="fa fa-times"></i></a></div>
-                <div id="help_content">
-                </div>
-
-        </div>
-
-    </div>
 @stop
