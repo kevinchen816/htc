@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Action;
 use App\Models\Camera;
 use App\Models\Photo;
+use App\Models\LogApi;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -123,6 +124,267 @@ class CamerasController extends Controller
 
         $message = isset($errors[$errorCode]) ? $errors[$errorCode] : 'Unknown Error';
         return $message;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function LogApi_Add($api, $type, $user_id, $camera_id, $request, $response) {
+        if ($user_id && $camera_id) {
+            $logapi = new LogApi;
+
+            $logapi->user_id = $user_id;
+            $logapi->camera_id = $camera_id;
+
+            $logapi->iemi = $request->module_id;
+            $logapi->iccid = $request->iccid;
+
+            $logapi->api = $api;
+            $logapi->type = $type;
+//            $logapi->request = $request->getContent();
+            $logapi->request = json_encode($request->all()); // string
+            $logapi->response = json_encode($response);
+
+            $logapi->save();
+        }
+    }
+
+    public function LogApi_Search($user_id, $imei) {
+        $ret = DB::table('log_apis')
+            ->where('request->module_id', $imei)
+            ->get();
+        return $ret;
+    }
+
+    public function LogApi_Text($name, $value) {
+        return sprintf('%25s: %s%c', $name, $value, 0x0a);
+    }
+
+    public function LogApi_List($log_apis) {
+        $handle = '';
+        //$link_request = '';
+        //$link_response = '';
+        foreach ($log_apis as $log_api) {
+            $request = json_decode($log_api->request);
+            $response = json_decode($log_api->response);
+
+            $request_type = 0;
+            if ($log_api->api == 'report') {
+                $api = 'HeartBeat';
+                $request_type = 1;
+                $response_type = 0;
+            } else if ($log_api->api == 'status') {
+                $api = 'Status';
+                $request_type = 1;
+                $response_type = 0;
+            } else if ($log_api->api == 'uploadthumb') {
+                $api = 'Upload Photo';
+                $request_type = 2;
+                $response_type = 0;
+            } else if ($log_api->api == 'downloadsettings') {
+                $api = 'Download Settings';
+                $request_type = 0;
+                $response_type = 1;
+            } else {
+                $api = 'Unknown';
+                $request_type = 0;
+                $response_type = 0;
+            }
+
+            $result = 'Success';
+            $datetime = $log_api->created_at;
+
+            if ($request_type == 1) {
+                $link_request = '<a class="btn btn-xs btn-primary view-request" data-request="';
+                if(isset($request->iccid)) {
+                    $link_request .= $this->LogApi_Text('ICCID', $request->iccid);
+                }
+                if(isset($request->module_id)) {
+                    $link_request .= $this->LogApi_Text('Module ID', $request->module_id);
+                }
+
+                if (isset($request->DataList)) {
+                    $data = $request->DataList;
+                    if(isset($data->Battery)) {
+                        $link_request .= $this->LogApi_Text('Battery', $data->Battery);
+                    }
+                    if(isset($data->SignalValue)) {
+                        $link_request .= $this->LogApi_Text('Signal', $data->SignalValue);
+                    }
+                    if(isset($data->Cardspace)) {
+                        $link_request .=  $this->LogApi_Text('Card Space', $data->Cardspace);
+                    }
+                    if(isset($data->Cardsize)) {
+                        $link_request .= $this->LogApi_Text('Card Size', $data->Cardsize);
+                    }
+                    if(isset($data->Temperature)) {
+                        $link_request .= $this->LogApi_Text('Temperature', $data->Temperature);
+                    }
+                }
+                $link_request .= '">View</a>';
+
+            } else if ($request_type == 2) {
+                $link_request = '<a class="btn btn-xs btn-primary view-request" data-request="';
+                if(isset($request->iccid)) {
+                    $link_request .= $this->LogApi_Text('ICCID', $request->iccid);
+                }
+                if(isset($request->module_id)) {
+                    $link_request .= $this->LogApi_Text('Module ID', $request->module_id);
+                }
+
+                if(isset($request->FileName)) {
+                    $link_request .= $this->LogApi_Text('FileName', $request->FileName);
+                }
+                if(isset($request->upload_resolution)) {
+                    $link_request .= $this->LogApi_Text('Upload Resolution', $request->upload_resolution);
+                }
+                if(isset($request->Source)) {
+                    $link_request .= $this->LogApi_Text('Source', $request->Source);
+                }
+
+                $data = $request;
+                if(isset($data->Battery)) {
+                    $link_request .= $this->LogApi_Text('Battery', $data->Battery);
+                }
+                if(isset($data->SignalValue)) {
+                    $link_request .= $this->LogApi_Text('Signal', $data->SignalValue);
+                }
+                if(isset($data->Cardspace)) {
+                    $link_request .=  $this->LogApi_Text('Card Space', $data->Cardspace);
+                }
+                if(isset($data->Cardsize)) {
+                    $link_request .= $this->LogApi_Text('Card Size', $data->Cardsize);
+                }
+                if(isset($data->Temperature)) {
+                    $link_request .= $this->LogApi_Text('Temperature', $data->Temperature);
+                }
+                $link_request .= '">View</a>';
+
+            } else {
+                $link_request = '';
+            }
+
+            if ($response_type == 1) {
+                if (isset($response->DataList)) {
+                    $data = $response->DataList;
+                    $link_response = '<a class="btn btn-xs btn-primary view-response" data-response="';
+
+                    if(isset($data->photoresolution)) {
+                        $link_response .= $this->LogApi_Text('Photo Resolution', $data->photoresolution);
+                    }
+                    if(isset($data->video_resolution)) {
+                        $link_response .= $this->LogApi_Text('Video Resolution', $data->video_resolution);
+                    }
+                    if(isset($data->video_rate)) {
+                        $link_response .= $this->LogApi_Text('Frame Rate', $data->video_rate);
+                    }
+                    if(isset($data->video_bitrate)) {
+                        $link_response .= $this->LogApi_Text('Quality Level', $data->video_bitrate);
+                    }
+                    if(isset($data->video_length)) {
+                        $link_response .= $this->LogApi_Text('Video Length', $data->video_length);
+                    }
+                    if(isset($data->video_sound)) {
+                        $link_response .= $this->LogApi_Text('Video Sound', $data->video_sound);
+                    }
+                    if(isset($data->photoburst)) {
+                        $link_response .= $this->LogApi_Text('Photo Burst', $data->photoburst);
+                    }
+                    if(isset($data->burst_delay)) {
+                        $link_response .= $this->LogApi_Text('Burst Delay', $data->burst_delay);
+                    }
+                    if(isset($data->upload_resolution)) {
+                        $link_response .= $this->LogApi_Text('Upload Resolution', $data->upload_resolution);
+                    }
+                    if(isset($data->photo_quality)) {
+                        $link_response .= $this->LogApi_Text('Upload Quality', $data->photo_quality);
+                    }
+                    if(isset($data->timestamp)) {
+                        $link_response .= $this->LogApi_Text('Time Stamp', $data->timestamp);
+                    }
+                    if(isset($data->date_format)) {
+                        $link_response .= $this->LogApi_Text('Date Format', $data->date_format);
+                    }
+                    if(isset($data->time_format)) {
+                        $link_response .= $this->LogApi_Text('Time Format', $data->time_format);
+                    }
+                    if(isset($data->temperature)) {
+                        $link_response .= $this->LogApi_Text('Temperature', $data->temperature);
+                    }
+                    if(isset($data->quiettime)) {
+                        $link_response .= $this->LogApi_Text('Quiet Time', $data->quiettime);
+                    }
+                    if(isset($data->timelapse)) {
+                        $link_response .= $this->LogApi_Text('Time Lapse', $data->timelapse);
+                    }
+                    if(isset($data->tls_start)) {
+                        $link_response .= $this->LogApi_Text('Timelapse Start Time', $data->tls_start);
+                    }
+                    if(isset($data->tls_stop)) {
+                        $link_response .= $this->LogApi_Text('Timelapse Stop Time', $data->tls_stop);
+                    }
+                    if(isset($data->tls_interval)) {
+                        $link_response .= $this->LogApi_Text('Timelapse Interval', $data->tls_interval);
+                    }
+                    if(isset($data->wireless_mode)) {
+                        $link_response .= $this->LogApi_Text('Wireless Mode', $data->wireless_mode);
+                    }
+                    if(isset($data->wm_schedule)) {
+                        $link_response .= $this->LogApi_Text('Schedule Interval', $data->wm_schedule);
+                    }
+                    if(isset($data->wm_sclimit)) {
+                        $link_response .= $this->LogApi_Text('Schedule File Limit', $data->wm_sclimit);
+                    }
+                    if(isset($data->hb_interval)) {
+                        $link_response .= $this->LogApi_Text('Heartbeat Interval', $data->hb_interval);
+                    }
+                    if(isset($data->online_max_time)) {
+                        $link_response .= $this->LogApi_Text('Action Process Time Limit', $data->online_max_time);
+                    }
+                    if(isset($data->cellularpw)) {
+                        $link_response .= $this->LogApi_Text('Cellular Password', $data->cellularpw);
+                    }
+                    if(isset($data->remotecontrol)) {
+                        $link_response .= $this->LogApi_Text('Remote Control', $data->remotecontrol);
+                    }
+                }
+                $link_response .= '">View</a>';
+            } else {
+                $link_response = '';
+            }
+
+            $handle .= '<tr>';
+            $handle .=    '<td>'.$log_api->id.'</td>';
+            $handle .=    '<td>'.$api.'</td>';
+            $handle .=    '<td>'.$result.'</td>';
+            $handle .=    '<td>'.$link_request.'</td>';
+            $handle .=    '<td>'.$link_response.'</td>';
+            $handle .=    '<td>'.$datetime.'</td>';
+            $handle .= '</tr>';
+       }
+       return $handle;
+    }
+
+    public function apilog($camera_id) {
+        //return $camera_id;
+        //return view('camera.apilog', compact('user', 'camera', 'photos'));
+        //return view('camera.apilog', compact('user', 'camera'));
+
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        $camera = Camera::find($camera_id);
+
+        $log_apis = DB::table('log_apis')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+
+//return $log_apis;
+        return view('camera.apilog', compact('user', 'camera', 'log_apis'));
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -617,6 +879,13 @@ class CamerasController extends Controller
         }
     */
     public function report(Request $request) {
+        //return $request;
+        //return $request->getContent();
+        //return gettype($request); // object
+        //return gettype($request->getContent()); // string
+        //return gettype($request->all()); // array
+        //return gettype(json_encode($request->all())); // string
+
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $camera = $ret['camera'];
@@ -630,7 +899,15 @@ class CamerasController extends Controller
         if ($err == 0) {
             $this->Camera_Status_Update($request, 'report');
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+
+//return gettype($response); // array
+//return gettype(json_encode($response)); // string
+//return gettype(json_decode(json_encode($response))); // object
+//return gettype(json_decode(json_encode($response), true)); // array
+        $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -708,6 +985,7 @@ class CamerasController extends Controller
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $camera = $ret['camera'];
+        $user_id = $ret['user_id'];
 
         if ($err == 0) {
             $this->Camera_Status_Update($request, 'settings');
@@ -780,7 +1058,10 @@ class CamerasController extends Controller
                 $this->Action_Completed($param);
             }
         }
-        return $this->Response_Result($err, $camera, $datalist);
+        $response = $this->Response_Result($err, $camera, $datalist);
+
+        $this->LogApi_Add('downloadsettings', 1, $user_id, $camera->id, $request, $response);
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -920,9 +1201,11 @@ PICT0002.JPG    1184126564  46945664
 
         $uploader = new ImageUploadHandler;
 
+        $camera_id = null;
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $camera = $ret['camera'];
+        $user_id = $ret['user_id'];
 
         if ($err == 0) {
             $camera_id = $camera->id;
@@ -990,18 +1273,38 @@ PICT0002.JPG    1184126564  46945664
         }
 
         if ($err == ERR_CRC32_FAIL) {
-            $crc32 = $ret['CRC32'];
-            $ret = $this->Response_Result($err, $camera);
-            $ret['CRC32'] = $crc32;
+            //$crc32 = $ret['CRC32'];
+            $response = $this->Response_Result($err, $camera);
+            $response['CRC32'] = $ret['CRC32'];
         } else {
-            $ret = $this->Response_Result($err, $camera);
+            $response = $this->Response_Result($err, $camera);
         }
+
+        $ret = [];
+        $ret['user_id'] = $user_id;
+        $ret['camera_id'] = $camera_id;
+        $ret['response'] = $response;
         return $ret;
     }
 
     //public function uploadthumb(Request $request, ImageUploadHandler $uploader) {
     public function uploadthumb(Request $request) {
-        return $this->uploadfile($request, 'photo_thumb');
+        //$user_id = $ret['user_id'];
+//return $request;
+//return $request->all();
+//return gettype($request->all());
+//return $request->getContent();
+//return $request->iccid;
+//return json_encode($request);
+//return gettype($request);
+//return gettype($request->getContent()); // string
+
+        $ret = $this->uploadfile($request, 'photo_thumb');
+//return $ret;
+        $response = $ret['response'];
+//return gettype($response);
+        $this->LogApi_Add('uploadthumb', 1, $ret['user_id'], $ret['camera_id'], $request, $response);
+        return $response;
     }
 
 /*

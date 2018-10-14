@@ -127,6 +127,8 @@ Route::get('/cameras/actioncancel/{action_id}', 'Api\CamerasController@actioncan
 Route::get('/cameras/clearmissing/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
 Route::get('/cameras/requestmissing/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
 
+Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@apilog')->name('camera.apilog');
+
 /*-----------------------------------------------------------*/
 Route::get('/account/profile', 'AccountsController@profile')->name('account.profile');
 Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
