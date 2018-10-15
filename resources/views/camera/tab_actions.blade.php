@@ -13,6 +13,7 @@
             <div class="panel-body  " id="commandhistory-{{ $camera->id }}">
                 <table class="table" id="action-table">
                     <tbody>
+@if ($camera->remotecurrent == '24')
                         <tr>
                             <td>
                                 <div class="well well-sm">
@@ -23,7 +24,7 @@
                                 </div>
                             </td>
                         </tr>
-
+@endif
                         <tr>
                             <td>
                                 <form class="form-horizontal" role="form" method="POST" action="{{ route('camera.actionqueue_post') }}" id="action-formatsd-form-{{ $camera->id }}">

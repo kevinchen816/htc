@@ -19,31 +19,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Camera_Settings_Camera_Identification($camera) !!}
-
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="inputSmall">Camera Region</label>
-                        <div class="col-md-7">
-                            <select id="{{ $camera->id }}_country" class="bs-select form-control input-sm" name="54_country">
-                                <option value="USA">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="AU">Australia</option>
-                                <option value="CN" selected="selected">China</option>
-                                <option value="EU">Europe</option>
-                            </select>
-                            <span class="help-block"> Select the country where the camera is located. </span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="inputSmall">Time Zone</label>
-                        <div class="col-md-7">
-                            <select id="{{ $camera->id }}_timezone" class="bs-select form-control input-sm"   name="{{ $camera->id }}_timezone">
-                                <option value="Asia/Hong_Kong" selected="selected">Hong_Kong</option>
-                            </select>
-                            <span class="help-block"> Select the time zone where the camera is located. </span>
-                        </div>
-                    </div>
+                    {!! $cc->Settings_Identification($camera) !!}
                 </div>
             </div>
         </div>
@@ -107,7 +83,6 @@
                 </div>
             </div>
 
-
         </div>
     </div>
 
@@ -126,7 +101,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Camera_Settings_Control_Settings($camera) !!}
+                    {!! $cc->Settings_Basic($camera) !!}
                 </div>
             </div>
         </div>
@@ -138,19 +113,23 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Camera_Settings_Trigger_Settings($camera) !!}
+                    {!! $cc->Settings_Trigger($camera) !!}
 
                     <div class="panel panel-default panel-success custom-settings-panel">
                         <div class="panel-heading">
                             <span class="button-checkbox">
                                 <button type="button" class="btn btn-default btn-xs" data-color="info"></button>
-                                <input type="checkbox" class="hidden" name="54_timelapse" id="54_timelapse" checked  />
+@if ($camera->timelapse == 'on')
+                                <input type="checkbox" class="hidden" name="{{ $camera->id }}_timelapse" id="{{ $camera->id }}_timelapse" checked  />
+@else
+                                <input type="checkbox" class="hidden" name="{{ $camera->id }}_timelapse" id="{{ $camera->id }}_timelapse"/>
+@endif
                             </span>
                             Time Lapse
                         </div>
-                        <div class="panel-body" id="panel-54-timelapse">
+                        <div class="panel-body" id="panel-{{ $camera->id }}-timelapse">
                             @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                            {!! $cc->Camera_Settings_Time_Lapse($camera) !!}
+                            {!! $cc->Settings_Timelapse($camera) !!}
                         </div>
                     </div>
                 </div>
@@ -166,7 +145,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Camera_Settings_Wireless_Settings($camera) !!}
+                    {!! $cc->Settings_Wireless_Mode($camera) !!}
                 </div>
             </div>
         </div>
@@ -178,7 +157,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Camera_Settings_Block_Mode_Settings($camera) !!}
+                    {!! $cc->Settings_Block_Mode($camera) !!}
                 </div>
             </div>
         </div>
@@ -191,1201 +170,32 @@
                     <!--<input type="checkbox"   data-size="normal" class="tog" name="dutytime_54" id="dutytime_54" data-toggle="toggle" data-on="Enabled" data-off="Disabled"> Duty Time/Hours of operation-->
                     <span class="button-checkbox">
                         <button type="button" class="btn btn-default btn-xs" data-color="info"></button>
-                        <input type="checkbox" class="hidden" name="54_dutytime" id="54_dutytime"   />
+@if ($camera->dutytime == 'on')
+                        <input type="checkbox" class="hidden" name="{{ $camera->id }}_dutytime" id="{{ $camera->id }}_dutytime" checked />
+@else
+                        <input type="checkbox" class="hidden" name="{{ $camera->id }}_dutytime" id="{{ $camera->id }}_dutytime" />
+@endif
                         <!-- <input type="checkbox" name="54_dutytime" id="54_dutytime"   /> -->
                     </span>
                     Duty Time/Hours of operation
                 </div>
                 <div class="panel-body">
-                    <div id="duty-tabs-54" class="tab-set mobile-nopadding-nomargin" >
-                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton54-on">Check All</a>
-                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton54-off">Check None</a>
+                    <div id="duty-tabs-{{ $camera->id }}" class="tab-set mobile-nopadding-nomargin" >
+                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton{{ $camera->id }}-on">Check All</a>
+                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton{{ $camera->id }}-off">Check None</a>
 
                         <ul class="tab-headers" style="font-size: .80em;">
-                            <li><a href="#tabs54-1">Sunday</a></li>
-                            <li><a href="#tabs54-2">Monday</a></li>
-                            <li><a href="#tabs54-3">Tuesday</a></li>
-                            <li><a href="#tabs54-4">Wednesday</a></li>
-                            <li><a href="#tabs54-5">Thursday</a></li>
-                            <li><a href="#tabs54-6">Friday</a></li>
-                            <li><a href="#tabs54-7">Saturday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-1">Sunday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-2">Monday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-3">Tuesday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-4">Wednesday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-5">Thursday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-6">Friday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-7">Saturday</a></li>
                         </ul>
 
-                        <div id="tabs54-1">
-                            <div id="controlgroup54-1" class="mobile-dutytime-div">
-                                <table>
-                                    <tr>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <!-- <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked /> -->
-                                        </span>
-                                        </td>
-
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_2" id="54_hour_1_2"  checked />
-                                        </span>
-                                        </td>
-
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_3" id="54_hour_1_3"  checked />
-                                        </span>
-                                        </td>
-
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_4" id="54_hour_1_4"  checked />
-                                        </span>
-                                        </td>
-
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_5" id="54_hour_1_5"  checked />
-                                        </span>
-                                        </td>
-
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_6" id="54_hour_1_6"  checked />
-                                        </span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_7" id="54_hour_1_7"  checked />
-                                        </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_8" id="54_hour_1_8"  checked />
-                                        </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_9" id="54_hour_1_9"  checked />
-                                        </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_10" id="54_hour_1_10"  checked />
-                                        </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_11" id="54_hour_1_11"  checked />
-                                        </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_12" id="54_hour_1_12"  checked />
-                                        </span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_13" id="54_hour_1-13"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_14" id="54_hour_1-14"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_15" id="54_hour_1-15"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_16" id="54_hour_1-16"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_17" id="54_hour_1-17"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_18" id="54_hour_1-18"  checked />
-                                            </span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_19" id="54_hour_1-19"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_20" id="54_hour_1-20"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_21" id="54_hour_1-21"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_22" id="54_hour_1-22"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_23" id="54_hour_1-23"  checked />
-                                            </span>
-                                        </td>
-                                        <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_24" id="54_hour_1-24"  checked />
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div id="tabs54-2">
-                            <div id="controlgroup54-2" class="mobile-dutytime-div">
-                                                        <table>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_1" id="54_hour_2_1"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_2" id="54_hour_2_2"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_3" id="54_hour_2_3"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_4" id="54_hour_2_4"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_5" id="54_hour_2_5"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_6" id="54_hour_2_6"  checked />
-                                        </span>
-                                        </td>
-                                    </tr>
-                                    <tr>                                <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_7" id="54_hour_2_7"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_8" id="54_hour_2_8"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_9" id="54_hour_2_9"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_10" id="54_hour_2_10"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_11" id="54_hour_2_11"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_12" id="54_hour_2_12"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_13" id="54_hour_2-13"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_14" id="54_hour_2-14"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_15" id="54_hour_2-15"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_16" id="54_hour_2-16"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_17" id="54_hour_2-17"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_18" id="54_hour_2-18"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_19" id="54_hour_2-19"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_20" id="54_hour_2-20"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_21" id="54_hour_2-21"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_22" id="54_hour_2-22"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_23" id="54_hour_2-23"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_2_24" id="54_hour_2-24"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr>
-                                </table>
-
-                            </div>
-                        </div>
-
-                        <div id="tabs54-3">
-                            <div id="controlgroup54-3" class="mobile-dutytime-div">
-                                                        <table>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_1" id="54_hour_3_1"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_2" id="54_hour_3_2"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_3" id="54_hour_3_3"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_4" id="54_hour_3_4"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_5" id="54_hour_3_5"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_6" id="54_hour_3_6"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_7" id="54_hour_3_7"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_8" id="54_hour_3_8"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_9" id="54_hour_3_9"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_10" id="54_hour_3_10"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_11" id="54_hour_3_11"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_12" id="54_hour_3_12"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_13" id="54_hour_3-13"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_14" id="54_hour_3-14"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_15" id="54_hour_3-15"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_16" id="54_hour_3-16"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_17" id="54_hour_3-17"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_18" id="54_hour_3-18"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_19" id="54_hour_3-19"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_20" id="54_hour_3-20"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_21" id="54_hour_3-21"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_22" id="54_hour_3-22"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_23" id="54_hour_3-23"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_3_24" id="54_hour_3-24"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr>
-                                </table>
-
-                            </div>
-                        </div>
-
-                        <div id="tabs54-4">
-                            <div id="controlgroup54-4" class="mobile-dutytime-div">
-                                <table>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_1" id="54_hour_4_1"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_2" id="54_hour_4_2"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_3" id="54_hour_4_3"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_4" id="54_hour_4_4"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_5" id="54_hour_4_5"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_6" id="54_hour_4_6"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_7" id="54_hour_4_7"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_8" id="54_hour_4_8"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_9" id="54_hour_4_9"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_10" id="54_hour_4_10"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_11" id="54_hour_4_11"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_12" id="54_hour_4_12"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_13" id="54_hour_4-13"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_14" id="54_hour_4-14"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_15" id="54_hour_4-15"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_16" id="54_hour_4-16"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_17" id="54_hour_4-17"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_18" id="54_hour_4-18"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_19" id="54_hour_4-19"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_20" id="54_hour_4-20"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_21" id="54_hour_4-21"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_22" id="54_hour_4-22"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_23" id="54_hour_4-23"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_4_24" id="54_hour_4-24"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr>
-                                </table>
-
-                            </div>
-                        </div>
-
-                        <div id="tabs54-5">
-                            <div id="controlgroup54-5" class="mobile-dutytime-div">
-                                                        <table>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_1" id="54_hour_5_1"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_2" id="54_hour_5_2"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_3" id="54_hour_5_3"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_4" id="54_hour_5_4"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_5" id="54_hour_5_5"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_6" id="54_hour_5_6"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_7" id="54_hour_5_7"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_8" id="54_hour_5_8"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_9" id="54_hour_5_9"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_10" id="54_hour_5_10"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_11" id="54_hour_5_11"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_12" id="54_hour_5_12"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_13" id="54_hour_5-13"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_14" id="54_hour_5-14"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_15" id="54_hour_5-15"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_16" id="54_hour_5-16"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_17" id="54_hour_5-17"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_18" id="54_hour_5-18"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_19" id="54_hour_5-19"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_20" id="54_hour_5-20"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_21" id="54_hour_5-21"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_22" id="54_hour_5-22"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_23" id="54_hour_5-23"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_5_24" id="54_hour_5-24"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr>
-                                </table>
-
-                            </div>
-                        </div>
-
-                        <div id="tabs54-6">
-                            <div id="controlgroup54-6" class="mobile-dutytime-div">
-                                                        <table>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_1" id="54_hour_6_1"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_2" id="54_hour_6_2"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_3" id="54_hour_6_3"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_4" id="54_hour_6_4"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_5" id="54_hour_6_5"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_6" id="54_hour_6_6"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_7" id="54_hour_6_7"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_8" id="54_hour_6_8"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_9" id="54_hour_6_9"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_10" id="54_hour_6_10"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_11" id="54_hour_6_11"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_12" id="54_hour_6_12"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_13" id="54_hour_6-13"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_14" id="54_hour_6-14"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_15" id="54_hour_6-15"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_16" id="54_hour_6-16"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_17" id="54_hour_6-17"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_18" id="54_hour_6-18"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_19" id="54_hour_6-19"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_20" id="54_hour_6-20"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_21" id="54_hour_6-21"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_22" id="54_hour_6-22"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_23" id="54_hour_6-23"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_6_24" id="54_hour_6-24"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr>
-                                </table>
-
-                            </div>
-                        </div>
-
-                        <div id="tabs54-7">
-                            <div id="controlgroup54-7" class="mobile-dutytime-div">
-                                                        <table>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_1" id="54_hour_7_1"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_2" id="54_hour_7_2"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_3" id="54_hour_7_3"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_4" id="54_hour_7_4"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_5" id="54_hour_7_5"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_6" id="54_hour_7_6"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_7" id="54_hour_7_7"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_8" id="54_hour_7_8"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_9" id="54_hour_7_9"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_10" id="54_hour_7_10"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_11" id="54_hour_7_11"  checked />
-                                        </span>
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                        <span class="button-checkbox" style="font-size: .80em;">
-                                            <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                                            <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_12" id="54_hour_7_12"  checked />
-                                        </span>
-                                        </td>
-                                                            </tr>
-                                    <tr>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_13" id="54_hour_7-13"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_14" id="54_hour_7-14"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_15" id="54_hour_7-15"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_16" id="54_hour_7-16"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_17" id="54_hour_7-17"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_18" id="54_hour_7-18"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr><tr>                                <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_19" id="54_hour_7-19"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_20" id="54_hour_7-20"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_21" id="54_hour_7-21"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_22" id="54_hour_7-22"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_23" id="54_hour_7-23"  checked />
-                                            </span>
-
-                                        </td>
-                                                                                            <td class="custom-time-toggle-td">
-                                            <span class="button-checkbox" style="font-size: .80em;">
-                                                <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                                                <input type="checkbox" class="hidden custom-time-button" name="54_hour_7_24" id="54_hour_7-24"  checked />
-                                            </span>
-
-                                        </td>
-                                                            </tr>
-                                </table>
-
-                            </div>
-                        </div>
+                        @inject('cc', 'App\Http\Controllers\Api\CamerasController')
+                        {!! $cc->Settings_DutyTime($camera) !!}
 
                     </div>
                 </div>
@@ -1445,7 +255,7 @@
 
 <script>
     $(document).ready(function(){
-        function initremotecontrolcontainer(id) {
+        function initremotecontrolcontainer(id) { // not used
             val = $('#' + id + '_remotecontrol').val();
 
             if (val == 'range') {
@@ -1476,10 +286,11 @@
             }
         }
 
-        $('#54_country').on('change', function() {
+        $('#{{ $camera->id }}_region').on('change', function() {
             val = this.value;
             //alert(val);
-            $.getJSON("/data/timezones/" + val, function(j) {
+            //$.getJSON("/data/timezones/" + val, function(j) {
+            $.getJSON("/data/timezones/"+val+".json", function(j) {
                 var options = '';
                 for (var i = 0; i < j.length; i++) {
                     options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
@@ -1487,143 +298,154 @@
                 //alert($("#54_timezone"));
 
                 //$("#54_timezone").html(options);
-                $("#54_timezone").empty().append(options);
+                $("#{{ $camera->id }}_timezone").empty().append(options);
             })
         });
 
-        $('#54_cameramode').on('change', function() {
+        $('#{{ $camera->id }}_camera_mode').on('change', function() {
             val = this.value;
             if (val == 'p') {
-                $('#field-wrapper-54-photoresolution').removeClass('hidden');
-                $('#field-wrapper-54-photoresolution').show(250);
-                $('#field-wrapper-54-upload_resolution').removeClass('hidden');
-                $('#field-wrapper-54-upload_resolution').show(250);
-                $('#field-wrapper-54-photo_quality').removeClass('hidden');
-                $('#field-wrapper-54-photo_quality').show(250);
-                $('#field-wrapper-54-photoburst').removeClass('hidden');
-                $('#field-wrapper-54-photoburst').show(250);
-                $('#field-wrapper-54-burst_delay').removeClass('hidden');
-                $('#field-wrapper-54-burst_delay').show(250);
-                $('#field-wrapper-54-video_resolution').hide(250);
-                $('#field-wrapper-54-video_rate').hide(250);
-                $('#field-wrapper-54-video_bitrate').hide(250);
-                $('#field-wrapper-54-video_length').hide(250);
-                $('#field-wrapper-54-video_sound').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_resolution').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-photo_resolution').show(250);
+                $('#field-wrapper-{{ $camera->id }}-upload_resolution').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-upload_resolution').show(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_quality').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-photo_quality').show(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_burst').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-photo_burst').show(250);
+                $('#field-wrapper-{{ $camera->id }}-burst_delay').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-burst_delay').show(250);
+                $('#field-wrapper-{{ $camera->id }}-video_resolution').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-video_fps').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-video_bitrate').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-video_length').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-video_sound').hide(250);
             } else {
-                $('#field-wrapper-54-photoresolution').hide(250);
-                $('#field-wrapper-54-upload_resolution').hide(250);
-                $('#field-wrapper-54-photo_quality').hide(250);
-                $('#field-wrapper-54-photoburst').hide(250);
-                $('#field-wrapper-54-burst_delay').hide(250);
-                $('#field-wrapper-54-video_resolution').removeClass('hidden');
-                $('#field-wrapper-54-video_resolution').show(250);
-                $('#field-wrapper-54-video_rate').removeClass('hidden');
-                $('#field-wrapper-54-video_bitrate').removeClass('hidden');
-                $('#field-wrapper-54-video_rate').show(250);
-                $('#field-wrapper-54-video_bitrate').show(250);
-                $('#field-wrapper-54-video_length').removeClass('hidden');
-                $('#field-wrapper-54-video_length').show(250);
-                $('#field-wrapper-54-video_sound').removeClass('hidden');
-                $('#field-wrapper-54-video_sound').show(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_resolution').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-upload_resolution').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_quality').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_burst').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-burst_delay').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-video_resolution').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-video_resolution').show(250);
+                $('#field-wrapper-{{ $camera->id }}-video_fps').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-video_bitrate').removeClass('hidden');
+                //$('#field-wrapper-{{ $camera->id }}-video_rate').show(250);
+                $('#field-wrapper-{{ $camera->id }}-video_bitrate').show(250);
+                $('#field-wrapper-{{ $camera->id }}-video_length').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-video_length').show(250);
+                $('#field-wrapper-{{ $camera->id }}-video_sound').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-video_sound').show(250);
             }
         });
 
-        $('#54_wireless_mode').on('change', function() {
+        $('#{{ $camera->id }}_wireless_mode').on('change', function() {
           val = this.value;
           if (val == 'schedule') {
-              $('#field-wrapper-54-wm_schedule').show(250);
-              $('#field-wrapper-54-wm_sclimit').show(250);
+              $('#field-wrapper-{{ $camera->id }}-wm_schedule').show(250);
+              $('#field-wrapper-{{ $camera->id }}-wm_sclimit').show(250);
           }
           else {
-              $('#field-wrapper-54-wm_schedule').hide(250);
-              $('#field-wrapper-54-wm_sclimit').hide(250);
+              $('#field-wrapper-{{ $camera->id }}-wm_schedule').hide(250);
+              $('#field-wrapper-{{ $camera->id }}-wm_sclimit').hide(250);
           }
         });
 
-        $('#54_remotecontrol').on('change', function() {
+        // not used
+        $('#{{ $camera->id }}_remotecontrol').on('change', function() {
           val = this.value;
           if (val == 'range') {
-              $('#panel-54-remotecontrol').show();
-              $('#54_rc_start').val('00:00');
-              $('#54_rc_stop').val('23:59');
+              $('#panel-{{ $camera->id }}-remotecontrol').show();
+              $('#{{ $camera->id }}_rc_start').val('00:00');
+              $('#{{ $camera->id }}_rc_stop').val('23:59');
           }
           else {
-              $('#panel-54-remotecontrol').hide();
-                $('#54_rc_start').val("off");
-                $('#54_rc_stop').val("off");
+              $('#panel-{{ $camera->id }}-remotecontrol').hide();
+                $('#{{ $camera->id }}_rc_start').val("off");
+                $('#{{ $camera->id }}_rc_stop').val("off");
           }
         });
 
-        $('#54_dutytime').change(function() {
+        $('#{{ $camera->id }}_dutytime').change(function() {
             val = $(this).prop('checked');
             if (val) {
-              $("#duty-tabs-54").show(500);
+              $("#duty-tabs-{{ $camera->id }}").show(500);
             }
             else {
-              $("#duty-tabs-54").hide(500);
+              $("#duty-tabs-{{ $camera->id }}").hide(500);
             };
         })
 
-        $('#54_timelapse').change(function() {
+        $('#{{ $camera->id }}_timelapse').change(function() {
             val = $(this).prop('checked');
             if (val) {
-                $("#panel-54-timelapse").show(250);
-                $('#54_tls_start').val('00:00');
-                $('#54_tls_stop').val('23:59');
-                $('#54_tls_interval').val('5m');
+                $("#panel-{{ $camera->id }}-timelapse").show(250);
+                $('#{{ $camera->id }}_tls_start').val('00:00');
+                $('#{{ $camera->id }}_tls_stop').val('23:59');
+                $('#{{ $camera->id }}_tls_interval').val('5m');
             }
             else {
-                $("#panel-54-timelapse").hide(250);
-                $('#54_tls_start').val("off");
-                $('#54_tls_stop').val("off");
-                $('#54_tls_interval').val("off");
+                $("#panel-{{ $camera->id }}-timelapse").hide(250);
+                $('#{{ $camera->id }}_tls_start').val("off");
+                $('#{{ $camera->id }}_tls_stop').val("off");
+                $('#{{ $camera->id }}_tls_interval').val("off");
             };
         })
 
-        $( "#Togglebutton54-on" ).click(function() {
+        $( "#Togglebutton{{ $camera->id }}-on" ).click(function() {
           $('.custom-time-button').prop('checked', true).change()
         });
 
-        $( "#Togglebutton54-off" ).click(function() {
+        $( "#Togglebutton{{ $camera->id }}-off" ).click(function() {
           $('.custom-time-button').prop('checked', false).change()
         });
 
         // show hide duty time tables
-        $("#duty-tabs-54").tabs();
+        $("#duty-tabs-{{ $camera->id }}").tabs();
 
         // first time through set duty time container visibility
-        initdutytimecontainer(54);
-        inittimelapsecontainer(54);
-        initremotecontrolcontainer(54);
+        initdutytimecontainer({{ $camera->id }});
+        inittimelapsecontainer({{ $camera->id }});
+        initremotecontrolcontainer({{ $camera->id }}); // not used
 
-        // val = $("#54_cameramode").val();
+        // TODO
+        val = $("#{{ $camera->id }}_camera_mode").val();
+        if (val == 'p') {
+            $('#field-wrapper-{{ $camera->id }}-photo_resolution').show(0);
+            $('#field-wrapper-{{ $camera->id }}-photo_burst').show(0);
+            $('#field-wrapper-{{ $camera->id }}-burst_delay').show(0);
+            $('#field-wrapper-{{ $camera->id }}-upload_resolution').show(0);
+            $('#field-wrapper-{{ $camera->id }}-photo_quality').show(0);
 
-        // if (val == 'p') {
-        //     $('#field-wrapper-54-photoresolution').show(0);
-        //     $('#field-wrapper-54-upload_resolution').show(0);
-        //     $('#field-wrapper-54-video_resolution').hide(0);
-        //     $('#field-wrapper-54-video_rate').hide(0);
-        //     $('#field-wrapper-54-video_length').hide(0);
-        //     $('#field-wrapper-54-video_sound').hide(0);
-        // }
-        // else {
-        //     $('#field-wrapper-54-photoresolution').hide(0);
-        //     $('#field-wrapper-54-upload_resolution').hide(0);
-        //     $('#field-wrapper-54-video_resolution').show(0);
-        //     $('#field-wrapper-54-video_rate').show(0);
-        //     $('#field-wrapper-54-video_length').show(0);
-        //     $('#field-wrapper-54-video_sound').show(0);
-        // }
-
-        // show/hide wireless schedule
-        val = $("#54_wireless_mode").val();
-        if (val == 'schedule') {
-            $('#field-wrapper-54-wm_schedule').show();
-            $('#field-wrapper-54-wm_sclimit').show();
+            $('#field-wrapper-{{ $camera->id }}-video_resolution').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-video_fps').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-video_bitrate').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-video_length').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-video_sound').hide(0);
         }
         else {
-            $('#field-wrapper-54-wm_schedule').hide();
-            $('#field-wrapper-54-wm_sclimit').hide();
+            $('#field-wrapper-{{ $camera->id }}-photo_resolution').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-photo_burst').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-burst_delay').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-upload_resolution').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-photo_quality').hide(0);
+
+            $('#field-wrapper-{{ $camera->id }}-video_resolution').show(0);
+            $('#field-wrapper-{{ $camera->id }}-video_fps').show(0);
+            $('#field-wrapper-{{ $camera->id }}-video_bitrate').show(0);
+            $('#field-wrapper-{{ $camera->id }}-video_length').show(0);
+            $('#field-wrapper-{{ $camera->id }}-video_sound').show(0);
+        }
+
+        // show/hide wireless schedule
+        val = $("#{{ $camera->id }}_wireless_mode").val();
+        if (val == 'schedule') {
+            $('#field-wrapper-{{ $camera->id }}-wm_schedule').show();
+            $('#field-wrapper-{{ $camera->id }}-wm_sclimit').show();
+        }
+        else {
+            $('#field-wrapper-{{ $camera->id }}-wm_schedule').hide();
+            $('#field-wrapper-{{ $camera->id }}-wm_sclimit').hide();
         }
     });
 </script>

@@ -23,8 +23,18 @@ class CreateCamerasTable extends Migration
             $table->string('model_id')->default('');
 
             /* infomation */
-            $table->string('description')->default('New Camera');
-            $table->string('location')->default('');
+            $table->string('description')->nullable()->default('New Camera');
+            $table->string('location')->nullable();
+
+            /*
+            <option value="USA">United States</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+            <option value="CN" selected="selected">China</option>
+            <option value="EU">Europe</option>
+            */
+            $table->string('region')->nullable()->default('USA');
+            $table->string('timezone')->nullable();
 
             $table->integer('points')->default(0);
             $table->integer('points_used')->default(0);
@@ -79,8 +89,9 @@ class CreateCamerasTable extends Migration
             $table->string('hb_interval')->default('1h');       // 1h
 
             $table->integer('online_max_time')->default(2);     // 2
-            $table->string('cellularpw')->default('');          //
+            $table->string('cellularpw')->nullable();           //
             $table->string('remotecontrol')->default('off');    // off, 24h
+            $table->string('remotecurrent')->default('off');    // off, 24h
 
             $table->string('dutytime')->default('off');         // off, on
             $table->string('dt_sun')->default('ffffff');        // ffffff

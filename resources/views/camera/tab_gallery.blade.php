@@ -292,7 +292,7 @@
     function InitializeCheckBoxes() {
         var items = JSON.parse(sessionStorage.getItem('items')) || [];
         var checkboxes = document.getElementsByClassName('image-check');
-        alert('>>InitializeCheckBoxes'); // kk-debug
+//        alert('>>InitializeCheckBoxes'); // kk-debug
         if (checkboxes) {
             for (var i = 0; i < checkboxes.length; i++) {
                 check = checkboxes[i];
@@ -303,7 +303,7 @@
     }
 
     function PostGallery(action, items) {
-        alert('>>PostGallery'); // kk-debug
+//        alert('>>PostGallery'); // kk-debug
         console.log('PostGallery: starting'); // kevin
         $('#gallery-form-{{ $camera->id }}').append('<input type="hidden" name="action" value="' + action + '" />');
         $('#gallery-form-{{ $camera->id }}').append('<input type="hidden" name="medialist" id="mediaid-list" value="" />');
@@ -316,7 +316,7 @@
     function UpdateToolbar() {
         var items = JSON.parse(sessionStorage.getItem('items')) || [];
         var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
-        alert('>>UpdateToolbar'); // kk-debug
+//        alert('>>UpdateToolbar'); // kk-debug
         height = $('.custom-thumbnail-grid-column').height();
         width = $('.custom-thumbnail-grid-column').width();
         if (manageSelected === true) {
@@ -377,7 +377,7 @@
         console.log('[_gallery]...............ready'); // kk-debug
         console.log('gallery2-partial - document ready');
         $(window).on('resize', function() {
-            alert('window on resize 1');
+//            alert('window on resize 1');
             height = $('.custom-thumbnail-grid-column').height();
             width = $('.custom-thumbnail-grid-column').width();
             $('.check-label .span-cr').height(height);

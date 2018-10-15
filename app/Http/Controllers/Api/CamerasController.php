@@ -775,11 +775,9 @@ class CamerasController extends Controller
                 $ret['err'] = 0;
                 $ret['user_id'] = $plan->user_id;
             } else {
-                //$ret['err'] = 802;
                 $ret['err'] = ERR_PLAN_EMPTY;
             }
         } else {
-            //$ret['err'] = 801;
             $ret['err'] = ERR_INVALID_SIM_CARD;
         }
         return $ret;
@@ -1099,7 +1097,6 @@ class CamerasController extends Controller
         $err = $ret['err'];
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request, 'settings');
 
@@ -1160,13 +1157,14 @@ class CamerasController extends Controller
             $datalist['blockmode10'] = $camera->blockmode10;
             $datalist['blockmode11'] = $camera->blockmode11;
 
+            $cameras = DB::table('cameras')->where('id', $camera->id);
+            $cameras->update(['remotecurrent' => $camera->remotecontrol]);
+
             if ($request->RequestID) {
                 $param = array(
                     'request_id'  => $request->RequestID,
                     'camera_id'   => $camera->id,
                     'action_code' => 'DS',
-                    //'photo_id'    => null,
-                    //'photo_cnt'   => null,
                 );
                 $this->Action_Completed($param);
             }
@@ -2059,7 +2057,8 @@ HighRes Max
                 //);
                 //$photos = DB::table('photos')->where($query);
 
-                $camera = Camera::findOrFail($camera_id);
+                //$camera = Camera::findOrFail($camera_id);
+                $camera = Camera::find($camera_id);
                 $photos = $camera->photos()
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
@@ -2170,9 +2169,192 @@ HighRes Max
         return view('camera.tab_overview', compact('camera'));
     }
 
+/*
+{
+"_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR",
+"id":"1",
+"1_description":"New Camera",
+"1_location":null,
+"54_country":"CN",
+"1_timezone":"Asia\/Hong_Kong",
+"push_notifications":"on",
+"54_email_owner":"on",
+"54_bw_medias_hour_est":"0",
+
+"1_camera_mode":"v",
+"1_photo_resolution":"4",
+"1_photo_burst":"1",
+"1_burst_delay":"250",
+"1_upload_resolution":"1",
+"1_photo_quality":"1",
+"1_video_resolution":"8",
+"1_video_fps":"4",
+"1_video_bitrate":"500",
+"1_video_length":"5s",
+"1_video_sound":"on",
+"1_timestamp":"on",
+"1_date_format":"Ymd",
+"1_time_format":"24",
+"1_temp_unit":"c",
+"1_quiettime":"5s",
+"1_timelapse":"on",
+"1_tls_start":"00:00",
+"1_tls_stop":"23:59",
+"1_tls_interval":"5m",
+"1_wireless_mode":"instant",
+"1_wm_schedule":"1h",
+"1_wm_sclimit":"20",
+"1_hb_interval":"1h",
+"1_online_max_time":"2",
+"1_cellularpw":null,
+"1_remotecontrol":"off",
+
+"1_blockmode1":"off",
+"1_blockmode2":"off",
+"1_blockmode3":"off",
+"1_blockmode4":"off",
+"1_blockmode5":"off",
+"1_blockmode7":"off",
+"1_blockmode8":"off",
+"1_blockmode9":"off",
+"1_blockmode10":"off",
+"1_blockmode11":"off",
+
+"54_hour_1_1":"on","54_hour_1_2":"on","54_hour_1_3":"on","54_hour_1_4":"on","54_hour_1_5":"on","54_hour_1_6":"on",
+"54_hour_1_7":"on","54_hour_1_8":"on","54_hour_1_9":"on","54_hour_1_10":"on","54_hour_1_11":"on","54_hour_1_12":"on",
+"54_hour_1_13":"on","54_hour_1_14":"on","54_hour_1_15":"on","54_hour_1_16":"on","54_hour_1_17":"on","54_hour_1_18":"on",
+"54_hour_1_19":"on","54_hour_1_20":"on","54_hour_1_21":"on","54_hour_1_22":"on","54_hour_1_23":"on","54_hour_1_24":"on",
+
+"54_hour_2_1":"on","54_hour_2_2":"on","54_hour_2_3":"on","54_hour_2_4":"on","54_hour_2_5":"on","54_hour_2_6":"on",
+"54_hour_2_7":"on","54_hour_2_8":"on","54_hour_2_9":"on","54_hour_2_10":"on","54_hour_2_11":"on","54_hour_2_12":"on",
+"54_hour_2_13":"on","54_hour_2_14":"on","54_hour_2_15":"on","54_hour_2_16":"on","54_hour_2_17":"on","54_hour_2_18":"on",
+"54_hour_2_19":"on","54_hour_2_20":"on","54_hour_2_21":"on","54_hour_2_22":"on","54_hour_2_23":"on","54_hour_2_24":"on",
+
+"54_hour_3_1":"on","54_hour_3_2":"on","54_hour_3_3":"on","54_hour_3_4":"on","54_hour_3_5":"on","54_hour_3_6":"on",
+"54_hour_3_7":"on","54_hour_3_8":"on","54_hour_3_9":"on","54_hour_3_10":"on","54_hour_3_11":"on","54_hour_3_12":"on",
+"54_hour_3_13":"on","54_hour_3_14":"on","54_hour_3_15":"on","54_hour_3_16":"on","54_hour_3_17":"on","54_hour_3_18":"on",
+"54_hour_3_19":"on","54_hour_3_20":"on","54_hour_3_21":"on","54_hour_3_22":"on","54_hour_3_23":"on","54_hour_3_24":"on",
+
+"54_hour_4_1":"on","54_hour_4_2":"on","54_hour_4_3":"on","54_hour_4_4":"on","54_hour_4_5":"on","54_hour_4_6":"on",
+"54_hour_4_7":"on","54_hour_4_8":"on","54_hour_4_9":"on","54_hour_4_10":"on","54_hour_4_11":"on","54_hour_4_12":"on",
+"54_hour_4_13":"on","54_hour_4_14":"on","54_hour_4_15":"on","54_hour_4_16":"on","54_hour_4_17":"on","54_hour_4_18":"on",
+"54_hour_4_19":"on","54_hour_4_20":"on","54_hour_4_21":"on","54_hour_4_22":"on","54_hour_4_23":"on","54_hour_4_24":"on",
+
+"54_hour_5_1":"on","54_hour_5_2":"on","54_hour_5_3":"on","54_hour_5_4":"on","54_hour_5_5":"on","54_hour_5_6":"on",
+"54_hour_5_7":"on","54_hour_5_8":"on","54_hour_5_9":"on","54_hour_5_10":"on","54_hour_5_11":"on","54_hour_5_12":"on",
+"54_hour_5_13":"on","54_hour_5_14":"on","54_hour_5_15":"on","54_hour_5_16":"on","54_hour_5_17":"on","54_hour_5_18":"on",
+"54_hour_5_19":"on","54_hour_5_20":"on","54_hour_5_21":"on","54_hour_5_22":"on","54_hour_5_23":"on","54_hour_5_24":"on",
+
+"54_hour_6_1":"on","54_hour_6_2":"on","54_hour_6_3":"on","54_hour_6_4":"on","54_hour_6_5":"on","54_hour_6_6":"on",
+"54_hour_6_7":"on","54_hour_6_8":"on","54_hour_6_9":"on","54_hour_6_10":"on","54_hour_6_11":"on","54_hour_6_12":"on",
+"54_hour_6_13":"on","54_hour_6_14":"on","54_hour_6_15":"on","54_hour_6_16":"on","54_hour_6_17":"on","54_hour_6_18":"on",
+"54_hour_6_19":"on","54_hour_6_20":"on","54_hour_6_21":"on","54_hour_6_22":"on","54_hour_6_23":"on","54_hour_6_24":"on",
+
+"54_hour_7_1":"on","54_hour_7_2":"on","54_hour_7_3":"on","54_hour_7_4":"on","54_hour_7_5":"on","54_hour_7_6":"on",
+"54_hour_7_7":"on","54_hour_7_8":"on","54_hour_7_9":"on","54_hour_7_10":"on","54_hour_7_11":"on","54_hour_7_12":"on",
+"54_hour_7_13":"on","54_hour_7_14":"on","54_hour_7_15":"on","54_hour_7_16":"on","54_hour_7_17":"on","54_hour_7_18":"on"
+"54_hour_7_19":"on","54_hour_7_20":"on","54_hour_7_21":"on","54_hour_7_22":"on","54_hour_7_23":"on","54_hour_7_24":"on"
+}
+*/
     public function settings(Request $request) {
-        //return 'settings';
-        return $request;
+        //return $request;
+
+        $Control_Settings = array(
+            /* Identification Settings */
+            "description",
+            "location",
+            "region",
+            "timezone",
+
+            /* Basic Settings */
+            "camera_mode",
+            "photo_resolution",
+            "photo_burst",
+            "burst_delay",
+            "upload_resolution",
+            "photo_quality",
+            "video_resolution", "video_fps", "video_bitrate", "video_length", "video_sound",
+            "timestamp", "date_format", "time_format",
+            "temp_unit",
+
+            /* Trigger Settings */
+            "quiettime",
+
+            /* Wireless Settings */
+            "wireless_mode", "wm_schedule", "wm_sclimit",
+            "hb_interval",
+            "online_max_time",
+            "cellularpw",
+            "remotecontrol",
+        );
+
+        $Timelapse_Settings = array(
+            "timelapse","tls_start","tls_stop","tls_interval",
+        );
+
+        $Block_Mode_Settings = array(
+            "blockmode1","blockmode2","blockmode3","blockmode4","blockmode5",
+            "blockmode7","blockmode8","blockmode9","blockmode10","blockmode11",
+        );
+
+        $dt_week = array(
+            'dt_sun','dt_mon','dt_tue','dt_wed','dt_thu','dt_fri','dt_sat',
+        );
+
+        $id = $request->id;
+
+        for ($week=1; $week<=7; $week++) {
+            $value = 0;
+            $bit = 0x800000;
+            for ($hour=1; $hour<=24; $hour++) {
+                $zz = $id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
+                if($request[$zz]) {
+                    $value |= $bit;
+                }
+                $bit >>= 1;
+            }
+            $key = $dt_week[$week-1];
+            $data[$key] = sprintf("%06x", $value);
+        }
+        //return var_dump($data);
+//        return $data;
+
+        foreach ($Control_Settings as $key) {
+            //$name = $id.'_'.$key;
+            //$data[$key] = $request[$name];
+            $data[$key] = $request[$id.'_'.$key];
+        }
+//return $data;
+
+        if (isset($request[$id.'_timelapse'])) {
+            foreach ($Timelapse_Settings as $key) {
+                $data[$key] = $request[$id.'_'.$key];
+            }
+        } else {
+            $data['timelapse'] = 'off';
+        }
+
+        if (isset($request[$id.'_dutytime'])) {
+            $data['dutytime'] = 'on';
+            //foreach ($Timelapse_Settings as $key) {
+            //    $data[$key] = $request[$id.'_'.$key];
+            //}
+        } else {
+            $data['dutytime'] = 'off';
+        }
+
+        foreach ($Block_Mode_Settings as $key) {
+            $data[$key] = $request[$id.'_'.$key];
+        }
+//return $data;
+
+        $cameras = DB::table('cameras')->where('id', $id);
+        $cameras->update($data);
+
+        //$camera = Camera::findOrFail($id);
+        $camera = Camera::find($id);
+        //return view('camera.tab_settings', compact('camera'));
+        return redirect()->route('cameras');
     }
 
     /* Action */
@@ -2363,10 +2545,10 @@ HighRes Max
 
         $handle = '';
         foreach ($lists as $key => $value) {
-            $field_mame  = $key;
+            $field_name  = $key;
             $field_value = $camera[$key];
             $field_title = $value;
-            $field_text  = $this->CameraFieldValueConvert($camera, $field_mame, $field_value);
+            $field_text  = $this->CameraFieldValueConvert($camera, $field_name, $field_value);
 
             $handle .= '<div class="row">';
             $handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
@@ -2588,42 +2770,13 @@ HighRes Max
 
     /*----------------------------------------------------------------------------------*/
     /* Settings */
-    /*
-    <div class="form-group" id="field-wrapper-54-cameramode">
-    <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
-    <div class="col-md-7">
-    <select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">
-    <option value="p" selected="selected">Photo</option>
-    <option value="v">Video</option>
-    </select>
-
-    <span class="help-block"> .....</span>
-    </div>
-    </div>
-     */
-
-    /*
-    <div class="form-group" id="field-wrapper-54-cellularpw">
-    <label class="col-md-4 control-label" for="inputSmall">Cellular Password</label>
-    <div class="col-md-7">
-    <input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw"
-    pattern="[0-9]{6}"
-    value="xxx" placeholder="Input Cellular Password">
-    <span class="help-block"> .....</span>
-    </div>
-    </div>
-
-    <input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc"
-    maxlength="30"
-    value="Truphone #1" placeholder="Input Camera Description">
-     */
-    public function Camera_Settings_Body($id, $lists) {
+    public function Settings_Body($id, $lists) {
         // $id = $camera->id;
         $camera = Camera::findOrFail($id);
 
         $handle = '';
         foreach ($lists as $key => $value) {
-            $field_mame  = $key;
+            $field_name  = $key;
             $field_value = $camera[$key];
 
             $title = $value['title'];
@@ -2642,17 +2795,35 @@ HighRes Max
                 $field_value = $camera[$key];
             }
 
-            $zz = $id . '_' . $field_mame;
+            $zz = $id.'_'.$field_name;
 
             /* Camera Mode:camera_mode=p */
-            // $handle .= '<div>'.$title.':'.$field_mame.'='.$field_value.'</div>';
+            // $handle .= '<div>'.$title.':'.$field_name.'='.$field_value.'</div>';
 
-            $handle .= '<div class="form-group" id="field-wrapper-' . $id . '-' . $field_mame . '">';
-            $handle .= '<label class="col-md-4 control-label" for="inputSmall">' . $title . '</label>';
-            $handle .= '<div class="col-md-7">';
+            /*
+                <div class="form-group" id="field-wrapper-54-cameramode">
+                    <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
+                    <div class="col-md-7">
+                        <select id="54_cameramode" class="bs-select form-control input-sm" name="54_cameramode">
+                            <option value="p" selected="selected">Photo</option>
+                            <option value="v">Video</option>
+                        </select>
+                ** OR **
+                        <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" maxlength="30" value="yyy" placeholder="zzz">
+                ** OR **
+                        <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" pattern="[0-9]{6}" value="yyy" placeholder="zzz">
+
+                        <span class="help-block"> .....</span>
+                    </div>
+                </div>
+            */
+            //$handle .= '<div class="form-group hidden" id="field-wrapper-'.$id.'-'.$field_name.'">';
+            $handle .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
+            $handle .=      '<label class="col-md-4 control-label" for="inputSmall">'.$title.'</label>';
+            $handle .=      '<div class="col-md-7">';
 
             if ($type == 'input') {
-                $format      = $value['format'];
+                $format = $value['format'];
                 $placeholder = $value['placeholder'];
                 // if (!empty($value['pattern']) {
                 //     $pattern = $value['pattern'];
@@ -2663,21 +2834,20 @@ HighRes Max
                 // $maxlength = $value['maxlength'];
 
                 //<input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc" maxlength="30" value="xxx" placeholder="xxx">
-                $handle .= '<input type="text" class="form-control input-sm" id="' . $zz . '" name="' . $zz . '" ' . $format . ' value="' . $field_value . '" placeholder="' . $placeholder . '">';
+                $handle .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" '.$format.' value="'.$field_value.'" placeholder="'.$placeholder.'">';
                 // }
 
             } else {
                 $options = $value['options'];
-                // $handle .=  '<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">';
-                $handle .= '<select class="bs-select form-control input-sm" id="' . $zz . '" name="' . $zz . '">';
+                //<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">
+                $handle .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
                 foreach ($options as $option) {
-                    // $option['name'] = Photo
-                    // $option['value'] = p
-                    // $handle .= '<div>'.$option['name'].'='.$option['value'].'</div>';
                     if ($option['value'] == $field_value) {
-                        $handle .= '<option value="' . $option['value'] . '" selected="selected">' . $option['name'] . '</option>';
+                        //<option value="p" selected="selected">Photo</option>
+                        $handle .= '<option value="'.$option['value'].'" selected="selected">'.$option['name'].'</option>';
                     } else {
-                        $handle .= '<option value="' . $option['value'] . '">' . $option['name'] . '</option>';
+                        //<option value="v">Video</option>
+                        $handle .= '<option value="'.$option['value'].'">'.$option['name'].'</option>';
                     }
                 }
                 $handle .= '</select>';
@@ -2686,14 +2856,161 @@ HighRes Max
             if (!empty($help)) {
                 // $handle .= '<span class="help-block">'.$help.'</span>';
             }
-            $handle .= '</div>';
+            $handle .=      '</div>';
             $handle .= '</div>';
         }
         //$handle .= '<hr>';
         return $handle;
     }
 
-    public function Camera_Settings_Camera_Identification($camera) {
+    public function Settings_Region($region) {
+        $regions = array(
+            'USA' => array(
+                'title' => 'United States',
+                'options' => array(
+                    array('name'=>'Eastern Time',                   'value'=>'America/New_York'),
+                    array('name'=>'Central Time',                   'value'=>'America/Chicago'),
+                    array('name'=>'Mountain Time',                  'value'=>'America/Denver'),
+                    array('name'=>'Mountain Time (no DST)',         'value'=>'America/Phoenix'),
+                    array('name'=>'Pacific Time',                   'value'=>'America/Los_Angeles'),
+                    array('name'=>'Alaska Time',                    'value'=>'America/Anchorage'),
+                    array('name'=>'Hawaii-Aleutian',                'value'=>'America/Adak'),
+                    array('name'=>'Hawaii-Aleutian Time (no DST)',  'value'=>'Pacific/Honolulu'),
+                ),
+            ),
+            'CA' => array(
+                'title' => 'Canada',
+                'options' => array(
+                    array('name'=>'Atlantic',       'value'=>'Canada/Atlantic'),
+                    array('name'=>'Central',        'value'=>'Canada/Central'),
+                    array('name'=>'Eastern',        'value'=>'Canada/Eastern'),
+                    array('name'=>'Mountain',       'value'=>'Canada/Mountain'),
+                    array('name'=>'Newfoundland',   'value'=>'Canada/Newfoundland'),
+                    array('name'=>'Pacific',        'value'=>'Canada/Pacific'),
+                    array('name'=>'Saskatchewan',   'value'=>'Canada/Saskatchewan'),
+                    array('name'=>'Yukon',          'value'=>'Canada/Yukon'),
+
+                ),
+            ),
+            'AU' => array(
+                'title' => 'Australia',
+                'options' => array(
+                    array('name'=>'Adelaide',       'value'=>'Australia/Adelaide'),
+                    array('name'=>'Brisbane',       'value'=>'Australia/Brisbane'),
+                    array('name'=>'Broken_Hill',    'value'=>'Australia/Broken_Hill'),
+                    array('name'=>'Currie',         'value'=>'Australia/Currie'),
+                    array('name'=>'Darwin',         'value'=>'Australia/Darwin'),
+                    array('name'=>'Eucla',          'value'=>'Australia/Eucla'),
+                    array('name'=>'Hobart',         'value'=>'Australia/Hobart'),
+                    array('name'=>'Lindeman',       'value'=>'Australia/Lindeman'),
+                    array('name'=>'Lord_Howe',      'value'=>'Australia/Lord_Howe'),
+                    array('name'=>'Melbourne',      'value'=>'Australia/Melbourne'),
+                    array('name'=>'Perth',          'value'=>'Australia/Perth'),
+                    array('name'=>'Sydney',         'value'=>'Australia/Sydney'),
+                ),
+            ),
+            'CN' => array(
+                'title' => 'China',
+                'options' => array(
+                    array('name'=>'Hong_Kong',       'value'=>'Asia/Hong_Kong'),
+                ),
+            ),
+            'EU' => array(
+                'title' => 'Europe',
+                'options' => array(
+                    array('name'=>'Amsterdam',      'value'=>'Europe/Amsterdam'),
+                    array('name'=>'Andorra',        'value'=>'Europe/Andorra'),
+                    array('name'=>'Astrakhan',      'value'=>'Europe/Astrakhan'),
+                    array('name'=>'Athens',         'value'=>'Europe/Athens'),
+                    array('name'=>'Belgrade',       'value'=>'Europe/Belgrade'),
+                    array('name'=>'Berlin',         'value'=>'Europe/Berlin'),
+                    array('name'=>'Bratislava',     'value'=>'Europe/Bratislava'),
+                    array('name'=>'Brussels',       'value'=>'Europe/Brussels'),
+                    array('name'=>'Bucharest',      'value'=>'Europe/Bucharest'),
+                    array('name'=>'Budapest',       'value'=>'Europe/Budapest'),
+                    array('name'=>'Busingen',       'value'=>'Europe/Busingen'),
+                    array('name'=>'Chisinau',       'value'=>'Europe/Chisinau'),
+                    array('name'=>'Copenhagen',     'value'=>'Europe/Copenhagen'),
+                    array('name'=>'Dublin',         'value'=>'Europe/Dublin'),
+                    array('name'=>'Gibraltar',      'value'=>'Europe/Gibraltar'),
+                    array('name'=>'Guernsey',       'value'=>'Europe/Guernsey'),
+                    array('name'=>'Helsinki',       'value'=>'Europe/Helsinki'),
+                    array('name'=>'Isle_of_Man',    'value'=>'Europe/Isle_of_Man'),
+                    array('name'=>'Istanbul',       'value'=>'Europe/Istanbul'),
+                    array('name'=>'Jersey',         'value'=>'Europe/Jersey'),
+                    array('name'=>'Kaliningrad',    'value'=>'Europe/Kaliningrad'),
+                    array('name'=>'Kiev',           'value'=>'Europe/Kiev'),
+                    array('name'=>'Kirov',          'value'=>'Europe/Kirov'),
+                    array('name'=>'Lisbon',         'value'=>'Europe/Lisbon'),
+                    array('name'=>'Ljubljana',      'value'=>'Europe/Ljubljana'),
+                    array('name'=>'London',         'value'=>'Europe/London'),
+                    array('name'=>'Luxembourg',     'value'=>'Europe/Luxembourg'),
+                    array('name'=>'Madrid',         'value'=>'Europe/Madrid'),
+                    array('name'=>'Malta',          'value'=>'Europe/Malta'),
+                    array('name'=>'Mariehamn',      'value'=>'Europe/xMariehamnxxx'),
+                    array('name'=>'Minsk',          'value'=>'Europe/Minsk'),
+                    array('name'=>'Monaco',         'value'=>'Europe/Monaco'),
+                    array('name'=>'Moscow',         'value'=>'Europe/Moscow'),
+                    array('name'=>'Oslo',           'value'=>'Europe/Oslo'),
+                    array('name'=>'Paris',          'value'=>'Europe/Paris'),
+                    array('name'=>'Podgorica',      'value'=>'Europe/Podgorica'),
+                    array('name'=>'Prague',         'value'=>'Europe/Prague'),
+                    array('name'=>'Riga',           'value'=>'Europe/Riga'),
+                    array('name'=>'Rome',           'value'=>'Europe/Rome'),
+                    array('name'=>'Samara',         'value'=>'Europe/Samara'),
+                    array('name'=>'San_Marino',     'value'=>'Europe/San_Marino'),
+                    array('name'=>'Sarajevo',       'value'=>'Europe/Sarajevo'),
+                    array('name'=>'Saratov',        'value'=>'Europe/Saratov'),
+                    array('name'=>'Simferopol',     'value'=>'Europe/Simferopol'),
+                    array('name'=>'Skopje',         'value'=>'Europe/Skopje'),
+                    array('name'=>'Sofia',          'value'=>'Europe/Sofia'),
+                    array('name'=>'Stockholm',      'value'=>'Europe/Stockholm'),
+                    array('name'=>'Tallinn',        'value'=>'Europe/Tallinn'),
+                    array('name'=>'Tirane',         'value'=>'Europe/Tirane'),
+                    array('name'=>'Ulyanovsk',      'value'=>'Europe/Ulyanovsk'),
+                    array('name'=>'Uzhgorod',       'value'=>'Europe/Uzhgorod'),
+                    array('name'=>'Vaduz',          'value'=>'Europe/Vaduz'),
+                    array('name'=>'Vatican',        'value'=>'Europe/Vatican'),
+                    array('name'=>'Vienna',         'value'=>'Europe/Vienna'),
+                    array('name'=>'Vilnius',        'value'=>'Europe/Vilnius'),
+                    array('name'=>'Volgograd',      'value'=>'Europe/Volgograd'),
+                    array('name'=>'Warsaw',         'value'=>'Europe/Warsaw'),
+                    array('name'=>'Zagreb',         'value'=>'Europe/Zagreb'),
+                    array('name'=>'Zaporozhye',     'value'=>'Europe/Zaporozhye'),
+                    array('name'=>'Zurich',         'value'=>'Europe/Zurich'),
+                ),
+            ),
+        );
+        return $regions[$region];
+    }
+
+    public function Settings_Option($id, $label, $options, $field_name, $field_value) {
+        $zz = $id.'_'.$field_name;
+
+        $handle = '';
+        $handle .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
+        $handle .=      '<label class="col-md-4 control-label" for="inputSmall">'.$label.'</label>';
+        $handle .=      '<div class="col-md-7">';
+//            $options = $value['options'];
+            $handle .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
+            foreach ($options as $option) {
+                if ($option['value'] == $field_value) {
+                    //<option value="p" selected="selected">Photo</option>
+                    $handle .= '<option value="'.$option['value'].'" selected="selected">'.$option['name'].'</option>';
+                } else {
+                    //<option value="v">Video</option>
+                    $handle .= '<option value="'.$option['value'].'">'.$option['name'].'</option>';
+                }
+            }
+            $handle .= '</select>';
+        $handle .=      '</div>';
+        $handle .= '</div>';
+        return $handle;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function Settings_Identification($camera) {
+        //return var_dump($this->Settings_Region('USA'));
         $lists = array(
             'description' => array(
                 'title'       => 'Camera Description',
@@ -2711,16 +3028,36 @@ HighRes Max
                 'help'        => '',
             ),
 
+            'region' => array(
+                'title' => 'Camera Region',
+                'options' => array(
+                    array('name'=>'United States',  'value'=>'USA'),
+                    array('name'=>'Canada',         'value'=>'CA'),
+                    array('name'=>'Australia',      'value'=>'AU'),
+                    array('name'=>'China',          'value'=>'CN'),
+                    array('name'=>'Europe',         'value'=>'EU'),
+                ),
+                'help'    => '',
+            ),
         );
 
-        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        $handle = $this->Settings_Body($camera->id, $lists);
+
+        //$region = $this->Settings_Region('USA');
+        $region = $this->Settings_Region($camera['region']);
+        $label = 'Time Zone';
+        $options = $region['options'];
+        $field_name = 'timezone';
+        $field_value = $camera[$field_name];
+        $handle .= $this->Settings_Option($camera->id, $label, $options, $field_name, $field_value);
+
         return $handle;
     }
 
-    public function Camera_Settings_Control_Settings($camera) {
+    public function Settings_Basic($camera) {
         $lists = array(
-            'camera_mode'       => array(
-                'title'   => 'Camera Mode',
+            'camera_mode' => array(
+                'title' => 'Camera Mode',
                 'options' => array(
                     array('name' => 'Photo', 'value' => 'p'),
                     array('name' => 'Video', 'value' => 'v'),
@@ -2729,68 +3066,68 @@ HighRes Max
             ),
 
             /* photo */
-            'photo_resolution'  => array(
-                'title'   => 'Photo Resolution',
+            'photo_resolution' => array(
+                'title' => 'Photo Resolution',
                 'options' => array(
                     array('name' => '4MP 16:9', 'value' => '4'),
                     array('name' => '6MP 16:9', 'value' => '6'),
                     array('name' => '8MP 16:9', 'value' => '8'),
                     array('name' => '12MP 16:9', 'value' => '12'),
                 ),
-                'help'    => 'Use this setting to control the size of the Photo saved on the SD Card.',
+                'help' => 'Use this setting to control the size of the Photo saved on the SD Card.',
             ),
-            'photo_burst'       => array(
-                'title'   => 'Photo Burst',
+            'photo_burst' => array(
+                'title' => 'Photo Burst',
                 'options' => array(
                     array('name' => '1', 'value' => '1'),
                     array('name' => '2', 'value' => '2'),
                     array('name' => '3', 'value' => '3'),
                 ),
-                'help'    => 'Photo Burst is used to set the number of photos captured per event in Photo Mode. It is not used for Video mode. If Cellular mode is ON, then the camera will upload each photo of the burst to the portal.',
+                'help' => 'Photo Burst is used to set the number of photos captured per event in Photo Mode. It is not used for Video mode. If Cellular mode is ON, then the camera will upload each photo of the burst to the portal.',
             ),
-            'burst_delay'       => array(
-                'title'   => 'Burst Delay',
+            'burst_delay' => array(
+                'title' => 'Burst Delay',
                 'options' => array(
                     array('name' => '250ms', 'value' => '250'),
                     array('name' => '500ms', 'value' => '500'),
                     array('name' => '1s', 'value' => '1000'),
                     array('name' => '3s', 'value' => '3000'),
                 ),
-                'help'    => 'The Burst Delay is the elapsed time between each burst photo.',
+                'help' => 'The Burst Delay is the elapsed time between each burst photo.',
             ),
             'upload_resolution' => array(
-                'title'   => 'Upload Resolution',
+                'title' => 'Upload Resolution',
                 'options' => array(
                     array('name' => 'Standard Low', 'value' => '1'),
                     array('name' => 'Standard Medium', 'value' => '2'),
                     array('name' => 'Standard High', 'value' => '3'),
                     array('name' => 'High Def', 'value' => '4'),
                 ),
-                'help'    => 'Use this setting to control the size of the uploaded thumbnail.',
+                'help' => 'Use this setting to control the size of the uploaded thumbnail.',
             ),
-            'photo_quality'     => array(
-                'title'   => 'Upload Quality',
+            'photo_quality' => array(
+                'title' => 'Upload Quality',
                 'options' => array(
                     array('name' => 'Standard', 'value' => '1'),
                     array('name' => 'Medium', 'value' => '2'),
                     array('name' => 'High', 'value' => '3'),
                 ),
-                'help'    => 'Use this setting to control the image quality and size of the uploaded thumbnail. A higher quality means clearer images but larger file sizes when uploaded to the portal. Use a Photo quality that best meets your application and budget. [Standard] quality will reduce the size and cost to upload each photo to the portal and is generally good enough for most applications. Keep in mind that you can request a High-res Max or the Original file from the SD card when/if you need it for more detail on this particular photo event.',
+                'help' => 'Use this setting to control the image quality and size of the uploaded thumbnail. A higher quality means clearer images but larger file sizes when uploaded to the portal. Use a Photo quality that best meets your application and budget. [Standard] quality will reduce the size and cost to upload each photo to the portal and is generally good enough for most applications. Keep in mind that you can request a High-res Max or the Original file from the SD card when/if you need it for more detail on this particular photo event.',
             ),
 
             /* video */
-            'video_resolution'  => array(
-                'title'   => 'Video Resolution',
+            'video_resolution' => array(
+                'title' => 'Video Resolution',
                 'options' => array(
                     array('name' => 'Standard Low', 'value' => '8'),
                     array('name' => 'Standard Medium', 'value' => '9'),
                     array('name' => 'Standard High', 'value' => '10'),
                     array('name' => 'High Def', 'value' => '11'),
                 ),
-                'help'    => 'This determines the frame size of the video in pixels, or how wide it is when viewed on your computer monitor. A higher resolution means the video file saved to the SD card is larger and when uploaded uses more battery and costs more image points from your data plan, but it will have more detail on the other hand.',
+                'help' => 'This determines the frame size of the video in pixels, or how wide it is when viewed on your computer monitor. A higher resolution means the video file saved to the SD card is larger and when uploaded uses more battery and costs more image points from your data plan, but it will have more detail on the other hand.',
             ),
-            'video_fps'         => array(
-                'title'   => 'Capture Rate',
+            'video_fps' => array(
+                'title' => 'Frame Rate',
                 'options' => array(
                     array('name' => '4fps', 'value' => '4'),
                     array('name' => '6fps', 'value' => '6'),
@@ -2800,10 +3137,10 @@ HighRes Max
                     array('name' => '15fps', 'value' => '15'),
                     array('name' => '30fps', 'value' => '30'),
                 ),
-                'help'    => 'Capture rate does not affect the size of the video file captured or reduce the points used to upload to the portal. A lower frame rate in low motion will improve the quality of each frame while motion blur may increase. A faster frame rate may reduce motion blur when there is higher motion and may reduce the image quality of each frame. Every environment is different. Please experiment to find the right value for your environment and needs.',
+                'help' => 'Capture rate does not affect the size of the video file captured or reduce the points used to upload to the portal. A lower frame rate in low motion will improve the quality of each frame while motion blur may increase. A faster frame rate may reduce motion blur when there is higher motion and may reduce the image quality of each frame. Every environment is different. Please experiment to find the right value for your environment and needs.',
             ),
-            'video_bitrate'     => array(
-                'title'   => 'Quality Level',
+            'video_bitrate' => array(
+                'title' => 'Quality Level',
                 'options' => array(
                     array('name' => '1 (default/smallest)', 'value' => '300'),
                     array('name' => '2', 'value' => '400'),
@@ -2819,76 +3156,76 @@ HighRes Max
                     array('name' => '12 (High)', 'value' => '2500'),
                     array('name' => '13 (Maximum/LARGE!)', 'value' => '5000'),
                 ),
-                'help'    => 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.',
+                'help' => 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.',
             ),
-            'video_length'      => array(
-                'title'   => 'Video Duration',
+            'video_length' => array(
+                'title' => 'Video Length',
                 'options' => array(
-                    array('name' => '2s', 'value' => '2s'),
-                    array('name' => '3s', 'value' => '3s'),
-                    array('name' => '4s', 'value' => '4s'),
-                    array('name' => '5s', 'value' => '5s'),
-                    array('name' => '6s', 'value' => '6s'),
-                    array('name' => '7s', 'value' => '7s'),
-                    array('name' => '8s', 'value' => '8s'),
-                    array('name' => '9s', 'value' => '9s'),
-                    array('name' => '10s', 'value' => '10s'),
+                    array('name' => '2s', 'value' => '2'),
+                    array('name' => '3s', 'value' => '3'),
+                    array('name' => '4s', 'value' => '4'),
+                    array('name' => '5s', 'value' => '5'),
+                    array('name' => '6s', 'value' => '6'),
+                    array('name' => '7s', 'value' => '7'),
+                    array('name' => '8s', 'value' => '8'),
+                    array('name' => '9s', 'value' => '9'),
+                    array('name' => '10s', 'value' => '10'),
                 ),
-                'help'    => 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.',
+                'help' => 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.',
             ),
-            'video_sound'       => array(
-                'title'   => 'Video Sound',
+            'video_sound' => array(
+                'title' => 'Video Sound',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
 
             /* other */
-            'timestamp'         => array(
-                'title'   => 'Time Stamp',
+            'timestamp' => array(
+                'title' => 'Time Stamp',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'date_format'       => array(
-                'title'   => 'Date Format',
+            'date_format' => array(
+                'title' => 'Date Format',
                 'options' => array(
                     array('name' => 'mdY', 'value' => 'mdY'),
                     array('name' => 'Ymd', 'value' => 'Ymd'),
                     array('name' => 'dmY', 'value' => 'dmY'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'time_format'       => array(
-                'title'   => 'Time Format',
+            'time_format' => array(
+                'title' => 'Time Format',
                 'options' => array(
                     array('name' => '12 Hour', 'value' => '12'),
                     array('name' => '24 Hour', 'value' => '24'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'temp_unit'         => array(
-                'title'   => 'Temperature',
+            'temp_unit' => array(
+                'title' => 'Temperature',
                 'options' => array(
                     array('name' => 'Fahrenheit', 'value' => 'f'),
                     array('name' => 'Celsius', 'value' => 'c'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
         );
 
-        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        $handle = $this->Settings_Body($camera->id, $lists);
         return $handle;
     }
 
-    public function Camera_Settings_Trigger_Settings($camera) {
+    public function Settings_Trigger($camera) {
         $lists = array(
             'quiettime' => array(
-                'title'   => 'Quiet Time',
+                'title' => 'Quiet Time',
                 'options' => array(
                     array('name' => '0s', 'value' => '0s'),
                     array('name' => '5s', 'value' => '5s'),
@@ -2919,20 +3256,20 @@ HighRes Max
                     array('name' => '55m', 'value' => '55m'),
                     array('name' => '60m', 'value' => '60m'),
                 ),
-                'help'    => 'Quiet Time is a delay after the current event is complete (photo or video). It can be used to reduce the number of PIR events in a given time. If your camera is taking too many photos or videos, then increase the quiet time to reduce the frequency of PIR (motion) activations. PIR or motion capture, as well as Time Lapse capture is disabled while sleeping in the quiet time period.',
+                'help' => 'Quiet Time is a delay after the current event is complete (photo or video). It can be used to reduce the number of PIR events in a given time. If your camera is taking too many photos or videos, then increase the quiet time to reduce the frequency of PIR (motion) activations. PIR or motion capture, as well as Time Lapse capture is disabled while sleeping in the quiet time period.',
             ),
 
         );
 
-        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        $handle = $this->Settings_Body($camera->id, $lists);
         return $handle;
     }
 
-    public function Camera_Settings_Time_Lapse($camera) {
+    public function Settings_Timelapse($camera) {
         $lists = array(
-            'tls_start'    => array(
-                'title'   => 'Timelapse Start Time',
-                'type'    => 'hhmm',
+            'tls_start' => array(
+                'title' => 'Timelapse Start Time',
+                'type' => 'hhmm',
                 'options' => array(
                     array('name' => '00:00', 'value' => '00:00'),
                     array('name' => '00:15', 'value' => '00:15'),
@@ -3032,12 +3369,12 @@ HighRes Max
                     array('name' => '23:45', 'value' => '23:45'),
                     // array('name' => '23:59', 'value' => '23:59'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
 
-            'tls_stop'     => array(
-                'title'   => 'Timelapse Stop Time',
-                'type'    => 'hhmm',
+            'tls_stop' => array(
+                'title' => 'Timelapse Stop Time',
+                'type' => 'hhmm',
                 'options' => array(
                     array('name' => '00:00', 'value' => '00:00'),
                     array('name' => '00:15', 'value' => '00:15'),
@@ -3137,7 +3474,7 @@ HighRes Max
                     array('name' => '23:45', 'value' => '23:45'),
                     array('name' => '23:59', 'value' => '23:59'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
             'tls_interval' => array(
                 'title'   => 'Timelapse Interval',
@@ -3161,15 +3498,15 @@ HighRes Max
                     array('name' => '10h', 'value' => '10h'),
                     array('name' => '12h', 'value' => '12h'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
         );
 
-        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        $handle = $this->Settings_Body($camera->id, $lists);
         return $handle;
     }
 
-    public function Camera_Settings_Wireless_Settings($camera) {
+    public function Settings_Wireless_Mode($camera) {
         $lists = array(
             'wireless_mode'   => array(
                 'title'   => 'Wireless Mode',
@@ -3202,8 +3539,8 @@ HighRes Max
             ),
 
             /* other */
-            'hb_interval'     => array(
-                'title'   => 'Heartbeat Interval',
+            'hb_interval' => array(
+                'title' => 'Heartbeat Interval',
                 'options' => array(
                     array('name' => 'Every Hour', 'value' => '1h'),
                     array('name' => 'Every 2 Hours', 'value' => '2h'),
@@ -3211,10 +3548,10 @@ HighRes Max
                     array('name' => 'Every 8 Hours', 'value' => '8h'),
                     array('name' => 'Every 12 Hours', 'value' => '12h'),
                 ),
-                'help'    => 'This timer will fire on the whole hour and will send a status to the server. The mobile app will recieve a notification when this occurs. This lets you know your camera is still functioning and its curent status. It will also process any pending Action items you have queued like High-Res Max, Video, Original, Settings.',
+                'help' => 'This timer will fire on the whole hour and will send a status to the server. The mobile app will recieve a notification when this occurs. This lets you know your camera is still functioning and its curent status. It will also process any pending Action items you have queued like High-Res Max, Video, Original, Settings.',
             ),
             'online_max_time' => array(
-                'title'   => 'Max Online Time',
+                'title' => 'Max Online Time',
                 'options' => array(
                     array('name' => '2m', 'value' => '2'),
                     array('name' => '3m', 'value' => '3'),
@@ -3226,117 +3563,117 @@ HighRes Max
                     array('name' => '9m', 'value' => '9'),
                     array('name' => '10m', 'value' => '10'),
                 ),
-                'help'    => 'Use this setting to control the amount of time the camera will remain online, per event, processing queued action requests. A shorter time means the camera can return to PIR mode more quickly and continue capturing Photo and Video, otherwise the camera is busy and may miss PIR events due to queue processing. A longer time means your queued Action items should get completed sooner if the queue is large.',
+                'help' => 'Use this setting to control the amount of time the camera will remain online, per event, processing queued action requests. A shorter time means the camera can return to PIR mode more quickly and continue capturing Photo and Video, otherwise the camera is busy and may miss PIR events due to queue processing. A longer time means your queued Action items should get completed sooner if the queue is large.',
             ),
-            'cellularpw'      => array(
-                'title'       => 'Cellular Password',
-                'type'        => 'input',
+            'cellularpw' => array(
+                'title' => 'Cellular Password',
+                'type' => 'input',
                 //'pattern' => '[0-9]{6}',
-                'format'      => 'pattern="[0-9]{6}"',
+                'format' => 'pattern="[0-9]{6}"',
                 'placeholder' => 'Input Cellular Password',
-                'help'        => 'Input 6 digits. Blank for no password. If you input a password, it is required when you power the camera into Setup mode. This means if your camera is stolen, the thief is not able to set cellular mode to OFF, which means he can only use the camera in cellular mode.',
+                'help' => 'Input 6 digits. Blank for no password. If you input a password, it is required when you power the camera into Setup mode. This means if your camera is stolen, the thief is not able to set cellular mode to OFF, which means he can only use the camera in cellular mode.',
             ),
-            'remotecontrol'   => array(
-                'title'   => 'Remote Control',
+            'remotecontrol' => array(
+                'title' => 'Remote Control',
                 'options' => array(
                     array('name' => 'Disabled', 'value' => 'off'),
                     array('name' => '24 Hour', 'value' => '24h'),
                 ),
-                'help'    => 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.',
+                'help' => 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.',
             ),
 
         );
 
-        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        $handle = $this->Settings_Body($camera->id, $lists);
         return $handle;
     }
 
-    public function Camera_Settings_Block_Mode_Settings($camera) {
+    public function Settings_Block_Mode($camera) {
         $lists = array(
-            'blockmode1'  => array(
-                'title'   => 'Block Mode 1',
+            'blockmode1' => array(
+                'title' => 'Block Mode 1',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'blockmode2'  => array(
-                'title'   => 'Block Mode 2',
+            'blockmode2' => array(
+                'title' => 'Block Mode 2',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'blockmode3'  => array(
-                'title'   => 'Block Mode 3',
+            'blockmode3' => array(
+                'title' => 'Block Mode 3',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'blockmode4'  => array(
-                'title'   => 'Block Mode 4',
+            'blockmode4' => array(
+                'title' => 'Block Mode 4',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'blockmode5'  => array(
-                'title'   => 'Block Mode 5',
+            'blockmode5' => array(
+                'title' => 'Block Mode 5',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
 
-            'blockmode7'  => array(
-                'title'   => 'Block Mode 7',
+            'blockmode7' => array(
+                'title' => 'Block Mode 7',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'blockmode8'  => array(
-                'title'   => 'Block Mode 8',
+            'blockmode8' => array(
+                'title' => 'Block Mode 8',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
-            'blockmode9'  => array(
-                'title'   => 'Block Mode 9',
+            'blockmode9' => array(
+                'title' => 'Block Mode 9',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
             'blockmode10' => array(
-                'title'   => 'Block Mode 10',
+                'title' => 'Block Mode 10',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
             'blockmode11' => array(
-                'title'   => 'Block Mode 11',
+                'title' => 'Block Mode 11',
                 'options' => array(
                     array('name' => 'On', 'value' => 'on'),
                     array('name' => 'Off', 'value' => 'off'),
                 ),
-                'help'    => '',
+                'help' => '',
             ),
         );
 
-        $handle = $this->Camera_Settings_Body($camera->id, $lists);
+        $handle = $this->Settings_Body($camera->id, $lists);
         return $handle;
     }
 
@@ -3352,6 +3689,238 @@ HighRes Max
     'help' => ''
     ),
      */
+
+/*
+<div id="tabs54-1">
+    <div id="controlgroup54-1" class="mobile-dutytime-div">
+        <table>
+            <tr>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked />
+                </span>
+                </td>
+
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_2" id="54_hour_1_2"  checked />
+                </span>
+                </td>
+
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_3" id="54_hour_1_3"  checked />
+                </span>
+                </td>
+
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_4" id="54_hour_1_4"  checked />
+                </span>
+                </td>
+
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_5" id="54_hour_1_5"  checked />
+                </span>
+                </td>
+
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_6" id="54_hour_1_6"  checked />
+                </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_7" id="54_hour_1_7"  checked />
+                </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_8" id="54_hour_1_8"  checked />
+                </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_9" id="54_hour_1_9"  checked />
+                </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_10" id="54_hour_1_10"  checked />
+                </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_11" id="54_hour_1_11"  checked />
+                </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                <span class="button-checkbox" style="font-size: .80em;">
+                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
+                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_12" id="54_hour_1_12"  checked />
+                </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_13" id="54_hour_1-13"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_14" id="54_hour_1-14"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_15" id="54_hour_1-15"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_16" id="54_hour_1-16"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_17" id="54_hour_1-17"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_18" id="54_hour_1-18"  checked />
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_19" id="54_hour_1-19"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_20" id="54_hour_1-20"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_21" id="54_hour_1-21"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_22" id="54_hour_1-22"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_23" id="54_hour_1-23"  checked />
+                    </span>
+                </td>
+                <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_24" id="54_hour_1-24"  checked />
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+*/
+
+    public function Settings_DutyTime($camera) {
+        $hour = array(
+            '12 AM', '01 AM', '02 AM', '03 AM', '04 AM', '05 AM',
+            '06 AM', '07 AM', '08 AM', '09 AM', '10 AM', '11 AM',
+            '12 PM', '01 PM', '02 PM', '03 PM', '04 PM', '05 PM',
+            '06 PM', '07 PM', '08 PM', '09 PM', '10 PM', '11 PM',
+        );
+
+        $dt_week = array(
+            'dt_sun','dt_mon','dt_tue','dt_wed','dt_thu','dt_fri','dt_sat',
+        );
+
+        $id = $camera->id;
+
+        $handle = '';
+        for ($week=0; $week<7; $week++) {
+            $tabs_id = 'tabs'.$id.'-'.($week+1); // tabs54-1
+            $control_group = 'controlgroup'.$id.'-'.($week+1); // controlgroup54-1
+
+            $value = hexdec($camera[$dt_week[$week]]);
+            $bit = 0x800000;
+
+            $handle .= '<div id="'.$tabs_id.'">';
+            $handle .=    '<div id="'.$control_group.'" class="mobile-dutytime-div">';
+            $handle .=        '<table>';
+            for ($h=0; $h<24; $h++) {
+                $zz = $id.'_hour_'.($week+1).'_'.($h+1); //54_hour_1_1
+                if (($h%6) == 0) {
+                    $handle .= '<tr>';
+                }
+
+                /*
+                    <td class="custom-time-toggle-td">
+                    <span class="button-checkbox" style="font-size: .80em;">
+                        <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
+                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked />
+                    </span>
+                    </td>
+                */
+                $handle .= '<td class="custom-time-toggle-td">';
+                $handle .= '<span class="button-checkbox" style="font-size: .80em;">';
+                $handle .=     '<button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">'.$hour[$h].'</button>';
+                //$handle .=     '<input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked />';
+                if ($value & $bit) {
+                    $handle .=   '<input type="checkbox" class="hidden custom-time-button" name="'.$zz.'" id="'.$zz.'" checked />';
+                } else {
+                    $handle .=   '<input type="checkbox" class="hidden custom-time-button" name="'.$zz.'" id="'.$zz.'" />';
+                }
+                $handle .= '</span>';
+                $handle .= '</td>';
+                if (($h+1)%6 == 0) {
+                    $handle .= '</tr>';
+                }
+
+                $bit >>= 1;
+            }
+            $handle .=        '</table>';
+            $handle .=    '</div>';
+            $handle .= '</div>';
+        }
+        return $handle;
+    }
 
     /*----------------------------------------------------------------------------------*/
     /* Actions */

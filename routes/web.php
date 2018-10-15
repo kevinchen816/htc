@@ -134,6 +134,7 @@ Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@apilog')->name(
 Route::get('/account/profile', 'AccountsController@profile')->name('account.profile');
 Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
 Route::post('/account/profile-emails', 'AccountsController@Emails_Save')->name('account.profile-emails');
+Route::get('/account/profile-emails', 'AccountsController@profile_emails')->name('account.profile-emails');
 
 /* default.blade.php */
     // $('#show_cameras').click(function() { /* default.blade.php */

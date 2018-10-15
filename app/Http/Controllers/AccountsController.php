@@ -209,6 +209,17 @@ class AccountsController extends Controller
         return redirect()->back();
     }
 
+    public function profile_emails() {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        //$user_id = $user->id;
+        return view('account.profile', compact('user'));
+    }
+
     public function activetab(Request $request) {
         return $request;
     }
