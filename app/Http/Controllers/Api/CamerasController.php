@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Action;
 use App\Models\Camera;
 use App\Models\Photo;
+use App\Models\Firmware;
 use App\Models\LogApi;
 use Auth;
 use DB;
@@ -160,49 +161,201 @@ class CamerasController extends Controller
 
     public function LogApi_List($log_apis) {
         $handle = '';
-        //$link_request = '';
-        //$link_response = '';
         foreach ($log_apis as $log_api) {
+            $show = 0;
+            $result = null;
             $request = json_decode($log_api->request);
             $response = json_decode($log_api->response);
-
-            $request_type = 0;
             if ($log_api->api == 'report') {
                 $api = 'HeartBeat';
                 $request_type = 1;
                 $response_type = 0;
+                $show = 1;
+
             } else if ($log_api->api == 'status') {
                 $api = 'Status';
                 $request_type = 1;
                 $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'downloadsettings') {
+                $api = 'Download Settings';
+                $request_type = 0;
+                $response_type = 2;
+                $show = 1;
+
+            } else if ($log_api->api == 'uploadblock') {
+                $api = 'Upload Block';
+                $request_type = 2;
+                $response_type = 0;
+                $show = 1;
+
             } else if ($log_api->api == 'uploadthumb') {
                 $api = 'Upload Photo';
                 $request_type = 2;
                 $response_type = 0;
-            } else if ($log_api->api == 'downloadsettings') {
-                $api = 'Download Settings';
-                $request_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'uploadoriginal') {
+                if ($request->upload_resolution == 6) {
+                    $api = 'Upload Original';
+                } else {
+                    $api = 'Upload HighResMax';
+                }
+                $request_type = 2;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'uploadvideothumb') {
+                $api = 'Upload Video Thumb';
+                $request_type = 2;
                 $response_type = 1;
+                $show = 1;
+
+            } else if ($log_api->api == 'uploadvideo') {
+                $api = 'Upload Video';
+                $request_type = 2;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'imagemissing') {
+                $api = 'Missing Photo';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'videomissing') {
+                $api = 'Missing Video';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'firmwareinfo') {
+                $api = 'Firmware Info';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            //} else if ($log_api->api == 'firmware') {
+            //    $api = 'Firmware Download';
+            //    $request_type = 1;
+            //    $response_type = 0;
+            //    $show = 1;
+
+            } else if ($log_api->api == 'firmwaredone') {
+                $api = 'Firmware Upgrade Success';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'firmwarefail') {
+                $api = 'Firmware Upgrade Fail';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'cardfull') {
+                $api = 'Card Full';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'formatdone') {
+                $api = 'Format Done';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'schedule_start') {
+                $api = 'Schedule Start';
+                $request_type = 1; // -> 0
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'schedule_finish') {
+                $api = 'Schedule Finish';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
+            } else if ($log_api->api == 'schedule_abort') {
+                $api = 'Schedule Abort';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
             } else {
                 $api = 'Unknown';
                 $request_type = 0;
                 $response_type = 0;
+                $show = 1;
             }
 
-            $result = 'Success';
-            $datetime = $log_api->created_at;
-
-            if ($request_type == 1) {
-                $link_request = '<a class="btn btn-xs btn-primary view-request" data-request="';
-                if(isset($request->iccid)) {
-                    $link_request .= $this->LogApi_Text('ICCID', $request->iccid);
+            if ($show == 1) {
+                if ($result == null) {
+                    if ($response->ResultCode == 0) {
+                        $result = 'Success';
+                        $btn_attr = 'btn-primary';
+                    } else if ($response->ResultCode == 1) {
+                        $result = 'Success';
+                        $btn_attr = 'btn-primary';
+                    } else {
+                        $result = 'Fail';
+                        $btn_attr = 'btn-danger';
+                    }
                 }
-                if(isset($request->module_id)) {
-                    $link_request .= $this->LogApi_Text('Module ID', $request->module_id);
-                }
 
-                if (isset($request->DataList)) {
-                    $data = $request->DataList;
+                $datetime = $log_api->created_at;
+
+                if ($request_type == 1) {
+                    $link_request = '<a class="btn btn-xs '.$btn_attr.' view-request" data-request="';
+                    if(isset($request->iccid)) {
+                        $link_request .= $this->LogApi_Text('ICCID', $request->iccid);
+                    }
+                    if(isset($request->module_id)) {
+                        $link_request .= $this->LogApi_Text('Module ID', $request->module_id);
+                    }
+
+                    if (isset($request->DataList)) {
+                        $data = $request->DataList;
+                        if(isset($data->Battery)) {
+                            $link_request .= $this->LogApi_Text('Battery', $data->Battery);
+                        }
+                        if(isset($data->SignalValue)) {
+                            $link_request .= $this->LogApi_Text('Signal', $data->SignalValue);
+                        }
+                        if(isset($data->Cardspace)) {
+                            $link_request .=  $this->LogApi_Text('Card Space', $data->Cardspace);
+                        }
+                        if(isset($data->Cardsize)) {
+                            $link_request .= $this->LogApi_Text('Card Size', $data->Cardsize);
+                        }
+                        if(isset($data->Temperature)) {
+                            $link_request .= $this->LogApi_Text('Temperature', $data->Temperature);
+                        }
+                    }
+                    $link_request .= '">View</a>';
+
+                } else if ($request_type == 2) {
+                    $link_request = '<a class="btn btn-xs '.$btn_attr.' view-request" data-request="';
+                    if(isset($request->iccid)) {
+                        $link_request .= $this->LogApi_Text('ICCID', $request->iccid);
+                    }
+                    if(isset($request->module_id)) {
+                        $link_request .= $this->LogApi_Text('Module ID', $request->module_id);
+                    }
+
+                    if(isset($request->FileName)) {
+                        $link_request .= $this->LogApi_Text('FileName', $request->FileName);
+                    }
+                    if(isset($request->upload_resolution)) {
+                        $link_request .= $this->LogApi_Text('Upload Resolution', $request->upload_resolution);
+                    }
+                    if(isset($request->Source)) {
+                        $link_request .= $this->LogApi_Text('Source', $request->Source);
+                    }
+
+                    $data = $request;
                     if(isset($data->Battery)) {
                         $link_request .= $this->LogApi_Text('Battery', $data->Battery);
                     }
@@ -218,147 +371,123 @@ class CamerasController extends Controller
                     if(isset($data->Temperature)) {
                         $link_request .= $this->LogApi_Text('Temperature', $data->Temperature);
                     }
-                }
-                $link_request .= '">View</a>';
+                    $link_request .= '">View</a>';
 
-            } else if ($request_type == 2) {
-                $link_request = '<a class="btn btn-xs btn-primary view-request" data-request="';
-                if(isset($request->iccid)) {
-                    $link_request .= $this->LogApi_Text('ICCID', $request->iccid);
-                }
-                if(isset($request->module_id)) {
-                    $link_request .= $this->LogApi_Text('Module ID', $request->module_id);
+                } else {
+                    $link_request = '';
                 }
 
-                if(isset($request->FileName)) {
-                    $link_request .= $this->LogApi_Text('FileName', $request->FileName);
-                }
-                if(isset($request->upload_resolution)) {
-                    $link_request .= $this->LogApi_Text('Upload Resolution', $request->upload_resolution);
-                }
-                if(isset($request->Source)) {
-                    $link_request .= $this->LogApi_Text('Source', $request->Source);
+                if ($response_type == 1) {
+                    $link_response = '<a class="btn btn-xs '.$btn_attr.' view-response" data-response="';
+                    if(isset($response->ResultCode)) {
+                        $link_response .= $this->LogApi_Text('Result Code', $response->ResultCode);
+                    }
+                    if(isset($response->ErrorMsg)) {
+                        $link_response .= $this->LogApi_Text('Error Message', $response->ErrorMsg);
+                    }
+                    if(isset($response->DateTimeStamp)) {
+                        $link_response .= $this->LogApi_Text('DateTime', $response->DateTimeStamp);
+                    }
+
+                    $link_response .= '">View</a>';
+                } else if ($response_type == 2) {
+                    if (isset($response->DataList)) {
+                        $data = $response->DataList;
+                        $link_response = '<a class="btn btn-xs '.$btn_attr.' view-response" data-response="';
+
+                        if(isset($data->photoresolution)) {
+                            $link_response .= $this->LogApi_Text('Photo Resolution', $data->photoresolution);
+                        }
+                        if(isset($data->video_resolution)) {
+                            $link_response .= $this->LogApi_Text('Video Resolution', $data->video_resolution);
+                        }
+                        if(isset($data->video_rate)) {
+                            $link_response .= $this->LogApi_Text('Frame Rate', $data->video_rate);
+                        }
+                        if(isset($data->video_bitrate)) {
+                            $link_response .= $this->LogApi_Text('Quality Level', $data->video_bitrate);
+                        }
+                        if(isset($data->video_length)) {
+                            $link_response .= $this->LogApi_Text('Video Length', $data->video_length);
+                        }
+                        if(isset($data->video_sound)) {
+                            $link_response .= $this->LogApi_Text('Video Sound', $data->video_sound);
+                        }
+                        if(isset($data->photoburst)) {
+                            $link_response .= $this->LogApi_Text('Photo Burst', $data->photoburst);
+                        }
+                        if(isset($data->burst_delay)) {
+                            $link_response .= $this->LogApi_Text('Burst Delay', $data->burst_delay);
+                        }
+                        if(isset($data->upload_resolution)) {
+                            $link_response .= $this->LogApi_Text('Upload Resolution', $data->upload_resolution);
+                        }
+                        if(isset($data->photo_quality)) {
+                            $link_response .= $this->LogApi_Text('Upload Quality', $data->photo_quality);
+                        }
+                        if(isset($data->timestamp)) {
+                            $link_response .= $this->LogApi_Text('Time Stamp', $data->timestamp);
+                        }
+                        if(isset($data->date_format)) {
+                            $link_response .= $this->LogApi_Text('Date Format', $data->date_format);
+                        }
+                        if(isset($data->time_format)) {
+                            $link_response .= $this->LogApi_Text('Time Format', $data->time_format);
+                        }
+                        if(isset($data->temperature)) {
+                            $link_response .= $this->LogApi_Text('Temperature', $data->temperature);
+                        }
+                        if(isset($data->quiettime)) {
+                            $link_response .= $this->LogApi_Text('Quiet Time', $data->quiettime);
+                        }
+                        if(isset($data->timelapse)) {
+                            $link_response .= $this->LogApi_Text('Time Lapse', $data->timelapse);
+                        }
+                        if(isset($data->tls_start)) {
+                            $link_response .= $this->LogApi_Text('Timelapse Start Time', $data->tls_start);
+                        }
+                        if(isset($data->tls_stop)) {
+                            $link_response .= $this->LogApi_Text('Timelapse Stop Time', $data->tls_stop);
+                        }
+                        if(isset($data->tls_interval)) {
+                            $link_response .= $this->LogApi_Text('Timelapse Interval', $data->tls_interval);
+                        }
+                        if(isset($data->wireless_mode)) {
+                            $link_response .= $this->LogApi_Text('Wireless Mode', $data->wireless_mode);
+                        }
+                        if(isset($data->wm_schedule)) {
+                            $link_response .= $this->LogApi_Text('Schedule Interval', $data->wm_schedule);
+                        }
+                        if(isset($data->wm_sclimit)) {
+                            $link_response .= $this->LogApi_Text('Schedule File Limit', $data->wm_sclimit);
+                        }
+                        if(isset($data->hb_interval)) {
+                            $link_response .= $this->LogApi_Text('Heartbeat Interval', $data->hb_interval);
+                        }
+                        if(isset($data->online_max_time)) {
+                            $link_response .= $this->LogApi_Text('Action Process Time Limit', $data->online_max_time);
+                        }
+                        if(isset($data->cellularpw)) {
+                            $link_response .= $this->LogApi_Text('Cellular Password', $data->cellularpw);
+                        }
+                        if(isset($data->remotecontrol)) {
+                            $link_response .= $this->LogApi_Text('Remote Control', $data->remotecontrol);
+                        }
+                    }
+                    $link_response .= '">View</a>';
+                } else {
+                    $link_response = '';
                 }
 
-                $data = $request;
-                if(isset($data->Battery)) {
-                    $link_request .= $this->LogApi_Text('Battery', $data->Battery);
-                }
-                if(isset($data->SignalValue)) {
-                    $link_request .= $this->LogApi_Text('Signal', $data->SignalValue);
-                }
-                if(isset($data->Cardspace)) {
-                    $link_request .=  $this->LogApi_Text('Card Space', $data->Cardspace);
-                }
-                if(isset($data->Cardsize)) {
-                    $link_request .= $this->LogApi_Text('Card Size', $data->Cardsize);
-                }
-                if(isset($data->Temperature)) {
-                    $link_request .= $this->LogApi_Text('Temperature', $data->Temperature);
-                }
-                $link_request .= '">View</a>';
-
-            } else {
-                $link_request = '';
+                $handle .= '<tr>';
+                $handle .=    '<td>'.$log_api->id.'</td>';
+                $handle .=    '<td>'.$api.'</td>';
+                $handle .=    '<td>'.$result.'</td>';
+                $handle .=    '<td>'.$link_request.'</td>';
+                $handle .=    '<td>'.$link_response.'</td>';
+                $handle .=    '<td>'.$datetime.'</td>';
+                $handle .= '</tr>';
             }
-
-            if ($response_type == 1) {
-                if (isset($response->DataList)) {
-                    $data = $response->DataList;
-                    $link_response = '<a class="btn btn-xs btn-primary view-response" data-response="';
-
-                    if(isset($data->photoresolution)) {
-                        $link_response .= $this->LogApi_Text('Photo Resolution', $data->photoresolution);
-                    }
-                    if(isset($data->video_resolution)) {
-                        $link_response .= $this->LogApi_Text('Video Resolution', $data->video_resolution);
-                    }
-                    if(isset($data->video_rate)) {
-                        $link_response .= $this->LogApi_Text('Frame Rate', $data->video_rate);
-                    }
-                    if(isset($data->video_bitrate)) {
-                        $link_response .= $this->LogApi_Text('Quality Level', $data->video_bitrate);
-                    }
-                    if(isset($data->video_length)) {
-                        $link_response .= $this->LogApi_Text('Video Length', $data->video_length);
-                    }
-                    if(isset($data->video_sound)) {
-                        $link_response .= $this->LogApi_Text('Video Sound', $data->video_sound);
-                    }
-                    if(isset($data->photoburst)) {
-                        $link_response .= $this->LogApi_Text('Photo Burst', $data->photoburst);
-                    }
-                    if(isset($data->burst_delay)) {
-                        $link_response .= $this->LogApi_Text('Burst Delay', $data->burst_delay);
-                    }
-                    if(isset($data->upload_resolution)) {
-                        $link_response .= $this->LogApi_Text('Upload Resolution', $data->upload_resolution);
-                    }
-                    if(isset($data->photo_quality)) {
-                        $link_response .= $this->LogApi_Text('Upload Quality', $data->photo_quality);
-                    }
-                    if(isset($data->timestamp)) {
-                        $link_response .= $this->LogApi_Text('Time Stamp', $data->timestamp);
-                    }
-                    if(isset($data->date_format)) {
-                        $link_response .= $this->LogApi_Text('Date Format', $data->date_format);
-                    }
-                    if(isset($data->time_format)) {
-                        $link_response .= $this->LogApi_Text('Time Format', $data->time_format);
-                    }
-                    if(isset($data->temperature)) {
-                        $link_response .= $this->LogApi_Text('Temperature', $data->temperature);
-                    }
-                    if(isset($data->quiettime)) {
-                        $link_response .= $this->LogApi_Text('Quiet Time', $data->quiettime);
-                    }
-                    if(isset($data->timelapse)) {
-                        $link_response .= $this->LogApi_Text('Time Lapse', $data->timelapse);
-                    }
-                    if(isset($data->tls_start)) {
-                        $link_response .= $this->LogApi_Text('Timelapse Start Time', $data->tls_start);
-                    }
-                    if(isset($data->tls_stop)) {
-                        $link_response .= $this->LogApi_Text('Timelapse Stop Time', $data->tls_stop);
-                    }
-                    if(isset($data->tls_interval)) {
-                        $link_response .= $this->LogApi_Text('Timelapse Interval', $data->tls_interval);
-                    }
-                    if(isset($data->wireless_mode)) {
-                        $link_response .= $this->LogApi_Text('Wireless Mode', $data->wireless_mode);
-                    }
-                    if(isset($data->wm_schedule)) {
-                        $link_response .= $this->LogApi_Text('Schedule Interval', $data->wm_schedule);
-                    }
-                    if(isset($data->wm_sclimit)) {
-                        $link_response .= $this->LogApi_Text('Schedule File Limit', $data->wm_sclimit);
-                    }
-                    if(isset($data->hb_interval)) {
-                        $link_response .= $this->LogApi_Text('Heartbeat Interval', $data->hb_interval);
-                    }
-                    if(isset($data->online_max_time)) {
-                        $link_response .= $this->LogApi_Text('Action Process Time Limit', $data->online_max_time);
-                    }
-                    if(isset($data->cellularpw)) {
-                        $link_response .= $this->LogApi_Text('Cellular Password', $data->cellularpw);
-                    }
-                    if(isset($data->remotecontrol)) {
-                        $link_response .= $this->LogApi_Text('Remote Control', $data->remotecontrol);
-                    }
-                }
-                $link_response .= '">View</a>';
-            } else {
-                $link_response = '';
-            }
-
-            $handle .= '<tr>';
-            $handle .=    '<td>'.$log_api->id.'</td>';
-            $handle .=    '<td>'.$api.'</td>';
-            $handle .=    '<td>'.$result.'</td>';
-            $handle .=    '<td>'.$link_request.'</td>';
-            $handle .=    '<td>'.$link_response.'</td>';
-            $handle .=    '<td>'.$datetime.'</td>';
-            $handle .= '</tr>';
        }
        return $handle;
     }
@@ -380,10 +509,9 @@ class CamerasController extends Controller
 
         $log_apis = DB::table('log_apis')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            ->where(['camera_id' => $camera_id])
             ->orderBy('created_at', 'desc')
-            ->paginate(5);
-
-//return $log_apis;
+            ->paginate(10);
         return view('camera.apilog', compact('user', 'camera', 'log_apis'));
     }
 
@@ -901,26 +1029,24 @@ class CamerasController extends Controller
         }
 
         $response = $this->Response_Result($err, $camera);
-
 //return gettype($response); // array
 //return gettype(json_encode($response)); // string
 //return gettype(json_decode(json_encode($response))); // object
 //return gettype(json_decode(json_encode($response), true)); // array
-        $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
+        if ($user_id && $camera) {
+            //$param = array(
+            //    'api' => 'report',
+            //    'user_id' => $user_id,
+            //    'camera' => $camera,
+            //    'request' => $request,
+            //    'response' => $response,
+            //);
+            $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
+        }
         return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
-    /*
-        {"iccid":"8944503540145562672","module_id":"861107030190590","model_id":"lookout-na",
-         "Arm":"Y",
-         "RequestID":"6"}
-
-        {"ResultCode":0,
-        "ActionCode":"DS",
-        "ParameterList":{"REQUESTID":"829"},
-        "DateTimeStamp":"2018-03-17 09:02:02"}
-    */
     public function status(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -936,24 +1062,6 @@ class CamerasController extends Controller
             $this->Camera_Status_Update($request, 'arm');
 
             if ($request->Arm == 'Y') {
-                //if ($this->Action_Search($camera->id, 'DS', 1) == 0) {
-                //    $param = array(
-                //        'camera_id'   => $camera->id,
-                //        'action_code' => 'DS',
-                //        'status'      => 1,
-                //    );
-                //    $this->Action_Add($param);
-                //}
-
-                //if ($this->Action_Search($camera->id, 'PS', 1) == 0) {
-                //    $param = array(
-                //        'camera_id'   => $camera->id,
-                //        'action_code' => 'PS',
-                //        'status'      => 1,
-                //    );
-                //    $this->Action_Add($param);
-                //}
-
                 $this->Action_CancellAll($camera->id);
 
                 $param = array(
@@ -976,7 +1084,12 @@ class CamerasController extends Controller
                 $this->Action_Completed($param);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('status', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1058,9 +1171,11 @@ class CamerasController extends Controller
                 $this->Action_Completed($param);
             }
         }
-        $response = $this->Response_Result($err, $camera, $datalist);
 
-        $this->LogApi_Add('downloadsettings', 1, $user_id, $camera->id, $request, $response);
+        $response = $this->Response_Result($err, $camera, $datalist);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('downloadsettings', 1, $user_id, $camera->id, $request, $response);
+        }
         return $response;
     }
 
@@ -1097,10 +1212,6 @@ class CamerasController extends Controller
         return $ret;
     }
 
-/*
-PICT0001.JPG    336098999   140876b7
-PICT0002.JPG    1184126564  46945664
-*/
     public function uploadblock(Request $request, ImageUploadHandler $uploader) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -1161,7 +1272,12 @@ PICT0002.JPG    1184126564  46945664
                 $err = ERR_NO_FILE_BUFFER;
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('uploadblock', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1204,9 +1320,8 @@ PICT0002.JPG    1184126564  46945664
         $camera_id = null;
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
-        $camera = $ret['camera'];
         $user_id = $ret['user_id'];
-
+        $camera = $ret['camera'];
         if ($err == 0) {
             $camera_id = $camera->id;
 
@@ -1282,28 +1397,20 @@ PICT0002.JPG    1184126564  46945664
 
         $ret = [];
         $ret['user_id'] = $user_id;
-        $ret['camera_id'] = $camera_id;
+        $ret['camera'] = $camera;
         $ret['response'] = $response;
         return $ret;
     }
 
-    //public function uploadthumb(Request $request, ImageUploadHandler $uploader) {
     public function uploadthumb(Request $request) {
-        //$user_id = $ret['user_id'];
-//return $request;
-//return $request->all();
-//return gettype($request->all());
-//return $request->getContent();
-//return $request->iccid;
-//return json_encode($request);
-//return gettype($request);
-//return gettype($request->getContent()); // string
-
         $ret = $this->uploadfile($request, 'photo_thumb');
-//return $ret;
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
         $response = $ret['response'];
-//return gettype($response);
-        $this->LogApi_Add('uploadthumb', 1, $ret['user_id'], $ret['camera_id'], $request, $response);
+        if ($user_id && $camera) {
+            //$this->LogApi_Add('uploadthumb', 1, $ret['user_id'], $ret['camera_id'], $request, $response);
+            $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
+        }
         return $response;
     }
 
@@ -1332,55 +1439,108 @@ HighRes Max
     "DateTimeStamp": "2018-10-01 20:55:51"
 }
 */
-    public function uploadoriginal(Request $request, ImageUploadHandler $uploader) {
+    public function upload_check($request, $action) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $camera_id = $camera->id;
 
-            if (!isset($request->RequestID)) {
-                return $this->Response_Result(ERR_NO_REQUEST_ID, $camera);
-            }
+            if (isset($request->RequestID)) {
+                /* search Action by RequestID */
+                $query = array(
+                    'id' => $request->RequestID,
+                    'camera_id' => $camera_id,
+                    'action' => $action, //'UO',
+                    'status' => ACTION_REQUESTED,
+                );
+                $actions = DB::table('actions')->where($query);
+                $action  = $actions->first();
+                if ($action) {
+                    $photo_id = $action->photo_id;
 
-            /* search Action */
-            $request_id = $request->RequestID;
-            $query = array(
-                'id' => $request_id,
-                'camera_id' => $camera_id,
-                'action' => 'UO',
-                'status' => ACTION_REQUESTED,
-            );
-            $actions = DB::table('actions')->where($query);
-            $action  = $actions->first();
-            if (!$action) {
-                return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
-            }
-            $photo_id = $action->photo_id;
+                    /* search Photo */
+                    $query = array(
+                        'id' => $photo_id,
+                        'camera_id' => $camera_id,
+                    );
+                    $photos = DB::table('photos')->where($query);
+                    $photo = $photos->first();
+                    if (!$photo) {
+                        //return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
+                        $response = $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
+                        $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+                        return $response;
+                    }
 
-            /* search Photo */
-            $query = array(
-                'id' => $photo_id,
-                'camera_id' => $camera_id,
-            );
-            $photos = DB::table('photos')->where($query);
-            $photo = $photos->first();
-            if (!$photo) {
-                return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
-            }
-
-            if (isset($request->blockid)) {
-                $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
-                $err = $ret['err'];
-            } else {
-                $file = $request->Image;
-                if ($file && $file->isValid()) {
-                    $ret = $uploader->save_file_ex($camera_id, $file);
-                    $err = $ret['err'];
                 } else {
-                    $err = ERR_NO_UPLOAD_FILE;
+                    //return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
+                    $response = $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
+                    $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+                    return $response;
                 }
+
+            } else {
+                $err = ERR_NO_REQUEST_ID;
+            }
+
+
+        }
+        //$ret = [];
+        $ret['err'] = $err;
+        //$ret['user_id'] = $user_id;
+        //$ret['camera'] = $camera;
+        return $ret;
+    }
+
+    public function uploadoriginal(Request $request, ImageUploadHandler $uploader) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $camera_id = $camera->id;
+            if (isset($request->RequestID)) {
+                /* search Action */
+                $query = array(
+                    'id' => $request->RequestID,
+                    'camera_id' => $camera_id,
+                    'action' => 'UO',
+                    'status' => ACTION_REQUESTED,
+                );
+                $actions = DB::table('actions')->where($query);
+                $action  = $actions->first();
+                if ($action) {
+                    /* search Photo */
+                    $query = array(
+                        'id' => $action->photo_id,
+                        'camera_id' => $camera_id,
+                    );
+                    $photos = DB::table('photos')->where($query);
+                    $photo = $photos->first();
+                    if ($photo) {
+                        if (isset($request->blockid)) {
+                            $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                            $err = $ret['err'];
+                        } else {
+                            $file = $request->Image;
+                            if ($file && $file->isValid()) {
+                                $ret = $uploader->save_file_ex($camera_id, $file);
+                                $err = $ret['err'];
+                            } else {
+                                $err = ERR_NO_UPLOAD_FILE;
+                            }
+                        }
+
+                    } else {
+                        $err = ERR_INVALID_PHOTO_ID;
+                    }
+                } else {
+                    $err = ERR_INVALID_REQUEST_ID;
+                }
+            } else {
+                $err = ERR_NO_REQUEST_ID;
             }
 
             if ($err == 0) {
@@ -1416,41 +1576,51 @@ HighRes Max
                 $actions->update($data);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*
-        $request = {
-            "iccid": "89860117851014783481",
-            "module_id": "861107032685597",
-            "model_id": "lookout-na",
+        "iccid": "89860117851014783481",
+        "module_id": "861107032685597",
+        "model_id": "lookout-na",
 
-            "FileName": "PICT0439.MP4",
-            "upload_resolution": "8",
-            "video_resolution": "8",
-            "video_length": "5s",
-            "video_sound": "on",
-            "video_rate": "4",
-            "video_bitrate": "1000",
-            "video_filesize": "597939",
-            "Source": "tl",
-            "DateTime": "20181001213044",
+        "FileName": "PICT0439.MP4",
+        "upload_resolution": "8",
+        "video_resolution": "8",
+        "video_length": "5s",
+        "video_sound": "on",
+        "video_rate": "4",
+        "video_bitrate": "1000",
+        "video_filesize": "597939",
+        "Source": "tl",
+        "DateTime": "20181001213044",
 
-            "RequestID": "7574",
+        "RequestID": "7574",
 
-            "Battery": "f",
-            "SignalValue": "22",
-            "Cardspace": "30039MB",
-            "Cardsize": "30432MB",
-            "Temperature": "27C",
-            "mcu": "4.36",
-            "FirmwareVersion": "20180912",
-            "cellular": "4G LTE",
-            "Image": {}
-        }
+        "Battery": "f",
+        "SignalValue": "22",
+        "Cardspace": "30039MB",
+        "Cardsize": "30432MB",
+        "Temperature": "27C",
+        "mcu": "4.36",
+        "FirmwareVersion": "20180912",
+        "cellular": "4G LTE",
+        "Image": {}
     */
     public function uploadvideothumb(Request $request) {
-        return $this->uploadfile($request, 'video_thumb');
+        $ret = $this->uploadfile($request, 'video_thumb');
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        $response = $ret['response'];
+        if ($user_id && $camera) {
+            $this->LogApi_Add('uploadvideothumb', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*
@@ -1467,52 +1637,49 @@ HighRes Max
     public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $camera_id = $camera->id;
-
-            if (!isset($request->RequestID)) {
-                return $this->Response_Result(ERR_NO_REQUEST_ID, $camera);
-            }
-
-            /* search Action */
-            $request_id = $request->RequestID;
-            $query = array(
-                'id' => $request_id,
-                'camera_id' => $camera_id,
-                'action' => 'UV',
-                'status' => ACTION_REQUESTED,
-            );
-            $actions = DB::table('actions')->where($query);
-            $action  = $actions->first();
-            if (!$action) {
-                return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
-            }
-            $photo_id = $action->photo_id;
-
-            /* search Photo */
-            $query = array(
-                'id' => $photo_id,
-                'camera_id' => $camera_id,
-            );
-            $photos = DB::table('photos')->where($query);
-            $photo = $photos->first();
-            if (!$photo) {
-                return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
-            }
-
-            if (isset($request->blockid)) {
-                $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
-                $err = $ret['err'];
-            } else {
-            $file = $request->Image;
-                if ($file && $file->isValid()) {
-                    $ret = $uploader->save_file_ex($camera_id, $file);
-                    $err = $ret['err'];
+            if (isset($request->RequestID)) {
+                /* search Action */
+                $query = array(
+                    'id' => $request->RequestID,
+                    'camera_id' => $camera_id,
+                    'action' => 'UV',
+                    'status' => ACTION_REQUESTED,
+                );
+                $actions = DB::table('actions')->where($query);
+                $action  = $actions->first();
+                if ($action) {
+                    /* search Photo */
+                    $query = array(
+                        'id' => $action->photo_id,
+                        'camera_id' => $camera_id,
+                    );
+                    $photos = DB::table('photos')->where($query);
+                    $photo = $photos->first();
+                    if ($photo) {
+                        if (isset($request->blockid)) {
+                            $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                            $err = $ret['err'];
+                        } else {
+                            $file = $request->Image;
+                            if ($file && $file->isValid()) {
+                                $ret = $uploader->save_file_ex($camera_id, $file);
+                                $err = $ret['err'];
+                            } else {
+                                $err = ERR_NO_UPLOAD_FILE;
+                            }
+                        }
+                    } else {
+                        $err = ERR_INVALID_PHOTO_ID;
+                    }
                 } else {
-                    $err = ERR_NO_UPLOAD_FILE;
+                    $err = ERR_INVALID_REQUEST_ID;
                 }
+            } else {
+                $err = ERR_NO_REQUEST_ID;
             }
 
             if ($err == 0) {
@@ -1548,13 +1715,19 @@ HighRes Max
                 $actions->update($data);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('uploadvideo', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
     public function imagemissing(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
             $this->Camera_Status_Update($request);
@@ -1568,12 +1741,18 @@ HighRes Max
                 $this->Action_Completed($param);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('imagemissing', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     public function videomissing(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
             $this->Camera_Status_Update($request);
@@ -1587,7 +1766,12 @@ HighRes Max
                 $this->Action_Completed($param);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('videomissing', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1599,8 +1783,8 @@ HighRes Max
     public function firmwareinfo(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
@@ -1620,26 +1804,41 @@ HighRes Max
                 $err = 0;
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('firmwareinfo', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*{"iccid":"89860117851014783481","module_id":"861107032685597","model_id":"lookout-na",
        "RequestID":"4980","version":"20180720"}*/
     public function firmware(Request $request) {
-        $name = 'IMAGE.ZIP';
-        $pathToFile = public_path() . '/firmware/' . $name;
-        //$result['pathToFile'] = $pathToFile;
-        //return $result;
+        $model_id = $request->model_id;
+        $firmware = DB::table('firmwares')
+            ->where(['model' => $model_id, 'active' => 1])
+            ->first();
+        if ($firmware) {
+            $version = $firmware->version;
+            if ($firmware->type == 1) {
+                $filename = 'IMAGE.ZIP';
+            } else {
+                $filename = 'IMAGE.BIN';
+            }
+            /* /firmware/lookout-na/20180816/IMAGE.ZIP */
+            $pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
 
-        //return response()->download($pathToFile);
-        return response()->download($pathToFile, $name);
+            // TODO: check file exist
+            return response()->download($pathToFile, $filename);
+        }
     }
 
     public function firmwaredone(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
@@ -1654,14 +1853,19 @@ HighRes Max
                 $this->Action_Completed($param);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('firmwaredone', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     public function firmwarefail(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
@@ -1675,30 +1879,40 @@ HighRes Max
                 $this->Action_Update($param);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('firmwarefail', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
     public function cardfull(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
             /* send email */
 
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('cardfull', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
     public function formatdone(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
@@ -1711,7 +1925,12 @@ HighRes Max
                 $this->Action_Completed($param);
             }
         }
-        return $this->Response_Result($err, $camera);
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('formatdone', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1750,8 +1969,8 @@ HighRes Max
     public function schedule(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
+        $user_id = $ret['user_id'];
         $camera = $ret['camera'];
-
         if ($err == 0) {
             $this->Camera_Status_Update($request, 'schedule');
 
@@ -1772,10 +1991,15 @@ HighRes Max
                 $param['status'] = ACTION_PENDING;
                 $this->Action_Add($param);
 
-                $ret = $this->Response_Result($err, $camera);
+                $response = $this->Response_Result($err, $camera);
+
                 $action = $this->Action_FindFirst($camera->id, ACTION_PENDING);
                 if ($action) {
-                    $ret['RequestID'] = $action->id;
+                    $response['RequestID'] = $action->id;
+                }
+
+                if ($user_id && $camera) {
+                    $this->LogApi_Add('schedule_start', 1, $user_id, $camera->id, $request, $response);
                 }
 
             } else if ($request->status == 'finish') {
@@ -1785,7 +2009,11 @@ HighRes Max
                     //$param['photo_cnt'] = ;
                     $this->Action_Completed($param);
                 }
-                $ret = $this->Response_Result($err, $camera);
+
+                $response = $this->Response_Result($err, $camera);
+                if ($user_id && $camera) {
+                    $this->LogApi_Add('schedule_finish', 1, $user_id, $camera->id, $request, $response);
+                }
 
             } else if ($request->status == 'abort') {
                 if ($request->RequestID) {
@@ -1793,11 +2021,13 @@ HighRes Max
                     $this->Action_Failed($param);
                     //$this->Action_Aborted($param);
                 }
-                $ret = $this->Response_Result($err, $camera);
+                $response = $this->Response_Result($err, $camera);
+                if ($user_id && $camera) {
+                    $this->LogApi_Add('schedule_abort', 1, $user_id, $camera->id, $request, $response);
+                }
             }
         }
-        //return $this->Response_Result($err, $camera);
-        return $ret;
+        return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1845,6 +2075,32 @@ HighRes Max
             session()->flash('warning', 'Please login first.');
             return redirect()->route('login');
         }
+    }
+
+    public function delete(Request $request) {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        //{"_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR","id":"1","password":"kevin816"}
+        //return $request;
+
+        //if (Auth::attempt(['password' => $request->password])) {
+        //    return 'OK';
+        //} else {
+        //    return 'NG';
+        //}
+
+        //$camera = DB::table('cameras')->find($request->id); // NG
+        $camera = Camera::find($request->id); // OK
+        if ($camera) {
+            $camera->delete();
+            $camera->photos()->delete();
+            $camera->actions()->delete();
+            $camera->log_apis()->delete();
+        }
+        return redirect()->route('cameras');
     }
 
     /* /cameras/getdetail/{camera_id} */
@@ -1925,32 +2181,39 @@ HighRes Max
         return $ret;
     }
 
-    public function sendsms($cameras_id, $sms) {
-        $ret = '/cameras/sendsms/'.$cameras_id.'/'.$sms;
+    public function sendsms($camera_id, $sms) {
+        $ret = '/cameras/sendsms/'.$camera_id.'/'.$sms;
         return $ret;
+
+        if ($sms == 'snap') {
+            // send SMS 'snap'
+        } else if ($sms == 'wake') {
+            // send SMS 'wake'
+        }
     }
 
-    public function actionqueue($camera_id, $action) {
+    public function actionqueue($camera_id, $action_code) {
         /* /cameras/actionqueue/2/LD */
-        //$ret = '/cameras/actionqueue/'.$cameras_id.'/'.$action;
+        //$ret = '/cameras/actionqueue/'.$camera_id.'/'.$action_code;
         //return $ret;
 
-        $param = array(
-            'camera_id'   => $camera_id,
-            'action_code' => $action, //'DS',
-            'status'      => ACTION_REQUESTED, //1,
-        );
-        $this->Action_Add($param);
-
-        //$user   = Auth::user();
-        //$camera = Camera::find($camera_id);
-        //$photos = $camera->photos()
-        //    ->orderBy('created_at', 'desc')
-        //    ->paginate(10);
-        //return view('camera.tab_actions', compact('user', 'camera', 'photos'));
-
         $camera = Camera::find($camera_id);
-        return view('camera.tab_actions', compact('camera'));
+        if ($camera) {
+            $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
+            if ($ret == 0) {
+                $param = array(
+                    'camera_id'   => $camera_id,
+                    'action_code' => $action_code,
+                    'status'      => ACTION_REQUESTED,
+                );
+                $this->Action_Add($param);
+            }
+            return view('camera.tab_actions', compact('camera'));
+
+        } else {
+            session()->flash('warning', 'camera not found');
+            return redirect()->route('cameras');
+        }
     }
 
     public function actionqueue_post(Request $request) {
@@ -1965,13 +2228,17 @@ HighRes Max
         //return $request;
 
         $camera_id = $request->id;
-        $action = $request->action;
-        $param = array(
-            'camera_id'   => $camera_id,
-            'action_code' => $action,
-            'status'      => ACTION_REQUESTED,
-        );
-        $this->Action_Add($param);
+        $action_code = $request->action;
+
+        $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
+        if ($ret == 0) {
+            $param = array(
+                'camera_id'   => $camera_id,
+                'action_code' => $action_code,
+                'status'      => ACTION_REQUESTED,
+            );
+            $this->Action_Add($param);
+        }
 
         //$camera = Camera::find($camera_id);
         //return view('camera.tab_actions', compact('camera'));

@@ -116,6 +116,7 @@ class CreateCamerasTable extends Migration
             $table->dateTime('last_schedule')->nullable();
             $table->dateTime('last_settings')->nullable();      // Last Downloaded
 
+            $table->integer('log')->default(0);
 
             $table->dateTime('expected_contact')->nullable();   // Expected Contact
 

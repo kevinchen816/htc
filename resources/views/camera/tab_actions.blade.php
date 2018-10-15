@@ -15,8 +15,18 @@
                     <tbody>
                         <tr>
                             <td>
+                                <div class="well well-sm">
+                                    <h4>Remote Control Options</h4>
+                                    <a data-param="snap" class="btn btn-sm btn-success sms-button" camera-id="{{ $camera->id }}"><i class="fa fa-bolt"></i> SMS: Snap Photo</a>
+                                    <a data-param="wake" class="btn btn-sm btn-success sms-button" camera-id="{{ $camera->id }}"><i class="fa fa-bolt"></i> SMS: Wakeup</a>
+                                    <div id="sms-message"></div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
                                 <form class="form-horizontal" role="form" method="POST" action="{{ route('camera.actionqueue_post') }}" id="action-formatsd-form-{{ $camera->id }}">
-                                    <!-- <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
                                     {{ csrf_field() }}
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
                                     <input name="action" type="hidden" value="FC">
@@ -24,6 +34,9 @@
                                         <label for="password inputSmall" class="control-label">Account Password:</label>
                                         <input id="{{ $camera->id }}_password_format" type="password" class="form-control input-sm" name="password" required>
                                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-trash"></i> Erase SD Card</button>
+                                        <!--<p>Erase SD card temporarily disabled. Your camera needs
+                                                        to upgrade to firmware 20181003 or higher.</p>-->
+
                                     </div>
                                     <div class="alert alert-sm alert-info">
                                         <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the Erase SD Card button.
@@ -35,9 +48,22 @@
                             <!-- <td><a href="/cameras/actionqueue/{{ $camera->id }}/FC" class="btn btn-sm btn-success">Format SD Card</a></td>-->
                         </tr>
 
+                        @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
+                        {!! $actions_ctrl->Commands($camera) !!}
+
+                        <!--<tr>
+                            <td>
+                                <a data-param="FW" class="btn btn-sm btn-success action-queue-15" camera-id="{{ $camera->id }}">Update Firmware to (20181003)</a>
+                            </td>
+                        </tr>-->
+
                         <tr>
                             <td>
+@if ($camera->log == 1)
                                 <a data-param="LD" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Disable</a>
+@else
+                                <a data-param="LE" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Enable</a>
+@endif
                                 <a data-param="LU" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Upload</a>
                             </td>
                         </tr>
@@ -109,6 +135,15 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td class="col-sm-1">
+                                PICT4912.JPG
+                            </td>
+                            <td class="col-sm-1">
+                                <a class="btn btn-xs btn-info missing-request" missing-id="949">Request</a>
+                            </td>
+                            <td class="col-sm-1">09/08/2018 7:35:55 pm</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -119,7 +154,7 @@
 <script type="text/javascript">
 $(document).ready(function () {
     $(".sms-button").click(function() {
-        alert('action queue');
+        //alert('action queue');
         sms = $(this).attr('data-param');
         id = $(this).attr('camera-id');
         url = '/cameras/sendsms/' + id + '/' + sms;

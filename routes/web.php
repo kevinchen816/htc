@@ -70,6 +70,7 @@ Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete
     /cameras/gallerythumbs/{camera_id}/{xx}         <-- xx = 10,20,30,40,60,80
 */
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
+Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
 
 /* tab_gallery.blade.php */

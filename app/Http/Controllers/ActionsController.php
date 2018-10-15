@@ -144,4 +144,33 @@ class ActionsController extends Controller
         }
         return $handle;
     }
+
+    public function Commands($camera) {
+        $handle = '';
+        $camera_id = $camera->id;
+
+        $firmware = DB::table('firmwares')
+            ->where(['model' => $camera->model_id, 'active' => 1])
+            ->first();
+        if ($firmware) {
+            $version = $firmware->version;
+            //if ($version > $camera->dsp_version) {
+                $handle .= '<tr>';
+                $handle .=     '<td>';
+                $handle .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Update Firmware to ('.$version.')</a>';
+                $handle .=     '</td>';
+                $handle .= '</tr>';
+            //}
+        }
+
+        //$handle .= '<tr>';
+        //$handle .=     '<td>';
+        //$handle .=         '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a>';
+        //$handle .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a>';
+        //$handle .=     '</td>';
+        //$handle .= '</tr>';
+
+        return $handle;
+    }
+
 }

@@ -21,4 +21,9 @@ class Camera extends Model
     public function actions() {
         return $this->hasMany(Action::class);
     }
+
+    public function log_apis() {
+        return $this->hasMany(LogApi::class);
+    }
+
 }

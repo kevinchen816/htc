@@ -16,8 +16,7 @@
                                 </h4>
                             </div>
                             <div class="panel-body">
-                                <form class="form-horizontal" role="form" method="POST" action="http://www.ridgetec.us/cameras/delete" id="delete-camera-form-{{ $camera->id }}">
-                                    <!-- <input type="hidden" name="_token" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
+                                <form class="form-horizontal" role="form" method="POST" action="{{ route('camera.delete') }}" id="delete-camera-form-{{ $camera->id }}">
                                     {{ csrf_field() }}
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
 
