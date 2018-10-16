@@ -58,50 +58,27 @@ Route::resource('/plans', 'PlansController');
 Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
 /*-----------------------------------------------------------*/
-/*
-    /cameras
-    /cameras/activetab
-    /cameras/getdetail/{camera_id}
-    /cameras/overview/{camera_id}
-    /cameras/actions/{camera_id}
-    /cameras/gallery
-    /cameras/download/{camera_id}/{photo_id}
-    /cameras/gallerylayout/{camera_id}/{xx}         <-- xx = 2,3,4,6,12
-    /cameras/gallerythumbs/{camera_id}/{xx}         <-- xx = 10,20,30,40,60,80
-*/
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
-Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
+Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail')->name('camera.getdetail');
 
-/* tab_gallery.blade.php */
-// <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
-// <form method="POST" action="{{ route('camera.gallery')" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-{{ $camerta->id }}">
+/* Overview */
+Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
+
+/* Gallery */
 Route::post('/cameras/gallery', 'Api\CamerasController@gallery')->name('camera.gallery');
+Route::get('/cameras/gallerylayout/{camera_id}/{number}', 'Api\CamerasController@gallerylayout')->name('camera.gallerylayout'); // 2,3,4,6,12
+Route::get('/cameras/gallerythumbs/{camera_id}/{number}', 'Api\CamerasController@gallerythumbs')->name('camera.gallerythumbs'); // 10,20,30,40,60,80
+Route::get('/cameras/download/{camera_id}/{photo_id}', 'Api\CamerasController@download')->name('camera.download');
 
-// <a href="/cameras/gallerylayout/54/2"> // 2,3,4,6,12
-Route::get('/cameras/gallerylayout/{camera_id}/{number}', 'Api\CamerasController@gallerylayout')->name('camera.gallerylayout');
-
-// <li><a href="/cameras/gallerythumbs/54/10">10 Per Page</a></li> // 10,20,30,40,60.80
-Route::get('/cameras/gallerythumbs/{camera_id}/{number}', 'Api\CamerasController@gallerythumbs')->name('camera.gallerythumbs');
+/* Settings */
 Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');
 
-/* Camera List (_list.blade.php) */
-    // <a href="/cameras/getdetail/50">New Camera</a><br />
-    Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail')->name('camera.getdetail');
+/* Actions */
+Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
 
-/* Camera Data (_data.blade.php) */
-    // <li><a href="/cameras/getdetail/50">New Camera</a></li>
-    //Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail');
-
-    // <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">
-    Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
-
-    // <a href="#action-54" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/54" aria-expanded="false">
-    Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
-
-    /* photo.blade.php */
-    // <a href="/cameras/download/54/90815">
-    //Route::get('/cameras/download/{camera_id}/{photo_id}', 'Api\CamerasController@download');
+/* Options */
+Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
 
     // $("#notify_photo").click(function () {   /* default.blade.php */
     // var url = '/cameras/testnotify/photo/' + cam + '/62830';
@@ -109,16 +86,6 @@ Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.
     // $("#notify_video").click(function () {   /* default.blade.php */
     // var url = '/cameras/testnotify/video/' + cam + '/62852';
 
-/*
-    /cameras/sendsms/' + id + '/' + sms
-
-    /cameras/actionqueue/' + id + '/' + action
-    /cameras/actioncancel/' + actionid;
-
-    /cameras/clearmissing/54';
-    /cameras/requestmissing/54/' + missingid;
-    /cameras/getmediaurl/' + actionid;              <-- show-highres
-*/
 Route::get('/cameras/sendsms/{camera_id}/{sms}', 'Api\CamerasController@sendsms')->name('camera.sendsms');
 
 Route::get('/cameras/actionqueue/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');

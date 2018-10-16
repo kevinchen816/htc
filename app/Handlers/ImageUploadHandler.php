@@ -41,7 +41,7 @@ class ImageUploadHandler
         ];
     }
 
-    public function save_file($file)
+    public function save_file2($file)
     {
         $ret['OriginalName'] = $file->getClientOriginalName();     // PICT0001.JPG
         $ret['extension'] = $file->getClientOriginalExtension(); // JPG
@@ -80,7 +80,7 @@ class ImageUploadHandler
         return $ret;
     }
 
-    public function save_file_ex($camera_id, $file)
+    public function save_file($camera_id, $file)
     {
         //$ret['OriginalName'] = $file->getClientOriginalName();        // PICT0001.JPG
         //$ret['extension'] = $file->getClientOriginalExtension();    // JPG
@@ -95,38 +95,36 @@ class ImageUploadHandler
         //$ret['err'] = $file->getError();
         //$ret['err_msg'] = $file->getErrorMessage();
 
-        $OriginalName = $file->getClientOriginalName();
+        //$OriginalName = $file->getClientOriginalName();
         $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
 
         // 构建存储的文件夹规则，值如：uploads/images/avatars/201709/21/
         // 文件夹切割能让查找效率更高。
-        //$folder_name = "uploads/images/$folder/".date("Ym/d", time());
-        //$filename = md5(date('ymdhis').$OriginalName).".".$extension; // 0be0fa46c2062453c8e0a375fe68f5fd.JPG
+        //$path_upload = "uploads/images/$folder/".date("Ym/d", time());
+        //$savename = md5(date('ymdhis').$OriginalName).".".$extension; // 0be0fa46c2062453c8e0a375fe68f5fd.JPG
         $path_upload = public_path().'/uploads/'.$camera_id;
-        $filename = time() . '_' . str_random(10) . '.' . $extension;
+        $savename = time() . '_' . str_random(10) . '.' . $extension;
+        $savepath = $file->move($path_upload, $savename);
 
-        $path = $file->move($path_upload, $filename);
-
-        $ret['OriginalName'] = $OriginalName;       // "PICT0001.JPG"
-        $ret['filename'] = $filename;               // "1538422239_Cf7PQK04w4.JPG"
-        $ret['filesize'] = $file->getClientSize();  // 7032
-        //$ret['path'] = "$path";
+        $ret['imagename'] = $file->getClientOriginalName(); // "PICT0001.JPG"
+        $ret['savename'] = $savename;                       // "1538422239_Cf7PQK04w4.JPG"
+        $ret['savepath'] = "$savepath";
+        $ret['extension'] = "$extension";
+        $ret['filesize'] = $file->getClientSize();          // 7032
         $ret['err'] = 0;
         return $ret;
     }
 
     public function save_buffer($camera_id, $file, $blockid, $blocknbr) {
-        //$folder_name = public_path() . '/uploads/block/' . $camera_id .'/'. $blockid;
-        $folder_name = public_path().'/uploads/block/'.$blockid;
+        $path_upload = public_path().'/uploads/block/'.$blockid;
         //$filename = $blocknbr . '.BIN';
         $filename = sprintf("%05u.BIN", $blocknbr);
-        $path = $file->move($folder_name, $filename);
+        $savepath = $file->move($path_upload, $filename);
 
-        //$ret['OriginalName'] = $file->getClientOriginalName();  // "PICT0001.JPG"
-        //$ret['filename'] = $filename;
         //$ret['filesize'] = $file->getClientSize();
-        //$ret['folder_name'] = "$folder_name";
-        $ret['path'] = "$path";
+        //$ret['ImageName'] = $file->getClientOriginalName();  // "PICT0001.JPG"
+        //$ret['savename'] = $savename;
+        $ret['savepath'] = "$savepath";
         $ret['err'] = 0;
         return $ret;
     }

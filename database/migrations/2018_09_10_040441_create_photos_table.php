@@ -23,8 +23,12 @@ class CreatePhotosTable extends Migration
 
             $table->string('filename');
             $table->integer('filetype')->nullable();
-            $table->integer('resolution'); //$table->string('upload_resolution');
+            $table->string('imagename');
+            $table->string('savename')->nullable(); // 'filepath'
             $table->integer('filesize')->nullable();
+
+            $table->integer('resolution')->nullable(); //$table->string('upload_resolution');
+            $table->float('points')->default(0);
 
             /* photo */
             $table->integer('photo_quality')->nullable();
@@ -44,8 +48,6 @@ class CreatePhotosTable extends Migration
             //$table->timestamp('datetime');  // 1970-01-01 00:00:01 ~ 2038-01-19 03:14:07 UTC
             $table->dateTime('datetime');   // 1000-01-01 00:00:00 ~ 9999-12-31 23:59:59
             //$table->date('datetime');
-
-            $table->string('filepath');
 
             $table->index(['created_at']);
             $table->timestamps();   // created_at, updated_at

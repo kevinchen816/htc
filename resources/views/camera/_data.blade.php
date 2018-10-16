@@ -133,7 +133,7 @@
                     @include('camera.tab_overview')
                     </div>
 
-                    <!-- GALLERY TAB --> <!--class="tab-pane fade active in"-->
+                    <!-- GALLERY TAB -->
 @if ($user->tab == 'gallery')
                     <div class="tab-pane fade active in" id="gallery-{{$camera->id}}">
 @else

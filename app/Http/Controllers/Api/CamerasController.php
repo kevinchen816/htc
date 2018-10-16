@@ -127,6 +127,59 @@ class CamerasController extends Controller
         return $message;
     }
 
+    public function TXT_Source($txt) {
+        if ($txt == 'setup') {
+            $txt = 'Menu';
+        } else if ($txt == 'mt') {
+            $txt = 'Motion';
+        } else if ($txt == 'tl') {
+            $txt = 'Timelapse';
+        } else if ($txt == 'ps') {
+            $txt = 'Photo Snap';
+        } else if ($txt == 'sc') {
+            $txt = 'Scheduled Upload';
+        }
+        return $txt;
+    }
+
+    public function TXT_UploadResolution($txt) {
+        if ($txt == 1) {
+            $txt = 'Standard Low';
+        } else if ($txt == 2) {
+            $txt = 'Standard Medium';
+        } else if ($txt == 3) {
+            $txt = 'Standard High';
+        } else if ($txt == 4) {
+            $txt = 'High Def';
+        } else if ($txt == 5) {
+            $txt = 'High-Res MAX';
+        } else if ($txt == 6) {
+            $txt = 'Original Photo';
+        //} else if ($txt == 7) {
+        //    $txt = '';
+        } else if ($txt == 8) {
+            $txt = 'Standard Low';
+        } else if ($txt == 9) {
+            $txt = 'Standard Medium';
+        } else if ($txt == 10) {
+            $txt = 'Standard High';
+        } else if ($txt == 11) {
+            $txt = 'High Def';
+        }
+        return $txt;
+    }
+
+    public function TXT_UploadQuality($txt) {
+        if ($txt == 1) {
+            $txt = 'Standard';
+        } else if ($txt == 2) {
+            $txt = 'Medium';
+        } else if ($txt == 3) {
+            $txt = 'High';
+        }
+        return $txt;
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function LogApi_Add($api, $type, $user_id, $camera_id, $request, $response) {
         if ($user_id && $camera_id) {
@@ -904,6 +957,7 @@ class CamerasController extends Controller
             $data['cellular']     = $param->cellular;
 
             $data['last_filename'] = $param->filename;
+            $data['last_savename'] = $param->savename;
 
             if ($param->Source != 'setup') {
                 $data['arm_photos'] = $camera->arm_photos+1;
@@ -947,39 +1001,41 @@ class CamerasController extends Controller
     /*----------------------------------------------------------------------------------*/
     public function Photo_Add($param) {
         $photo = new Photo;
-        $photo->camera_id         = $param->camera_id; // TODO
-        $photo->filename          = $param->FileName;
-        $photo->filetype          = 1;
-        $photo->filesize          = $param->filesize;
-        $photo->resolution        = $param->upload_resolution;
+        $photo->camera_id           = $param->camera_id; // TODO
+        $photo->filename            = $param->filename;
+        $photo->imagename           = $param->imagename;
+        $photo->savename            = $param->savename;
+        $photo->filesize            = $param->filesize;
+        $photo->filetype            = 1;
+        $photo->points              = $param->points;
 
-        $photo->photo_quality     = $param->photo_quality;
-        $photo->photo_compression = $param->photo_compression;
-
-        $photo->source            = $param->Source;
-        $photo->datetime          = $param->DateTime;
-        $photo->filepath          = $param->filename;
+        $photo->resolution          = $param->upload_resolution;
+        $photo->photo_quality       = $param->photo_quality;
+        $photo->photo_compression   = $param->photo_compression;
+        $photo->source              = $param->Source;
+        $photo->datetime            = $param->DateTime;
         $photo->save();
         return $photo;
     }
 
     public function Video_Add($param) {
         $photo = new Photo;
-        $photo->camera_id       = $param->camera_id; // TODO
-        $photo->filename        = $param->FileName;
-        $photo->filetype        = 2;
-        $photo->filesize        = $param->filesize; // $param->video_filesize;
-        $photo->resolution      = $param->upload_resolution;
+        $photo->camera_id           = $param->camera_id; // TODO
+        $photo->filename            = $param->filename;
+        $photo->imagename           = $param->imagename;
+        $photo->savename            = $param->savename;
+        $photo->filesize            = $param->filesize; // $param->video_filesize;
+        $photo->filetype            = 2;
+        $photo->points              = $param->points;
 
-        $photo->photo_quality   = $param->photo_quality;
-        $photo->video_length    = (integer) ($param->video_length);
-        $photo->video_sound     = $param->video_sound;
-        $photo->video_rate      = $param->video_rate;
-        $photo->video_bitrate   = $param->video_bitrate;
-
-        $photo->source          = $param->Source;
-        $photo->datetime        = $param->DateTime;
-        $photo->filepath        = $param->filename;
+        $photo->resolution          = $param->upload_resolution;
+        $photo->photo_quality       = $param->photo_quality;
+        $photo->video_length        = (integer) ($param->video_length);
+        $photo->video_sound         = $param->video_sound;
+        $photo->video_rate          = $param->video_rate;
+        $photo->video_bitrate       = $param->video_bitrate;
+        $photo->source              = $param->Source;
+        $photo->datetime            = $param->DateTime;
         $photo->save();
         return $photo;
     }
@@ -1256,7 +1312,7 @@ class CamerasController extends Controller
                 $err = $ret['err'];
                 if ($err == 0) {
                     /* https://www.cnblogs.com/mslagee/p/6223140.html */
-                    $crc32 = hexdec(hash_file('crc32b', $ret['path']));
+                    $crc32 = hexdec(hash_file('crc32b', $ret['savepath']));
                     if ($crc32 != $request->crc32) {
                         $ret = $this->Response_Result(ERR_CRC32_FAIL, $camera);
                         $ret['CRC32'] = $crc32;
@@ -1329,8 +1385,7 @@ class CamerasController extends Controller
             } else {
                 $file = $request->Image;
                 if ($file && $file->isValid()) {
-                    // $ret = $uploader->save_file($file);
-                    $ret = $uploader->save_file_ex($camera_id, $file);
+                    $ret = $uploader->save_file($camera_id, $file);
                     $err = $ret['err'];
                 } else {
                     $err = ERR_NO_UPLOAD_FILE;
@@ -1338,24 +1393,21 @@ class CamerasController extends Controller
             }
 
             if ($err == 0) {
-                //$OriginalName = $ret['OriginalName'];
-                $OriginalName = $request->FileName;     // PICT0001.JPG
-                $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
-                $filesize = $ret['filesize'];
-
                 $param = $request;
                 $param['camera_id'] = $camera_id;
-                $param['filename'] = $filename;
-                $param['filesize'] = $filesize;
+                $param['filename'] = $request->FileName;
+                $param['imagename'] = $ret['imagename'];
+                $param['savename'] = $ret['savename'];
+                $param['extension'] = $ret['extension'];
+                $param['filesize'] = $ret['filesize'];
 
+                $points = $this->Plan_Update($param);
+                $param['points'] = $points;
                 if ($api == 'video_thumb') {
                     $photo = $this->Video_Add($param);
                 } else {
                     $photo = $this->Photo_Add($param);
                 }
-
-                $points = $this->Plan_Update($param);
-                $param['points'] = $points;
                 $this->Camera_Status_Update($param, 'upload');
 
                 if ($request->RequestID) {
@@ -1365,15 +1417,15 @@ class CamerasController extends Controller
                     if ($action) {
                         if ($action->camera_id == $camera_id) {
                             if ($action->action == 'PS') {
-                                $data['filename'] = $OriginalName;
+                                $data['filename'] = $request->FileName;
                                 $data['photo_id'] = $photo->id;
                                 $data['photo_cnt'] = 1;
                                 $data['status'] = ACTION_COMPLETED;
 
                             } else if ($action->action == 'SC') {
-                                $data['filename'] = $OriginalName;
+                                $data['filename'] = $request->FileName;
                                 $data['photo_id'] = $photo->id;
-                                if ($OriginalName != $action->filename) {
+                                if ($request->FileName != $action->filename) {
                                     $data['photo_cnt'] = $action->photo_cnt + 1;
                                 }
                             }
@@ -1401,6 +1453,9 @@ class CamerasController extends Controller
     }
 
     public function uploadthumb(Request $request) {
+//$file = $request->Image;
+//return $file->getClientOriginalName();
+
         $ret = $this->uploadfile($request, 'photo_thumb');
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
@@ -1524,7 +1579,7 @@ HighRes Max
                         } else {
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
-                                $ret = $uploader->save_file_ex($camera_id, $file);
+                                $ret = $uploader->save_file($camera_id, $file);
                                 $err = $ret['err'];
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
@@ -1542,28 +1597,31 @@ HighRes Max
             }
 
             if ($err == 0) {
-                //$OriginalName = $ret['OriginalName'];
-                $OriginalName = $request->FileName;     // PICT0001.JPG
-                $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
                 $filesize = $ret['filesize'];
+
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['filename'] = $request->FileName;
+                $param['imagename'] = $ret['imagename'];
+                $param['savename'] = $ret['savename'];
+                $param['extension'] = $ret['extension'];
+                $param['filesize'] = $ret['filesize'];
+
+                /* update Plan */
+                $points = $this->Plan_Update($param);
+                $param['points'] = $points;
 
                 /* update Photo */
                 $data = [];
                 $data['resolution'] = $request->upload_resolution;
-                $data['filesize'] = $filesize;
                 $data['photo_compression'] = $request->photo_compression;
-                $data['filepath'] = $filename;
+                $data['imagename'] = $ret['imagename'];
+                $data['savename'] = $ret['savename'];
+                $data['filesize'] = $filesize;
+                $data['points'] = $points;
                 $photos->update($data);
 
-                /* update Plan */
-                $param = $request;
-                $param['camera_id'] = $camera_id;
-                $param['filename'] = $filename;
-                $param['filesize'] = $filesize;
-                $points = $this->Plan_Update($param);
-
                 /* update Camera Status */
-                $param['points'] = $points;
                 $this->Camera_Status_Update($param, 'upload');
 
                 /* update Action */
@@ -1611,6 +1669,9 @@ HighRes Max
         "Image": {}
     */
     public function uploadvideothumb(Request $request) {
+//$file = $request->Image;
+//return $file->getClientOriginalName();
+
         $ret = $this->uploadfile($request, 'video_thumb');
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
@@ -1664,7 +1725,7 @@ HighRes Max
                         } else {
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
-                                $ret = $uploader->save_file_ex($camera_id, $file);
+                                $ret = $uploader->save_file($camera_id, $file);
                                 $err = $ret['err'];
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
@@ -1681,28 +1742,31 @@ HighRes Max
             }
 
             if ($err == 0) {
-                //$OriginalName = $ret['OriginalName'];
-                $OriginalName = $request->FileName;     // PICT0001.JPG
-                $filename = $ret['filename'];           // 1538422239_Cf7PQK04w4.JPG
                 $filesize = $ret['filesize'];
+
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['filename'] = $request->FileName;
+                $param['imagename'] = $ret['imagename'];
+                $param['savename'] = $ret['savename'];
+                $param['extension'] = $ret['extension'];
+                $param['filesize'] = $ret['filesize'];
+
+                /* update Plan */
+                $points = $this->Plan_Update($param, 1);
+                $param['points'] = $points;
 
                 /* update Photo */
                 $data = [];
                 $data['resolution'] = $request->upload_resolution;
-                $data['filesize'] = $filesize;
                 //$data['photo_compression'] = $request->photo_compression;
-                $data['filepath'] = $filename;
+                $data['imagename'] = $ret['imagename'];
+                $data['savename'] = $ret['savename'];
+                $data['filesize'] = $filesize;
+                $data['points'] = $points;
                 $photos->update($data);
 
-                /* update Plan */
-                $param = $request;
-                $param['camera_id'] = $camera_id;
-                $param['filename'] = $filename;
-                $param['filesize'] = $filesize;
-                $points = $this->Plan_Update($param, 1);
-
                 /* update Camera Status */
-                $param['points'] = $points;
                 $this->Camera_Status_Update($param, 'upload');
 
                 /* update Action */
@@ -2029,455 +2093,6 @@ HighRes Max
     }
 
     /*----------------------------------------------------------------------------------*/
-    /* Web Function */
-
-    // https://blog.csdn.net/woshihaiyong168/article/details/52992812
-    //public function cameras($camera_id) {
-    public function cameras() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $user_id = $user->id;
-            //$cameras = DB::table('cameras')->where('user_id', $user_id)->get();
-            // foreach ($cameras as $camera) {
-            //     echo $camera->description;
-            //     echo '<br/>';
-            // }
-            //return;
-
-            $camera = DB::table('cameras')
-                ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
-                ->where('user_id', $user_id)
-                ->first();
-            if ($camera) {
-                $camera_id = $camera->id;
-
-                /* search Photo */
-                //$query = array(
-                //    'camera_id' => $camera_id,
-                //);
-                //$photos = DB::table('photos')->where($query);
-
-                //$camera = Camera::findOrFail($camera_id);
-                $camera = Camera::find($camera_id);
-                $photos = $camera->photos()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(10);
-
-                //session()->flash('success', 'Welcome !!');
-                return view('cameras', compact('user', 'camera', 'photos'));
-
-            } else {
-                return view('cameras_empty', compact('user'));
-            }
-
-        } else {
-            session()->flash('warning', 'Please login first.');
-            return redirect()->route('login');
-        }
-    }
-
-    public function delete(Request $request) {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
-        //{"_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR","id":"1","password":"kevin816"}
-        //return $request;
-
-        //if (Auth::attempt(['password' => $request->password])) {
-        //    return 'OK';
-        //} else {
-        //    return 'NG';
-        //}
-
-        //$camera = DB::table('cameras')->find($request->id); // NG
-        $camera = Camera::find($request->id); // OK
-        if ($camera) {
-            $camera->delete();
-            $camera->photos()->delete();
-            $camera->actions()->delete();
-            $camera->log_apis()->delete();
-        }
-        return redirect()->route('cameras');
-    }
-
-    /* /cameras/getdetail/{camera_id} */
-    public function getdetail($camera_id) {
-        //$user   = Auth::user();
-        //$camera = Camera::findOrFail($camera_id);
-        //$photos = $camera->photos()
-        //    ->orderBy('created_at', 'desc')
-        //    ->paginate(10);
-        ////return view('cameras', compact('camera', 'photos')); // OK
-        //return view('cameras', compact('user', 'camera', 'photos')); // OK
-
-        return redirect()->route('cameras');
-    }
-
-    public function gallery() {
-        $token     = $_POST['_token'];
-        $camera_id = $_POST['id'];
-        $action    = $_POST['action'];
-        $medialist = $_POST['medialist'];
-        echo $token;
-        echo '<br/>';
-        echo $camera_id;
-        echo '<br/>';
-        echo $action;
-        echo '<br/>';
-        echo $medialist;
-        echo '<br/>';
-
-        /* push to Action queue .... */
-
-        return;
-    }
-
-    public function gallerylayout($camera_id, $number) {
-        echo $camera_id;
-        echo '<br/>';
-        echo $number;
-        echo '<br/>';
-        return;
-    }
-
-    public function gallerythumbs($camera_id, $number) {
-        echo $camera_id;
-        echo '<br/>';
-        echo $number;
-        echo '<br/>';
-        return;
-    }
-
-    /* /cameras/activetab */
-    public function activetab() {
-        $tab = $_POST['tab'];
-        $user = Auth::user();
-//return $user->id;
-        $data['tab'] = $tab;
-        $user->update($data);
-        return $tab;
-
-        //$ret['a'] = 1;
-        //$ret['b'] = 2;
-        //$ret['c'] = 3;
-        //return json_encode($ret); // OK
-    }
-
-    //public function activetab(Request $request) {
-    //    return $request;
-    //}
-
-    public function overview($cameras_id) {
-        //return '/cameras/overview/'.$cameras_id;
-        $camera = Camera::findOrFail($cameras_id);
-        return view('camera.tab_overview', compact('camera'));
-    }
-
-    //public function actions($cameras_id) {
-    //    $ret = '/cameras/actions/' . $cameras_id;
-    //    return $ret;
-    //}
-
-    public function actions($cameras_id) {
-        //return '/cameras/actions/'.$cameras_id;
-        $camera = Camera::findOrFail($cameras_id);
-        return view('camera.tab_actions', compact('camera'));
-    }
-/*
-{
-"_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR",
-"id":"1",
-"1_description":"New Camera",
-"1_location":null,
-"54_country":"CN",
-"1_timezone":"Asia\/Hong_Kong",
-"push_notifications":"on",
-"54_email_owner":"on",
-"54_bw_medias_hour_est":"0",
-
-"1_camera_mode":"v",
-"1_photo_resolution":"4",
-"1_photo_burst":"1",
-"1_burst_delay":"250",
-"1_upload_resolution":"1",
-"1_photo_quality":"1",
-"1_video_resolution":"8",
-"1_video_fps":"4",
-"1_video_bitrate":"500",
-"1_video_length":"5s",
-"1_video_sound":"on",
-"1_timestamp":"on",
-"1_date_format":"Ymd",
-"1_time_format":"24",
-"1_temp_unit":"c",
-"1_quiettime":"5s",
-"1_timelapse":"on",
-"1_tls_start":"00:00",
-"1_tls_stop":"23:59",
-"1_tls_interval":"5m",
-"1_wireless_mode":"instant",
-"1_wm_schedule":"1h",
-"1_wm_sclimit":"20",
-"1_hb_interval":"1h",
-"1_online_max_time":"2",
-"1_cellularpw":null,
-"1_remotecontrol":"off",
-
-"1_blockmode1":"off",
-"1_blockmode2":"off",
-"1_blockmode3":"off",
-"1_blockmode4":"off",
-"1_blockmode5":"off",
-"1_blockmode7":"off",
-"1_blockmode8":"off",
-"1_blockmode9":"off",
-"1_blockmode10":"off",
-"1_blockmode11":"off",
-
-"54_hour_1_1":"on","54_hour_1_2":"on","54_hour_1_3":"on","54_hour_1_4":"on","54_hour_1_5":"on","54_hour_1_6":"on",
-"54_hour_1_7":"on","54_hour_1_8":"on","54_hour_1_9":"on","54_hour_1_10":"on","54_hour_1_11":"on","54_hour_1_12":"on",
-"54_hour_1_13":"on","54_hour_1_14":"on","54_hour_1_15":"on","54_hour_1_16":"on","54_hour_1_17":"on","54_hour_1_18":"on",
-"54_hour_1_19":"on","54_hour_1_20":"on","54_hour_1_21":"on","54_hour_1_22":"on","54_hour_1_23":"on","54_hour_1_24":"on",
-
-"54_hour_2_1":"on","54_hour_2_2":"on","54_hour_2_3":"on","54_hour_2_4":"on","54_hour_2_5":"on","54_hour_2_6":"on",
-"54_hour_2_7":"on","54_hour_2_8":"on","54_hour_2_9":"on","54_hour_2_10":"on","54_hour_2_11":"on","54_hour_2_12":"on",
-"54_hour_2_13":"on","54_hour_2_14":"on","54_hour_2_15":"on","54_hour_2_16":"on","54_hour_2_17":"on","54_hour_2_18":"on",
-"54_hour_2_19":"on","54_hour_2_20":"on","54_hour_2_21":"on","54_hour_2_22":"on","54_hour_2_23":"on","54_hour_2_24":"on",
-
-"54_hour_3_1":"on","54_hour_3_2":"on","54_hour_3_3":"on","54_hour_3_4":"on","54_hour_3_5":"on","54_hour_3_6":"on",
-"54_hour_3_7":"on","54_hour_3_8":"on","54_hour_3_9":"on","54_hour_3_10":"on","54_hour_3_11":"on","54_hour_3_12":"on",
-"54_hour_3_13":"on","54_hour_3_14":"on","54_hour_3_15":"on","54_hour_3_16":"on","54_hour_3_17":"on","54_hour_3_18":"on",
-"54_hour_3_19":"on","54_hour_3_20":"on","54_hour_3_21":"on","54_hour_3_22":"on","54_hour_3_23":"on","54_hour_3_24":"on",
-
-"54_hour_4_1":"on","54_hour_4_2":"on","54_hour_4_3":"on","54_hour_4_4":"on","54_hour_4_5":"on","54_hour_4_6":"on",
-"54_hour_4_7":"on","54_hour_4_8":"on","54_hour_4_9":"on","54_hour_4_10":"on","54_hour_4_11":"on","54_hour_4_12":"on",
-"54_hour_4_13":"on","54_hour_4_14":"on","54_hour_4_15":"on","54_hour_4_16":"on","54_hour_4_17":"on","54_hour_4_18":"on",
-"54_hour_4_19":"on","54_hour_4_20":"on","54_hour_4_21":"on","54_hour_4_22":"on","54_hour_4_23":"on","54_hour_4_24":"on",
-
-"54_hour_5_1":"on","54_hour_5_2":"on","54_hour_5_3":"on","54_hour_5_4":"on","54_hour_5_5":"on","54_hour_5_6":"on",
-"54_hour_5_7":"on","54_hour_5_8":"on","54_hour_5_9":"on","54_hour_5_10":"on","54_hour_5_11":"on","54_hour_5_12":"on",
-"54_hour_5_13":"on","54_hour_5_14":"on","54_hour_5_15":"on","54_hour_5_16":"on","54_hour_5_17":"on","54_hour_5_18":"on",
-"54_hour_5_19":"on","54_hour_5_20":"on","54_hour_5_21":"on","54_hour_5_22":"on","54_hour_5_23":"on","54_hour_5_24":"on",
-
-"54_hour_6_1":"on","54_hour_6_2":"on","54_hour_6_3":"on","54_hour_6_4":"on","54_hour_6_5":"on","54_hour_6_6":"on",
-"54_hour_6_7":"on","54_hour_6_8":"on","54_hour_6_9":"on","54_hour_6_10":"on","54_hour_6_11":"on","54_hour_6_12":"on",
-"54_hour_6_13":"on","54_hour_6_14":"on","54_hour_6_15":"on","54_hour_6_16":"on","54_hour_6_17":"on","54_hour_6_18":"on",
-"54_hour_6_19":"on","54_hour_6_20":"on","54_hour_6_21":"on","54_hour_6_22":"on","54_hour_6_23":"on","54_hour_6_24":"on",
-
-"54_hour_7_1":"on","54_hour_7_2":"on","54_hour_7_3":"on","54_hour_7_4":"on","54_hour_7_5":"on","54_hour_7_6":"on",
-"54_hour_7_7":"on","54_hour_7_8":"on","54_hour_7_9":"on","54_hour_7_10":"on","54_hour_7_11":"on","54_hour_7_12":"on",
-"54_hour_7_13":"on","54_hour_7_14":"on","54_hour_7_15":"on","54_hour_7_16":"on","54_hour_7_17":"on","54_hour_7_18":"on"
-"54_hour_7_19":"on","54_hour_7_20":"on","54_hour_7_21":"on","54_hour_7_22":"on","54_hour_7_23":"on","54_hour_7_24":"on"
-}
-*/
-    public function settings(Request $request) {
-        //return $request;
-
-        $Control_Settings = array(
-            /* Identification Settings */
-            "description",
-            "location",
-            "region",
-            "timezone",
-
-            /* Basic Settings */
-            "camera_mode",
-            "photo_resolution",
-            "photo_burst",
-            "burst_delay",
-            "upload_resolution",
-            "photo_quality",
-            "video_resolution", "video_fps", "video_bitrate", "video_length", "video_sound",
-            "timestamp", "date_format", "time_format",
-            "temp_unit",
-
-            /* Trigger Settings */
-            "quiettime",
-
-            /* Wireless Settings */
-            "wireless_mode", "wm_schedule", "wm_sclimit",
-            "hb_interval",
-            "online_max_time",
-            "cellularpw",
-            "remotecontrol",
-        );
-
-        $Timelapse_Settings = array(
-            "timelapse","tls_start","tls_stop","tls_interval",
-        );
-
-        $Block_Mode_Settings = array(
-            "blockmode1","blockmode2","blockmode3","blockmode4","blockmode5",
-            "blockmode7","blockmode8","blockmode9","blockmode10","blockmode11",
-        );
-
-        $dt_week = array(
-            'dt_sun','dt_mon','dt_tue','dt_wed','dt_thu','dt_fri','dt_sat',
-        );
-
-        $id = $request->id;
-
-        for ($week=1; $week<=7; $week++) {
-            $value = 0;
-            $bit = 0x800000;
-            for ($hour=1; $hour<=24; $hour++) {
-                $zz = $id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
-                if($request[$zz]) {
-                    $value |= $bit;
-                }
-                $bit >>= 1;
-            }
-            $key = $dt_week[$week-1];
-            $data[$key] = sprintf("%06x", $value);
-        }
-        //return var_dump($data);
-//        return $data;
-
-        foreach ($Control_Settings as $key) {
-            //$name = $id.'_'.$key;
-            //$data[$key] = $request[$name];
-            $data[$key] = $request[$id.'_'.$key];
-        }
-//return $data;
-
-        if (isset($request[$id.'_timelapse'])) {
-            foreach ($Timelapse_Settings as $key) {
-                $data[$key] = $request[$id.'_'.$key];
-            }
-        } else {
-            $data['timelapse'] = 'off';
-        }
-
-        if (isset($request[$id.'_dutytime'])) {
-            $data['dutytime'] = 'on';
-            //foreach ($Timelapse_Settings as $key) {
-            //    $data[$key] = $request[$id.'_'.$key];
-            //}
-        } else {
-            $data['dutytime'] = 'off';
-        }
-
-        foreach ($Block_Mode_Settings as $key) {
-            $data[$key] = $request[$id.'_'.$key];
-        }
-//return $data;
-
-        $cameras = DB::table('cameras')->where('id', $id);
-        $cameras->update($data);
-
-        //$camera = Camera::findOrFail($id);
-        $camera = Camera::find($id);
-        //return view('camera.tab_settings', compact('camera'));
-        return redirect()->route('cameras');
-    }
-
-    /* Action */
-    public function sendsms($camera_id, $sms) {
-        $ret = '/cameras/sendsms/'.$camera_id.'/'.$sms;
-        return $ret;
-
-        if ($sms == 'snap') {
-            // send SMS 'snap'
-        } else if ($sms == 'wake') {
-            // send SMS 'wake'
-        }
-    }
-
-    public function actionqueue($camera_id, $action_code) {
-        /* /cameras/actionqueue/2/LD */
-        //$ret = '/cameras/actionqueue/'.$camera_id.'/'.$action_code;
-        //return $ret;
-
-        $camera = Camera::find($camera_id);
-        if ($camera) {
-            $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
-            if ($ret == 0) {
-                $param = array(
-                    'camera_id'   => $camera_id,
-                    'action_code' => $action_code,
-                    'status'      => ACTION_REQUESTED,
-                );
-                $this->Action_Add($param);
-            }
-            return view('camera.tab_actions', compact('camera'));
-
-        } else {
-            session()->flash('warning', 'camera not found');
-            return redirect()->route('cameras');
-        }
-    }
-
-    public function actionqueue_post(Request $request) {
-        /*
-            {
-                "_token":"D6RyLJ5esCNGbgPPcw6D18sAgY9X3UZQNsesJDvO",
-                "id":"2",
-                "action":"FC",
-                "password":"12345"
-            }
-        */
-        //return $request;
-
-        $camera_id = $request->id;
-        $action_code = $request->action;
-
-        $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
-        if ($ret == 0) {
-            $param = array(
-                'camera_id'   => $camera_id,
-                'action_code' => $action_code,
-                'status'      => ACTION_REQUESTED,
-            );
-            $this->Action_Add($param);
-        }
-
-        //$camera = Camera::find($camera_id);
-        //return view('camera.tab_actions', compact('camera'));
-        return redirect()->back();
-    }
-
-    public function actioncancel($action_id) {
-        /* /cameras/actioncancel/18 */
-        //$ret = '/cameras/actioncancel/'.$action_id;
-        //return $ret;
-
-        $actions = DB::table('actions')->where('id', $action_id);
-        $action  = $actions->first();
-        if ($action) {
-            $camera_id = $action->camera_id;
-            $data['status'] = ACTION_CANCELLED;
-            $data['completed'] = date('Y-m-d H:i:s');
-            $actions->update($data);
-        }
-
-        $camera = Camera::find($camera_id);
-        return view('camera.tab_actions', compact('camera'));
-    }
-
-    public function clearmissing($cameras_id) {
-        $ret = '/cameras/clearmissing/'.$cameras_id;
-        return $ret;
-    }
-
-    public function requestmissing($cameras_id, $missing_id) {
-        $ret = '/cameras/requestmissing/'.$cameras_id.'/'.$missing_id;
-        return $ret;
-    }
-
-    public function emailpolicy() {
-        $user   = Auth::user();
-        //$camera = Camera::findOrFail($camera_id);
-        $camera = Camera::find($camera_id);
-        $photos = $camera->photos()
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return view('support.emailpolicy', compact('user', 'camera', 'photos'));
-    }
-
-    /*----------------------------------------------------------------------------------*/
     /* Common Functions */
     public function CameraFieldValueConvert($camera, $column, $name) {
         if ($name == 'off') {
@@ -2575,94 +2190,9 @@ HighRes Max
     }
 
     /*----------------------------------------------------------------------------------*/
-    /* Camera List */
-    /*
-    <tr>
-    <td class="col-sm-1">
-    </td>
-    <td class="col-sm-5 ">
-    <a href="/cameras/getdetail/50">New Camera</a><br />
-    <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
-    <span style="font-size: .95em">07/12/2018 5:49:00 am</span>
-    </td>
-    <td class="col-sm-6">
-    <!--<a class="btn thumb-select" data-id="54" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" class="img-responsive" /></a>-->
-    </td>
-    </tr>
-     */
-    public function Camera_List($active_camera_id) {
-        //return $active_camera_id;
-
-        $user    = Auth::user();
-        $user_id = $user->id;
-        $cameras = DB::table('cameras')
-            ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
-            ->where('user_id', $user_id)
-            ->get();
-
-        $style  = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
-        $handle = '';
-        foreach ($cameras as $camera) {
-            $camera_id    = $camera->id;
-            $description  = $camera->description;
-            $battery      = $this->CameraFieldValueConvert($camera, 'battery', $camera->battery);
-            $last_contact = $camera->last_contact;
-
-            if (!empty($camera->last_filename)) {
-                //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;
-                //$url = url('/uploads/images/').$camera->last_filename; // NG
-                // $url = url('/uploads/images/').'/'.$camera->last_filename;
-                $url = url('/uploads/' . $camera_id . '/') . '/' . $camera->last_filename;
-            } else {
-                $url = '';
-            }
-            //$url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
-
-            $handle .= '<tr>';
-
-            $handle .= '    <td class="col-sm-1">';
-            if ($camera_id == $active_camera_id) {
-                $handle .= '<i class="fa fa-camera"> </i>';
-            }
-            $handle .= '    </td>';
-
-            if ($camera_id == $active_camera_id) {
-                $handle .= '    <td class="col-sm-5 active">';
-            } else {
-                $handle .= '    <td class="col-sm-5">';
-            }
-
-            $handle .= '        <a href="/cameras/getdetail/' . $camera_id . '">' . $description . '</a><br/>';
-            // $handle .= '        <i class="fa fa-battery-full" style="color: lime;"> </i>'.$battery.'<br />';
-            $handle .= $battery . '<br/>';
-            $handle .= '        <span style="font-size: .95em">' . $last_contact . '</span>';
-            $handle .= '    </td>';
-
-            $handle .= '    <td class="col-sm-6">';
-            if (!empty($url)) {
-                // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
-                $handle .= '        <a class="btn thumb-select" data-id="' . $camera_id . '" style="' . $style . '"><img src="' . $url . '" class="img-responsive"/></a>';
-            }
-            $handle .= '    </td>';
-            $handle .= '</tr>';
-        }
-        return $handle;
-    }
-
+    /* TAB Function
     /*----------------------------------------------------------------------------------*/
-    /* Camera Tab
-    /*----------------------------------------------------------------------------------*/
-    public function Camera_Tab() {
-
-
-
-
-    }
-
-    /*----------------------------------------------------------------------------------*/
-    /* Camera Data
-    /*----------------------------------------------------------------------------------*/
-    /* Overview */
+    /* TAB Overview */
     public function OverviewStatus($camera) {
         $lists = array(
             'description'  => 'Description',
@@ -2764,7 +2294,7 @@ HighRes Max
     }
 
     /*----------------------------------------------------------------------------------*/
-    /* Gallery */
+    /* TAB Gallery */
     public function Camera_Gallery_Select_Camera() {
         // $handle = '';
         // $handle .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
@@ -2789,8 +2319,83 @@ HighRes Max
         return $handle;
     }
 
+    public function Camera_Gallery_Photo($camera, $photos) {
+        $handle = '';
+        $camera_id = $camera->id;
+        $column = 1;
+        $col = 12/$camera->columns;
+        foreach ($photos as $photo) {
+            $photo_id = $photo->id;
+
+            $source = $this->TXT_Source($photo->source);
+            $resolution = $this->TXT_UploadResolution($photo->resolution);
+            $quality = $this->TXT_UploadQuality($photo->photo_quality);
+
+            if ($photo->filetype == 2) {
+                // PICT0004.MP4 | 10/16/2018 9:13:31 am | Time Lapse | Standard Low | Points: 2.00 (Video Cost: 0 pts)
+                $caption = sprintf('%s | %s | %s | %s | Points: %.2f', $photo->filename, $photo->datetime, $source, $resolution, $photo->points);
+            } else {
+                // PICT0055.JPG | 10/15/2018 6:14:02 am | Menu       | Standard Low (Q=Standard) | Points: 1.00
+                $caption = sprintf('%s | %s | %s | %s (Q=%s) | Points: %.2f', $photo->filename, $photo->datetime, $source, $resolution, $quality, $photo->points);
+            }
+            $title = sprintf('%s (%d)', $photo->filename, $photo->id); // PICT0001.JPG (1)
+            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
+            $download = sprintf('/cameras/download/%d/%d', $camera_id, $photo_id);
+
+            $handle .= '<div class="col-xs-'.$col.' custom-thumbnail-grid-column column-number-'.$column.'">';
+            $handle .=     '<div class="image-checkbox">';
+            $handle .=         '<label style="font-size: 1.5em" class="check-label hidden">';
+            $handle .=             '<input type="checkbox" class="image-check" value="'.$photo_id.'" id="check_'.$photo_id.'" />';
+            $handle .=             '<span class="cr span-cr"></span>';
+            $handle .=         '</label>';
+            $handle .=     '</div>';
+
+            if ($photo->filetype == 2) {
+            $handle .=     '<div class="image-highdef pull-right">';
+            $handle .=         '<label style="font-size: 1.5em; margin-right: 4px;">';
+            $handle .=             '<span class="cr"><i class="cr-icon fa fa-play-circle" style="color:lime;"></i></span>';
+            $handle .=         '</label>';
+            $handle .=     '</div>';
+            }
+
+            $handle .=     '<div class="image-highdef pull-right" hidden id="pending-'.$photo_id.'">';
+            $handle .=         '<label style="font-size: 1.0em; margin-right: 4px;">';
+            $handle .=             '<span class="cr"><i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i></span>';
+            $handle .=         '</label>';
+            $handle .=     '</div>';
+
+            $handle .=     '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
+            $handle .=         'href="'.$filepath.'" ';
+            $handle .=         'data-caption="'. $caption.'"';
+            $handle .=         'data-camera="'.$camera_id.'" ';
+            $handle .=         'data-id="'.$photo_id.'" ';
+            $handle .=         'data-highres="0" ';
+            $handle .=         'data-pending="0">';
+
+            $handle .=         '<img src="'.$filepath.'"';
+            $handle .=             'class="img-responsive custom-thumb"';
+            $handle .=             'title="'.$title.'" ';
+            $handle .=             'alt="'.$photo->filename.'" ';
+            $handle .=             'data-description="'.$photo->filename.'">';
+            $handle .=     '</a>';
+
+            $handle .=     '<p class="thumbnail-timestamp pull-right" style="font-size: .70em">';
+            $handle .=         '<a href="'.$download.'"><i class="fa fa-download"></i></a> ';
+            $handle .=         $photo->datetime;
+            $handle .=     '</p>';
+            $handle .= '</div>';
+
+            if ($column == $camera->columns) {
+                $column = 1;
+            } else {
+                $column++;
+            }
+        }
+        return $handle;
+    }
+
     /*----------------------------------------------------------------------------------*/
-    /* Settings */
+    /* TAB Settings */
     public function Settings_Body($id, $lists) {
         // $id = $camera->id;
         $camera = Camera::findOrFail($id);
@@ -3029,7 +2634,6 @@ HighRes Max
         return $handle;
     }
 
-    /*----------------------------------------------------------------------------------*/
     public function Settings_Identification($camera) {
         //return var_dump($this->Settings_Region('USA'));
         $lists = array(
@@ -3698,188 +3302,6 @@ HighRes Max
         return $handle;
     }
 
-    /*
-    'xxxx' => array(
-    'title'   => 'xxxx',
-    'options'   => array(
-    array('name' => '', 'value' => ''),
-    array('name' => '', 'value' => ''),
-    array('name' => '', 'value' => ''),
-    array('name' => '', 'value' => ''),
-    ),
-    'help' => ''
-    ),
-     */
-
-/*
-<div id="tabs54-1">
-    <div id="controlgroup54-1" class="mobile-dutytime-div">
-        <table>
-            <tr>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">12 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked />
-                </span>
-                </td>
-
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">01 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_2" id="54_hour_1_2"  checked />
-                </span>
-                </td>
-
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">02 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_3" id="54_hour_1_3"  checked />
-                </span>
-                </td>
-
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">03 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_4" id="54_hour_1_4"  checked />
-                </span>
-                </td>
-
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">04 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_5" id="54_hour_1_5"  checked />
-                </span>
-                </td>
-
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">05 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_6" id="54_hour_1_6"  checked />
-                </span>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">06 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_7" id="54_hour_1_7"  checked />
-                </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">07 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_8" id="54_hour_1_8"  checked />
-                </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">08 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_9" id="54_hour_1_9"  checked />
-                </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">09 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_10" id="54_hour_1_10"  checked />
-                </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">10 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_11" id="54_hour_1_11"  checked />
-                </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                <span class="button-checkbox" style="font-size: .80em;">
-                    <button type="button" class="btn btn-default btn-md"  style="padding-left:2px;padding-right:2px;" data-color="info">11 AM</button>
-                    <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_12" id="54_hour_1_12"  checked />
-                </span>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">12 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_13" id="54_hour_1-13"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">01 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_14" id="54_hour_1-14"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">02 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_15" id="54_hour_1-15"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">03 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_16" id="54_hour_1-16"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">04 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_17" id="54_hour_1-17"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">05 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_18" id="54_hour_1-18"  checked />
-                    </span>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">06 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_19" id="54_hour_1-19"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">07 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_20" id="54_hour_1-20"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">08 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_21" id="54_hour_1-21"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">09 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_22" id="54_hour_1-22"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">10 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_23" id="54_hour_1-23"  checked />
-                    </span>
-                </td>
-                <td class="custom-time-toggle-td">
-                    <span class="button-checkbox" style="font-size: .80em;">
-                        <button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">11 PM</button>
-                        <input type="checkbox" class="hidden custom-time-button" name="54_hour_1_24" id="54_hour_1-24"  checked />
-                    </span>
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
-*/
-
     public function Settings_DutyTime($camera) {
         $hour = array(
             '12 AM', '01 AM', '02 AM', '03 AM', '04 AM', '05 AM',
@@ -3944,12 +3366,459 @@ HighRes Max
     }
 
     /*----------------------------------------------------------------------------------*/
-    /* Actions */
+    /* TAB Actions */
 
     /*----------------------------------------------------------------------------------*/
-    /* Options */
+    /* TAB Options */
 
     /*----------------------------------------------------------------------------------*/
+    /* Camera List */
+    /*
+    <tr>
+    <td class="col-sm-1">
+    </td>
+    <td class="col-sm-5 ">
+    <a href="/cameras/getdetail/50">New Camera</a><br />
+    <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
+    <span style="font-size: .95em">07/12/2018 5:49:00 am</span>
+    </td>
+    <td class="col-sm-6">
+    <!--<a class="btn thumb-select" data-id="54" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" class="img-responsive" /></a>-->
+    </td>
+    </tr>
+     */
+    public function Camera_List($active_camera_id) {
+        //return $active_camera_id;
+
+        $user    = Auth::user();
+        $user_id = $user->id;
+        $cameras = DB::table('cameras')
+            //->select('id', 'description', 'battery', 'last_contact', 'last_filename', 'last_savename')
+            ->where('user_id', $user_id)
+            ->get();
+
+        $style  = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
+        $handle = '';
+        foreach ($cameras as $camera) {
+            $camera_id    = $camera->id;
+            $description  = $camera->description;
+            $battery      = $this->CameraFieldValueConvert($camera, 'battery', $camera->battery);
+            $last_contact = $camera->last_contact;
+
+            if (!empty($camera->last_savename)) {
+                //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;
+                //$url = url('/uploads/images/').$camera->last_filename; // NG
+                // $url = url('/uploads/images/').'/'.$camera->last_filename;
+                $url = url('/uploads/'.$camera_id.'/').'/'.$camera->last_savename;
+            } else {
+                $url = '';
+            }
+            //$url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
+
+            $handle .= '<tr>';
+
+            $handle .= '    <td class="col-sm-1">';
+            if ($camera_id == $active_camera_id) {
+                $handle .= '<i class="fa fa-camera"> </i>';
+            }
+            $handle .= '    </td>';
+
+            if ($camera_id == $active_camera_id) {
+                $handle .= '    <td class="col-sm-5 active">';
+            } else {
+                $handle .= '    <td class="col-sm-5">';
+            }
+
+            $handle .= '        <a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
+            // $handle .= '        <i class="fa fa-battery-full" style="color: lime;"> </i>'.$battery.'<br />';
+            $handle .= $battery.'<br/>';
+            $handle .= '        <span style="font-size: .95em">'.$last_contact.'</span>';
+            $handle .= '    </td>';
+
+            $handle .= '    <td class="col-sm-6">';
+            if (!empty($url)) {
+                // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
+                $handle .= '        <a class="btn thumb-select" data-id="'.$camera_id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
+            }
+            $handle .= '    </td>';
+            $handle .= '</tr>';
+        }
+        return $handle;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    /* Web Function */
+
+    public function activetab() {
+        $tab = $_POST['tab'];
+        $user = Auth::user();
+
+        $data['tab'] = $tab;
+        $user->update($data);
+        return $tab;
+
+        //$ret['a'] = 1;
+        //$ret['b'] = 2;
+        //$ret['c'] = 3;
+        //return json_encode($ret); // OK
+    }
+
+    // https://blog.csdn.net/woshihaiyong168/article/details/52992812
+    //public function cameras($camera_id) {
+    public function cameras() {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $user_id = $user->id;
+            //$cameras = DB::table('cameras')->where('user_id', $user_id)->get();
+            // foreach ($cameras as $camera) {
+            //     echo $camera->description;
+            //     echo '<br/>';
+            // }
+            //return;
+
+            $camera = DB::table('cameras')
+                ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
+                ->where('user_id', $user_id)
+                ->first();
+            if ($camera) {
+                $camera_id = $camera->id;
+
+                /* search Photo */
+                //$query = array(
+                //    'camera_id' => $camera_id,
+                //);
+                //$photos = DB::table('photos')->where($query);
+
+                //$camera = Camera::findOrFail($camera_id);
+                $camera = Camera::find($camera_id);
+                $photos = $camera->photos()
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($camera->thumbs);
+
+                //session()->flash('success', 'Welcome !!');
+                return view('cameras', compact('user', 'camera', 'photos'));
+
+            } else {
+                return view('cameras_empty', compact('user'));
+            }
+
+        } else {
+            session()->flash('warning', 'Please login first.');
+            return redirect()->route('login');
+        }
+    }
+
+    public function delete(Request $request) {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        //{"_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR","id":"1","password":"kevin816"}
+        //return $request;
+
+        //if (Auth::attempt(['password' => $request->password])) {
+        //    return 'OK';
+        //} else {
+        //    return 'NG';
+        //}
+
+        //$camera = DB::table('cameras')->find($request->id); // NG
+        $camera = Camera::find($request->id); // OK
+        if ($camera) {
+            $camera->delete();
+            $camera->photos()->delete();
+            $camera->actions()->delete();
+            $camera->log_apis()->delete();
+        }
+        return redirect()->route('cameras');
+    }
+
+    public function download($camera_id, $photo_id) {
+        //return 'camera_id='.$camera_id.', photo_id='.$photo_id;
+
+        //$user   = Auth::user();
+        $camera = Camera::findOrFail($camera_id);
+        $photos = $camera->photos()->where('id', $photo_id);
+        //$photos = DB::table('photos')->where('id', $photo_id);
+        $photo  = $photos->first();
+
+        /* /uploads/camera_id/1539695099_2Q7NJJh7ur.ZIP */
+        $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->savename;
+
+        // TODO: check file exist
+        return response()->download($pathToFile, $photo->imagename);
+    }
+
+    /* /cameras/getdetail/{camera_id} */
+    public function getdetail($camera_id) {
+        //$user   = Auth::user();
+        //$camera = Camera::findOrFail($camera_id);
+        //$photos = $camera->photos()
+        //    ->orderBy('created_at', 'desc')
+        //    ->paginate(10);
+        ////return view('cameras', compact('camera', 'photos')); // OK
+        //return view('cameras', compact('user', 'camera', 'photos')); // OK
+
+        return redirect()->route('cameras');
+    }
+
+    public function gallery() {
+        $token     = $_POST['_token'];
+        $camera_id = $_POST['id'];
+        $action    = $_POST['action'];
+        $medialist = $_POST['medialist'];
+        echo $token;
+        echo '<br/>';
+        echo $camera_id;
+        echo '<br/>';
+        echo $action;
+        echo '<br/>';
+        echo $medialist;
+        echo '<br/>';
+
+        /* push to Action queue .... */
+
+        return;
+    }
+
+    public function gallerylayout($camera_id, $number) {
+        $cameras = DB::table('cameras')->where('id', $camera_id);
+        $cameras->update(['columns' => $number]);
+        return redirect()->route('cameras');
+    }
+
+    public function gallerythumbs($camera_id, $number) {
+        $cameras = DB::table('cameras')->where('id', $camera_id);
+        $cameras->update(['thumbs' => $number]);
+        return redirect()->route('cameras');
+    }
+
+    //public function activetab(Request $request) {
+    //    return $request;
+    //}
+
+    public function overview($cameras_id) {
+        //return '/cameras/overview/'.$cameras_id;
+        $camera = Camera::findOrFail($cameras_id);
+        return view('camera.tab_overview', compact('camera'));
+    }
+
+    //public function actions($cameras_id) {
+    //    $ret = '/cameras/actions/' . $cameras_id;
+    //    return $ret;
+    //}
+
+    public function actions($cameras_id) {
+        //return '/cameras/actions/'.$cameras_id;
+        $camera = Camera::findOrFail($cameras_id);
+        return view('camera.tab_actions', compact('camera'));
+    }
+
+    public function settings(Request $request) {
+        //return $request;
+
+        $Control_Settings = array(
+            /* Identification Settings */
+            "description",
+            "location",
+            "region",
+            "timezone",
+
+            /* Basic Settings */
+            "camera_mode",
+            "photo_resolution",
+            "photo_burst",
+            "burst_delay",
+            "upload_resolution",
+            "photo_quality",
+            "video_resolution", "video_fps", "video_bitrate", "video_length", "video_sound",
+            "timestamp", "date_format", "time_format",
+            "temp_unit",
+
+            /* Trigger Settings */
+            "quiettime",
+
+            /* Wireless Settings */
+            "wireless_mode", "wm_schedule", "wm_sclimit",
+            "hb_interval",
+            "online_max_time",
+            "cellularpw",
+            "remotecontrol",
+        );
+
+        $Timelapse_Settings = array(
+            "timelapse","tls_start","tls_stop","tls_interval",
+        );
+
+        $Block_Mode_Settings = array(
+            "blockmode1","blockmode2","blockmode3","blockmode4","blockmode5",
+            "blockmode7","blockmode8","blockmode9","blockmode10","blockmode11",
+        );
+
+        $dt_week = array(
+            'dt_sun','dt_mon','dt_tue','dt_wed','dt_thu','dt_fri','dt_sat',
+        );
+
+        $id = $request->id;
+
+        for ($week=1; $week<=7; $week++) {
+            $value = 0;
+            $bit = 0x800000;
+            for ($hour=1; $hour<=24; $hour++) {
+                $zz = $id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
+                if($request[$zz]) {
+                    $value |= $bit;
+                }
+                $bit >>= 1;
+            }
+            $key = $dt_week[$week-1];
+            $data[$key] = sprintf("%06x", $value);
+        }
+        //return var_dump($data);
+//        return $data;
+
+        foreach ($Control_Settings as $key) {
+            //$name = $id.'_'.$key;
+            //$data[$key] = $request[$name];
+            $data[$key] = $request[$id.'_'.$key];
+        }
+//return $data;
+
+        if (isset($request[$id.'_timelapse'])) {
+            foreach ($Timelapse_Settings as $key) {
+                $data[$key] = $request[$id.'_'.$key];
+            }
+        } else {
+            $data['timelapse'] = 'off';
+        }
+
+        if (isset($request[$id.'_dutytime'])) {
+            $data['dutytime'] = 'on';
+            //foreach ($Timelapse_Settings as $key) {
+            //    $data[$key] = $request[$id.'_'.$key];
+            //}
+        } else {
+            $data['dutytime'] = 'off';
+        }
+
+        foreach ($Block_Mode_Settings as $key) {
+            $data[$key] = $request[$id.'_'.$key];
+        }
+//return $data;
+
+        $cameras = DB::table('cameras')->where('id', $id);
+        $cameras->update($data);
+
+        //$camera = Camera::findOrFail($id);
+        //return view('camera.tab_settings', compact('camera'));
+        return redirect()->route('cameras');
+    }
+
+    /* Action */
+    public function sendsms($camera_id, $sms) {
+        $ret = '/cameras/sendsms/'.$camera_id.'/'.$sms;
+        return $ret;
+
+        if ($sms == 'snap') {
+            // send SMS 'snap'
+        } else if ($sms == 'wake') {
+            // send SMS 'wake'
+        }
+    }
+
+    public function actionqueue($camera_id, $action_code) {
+        /* /cameras/actionqueue/2/LD */
+        //$ret = '/cameras/actionqueue/'.$camera_id.'/'.$action_code;
+        //return $ret;
+
+        $camera = Camera::find($camera_id);
+        if ($camera) {
+            $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
+            if ($ret == 0) {
+                $param = array(
+                    'camera_id'   => $camera_id,
+                    'action_code' => $action_code,
+                    'status'      => ACTION_REQUESTED,
+                );
+                $this->Action_Add($param);
+            }
+            return view('camera.tab_actions', compact('camera'));
+
+        } else {
+            session()->flash('warning', 'camera not found');
+            return redirect()->route('cameras');
+        }
+    }
+
+    public function actionqueue_post(Request $request) {
+        /*
+            {
+                "_token":"D6RyLJ5esCNGbgPPcw6D18sAgY9X3UZQNsesJDvO",
+                "id":"2",
+                "action":"FC",
+                "password":"12345"
+            }
+        */
+        //return $request;
+
+        $camera_id = $request->id;
+        $action_code = $request->action;
+
+        $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
+        if ($ret == 0) {
+            $param = array(
+                'camera_id'   => $camera_id,
+                'action_code' => $action_code,
+                'status'      => ACTION_REQUESTED,
+            );
+            $this->Action_Add($param);
+        }
+
+        //$camera = Camera::find($camera_id);
+        //return view('camera.tab_actions', compact('camera'));
+        return redirect()->back();
+    }
+
+    public function actioncancel($action_id) {
+        /* /cameras/actioncancel/18 */
+        //$ret = '/cameras/actioncancel/'.$action_id;
+        //return $ret;
+
+        $actions = DB::table('actions')->where('id', $action_id);
+        $action  = $actions->first();
+        if ($action) {
+            $camera_id = $action->camera_id;
+            $data['status'] = ACTION_CANCELLED;
+            $data['completed'] = date('Y-m-d H:i:s');
+            $actions->update($data);
+        }
+
+        $camera = Camera::find($camera_id);
+        return view('camera.tab_actions', compact('camera'));
+    }
+
+    public function clearmissing($cameras_id) {
+        $ret = '/cameras/clearmissing/'.$cameras_id;
+        return $ret;
+    }
+
+    public function requestmissing($cameras_id, $missing_id) {
+        $ret = '/cameras/requestmissing/'.$cameras_id.'/'.$missing_id;
+        return $ret;
+    }
+
+    public function emailpolicy() {
+        $user   = Auth::user();
+        //$camera = Camera::findOrFail($camera_id);
+        $camera = Camera::find($camera_id);
+        $photos = $camera->photos()
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('support.emailpolicy', compact('user', 'camera', 'photos'));
+    }
+
     public function account_profile() {
         if (Auth::check()) {
             $user = Auth::user();
@@ -3995,13 +3864,13 @@ HighRes Max
         print_r($tables);
         return $tables;
     }
+}
 
 /*
 // https://laravelacademy.org/post/6140.html
 $users = DB::table('users')->select('name', 'email as user_email')->get();
 
-// 强制查询返回不重复的结果集
-$users = DB::table('users')->distinct()->get();
+// 强制查询返回不重复的结果�?$users = DB::table('users')->distinct()->get();
 
 $query = DB::table('users')->select('name');
 $users = $query->addSelect('age')->get();
@@ -4023,8 +3892,7 @@ $users = DB::table('users')
 ->whereDate('created_at', '2016-10-10')
 ->get();
 
-// 原生表达式
-$users = DB::table('users')
+// 原生表达�?$users = DB::table('users')
 ->select(DB::raw('count(*) as user_count, status'))
 ->where('status', '<>', 1)
 ->groupBy('status')
@@ -4039,4 +3907,3 @@ $topics = $topic->withOrder($request->order)
 ->where('category_id', $category->id)
 ->paginate(20);
  */
-}

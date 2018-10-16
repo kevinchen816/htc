@@ -44,7 +44,8 @@
 
     .check-label input:checked + .span-cr:after{
         background-repeat: no-repeat;
-        background-image: url(http://www.ridgetec.us/images/Check-Mark2.png);
+        //background-image: url({{ public_path()}}/images/Check-Mark2.png);
+        background-image: url(/images/Check-Mark2.png);
         background-size: 100% 100%;
         position: absolute;
         top: 5%;
@@ -59,7 +60,7 @@
         width: 100%;
         //height:95%;
         bottom: 3px;
-        background-color:rgba(0, 0, 0, 0.35);
+        background-color:rgba(0, 0, 0, 0.65);
         padding-bottom: 2px;
         padding-right:10px;
     }
@@ -90,7 +91,8 @@
         height: 60%;
         width: 36%;
         background-repeat: no-repeat;
-        background-image: url(http://www.ridgetec.us/images/icon-play-video-white.png);
+        //background-image: url({{ public_path()}}/images/icon-play-video-white.png);
+        background-image: url(/images/icon-play-video-white.png);
         background-size: 100% 100%;
         cursor: pointer;
     }
@@ -106,7 +108,7 @@
         width: 30px;
         height: 30px;
         border: 0;
-        //background-image: url(http://www.ridgetec.us/images/close-icon.png);
+        //background-image: url({{ public_path()}}/images/close-icon.png);
         background-image: url(/images/close-icon.png);
         background-repeat: no-repeat;
         background-size: 100% 100%;
@@ -152,37 +154,38 @@
     }
 </style>
 
+<!----------------------------------------------------------------->
 <div class="panel panel-default panel-primary custom-settings-panel">
     <div class="panel-heading" style="padding-top:6px;">
         <h4 class="panel-title">
             <span style="font-size: .70em; margin-top: 6px; margin-left: 1px;">
                 <i class="fa fa-camera" style="color:lime;"></i> HighRes | <i class="fa fa-hourglass" style="color:#ffd352;"></i> Pending Request
+                <span class="label label-warning">*Note: Uploads will automatically purge after 90 days</span>
             </span>
 
             <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="gallery"><i class="fa fa-question"></i></a>
+
             <span class="pull-right" style="font-size: .70em; margin-top: 6px;">
-                <strong>(2 thumbs this page) | Page 1 of 1</strong>
-                <!-- <strong>(0 thumbs this page) | Page 1 of 0</strong> -->
+                <strong>({{ $photos->count() }} thumbs this page) | Page {{ $photos->currentPage() }} of {{ $photos->lastPage() }}</strong>
             </span>
         </h4>
-    </div>
+    </div> <!-- panel-heading -->
 
     <div class="panel-body" style="padding-top:2px;">
         <!-- ====GALLERY CODE== -->
         <div class="row">
             <div class="col-md-12">
-
-                <!-- <div class="col-count-4 gallery-manager" data-col="4" data-row="6"> -->
+                <div class="col-count-4 gallery-manager" data-col="4" data-row="6">
+                    <div class="gallery-toolbar">
                     @include('camera.gallery._toolbar')
-                    <!-- gallery-toolbar -->
+                    </div> <!-- gallery-toolbar -->
+
                     <form method="POST" action="{{ route('camera.gallery') }}"
                         accept-charset="UTF-8"
                         class="form-horizontal"
                         role="form"
                         name="pictureForm"
                         id="gallery-form-{{ $camera->id }}">
-                        <!-- <input name="_token" type="hidden" value="FLozpJONzCgc7Ue23LdVtrflOcF6otRJicEMdDrh"> -->
-                        <!-- <input name="id" type="hidden" value="54"> -->
                         {{ csrf_field() }}
                         <input name="id" type="hidden" value="{{ $camera->id }}">
 
@@ -190,26 +193,26 @@
                             <div id="info"></div>
 
                             <!-- Begin Row -->
-                            <!-- <div class="row no-gutters"> -->
-                                @yield('gallery')
-                            <!-- </div> -->
-                            <!-- End Row -->
-                        </div>
-                        <!-- thumbnail-gallery -->
-                    </form>
-                <!-- </div> -->
-                <!-- gallery-manager -->
+                            <div class="row no-gutters">
+                                @inject('cc', 'App\Http\Controllers\Api\CamerasController')
+                                {!! $cc->Camera_Gallery_Photo($camera, $photos) !!}
 
-            </div>
-            <!-- col-md-12 -->
-        </div>
-        <!-- row -->
-    </div>
-    <!-- panel-body -->
+                            </div>
+                            <!-- End Row -->
+                        </div> <!-- thumbnail-gallery -->
+                    </form>
+                </div> <!-- gallery-manager -->
+            </div> <!-- col-md-12 -->
+        </div> <!-- row -->
+    </div> <!-- panel-body -->
 
     <div class="row">
         <div class="col-md-12">
             <div class="well well-sm" style="padding-left:2px;margin-left:2px;">
+                @if (count($photos) > 0)
+                    {!! $photos->render() !!}
+                @endif
+
                 <!-- kevin test -->
                 <!--
                 <ul class="pagination pagination">
@@ -225,14 +228,14 @@
             </div>
         </div>
     </div>
-</div>
-<!-- panel -->
+</div> <!-- panel -->
 
+<!----------------------------------------------------------------->
 @include('camera.gallery._help')
 @include('camera.gallery._dlg')
 
 <script>
-    /*
+/*
     var cameraId = '54';
     var lastCamera = JSON.parse(sessionStorage.getItem('currentCam')) || null;
     var windowload = false;
@@ -255,13 +258,10 @@
     function isLandscape() {
         return (window.orientation === 90 || window.orientation === -90);
     }
-    */
+*/
+
     //var items = JSON.parse(sessionStorage.getItem('items')) || [];
     //var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
-    function Kevin_Test() { // kk-debug
-        $('#select-all-{{$camera->id}}').removeClass('disabled hidden');
-    }
-
     function IEVersion() {
       var sAgent = window.navigator.userAgent;
       var Idx = sAgent.indexOf("MSIE");
@@ -271,9 +271,11 @@
       // If IE, return version number.
       if (Idx > 0)
         return parseInt(sAgent.substring(Idx+ 5, sAgent.indexOf(".", Idx)));
+
       // If IE 11 then look for Updated user agent string.
       else if (!!navigator.userAgent.match(/Trident\/7\./))
         return 11;
+
       else
         return 0; //It is not IE
     }
@@ -390,7 +392,7 @@
         });
 
         $('.image-check').on('change', function () {
-            alert('==> .image-check'); // // kk-debug
+			alert('==> .image-check'); // // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var id = $(this).attr('id');
             v = $(this).prop('checked');
@@ -785,7 +787,7 @@
 
         $(function(){
             $(window).resize(function(){
-            console.log('[_gallery]................B (resize)'); // kk-debug
+                console.log('[_gallery]................B (resize)'); // kk-debug
                 //console.log('gallery2-partial - window resize function for video player');
                 video_w = parseInt($(".modal-dialog-player").attr("orig-width"));
                 video_h = parseInt($(".modal-dialog-player").attr("orig-height"));
@@ -817,5 +819,5 @@
     });
 </script>
 
-<!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
+<!--<script src="{{ public_path()}}/js/gallery.js"></script>-->
 <script src="/js/gallery.js"></script>
