@@ -2104,15 +2104,15 @@ HighRes Max
 
     /* /cameras/getdetail/{camera_id} */
     public function getdetail($camera_id) {
-        $user   = Auth::user();
-        $camera = Camera::findOrFail($camera_id);
-        $photos = $camera->photos()
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        //return view('cameras', compact('camera', 'photos')); // OK
-        return view('cameras', compact('user', 'camera', 'photos')); // OK
+        //$user   = Auth::user();
+        //$camera = Camera::findOrFail($camera_id);
+        //$photos = $camera->photos()
+        //    ->orderBy('created_at', 'desc')
+        //    ->paginate(10);
+        ////return view('cameras', compact('camera', 'photos')); // OK
+        //return view('cameras', compact('user', 'camera', 'photos')); // OK
 
-        //return redirect()->route('cameras_ex', $camera_id);
+        return redirect()->route('cameras');
     }
 
     public function gallery() {
@@ -2153,22 +2153,38 @@ HighRes Max
     /* /cameras/activetab */
     public function activetab() {
         $tab = $_POST['tab'];
+        $user = Auth::user();
+//return $user->id;
+        $data['tab'] = $tab;
+        $user->update($data);
         return $tab;
 
-        // $ret['a'] = 1;
-        // $ret['b'] = 2;
-        // $ret['c'] = 3;
-        // return json_encode($ret); // OK
+        //$ret['a'] = 1;
+        //$ret['b'] = 2;
+        //$ret['c'] = 3;
+        //return json_encode($ret); // OK
     }
 
-    public function overview($cameras_id) {
-        //$ret = '/cameras/overview/'.$cameras_id;
-        //return $ret;
+    //public function activetab(Request $request) {
+    //    return $request;
+    //}
 
+    public function overview($cameras_id) {
+        //return '/cameras/overview/'.$cameras_id;
         $camera = Camera::findOrFail($cameras_id);
         return view('camera.tab_overview', compact('camera'));
     }
 
+    //public function actions($cameras_id) {
+    //    $ret = '/cameras/actions/' . $cameras_id;
+    //    return $ret;
+    //}
+
+    public function actions($cameras_id) {
+        //return '/cameras/actions/'.$cameras_id;
+        $camera = Camera::findOrFail($cameras_id);
+        return view('camera.tab_actions', compact('camera'));
+    }
 /*
 {
 "_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR",
@@ -2358,11 +2374,6 @@ HighRes Max
     }
 
     /* Action */
-    public function actions($cameras_id) {
-        $ret = '/cameras/actions/' . $cameras_id;
-        return $ret;
-    }
-
     public function sendsms($camera_id, $sms) {
         $ret = '/cameras/sendsms/'.$camera_id.'/'.$sms;
         return $ret;
@@ -2636,6 +2647,16 @@ HighRes Max
             $handle .= '</tr>';
         }
         return $handle;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    /* Camera Tab
+    /*----------------------------------------------------------------------------------*/
+    public function Camera_Tab() {
+
+
+
+
     }
 
     /*----------------------------------------------------------------------------------*/

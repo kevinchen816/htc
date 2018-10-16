@@ -29,32 +29,6 @@
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->Camera_List($camera->id) !!}
                     @endif
-
-<!--                     <tr>
-                        <td class="col-sm-1">
-                        </td>
-                        <td class="col-sm-5 ">
-                            <a href="/cameras/getdetail/50">New Camera</a><br />
-                            <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
-                            <span style="font-size: .95em">07/12/2018 5:49:00 am</span>
-                        </td>
-                        <td class="col-sm-6">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-sm-1">
-                            <i class="fa fa-camera"> </i>
-                        </td>
-                        <td class="col-sm-5 active">
-                            <a href="/cameras/getdetail/54">Truphone #1</a><br />
-                            <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
-                            <span style="font-size: .95em">09/10/2018 3:00:16 pm</span>
-                        </td>
-                        <td class="col-sm-6">
-                        </td>
-                    </tr>
- -->
                 </tbody>
             </table>
         </div>

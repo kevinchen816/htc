@@ -70,8 +70,8 @@ Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete
     /cameras/gallerythumbs/{camera_id}/{xx}         <-- xx = 10,20,30,40,60,80
 */
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
-Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
+Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
 
 /* tab_gallery.blade.php */
 // <form method="POST" action="http://www.ridgetec.us/cameras/gallery" accept-charset="UTF-8" class="form-horizontal" role="form" name="pictureForm" id="gallery-form-54">
@@ -97,7 +97,7 @@ Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.
     Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
 
     // <a href="#action-54" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/54" aria-expanded="false">
-    //Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
+    Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
 
     /* photo.blade.php */
     // <a href="/cameras/download/54/90815">

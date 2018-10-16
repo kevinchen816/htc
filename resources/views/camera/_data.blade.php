@@ -66,38 +66,57 @@
                 </div>
             </div>
 
-@if ($camera)
             <!-- CAMERA DATA - TAB -->
             <!-- <div id="tabs-54" class="tab-container"> -->
             <div id="tabs-{{ $camera->id}}" class="tab-container">
 
                 <!-- <ul class="nav nav-tabs" id="cameratabs-54"> -->
                 <ul class="nav nav-tabs" id="cameratabs-{{ $camera->id }}">
-                    <!-- <li ><a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true"> -->
-                    <li >
-                        <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id )}}" aria-expanded="true">
+                    <!-- <li class="active" >-->
+@if ($user->tab == 'overview')
+                    <li class="active" >
+@else
+                    <li>
+@endif
+                        <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">
+                        <!-- <a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">  -->
                             <span class="glyphicon glyphicon-list-alt"> </span> Overview
                         </a>
                     </li>
-                    <li class="active">
-                    <!-- <li> -->
+@if ($user->tab == 'gallery')
+                    <li class="active" >
+@else
+                    <li>
+@endif
                         <a href="#gallery-{{ $camera->id }}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
                         <!-- <a href="#gallery-{{$camera->id}}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true"> -->
                             <span class="glyphicon glyphicon-picture"> </span> Gallery
                         </a>
                     </li>
+@if ($user->tab == 'settings')
+                    <li class="active" >
+@else
                     <li>
+@endif
                         <a href="#settings-{{ $camera->id }}" data-toggle="tab" data-tab="settings" aria-expanded="false">
                         <!-- <a href="#settings-{{$camera->id}}" data-toggle="tab" data-tab="settings" aria-expanded="false"> -->
                             <span class="glyphicon glyphicon-edit"> </span> Settings
                         </a>
                     </li>
+@if ($user->tab == 'commands')
+                    <li class="active" >
+@else
                     <li>
-                        <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="/cameras/actions/{{ $camera->id }}" aria-expanded="false">
+@endif
+                        <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions', $camera->id) }}" aria-expanded="false">
                             <span class="glyphicon glyphicon-tasks"> </span> Actions
                         </a>
                     </li>
+@if ($user->tab == 'options')
+                    <li class="active" >
+@else
                     <li>
+@endif
                         <a href="#options-{{ $camera->id }}" data-toggle="tab" data-tab="options" aria-expanded="false">
                             <span class="glyphicon glyphicon-cog"> </span> Options
                         </a>
@@ -106,95 +125,53 @@
 
                 <div class="tab-content" id="myTabContent-{{ $camera->id }}">
                     <!-- OVERVIEW TAB -->
+@if ($user->tab == 'overview')
+                    <div class="tab-pane fade active in" id="overview-{{$camera->id}}">
+@else
                     <div class="tab-pane fade" id="overview-{{$camera->id}}">
+@endif
                     @include('camera.tab_overview')
                     </div>
 
-                    <!-- GALLERY TAB -->
-                    <div class="tab-pane fade active in" id="gallery-{{ $camera->id }}">
+                    <!-- GALLERY TAB --> <!--class="tab-pane fade active in"-->
+@if ($user->tab == 'gallery')
+                    <div class="tab-pane fade active in" id="gallery-{{$camera->id}}">
+@else
+                    <div class="tab-pane fade" id="gallery-{{ $camera->id }}">
+@endif
                     @include('camera.tab_gallery')
                     </div>
 
                     <!-- SETTINGS TAB -->
+@if ($user->tab == 'settings')
+                    <div class="tab-pane fade active in" id="settings-{{$camera->id}}">
+@else
                     <div class="tab-pane fade" id="settings-{{ $camera->id }}">
+@endif
                     @include('camera.tab_settings')
                     </div>
 
                     <!-- ACTION HISTORY TAB -->
-                    <div class="tab-pane fade  " id="action-{{ $camera->id }}">
+@if ($user->tab == 'commands')
+                    <div class="tab-pane fade active in" id="action-{{$camera->id}}">
+@else
+                    <div class="tab-pane fade" id="action-{{ $camera->id }}">
+@endif
                     @include('camera.tab_actions')
                     </div>
 
                     <!-- OPTIONS TAB s -->
+@if ($user->tab == 'options')
+                    <div class="tab-pane fade active in" id="options-{{$camera->id}}">
+@else
                     <div class="tab-pane fade" id="options-{{ $camera->id }}">
+@endif
                     @include('camera.tab_options')
                     </div>
                     <!-- OPTIONS TAB e -->
-
                 </div>
 
             </div>
-@else
-            <!-- CAMERA DATA - TAB -->
-            <!-- <div id="tabs-54" class="tab-container"> -->
-            <div id="tabs-" class="tab-container">
-
-                <!-- <ul class="nav nav-tabs" id="cameratabs-54"> -->
-                <ul class="nav nav-tabs" id="cameratabs">
-                    <li >
-                        <a href="#overview" data-toggle="tab" data-tab="overview" aria-expanded="true">
-                            <span class="glyphicon glyphicon-list-alt"> </span> Overview
-                        </a>
-                    </li>
-                    <li class="active">
-                        <a href="#gallery" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
-                            <span class="glyphicon glyphicon-picture"> </span> Gallery
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#settings" data-toggle="tab" data-tab="settings" aria-expanded="false">
-                            <span class="glyphicon glyphicon-edit"> </span> Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#action" data-toggle="tab" data-tab="commands" aria-expanded="false">
-                            <span class="glyphicon glyphicon-tasks"> </span> Actions
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#options" data-toggle="tab" data-tab="options" aria-expanded="false">
-                            <span class="glyphicon glyphicon-cog"> </span> Options
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="tab-content" id="myTabContent">
-                    <!-- OVERVIEW TAB -->
-                    <div class="tab-pane fade" id="overview">
-                    </div>
-
-                    <!-- GALLERY TAB -->
-                    <div class="tab-pane fade active in" id="gallery">
-                    </div>
-
-                    <!-- SETTINGS TAB -->
-                    <div class="tab-pane fade" id="settings">
-                    </div>
-
-                    <!-- ACTION HISTORY TAB -->
-                    <div class="tab-pane fade  " id="action">
-                    </div>
-
-                    <!-- OPTIONS TAB s -->
-                    <div class="tab-pane fade" id="options">
-                    </div>
-                    <!-- OPTIONS TAB e -->
-
-                </div>
-
-            </div>
-
-@endif
         </div>
     </div>
 </div>
