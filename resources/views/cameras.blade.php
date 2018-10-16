@@ -18,7 +18,7 @@
 
 @section('javascript')
 <script>
-console.log('cameras page just loaded: {{ $camera->id }}');
+    //console.log('cameras page just loaded: {{ $camera->id }}');
     function isPortrait() {
         return window.innerHeight > window.innerWidth;
     }
@@ -68,7 +68,7 @@ console.log('#height='+height);
 console.log('#width='+width);
 
     $('#show_cameras').click(function() {
-alert('#show_cameras');
+//alert('#show_cameras');
         //alert('after open');
         $.get('/account/showcameralist/open');
         $("#camera_data").removeClass('col-md-12');
@@ -86,7 +86,7 @@ alert('#show_cameras');
     });
 
     $('#close_cameras').click(function() {
-alert('#close_cameras');
+//alert('#close_cameras');
         $("#show_cameras").show();
         $("#show_cameras").removeClass('hidden');
         $("#camera_dropdown").removeClass('hidden');
@@ -102,12 +102,12 @@ alert('#close_cameras');
     });
 
     $("#btn-refresh").click(function () {
-alert('#btn-refresh');
+//alert('#btn-refresh');
         window.location.reload(false);
     });
 
     $("#notify_photo").click(function () {
-alert('#notify_photo');
+//alert('#notify_photo');
         //alert('notify_photo');
         var cam = $(this).attr('data-cam');
         var url = '/cameras/testnotify/photo/' + cam + '/62830';
@@ -115,14 +115,14 @@ alert('#notify_photo');
     });
 
     $("#notify_video").click(function () {
-alert('#notify_video');
+//alert('#notify_video');
         var cam = $(this).attr('data-cam');
         var url = '/cameras/testnotify/video/' + cam + '/62852';
         $('#notify-video-msg').load(url);
     });
 
     $(".thumb-select").click(function () {
-alert('.thumb-select');
+//alert('.thumb-select');
         id = $(this).attr('data-id');
         url = '/cameras/getdetail/' + id;
         //alert('thumb-select' + url);
@@ -132,7 +132,7 @@ alert('.thumb-select');
             tab: 'gallery'
         },
         function(data, status){
-alert('#data='+data);
+//alert('#data='+data);
             //alert("Data: " + data + "\nStatus: " + status);
             window.location.href = url;
         });
@@ -144,15 +144,15 @@ alert('#data='+data);
     // respond to tab change
     //$('#tabs-54').on('click','.tablink,#cameratabs-54 a',function (e) {
     $('#tabs-{{ $camera->id }}').on('click','.tablink,#cameratabs-{{ $camera->id }} a',function (e) {
-alert('#tabs-{{ $camera->id }}');
+//alert('#tabs-{{ $camera->id }}');
         //alert('tab change');
         e.preventDefault();
         var url = $(this).attr("data-url");
         var tabname = $(this).attr("data-tab");
         var data = '';
 
-alert('#tabname='+tabname);
-alert('#url='+url);
+//alert('#tabname='+tabname);
+//alert('#url='+url);
 
 //{{ csrf_field() }}
 //<input type="hidden" name="_token" value="zyj7Xun779JLytaKxnVwAMe5HImSLY24qodO9VIX">
@@ -167,7 +167,7 @@ alert('#url='+url);
             tab: tabname,
         },
         function(data, status){
-alert('#data='+data);
+//alert('#data='+data);
              //alert("Data: " + data + "\nStatus: " + status);
         });
 
