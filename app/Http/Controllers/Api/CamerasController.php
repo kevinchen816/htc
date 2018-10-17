@@ -603,14 +603,24 @@ class CamerasController extends Controller
         $action->status = $param['status']; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
         $action->requested = date('Y-m-d H:i:s');
 
+        if (isset($param['photo_id'])) {
+            $action->photo_id = $param['photo_id'];
+        }
+        if (isset($param['filename'])) {
+            $action->filename = $param['filename'];
+        }
+        if (isset($param['image_size'])) {
+            $action->image_size = $param['image_size'];
+        }
+        if (isset($param['compression'])) {
+            $action->compression = $param['compression'];
+        }
         if (isset($param['first_number'])) {
             $action->first_number = $param['first_number'];
         }
-
         if (isset($param['last_number'])) {
             $action->last_number = $param['last_number'];
         }
-
         $action->save();
     }
 
@@ -766,18 +776,42 @@ class CamerasController extends Controller
 
     /*----------------------------------------------------------------------------------*/
     /*
-    {
-        "RequestID": "18679", <-- schedule
-        "ResultCode": 0,
-        "ActionCode": "UO",
-        "ParameterList": {
-            "FILENAME": "PICT0089.JPG",
-            "IMAGESIZE": "5",
-            "COMPRESSION": "28",
-            "REQUESTID": "18372"
-        },
-        "DateTimeStamp": "2018-10-01 20:45:55"
-    }
+        HighRes Max
+        {
+            "ResultCode": 0,
+            "ActionCode": "UO",
+            "ParameterList": {
+                "FILENAME": "PICT0089.JPG",
+                "IMAGESIZE": "5",
+                "COMPRESSION": "28",
+                "REQUESTID": "18372"
+            },
+            "DateTimeStamp": "2018-10-01 20:45:55"
+        }
+
+        Photo Original
+
+        {
+            "ResultCode": 0,
+            "ActionCode": "UO",
+            "ParameterList": {
+                "FILENAME": "PICT0593.JPG",
+                "IMAGESIZE": "6",
+                "REQUESTID": "7572"
+            },
+            "DateTimeStamp": "2018-10-01 20:55:51"
+        }
+
+        Video
+        {
+            "ResultCode": 0,
+            "ActionCode": "UV",
+            "ParameterList": {
+                "FILENAME": "PICT0478.MP4",
+                "REQUESTID": "7576"
+            },
+            "DateTimeStamp": "2018-10-02 01:00:10"
+        }
     */
     public function Response_Result($err, $camera = null, $datalist = null) {
         // date_default_timezone_set("Asia/Shanghai");
@@ -1467,31 +1501,6 @@ class CamerasController extends Controller
         return $response;
     }
 
-/*
-HighRes Max
-{
-    "ResultCode": 0,
-    "ActionCode": "UO",
-    "ParameterList": {
-        "FILENAME": "PICT0089.JPG",
-        "IMAGESIZE": "5",
-        "COMPRESSION": "28",
-        "REQUESTID": "18372"
-    },
-    "DateTimeStamp": "2018-10-01 20:45:55"
-}
-
-{
-    "ResultCode": 0,
-    "ActionCode": "UO",
-    "ParameterList": {
-        "FILENAME": "PICT0593.JPG",
-        "IMAGESIZE": "6",
-        "REQUESTID": "7572"
-    },
-    "DateTimeStamp": "2018-10-01 20:55:51"
-}
-*/
     public function upload_check($request, $action) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -1682,17 +1691,6 @@ HighRes Max
         return $response;
     }
 
-    /*
-    {
-        "ResultCode": 0,
-        "ActionCode": "UV",
-        "ParameterList": {
-            "FILENAME": "PICT0478.MP4",
-            "REQUESTID": "7576"
-        },
-        "DateTimeStamp": "2018-10-02 01:00:10"
-    }
-    */
     public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -2350,7 +2348,7 @@ HighRes Max
             $handle .=         '</label>';
             $handle .=     '</div>';
 
-            if ($photo->filetype == 2) {
+            if (($photo->filetype == 2) && (!$photo->action)) {
             $handle .=     '<div class="image-highdef pull-right">';
             $handle .=         '<label style="font-size: 1.5em; margin-right: 4px;">';
             $handle .=             '<span class="cr"><i class="cr-icon fa fa-play-circle" style="color:lime;"></i></span>';
@@ -2358,7 +2356,12 @@ HighRes Max
             $handle .=     '</div>';
             }
 
+            if ($photo->action) {
+            $handle .=     '<div class="image-highdef pull-right" id="pending-'.$photo_id.'">';
+            } else {
             $handle .=     '<div class="image-highdef pull-right" hidden id="pending-'.$photo_id.'">';
+            }
+
             $handle .=         '<label style="font-size: 1.0em; margin-right: 4px;">';
             $handle .=             '<span class="cr"><i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i></span>';
             $handle .=         '</label>';
@@ -3563,23 +3566,76 @@ HighRes Max
         return redirect()->route('cameras');
     }
 
-    public function gallery() {
-        $token     = $_POST['_token'];
-        $camera_id = $_POST['id'];
-        $action    = $_POST['action'];
-        $medialist = $_POST['medialist'];
-        echo $token;
-        echo '<br/>';
-        echo $camera_id;
-        echo '<br/>';
-        echo $action;
-        echo '<br/>';
-        echo $medialist;
-        echo '<br/>';
+    public function gallery(Request $request) {
+        //$medialist = $_POST['medialist'];
+        //{"id":"1","action":"d","medialist":"[\"check_22\"]"}
+        //return $request;
 
-        /* push to Action queue .... */
+        $action = $request->action;
+        $param = array(
+            'camera_id'   => $request->id,
+            'status'      => ACTION_REQUESTED,
+        );
 
-        return;
+        $medialist = json_decode($request->medialist);
+        foreach ($medialist as $media) {
+            /*
+                Array(
+                    [0] => check
+                    [1] => 22
+                )
+            */
+            $x = explode("_", $media);
+            $photo_id = $x[1];
+            //echo $photo_id; echo '<br>';
+
+            $photo = Photo::findOrFail($photo_id);
+            $filename = $photo->filename;
+            //echo $filename; echo '<br>';
+
+            if ($photo->action == 0) {
+                if ($action == 'd') {
+                    $photo->delete();
+
+                } else if ($action == 'h') {
+                    if ($photo->filetype == 1) {
+                        $param['action_code'] = 'UO';
+                        $param['photo_id'] = $photo_id;
+                        $param['filename'] = $filename;
+                        $param['image_size'] = 5;
+                        $param['compression'] = 28; //$compression;
+                        $this->Action_Add($param);
+
+                        $data['action'] = 1;
+                        $photo->update($data);
+                    }
+
+                } else if ($action == 'o') {
+                    if ($photo->filetype == 1) {
+                        $param['action_code'] = 'UO';
+                        $param['photo_id'] = $photo_id;
+                        $param['filename'] = $filename;
+                        $param['image_size'] = 6;
+                        $this->Action_Add($param);
+
+                        $data['action'] = 1;
+                        $photo->update($data);
+                    }
+
+                } else if ($action == 'v') {
+                    if ($photo->filetype == 2) {
+                        $param['action_code'] = 'UV';
+                        $param['photo_id'] = $photo_id;
+                        $param['filename'] = $filename;
+                        $this->Action_Add($param);
+
+                        $data['action'] = 1;
+                        $photo->update($data);
+                    }
+                }
+            }
+        }
+        return redirect()->route('cameras');
     }
 
     public function gallerylayout($camera_id, $number) {
@@ -3792,32 +3848,43 @@ HighRes Max
             $data['status'] = ACTION_CANCELLED;
             $data['completed'] = date('Y-m-d H:i:s');
             $actions->update($data);
+
+            $photo_id = $action->photo_id;
+            if ($photo_id) {
+                $photo = Photo::findOrFail($photo_id);
+                $filename = $photo->filename;
+
+                $data['action'] = 0;
+                $photo->update($data);
+            }
         }
 
-        $camera = Camera::find($camera_id);
+        $camera = Camera::findOrFail($camera_id);
         return view('camera.tab_actions', compact('camera'));
     }
 
     public function clearmissing($cameras_id) {
-        $ret = '/cameras/clearmissing/'.$cameras_id;
-        return $ret;
+        //return '/cameras/clearmissing/'.$cameras_id;
+        $camera = Camera::findOrFail($camera_id);
+        return view('camera.tab_actions', compact('camera'));
     }
 
     public function requestmissing($cameras_id, $missing_id) {
-        $ret = '/cameras/requestmissing/'.$cameras_id.'/'.$missing_id;
-        return $ret;
+        //return '/cameras/requestmissing/'.$cameras_id.'/'.$missing_id;
+        $camera = Camera::findOrFail($camera_id);
+        return view('camera.tab_actions', compact('camera'));
     }
 
-    public function emailpolicy() {
-        $user   = Auth::user();
-        //$camera = Camera::findOrFail($camera_id);
-        $camera = Camera::find($camera_id);
-        $photos = $camera->photos()
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return view('support.emailpolicy', compact('user', 'camera', 'photos'));
-    }
+    //public function emailpolicy() {
+    //    $user   = Auth::user();
+    //    //$camera = Camera::findOrFail($camera_id);
+    //    $camera = Camera::find($camera_id);
+    //    $photos = $camera->photos()
+    //        ->orderBy('created_at', 'desc')
+    //        ->paginate(10);
+    //
+    //    return view('support.emailpolicy', compact('user', 'camera', 'photos'));
+    //}
 
     public function account_profile() {
         if (Auth::check()) {

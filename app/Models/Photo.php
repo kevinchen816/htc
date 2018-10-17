@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     protected $fillable = [
-        'camera_id', 'filename', 'upload_resolution', 'source','datetime','filepath',
+        'camera_id', 'filename', 'upload_resolution', 'source','datetime','filepath', 'action'
     ];
 
     //protected $hidden = [

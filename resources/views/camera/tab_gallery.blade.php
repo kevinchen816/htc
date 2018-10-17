@@ -284,10 +284,10 @@
         //console.log(id + ' ' + v);
         var returnValue = false;
         var pos = items.indexOf(id);
-        console.log('>>isItemChecked('+id+')'); // // kk-debug
         if (pos >= 0) {
             returnValue = true;
         }
+        console.log('>>isItemChecked('+id+')='+returnValue);
         return returnValue;
     }
 
@@ -305,8 +305,7 @@
     }
 
     function PostGallery(action, items) {
-//        alert('>>PostGallery'); // kk-debug
-        console.log('PostGallery: starting'); // kevin
+        console.log('**** PostGallery: starting'); // kevin
         $('#gallery-form-{{ $camera->id }}').append('<input type="hidden" name="action" value="' + action + '" />');
         $('#gallery-form-{{ $camera->id }}').append('<input type="hidden" name="medialist" id="mediaid-list" value="" />');
         $('#mediaid-list').val(JSON.stringify(items));
@@ -314,15 +313,15 @@
         console.log('PostGallery: submitted form'); // kevin
     }
 
-
     function UpdateToolbar() {
         var items = JSON.parse(sessionStorage.getItem('items')) || [];
         var manageSelected = JSON.parse(sessionStorage.getItem('manageOn')) || false;
-//        alert('>>UpdateToolbar'); // kk-debug
+        console.log('#manageSelected='+manageSelected);
         height = $('.custom-thumbnail-grid-column').height();
         width = $('.custom-thumbnail-grid-column').width();
         if (manageSelected === true) {
-            console.log('we should open the toolbar');
+            //console.log('we should open the toolbar');
+            console.log('==> UpdateToolbar(open)');
             $('#itemAmount').show();
             $('.check-label .span-cr').height(height);
             $('.check-label .span-cr').width(width);
@@ -344,7 +343,8 @@
             document.getElementById('itemAmount').innerHTML = getbadge(items.length);
         }
         else {
-            console.log('we should close the toolbar');
+            //console.log('we should close the toolbar');
+            console.log('==> UpdateToolbar(close)');
             //$('.image-check').prop('checked', false).change();
             $('#with-selected').addClass('disabled');
             $('#camera-desc').show();
@@ -363,7 +363,7 @@
     }
 
     $(window).on('load', function() {
-        console.log('[_gallery]...............load'); // kk-debug
+        console.log('[tab_gallery]...............window.load'); // kk-debug
         UpdateToolbar();
         //InitializeCheckBoxes();
         windowload = true;
@@ -376,10 +376,11 @@
     $(document).ready(function () {
         var height = '';
         var width = '';
-        console.log('[_gallery]...............ready'); // kk-debug
-        console.log('gallery2-partial - document ready');
+        console.log('[tab_gallery]...............document.ready'); // kk-debug
+        //console.log('gallery2-partial - document ready');
         $(window).on('resize', function() {
-//            alert('window on resize 1');
+            //alert('window on resize 1');
+            console.log('[tab_gallery]...............window.on(resize)'); // kk-debug
             height = $('.custom-thumbnail-grid-column').height();
             width = $('.custom-thumbnail-grid-column').width();
             $('.check-label .span-cr').height(height);
@@ -392,10 +393,13 @@
         });
 
         $('.image-check').on('change', function () {
-			alert('==> .image-check'); // // kk-debug
+			//alert('==> .image-check'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var id = $(this).attr('id');
             v = $(this).prop('checked');
+
+            console.log('#id='+id+'('+v+')');
+            //console.log('#items='+items);
 
             // add or remove this item in items array
             if(v) {
@@ -417,8 +421,7 @@
 
         $('#multi-select').on('change', function () {
             //console.log('multi-select change event fired');
-            alert('multi-select change event fired');
-            console.log(JSON.stringify($(this).prop('checked'))); // // kk-debug
+            console.log(JSON.stringify('#manageOn='+$(this).prop('checked'))); // kk-debug
 
             sessionStorage.setItem('manageOn', JSON.stringify($(this).prop('checked')));
 
@@ -426,7 +429,7 @@
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
 
             if (manageSelected === true && !($('#itemAmount').is(':visible'))) {
-                alert('#multi-select...........1'); // // kk-debug
+                //alert('#multi-select...........1'); // kk-debug
                 document.getElementById('itemAmount').innerHTML = getbadge(items.length);
 
                 var height = $('.custom-thumbnail-grid-column').height();
@@ -454,7 +457,7 @@
                 $('#with-selected').show(350);
             }
             else if( manageSelected === false && $('#itemAmount').is(':visible')){
-                alert('#multi-select...........2'); // // kk-debug
+                //alert('#multi-select...........2'); // kk-debug
                 $('#with-selected').addClass('disabled');
                 $('#camera-desc').show();
                 $('#select-all-{{ $camera->id }}').addClass('disabled');
@@ -471,7 +474,7 @@
                 $('#itemAmount').hide();
             }
             else if(manageSelected === true && ($('#itemAmount').is(':visible'))){
-                alert('#multi-select...........3'); // // kk-debug
+                //alert('#multi-select...........3'); // kk-debug
                 sessionStorage.setItem('manageOn', JSON.stringify(false));
                 manageSelected = JSON.parse(sessionStorage.getItem('manageOn'));
                 $('#with-selected').addClass('disabled');
@@ -491,7 +494,7 @@
                 $('#itemAmount').hide();
             }
             else if(manageSelected === false && !($('#itemAmount').is(':visible'))){
-                alert('#multi-select...........4'); // // kk-debug
+                //alert('#multi-select...........4'); // kk-debug
                 sessionStorage.setItem('manageOn', JSON.stringify(true));
                 manageSelected = JSON.parse(sessionStorage.getItem('manageOn'));
 
@@ -525,7 +528,7 @@
 
         /* Action - Delete */
         $('#DeleteModal').on('show.bs.modal', function (event) {
-            alert('==> #DeleteModal'); // kk-debug
+            console.log('==> #DeleteModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -548,7 +551,7 @@
         });
 
         $('#button-confirm-delete').on('click', function() {
-            alert('==> #button-confirm-deletel'); // kk-debug
+            //alert('==> click #button-confirm-deletel'); // kk-debug
             //console.log('Confirm Button Click multi: Start');
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
@@ -562,7 +565,7 @@
 
         /* Action - Request HighRes MAX */
         $('#HighresModal').on('show.bs.modal', function (event) {
-            alert('==> #HighresModal'); // kk-debug
+            console.log('==> #HighresModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -590,7 +593,7 @@
         });
 
         $('#button-confirm-highres').on('click', function() {
-            alert('==> #button-confirm-highres'); // kk-debug
+            //alert('==> click #button-confirm-highres'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
             sessionStorage.removeItem('manageOn');
@@ -601,7 +604,7 @@
 
         /* Action - Request Original */
         $('#OriginalModal').on('show.bs.modal', function (event) {
-            alert('==> #OriginalModal'); // kk-debug
+            console.log('==> #OriginalModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -629,7 +632,7 @@
         });
 
         $('#button-confirm-original').on('click', function() {
-            alert('==> #button-confirm-original'); // kk-debug
+            //alert('==> click #button-confirm-original'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
             sessionStorage.removeItem('manageOn');
@@ -640,7 +643,7 @@
 
         /* Action - Request Video */
         $('#VideoModal').on('show.bs.modal', function (event) {
-            alert('==> #VideoModal'); // kk-debug
+            console.log('==> #VideoModal'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             //var button = $(event.relatedTarget); // Button that triggered the modal
             //var dialogType = button.data('type'); // Extract info from data-* attributes
@@ -668,7 +671,7 @@
         });
 
         $('#button-confirm-video').on('click', function() {
-            alert('==> #button-confirm-video'); // kk-debug
+            //alert('==> click #button-confirm-video'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             sessionStorage.removeItem('items');
             sessionStorage.removeItem('manageOn');
@@ -679,7 +682,7 @@
 
         /* Select All */
         $(document).on('click', '#select-all-{{ $camera->id }}', function() {
-            alert('==> #select-all-{{ $camera->id }}'); // kk-debug
+            console.log('==> click #select-all-{{ $camera->id }}'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var checkboxes = $('.thumbnail-gallery .image-check');
             checkboxes.each(function(){
@@ -695,8 +698,7 @@
 
         /* Clear All */
         $(document).on('click', '#clear-all-{{ $camera->id }}', function() {
-            alert('==> #clear-all-{{ $camera->id }}'); // kk-debug
-            //console.log('clear-all clicked');
+            console.log('==> click #clear-all-{{ $camera->id }}'); // kk-debug
             sessionStorage.removeItem("items");
             //sessionStorage.setItem('items', JSON.stringify([]));
             document.getElementById('itemAmount').innerHTML = getbadge(0);
@@ -706,7 +708,7 @@
 
         /* Select None */
         $('#select-none-{{ $camera->id }}').click(function () {
-            alert('==> #select-none-{{ $camera->id }}'); // kk-debug
+            console.log('==> click #select-none-{{ $camera->id }}'); // kk-debug
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var checkboxes = $('.thumbnail-gallery .image-check');
             checkboxes.each(function(){
@@ -781,13 +783,12 @@
 
         documentready = true;
         if (windowload) {
-            console.log('[_gallery]................A'); // kk-debug
             UpdateToolbar();        // required for IE
         }
 
         $(function(){
             $(window).resize(function(){
-                console.log('[_gallery]................B (resize)'); // kk-debug
+                console.log('[tab_gallery]...............window.resize'); // kk-debug
                 //console.log('gallery2-partial - window resize function for video player');
                 video_w = parseInt($(".modal-dialog-player").attr("orig-width"));
                 video_h = parseInt($(".modal-dialog-player").attr("orig-height"));

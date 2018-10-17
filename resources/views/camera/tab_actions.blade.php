@@ -94,21 +94,13 @@
                         @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
                         {!! $actions_ctrl->History($camera) !!}
 
-                        <tr>
+                        <!--<tr>
                             <td>Scheduled Update</td>
                             <td>Completed</td>
                             <td>09/10/2018 1:31:14 pm</td>
                             <td>09/10/2018 1:34:53 pm</td>
                             <td>49 photos uploaded.</td>
-                        </tr>
-
-                        <tr>
-                            <td>Scheduled Update</td>
-                            <td>Completed</td>
-                            <td>09/10/2018 1:31:14 pm</td>
-                            <td>09/10/2018 1:34:53 pm</td>
-                            <td>49 photos uploaded.</td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
@@ -185,8 +177,8 @@ $(document).ready(function () {
 
     $('#clear-missing').click(function(event) {
         var url = '/cameras/clearmissing/{{ $camera->id }}';
-        alert(url);
-        console.log('url = ' + url);
+        //alert(url);
+        //console.log('url = ' + url);
         $('#action-{{ $camera->id }}').load(url);
     });
 

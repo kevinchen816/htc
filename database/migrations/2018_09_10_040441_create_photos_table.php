@@ -43,6 +43,8 @@ class CreatePhotosTable extends Migration
             //$table->integer('video_filesize')->nullable();
 
             $table->string('source')->nullable();
+            $table->integer('action')->nullable();
+            $table->integer('original')->nullable();
 
             //$table->string('datetime', 14);
             //$table->timestamp('datetime');  // 1970-01-01 00:00:01 ~ 2038-01-19 03:14:07 UTC

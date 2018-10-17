@@ -123,8 +123,6 @@ Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick
 //Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
 
 /*-----------------------------------------------------------*/
-Route::get('/support/emailpolicy', function() {return '/support/emailpolicy';})->name('support.emailpolicy');
-//Route::get('/support/emailpolicy', function() {return view('support.emailpolicy');})->name('support.emailpolicy');
 //Route::get('/support/emailpolicy', function() {'Api\CamerasController@emailpolicy';})->name('support.emailpolicy');
 
 Route::get('/support/contact', function() {return '/support/contact';})->name('support.contact');

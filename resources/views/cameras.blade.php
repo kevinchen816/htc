@@ -53,7 +53,7 @@ console.log('#manageSelected='+manageSelected);
 
 $(document).ready(function(){
     //console.log('document ready just fired');
-    console.log('=> document.ready()');
+    console.log('[main]...............document.ready'); // kk-debug
 
     var height = $('.custom-thumbnail-grid-column').height();
     var width = $('.custom-thumbnail-grid-column').width();
