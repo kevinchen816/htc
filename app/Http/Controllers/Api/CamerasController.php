@@ -188,7 +188,7 @@ class CamerasController extends Controller
             $logapi->user_id = $user_id;
             $logapi->camera_id = $camera_id;
 
-            $logapi->iemi = $request->module_id;
+            $logapi->imei = $request->module_id;
             $logapi->iccid = $request->iccid;
 
             $logapi->api = $api;
