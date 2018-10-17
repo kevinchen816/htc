@@ -48,7 +48,7 @@
                         <a href="{{ route('help.plans') }}">PLAN INFO</a>
                     </li>
 @else
-                    <li class=""><a href="https://portal.ridgetec.com/tour/start">DEMO</a></li>
+                    <!--<li class=""><a href="https://portal.ridgetec.com/tour/start">DEMO</a></li>-->
                     <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
 @endif
 
@@ -64,14 +64,14 @@
                     </li>
 
 @if (Auth::check())
-                    <li class="dropdown">
+                    <li class="{{ ($user->sel_menu == 'user') ? 'dropdown active' : 'dropdown' }}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ $user->name }}  <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ route('users.show', Auth::user()->id) }}">User Show</a></li>
-                            <li><a href="{{ route('users.edit', Auth::user()->id) }}">User Edit</a></li>
+                            <!--<li><a href="{{ route('users.show', Auth::user()->id) }}">User Show</a></li>-->
+                            <li><a href="{{ route('users.edit', Auth::user()->id) }}">User</a></li>
                             <li><a href="{{ route('plans.index') }}">Plans</a></li>
                             <li>
                                 <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>

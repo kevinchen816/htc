@@ -1,6 +1,12 @@
 @extends('layouts.default2')
+
+@section('welcome')
+@include('layouts._welcome')
+@stop
+
 @section('content')
 <div class="container">
+
     <div class="row">
         <div class="col-md-offset-2 col-md-8">
             <div class="panel panel-default">
@@ -23,7 +29,7 @@
                             <input type="password" name="password" class="form-control" value="{{ old('password') }}">
                         </div>
 
-                      <div class="checkbox">
+                      <div class="checkbox-XX">
                         <label><input type="checkbox" name="remember"> Remember Me</label>
                       </div>
 

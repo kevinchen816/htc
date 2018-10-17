@@ -75,29 +75,19 @@ class PlansController extends Controller
 
     /*----------------------------------------------------------------------------------*/
     /*
-        GET    /users               -> index()      // 显示所有用户页面
         GET    /users/create        -> create()     // 创建用户页面 (Register)
         POST   /users               -> store()      // 创建用户
+
+        GET    /users               -> index()      // 显示所有用户页面
         GET    /users/{user}        -> show()       // 显示用户页面
+
         GET    /users/{user}/edit   -> edit()       // 编辑用户页面
         PATCH  /users/{user}        -> update()     // 更新用户
+
         DELETE /users/{user}        -> destroy()    // 删除用户
     */
 
-    /* All - GET /xxx */
-    public function index() {
-        if (Auth::check()) {
-            $user = Auth::user();
-
-            // $plans = Plan::all();
-            $plans = Plan::paginate(5);
-            return view('plans.index', compact('user', 'plans'));
-        } else {
-            session()->flash('warning', 'Please login first.');
-            return redirect()->route('login');
-        }
-    }
-
+    /*----------------------------------------------------------------------------------*/
     /* Create Page - GET /xxx/create  */
     public function create() {
         $user = Auth::user();
@@ -109,9 +99,6 @@ class PlansController extends Controller
         Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
     */
     public function store(Request $request) {
-        // return 'store';
-//return $request;
-
         $this->validate($request, [
             'iccid' => 'required|unique:plans|max:20',
         ]);
@@ -126,8 +113,7 @@ class PlansController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
 
-            session()->flash('success', 'Create Success');
-            //return redirect()->route('plans.show', [$plan]);
+            //session()->flash('success', 'Create Success');
             return view('plans.show', compact('user', 'plan'));
         } else {
             session()->flash('warning', 'Please Login first');
@@ -135,8 +121,33 @@ class PlansController extends Controller
         }
     }
 
+    /*----------------------------------------------------------------------------------*/
+    /* All - GET /xxx */
+    public function index() {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $data['sel_menu'] = 'user';
+        $user->update($data);
+
+        //$plans = Plan::all();
+        //$plans = Plan::paginate(5);
+        $plans = $user->plans()
+            //->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return view('plans.index', compact('user', 'plans'));
+    }
+
     /* Read - GET /xxx/{id} */
     public function show(Plan $plan) {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
         $user = Auth::user();
         return view('plans.show', compact('user', 'plan'));
 
@@ -152,6 +163,7 @@ class PlansController extends Controller
         // return view('plans.show', compact('plan'));
     }
 
+    /*----------------------------------------------------------------------------------*/
     /* Edit - GET /xxx/{id}/edit */
     public function edit(Plan $plan) {
         $user = Auth::user();
@@ -163,7 +175,6 @@ class PlansController extends Controller
 
     /* Update - PATCH /xxx/{id} */
     public function update(Plan $plan, Request $request) {
-        // return 'update';
         $this->validate($request, [
             'points' => 'required',
             'points_used' => 'required',
@@ -177,6 +188,7 @@ class PlansController extends Controller
         return redirect()->route('plans.show', $plan->id);
     }
 
+    /*----------------------------------------------------------------------------------*/
     /* Delete - DELETE /xxx/{id} */
     public function destroy(Plan $plan) {
         $user = Auth::user();

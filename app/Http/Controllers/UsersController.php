@@ -31,33 +31,26 @@ class UsersController extends Controller
 
     /*----------------------------------------------------------------------------------*/
     /*
-        GET    /users               -> index()      // 显示所有用户页面
         GET    /users/create        -> create()     // 创建用户页面 (Register)
         POST   /users               -> store()      // 创建用户
+
+        GET    /users               -> index()      // 显示所有用户页面
         GET    /users/{user}        -> show()       // 显示用户页面
+
         GET    /users/{user}/edit   -> edit()       // 编辑用户页面
         PATCH  /users/{user}        -> update()     // 更新用户
+
         DELETE /users/{user}        -> destroy()    // 删除用户
     */
 
-    /* GET /users - 显示所有用户页面 */
-    public function index() {
-        // $users = User::all();
-        $users = User::paginate(5);
-        return view('users.index', compact('users'));
-    }
-
+    /*----------------------------------------------------------------------------------*/
     /* GET /users/create - 创建用户页面 (Register) */
     public function create() {
         return view('users.create');
     }
-    // public function register() {
-    //     return view('users.register');
-    // }
 
     /* POST /users - 创建用户 */
     public function store(Request $request) {
-
         $this->validate($request, [
             'name' => 'required|max:50',
             'email' => 'required|email|unique:users|max:255',
@@ -72,24 +65,23 @@ class UsersController extends Controller
 
         Auth::Login($user);
 
-        session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
-        return redirect()->route('users.show', [$user]);
-        // return redirect()->route('users.show', [$user->id]);
+        return redirect()->route('cameras');
 
-        if (Auth::check()) {
-            session()->flash('success', 'Register Success !!');
+        //if (Auth::check()) {
+        //    session()->flash('success', 'Register Success !!');
+        //    return redirect()->route('users.show', [$user]); // [$user] = [$user->id]
+        //} else {
+        //    session()->flash('warning', 'Login Fail !!');
+        //    return redirect()->back();
+        //}
+    }
 
-            $user = Auth::user();
-            $camera = DB::table('cameras')->where('user_id', $user->id)->first();
-            // $camera_id = $camera->id;
-            $camera_id = 0; // for test
-            // $camera = Camera::findOrFail($camera_id);
-            return redirect()->route('cameras', $camera_id);
-        } else {
-            session()->flash('warning', 'Login Fail !!');
-            return redirect()->back();
-        }
-        // return redirect()->route('users.show', [$user]);
+    /*----------------------------------------------------------------------------------*/
+    /* GET /users - 显示所有用户页面 */
+    public function index() {
+        // $users = User::all();
+        $users = User::paginate(5);
+        return view('users.index', compact('users'));
     }
 
     /* GET /users/{user} - 显示用户页面 (Profile) */
@@ -108,8 +100,18 @@ class UsersController extends Controller
     //     return view('users.profile');
     // }
 
+    /*----------------------------------------------------------------------------------*/
     /* GET /users/{user}/edit - 编辑用户页面 (Edit) */
     public function edit(User $user) {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $data['sel_menu'] = 'user';
+        $user->update($data);
+
         $this->authorize('update', $user);
         return view('users.edit', compact('user'));
     }
@@ -135,10 +137,10 @@ class UsersController extends Controller
         $user->update($data);
 
         session()->flash('success', '个人资料更新成功！');
-
         return redirect()->route('users.show', $user->id);
     }
 
+    /*----------------------------------------------------------------------------------*/
     /* DELETE /users/{user} - 删除用户 (Delete) */
     public function destroy(User $user) {
         $user->delete();

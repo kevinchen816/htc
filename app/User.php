@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 // use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use App\Models\Camera;
+use App\Models\Plan;
 
 //class User extends Model
 class User extends Authenticatable
@@ -40,6 +41,10 @@ class User extends Authenticatable
 
     public function cameras() {
         return $this->hasMany(Camera::class);
+    }
+
+    public function plans() {
+        return $this->hasMany(Plan::class);
     }
 
 }
