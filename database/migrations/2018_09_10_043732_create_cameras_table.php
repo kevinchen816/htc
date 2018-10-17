@@ -51,7 +51,7 @@ class CreateCamerasTable extends Migration
 
             /* settings */
             $table->string('camera_mode')->default('p');        // p, v
-            $table->integer('photo_resolution')->default(0);    // 2, 4, 6, 8, 12
+            $table->integer('photo_resolution')->default(4);    // 2, 4, 6, 8, 12
             $table->integer('photo_burst')->default(1);         // 1, 2, 3
             $table->integer('burst_delay')->default(250);       // 250, 500, 1000, 3000ms
 
@@ -67,7 +67,7 @@ class CreateCamerasTable extends Migration
             $table->string('video_sound')->default('on');       // off, on
 
             $table->integer('upload_resolution')->default(1);
-            $table->integer('photo_quality')->default(0);
+            $table->integer('photo_quality')->default(1);
             $table->integer('photo_compression')->default(20);
 
             $table->string('timestamp')->default('on');         // off, on
