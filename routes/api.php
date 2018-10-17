@@ -67,6 +67,7 @@ $api->version('v1', [
 
     $api->post('logstatus', 'CamerasController@logstatus')->name('api.camera.logstatus');
     $api->post('uploadlog', 'CamerasController@uploadlog')->name('api.camera.uploadlog');
+
 });
 
 $api->version('v2', function($api) {

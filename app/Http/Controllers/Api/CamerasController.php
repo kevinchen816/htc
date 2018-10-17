@@ -980,7 +980,14 @@ class CamerasController extends Controller
         $data['iccid'] = $param->iccid;
         $data['model_id'] = $param->model_id;
 
-        if ($api_type == 'upload') {
+        if ($api_type == 'log') {
+            if ($param->status == 'enable') {
+                $data['log'] = 1;
+            } else {
+                $data['log'] = 0;
+            }
+
+        } else if ($api_type == 'upload') {
             $data['battery']      = $param->Battery;
             $data['signal_value'] = $param->SignalValue;
             $data['card_space']   = $param->Cardspace;
@@ -2086,6 +2093,156 @@ class CamerasController extends Controller
                     $this->LogApi_Add('schedule_abort', 1, $user_id, $camera->id, $request, $response);
                 }
             }
+        }
+        return $response;
+    }
+
+
+    /*----------------------------------------------------------------------------------*/
+    //{"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","status":"enable","RequestID":"3"}
+    public function logstatus(Request $request) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $this->Camera_Status_Update($request);
+
+            if ($request->RequestID) {
+
+                if ($request->status == 'enable') {
+                    $action_code = 'LE';
+                } else {
+                    $action_code = 'LU';
+                }
+
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => $action_code,
+                );
+                $this->Action_Completed($param);
+            }
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('logstatus', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
+    }
+
+/*
+{
+    "iccid": "89860117851014783481",
+    "module_id": "861107032685597",
+    "model_id": "lookout-na",
+    "RequestID": "2",
+    "log": []
+}
+*/
+    //{"ResultCode":0,"ActionCode":"LU","ParameterList":{"REQUESTID":"4"},"DateTimeStamp":"2018-10-18 06:08:25"}
+    public function uploadlog(Request $request, ImageUploadHandler $uploader) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $camera_id = $camera->id;
+            //if (isset($request->RequestID)) {
+                /* search Action */
+                //$query = array(
+                //    'id' => $request->RequestID,
+                //    'camera_id' => $camera_id,
+                //    'action' => 'LU',
+                //    'status' => ACTION_REQUESTED,
+                //);
+                //$actions = DB::table('actions')->where($query);
+                //$action  = $actions->first();
+                //if ($action) {
+
+                    /* search Photo */
+                    //$query = array(
+                    //    'id' => $action->photo_id,
+                    //    'camera_id' => $camera_id,
+                    //);
+                    //$photos = DB::table('photos')->where($query);
+                    //$photo = $photos->first();
+                    //if ($photo) {
+                        $filename = 'LOG.TXT';
+                        if (isset($request->blockid)) {
+                            $ret =$this->uploadblock_merge($camera, $filename, $request->blockid, $request->crc32);
+                            $err = $ret['err'];
+                        } else {
+                            //$file = $request->Image;
+                            $file = $request->log;
+                            if ($file && $file->isValid()) {
+                                $ret = $uploader->save_log($camera_id, $file);
+                                $err = $ret['err'];
+                            } else {
+                                $err = ERR_NO_UPLOAD_FILE;
+                            }
+                        }
+
+                    //} else {
+                    //    $err = ERR_INVALID_PHOTO_ID;
+                    //}
+                //} else {
+                //    $err = ERR_INVALID_REQUEST_ID;
+                //}
+            //} else {
+            //    $err = ERR_NO_REQUEST_ID;
+            //}
+
+            if ($err == 0) {
+                $filesize = $ret['filesize'];
+
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['filename'] = $request->FileName;
+                $param['imagename'] = $ret['imagename'];
+                $param['savename'] = $ret['savename'];
+                $param['extension'] = $ret['extension'];
+                $param['filesize'] = $ret['filesize'];
+
+                /* update Plan */
+                //$points = $this->Plan_Update($param);
+                //$param['points'] = $points;
+
+                /* update Photo */
+                //$data = [];
+                //$data['resolution'] = $request->upload_resolution;
+                //$data['photo_compression'] = $request->photo_compression;
+                //$data['imagename'] = $ret['imagename'];
+                //$data['savename'] = $ret['savename'];
+                //$data['filesize'] = $filesize;
+                //$data['points'] = $points;
+                //$photos->update($data);
+
+                /* update Camera Status */
+                $this->Camera_Status_Update($param, 'log');
+
+                /* update Action */
+                if ($request->RequestID) {
+                    $param = array(
+                        'request_id'  => $request->RequestID,
+                        'camera_id'   => $camera->id,
+                        'action_code' => 'LU',
+                    );
+                    $this->Action_Completed($param);
+                }
+
+                //$data = [];
+                //$data['status'] = ACTION_COMPLETED;
+                //$data['completed'] = date('Y-m-d H:i:s');
+                ////$data['photo_cnt'] = 1;
+                //$actions->update($data);
+            }
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('uploadlog', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
     }
@@ -3667,8 +3824,6 @@ class CamerasController extends Controller
     }
 
     public function settings(Request $request) {
-        //return $request;
-
         $Control_Settings = array(
             /* Identification Settings */
             "description",
@@ -3711,13 +3866,13 @@ class CamerasController extends Controller
             'dt_sun','dt_mon','dt_tue','dt_wed','dt_thu','dt_fri','dt_sat',
         );
 
-        $id = $request->id;
+        $camera_id = $request->id;
 
         for ($week=1; $week<=7; $week++) {
             $value = 0;
             $bit = 0x800000;
             for ($hour=1; $hour<=24; $hour++) {
-                $zz = $id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
+                $zz = $camera_id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
                 if($request[$zz]) {
                     $value |= $bit;
                 }
@@ -3730,38 +3885,48 @@ class CamerasController extends Controller
 //        return $data;
 
         foreach ($Control_Settings as $key) {
-            //$name = $id.'_'.$key;
+            //$name = $camera_id.'_'.$key;
             //$data[$key] = $request[$name];
-            $data[$key] = $request[$id.'_'.$key];
+            $data[$key] = $request[$camera_id.'_'.$key];
         }
 //return $data;
 
-        if (isset($request[$id.'_timelapse'])) {
+        if (isset($request[$camera_id.'_timelapse'])) {
             foreach ($Timelapse_Settings as $key) {
-                $data[$key] = $request[$id.'_'.$key];
+                $data[$key] = $request[$camera_id.'_'.$key];
             }
         } else {
             $data['timelapse'] = 'off';
         }
 
-        if (isset($request[$id.'_dutytime'])) {
+        if (isset($request[$camera_id.'_dutytime'])) {
             $data['dutytime'] = 'on';
             //foreach ($Timelapse_Settings as $key) {
-            //    $data[$key] = $request[$id.'_'.$key];
+            //    $data[$key] = $request[$camera_id.'_'.$key];
             //}
         } else {
             $data['dutytime'] = 'off';
         }
 
         foreach ($Block_Mode_Settings as $key) {
-            $data[$key] = $request[$id.'_'.$key];
+            $data[$key] = $request[$camera_id.'_'.$key];
         }
 //return $data;
 
-        $cameras = DB::table('cameras')->where('id', $id);
+        $cameras = DB::table('cameras')->where('id', $camera_id);
         $cameras->update($data);
 
-        //$camera = Camera::findOrFail($id);
+        $ret = $this->Action_Search($camera_id, 'DS', ACTION_REQUESTED);
+        if ($ret == 0) {
+            $param = array(
+                'camera_id'   => $camera_id,
+                'action_code' => 'DS',
+                'status'      => ACTION_REQUESTED,
+            );
+            $this->Action_Add($param);
+        }
+
+        //$camera = Camera::findOrFail($camera_id);
         //return view('camera.tab_settings', compact('camera'));
         return redirect()->route('cameras');
     }

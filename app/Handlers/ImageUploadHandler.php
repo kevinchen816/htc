@@ -216,4 +216,24 @@ class ImageUploadHandler
         return $ret;
     }
 
+    public function save_log($camera_id, $file)
+    {
+        $OriginalName = $file->getClientOriginalName();
+        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+
+        $path_upload = public_path().'/uploads/logs/'.$camera_id;
+        //$savename = time() . '_' . str_random(10) . '.' . $extension;
+        $savename = date('ymdhis').'_'.$OriginalName;
+
+        $savepath = $file->move($path_upload, $savename);
+
+        $ret['imagename'] = $file->getClientOriginalName(); // "PICT0001.JPG"
+        $ret['savename'] = $savename;                       // "1538422239_Cf7PQK04w4.JPG"
+        $ret['savepath'] = "$savepath";
+        $ret['extension'] = "$extension";
+        $ret['filesize'] = $file->getClientSize();          // 7032
+        $ret['err'] = 0;
+        return $ret;
+    }
+
 }
