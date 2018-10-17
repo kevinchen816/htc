@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="billing">
+<!--<div class="tab-pane fade" id="billing">-->
     <div class="col-md-9">
         <style>
             /* Padding for Stripe Element containers */
@@ -164,4 +164,4 @@
             });
         </script>
     </div>
-</div>
+<!--</div>-->

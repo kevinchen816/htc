@@ -73,50 +73,34 @@
                 <!-- <ul class="nav nav-tabs" id="cameratabs-54"> -->
                 <ul class="nav nav-tabs" id="cameratabs-{{ $camera->id }}">
                     <!-- <li class="active" >-->
-@if ($user->tab == 'overview')
-                    <li class="active" >
-@else
-                    <li>
-@endif
+                    <li class={{ ($user->sel_camera_tab == 'overview') ? "active" : "" }}>
                         <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">
                         <!-- <a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">  -->
                             <span class="glyphicon glyphicon-list-alt"> </span> Overview
                         </a>
                     </li>
-@if ($user->tab == 'gallery')
-                    <li class="active" >
-@else
-                    <li>
-@endif
+
+                    <li class={{ ($user->sel_camera_tab == 'gallery') ? "active" : "" }}>
                         <a href="#gallery-{{ $camera->id }}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
                         <!-- <a href="#gallery-{{$camera->id}}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true"> -->
                             <span class="glyphicon glyphicon-picture"> </span> Gallery
                         </a>
                     </li>
-@if ($user->tab == 'settings')
-                    <li class="active" >
-@else
-                    <li>
-@endif
+
+                    <li class={{ ($user->sel_camera_tab == 'settings') ? "active" : "" }}>
                         <a href="#settings-{{ $camera->id }}" data-toggle="tab" data-tab="settings" aria-expanded="false">
                         <!-- <a href="#settings-{{$camera->id}}" data-toggle="tab" data-tab="settings" aria-expanded="false"> -->
                             <span class="glyphicon glyphicon-edit"> </span> Settings
                         </a>
                     </li>
-@if ($user->tab == 'commands')
-                    <li class="active" >
-@else
-                    <li>
-@endif
+
+                    <li class={{ ($user->sel_camera_tab == 'commands') ? "active" : "" }}>
                         <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions', $camera->id) }}" aria-expanded="false">
                             <span class="glyphicon glyphicon-tasks"> </span> Actions
                         </a>
                     </li>
-@if ($user->tab == 'options')
-                    <li class="active" >
-@else
-                    <li>
-@endif
+
+                    <li class={{ ($user->sel_camera_tab == 'options') ? "active" : "" }}>
                         <a href="#options-{{ $camera->id }}" data-toggle="tab" data-tab="options" aria-expanded="false">
                             <span class="glyphicon glyphicon-cog"> </span> Options
                         </a>
@@ -125,50 +109,29 @@
 
                 <div class="tab-content" id="myTabContent-{{ $camera->id }}">
                     <!-- OVERVIEW TAB -->
-@if ($user->tab == 'overview')
-                    <div class="tab-pane fade active in" id="overview-{{$camera->id}}">
-@else
-                    <div class="tab-pane fade" id="overview-{{$camera->id}}">
-@endif
+                    <div class="tab-pane fade {{ ($user->sel_camera_tab == 'overview') ? 'active in' : '' }}" id="overview-{{$camera->id}}">
                     @include('camera.tab_overview')
                     </div>
 
                     <!-- GALLERY TAB -->
-@if ($user->tab == 'gallery')
-                    <div class="tab-pane fade active in" id="gallery-{{$camera->id}}">
-@else
-                    <div class="tab-pane fade" id="gallery-{{ $camera->id }}">
-@endif
+                    <div class="tab-pane fade {{ ($user->sel_camera_tab == 'gallery') ? 'active in' : '' }}" id="gallery-{{$camera->id}}">
                     @include('camera.tab_gallery')
                     </div>
 
                     <!-- SETTINGS TAB -->
-@if ($user->tab == 'settings')
-                    <div class="tab-pane fade active in" id="settings-{{$camera->id}}">
-@else
-                    <div class="tab-pane fade" id="settings-{{ $camera->id }}">
-@endif
+                    <div class="tab-pane fade {{ ($user->sel_camera_tab == 'settings') ? 'active in' : '' }}" id="settings-{{$camera->id}}">
                     @include('camera.tab_settings')
                     </div>
 
                     <!-- ACTION HISTORY TAB -->
-@if ($user->tab == 'commands')
-                    <div class="tab-pane fade active in" id="action-{{$camera->id}}">
-@else
-                    <div class="tab-pane fade" id="action-{{ $camera->id }}">
-@endif
+                    <div class="tab-pane fade {{ ($user->sel_camera_tab == 'commands') ? 'active in' : '' }}" id="action-{{$camera->id}}">
                     @include('camera.tab_actions')
                     </div>
 
-                    <!-- OPTIONS TAB s -->
-@if ($user->tab == 'options')
-                    <div class="tab-pane fade active in" id="options-{{$camera->id}}">
-@else
-                    <div class="tab-pane fade" id="options-{{ $camera->id }}">
-@endif
+                    <!-- OPTIONS TAB -->
+                    <div class="tab-pane fade {{ ($user->sel_camera_tab == 'options') ? 'active in' : '' }}" id="options-{{$camera->id}}">
                     @include('camera.tab_options')
                     </div>
-                    <!-- OPTIONS TAB e -->
                 </div>
 
             </div>

@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="email-setup" style="padding-top: 10px;">
+<!--<div class="tab-pane fade" id="email-setup" style="padding-top: 10px;">-->
     <form method="POST" action="{{ route('account.profile-emails') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emails-form">
         {{ csrf_field() }}
         <div class="row">
@@ -11,4 +11,4 @@
             {!! $ac->Emails() !!}
         </div>
     </form>
-</div>
+<!--</div>-->

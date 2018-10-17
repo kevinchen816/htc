@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="remote">
+<!--<div class="tab-pane fade" id="remote">-->
     <form method="POST" action="https://portal.ridgetec.com/account/remote" accept-charset="UTF-8" class="form-horizontal" role="form" id="mobile-apps-form">
     {{ csrf_field() }}
         <div class="panel panel-default panel-primary custom-settings-panel">
@@ -46,4 +46,4 @@
             </div>
         </div>
     </form>
-</div>
+<!--</div>-->

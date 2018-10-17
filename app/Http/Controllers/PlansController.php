@@ -19,6 +19,8 @@ class PlansController extends Controller
         //     return view('account.profile');
         // }
         $user = Auth::user();
+        $data['sel_menu'] = 'plan';
+        $user->update($data);
         return view('plans.add-plan', compact('user'));
     }
 

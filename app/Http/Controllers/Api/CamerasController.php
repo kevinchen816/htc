@@ -3378,18 +3378,20 @@ class CamerasController extends Controller
     /* Camera List */
     /*
     <tr>
-    <td class="col-sm-1">
-    </td>
-    <td class="col-sm-5 ">
-    <a href="/cameras/getdetail/50">New Camera</a><br />
-    <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
-    <span style="font-size: .95em">07/12/2018 5:49:00 am</span>
-    </td>
-    <td class="col-sm-6">
-    <!--<a class="btn thumb-select" data-id="54" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20180911%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20180911T012016Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=8e1e0e2ac491275350a4091d1b00b06b56f71477371a4eafbbab13995200d36e" class="img-responsive" /></a>-->
-    </td>
+        <td class="col-sm-1">
+        </td>
+        <td class="col-sm-5 ">
+            <a href="/cameras/getdetail/50">New Camera</a><br />
+            <i class="fa fa-battery-full" style="color: lime;"> </i> 100%<br />
+            <span style="font-size: .95em">07/12/2018 5:49:00 am</span>
+        </td>
+        <td class="col-sm-6">
+            <a class="btn thumb-select" data-id="54" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;">
+                <img src="https://ridgetec-dev.s3.us-east-2.amazonaws.com/camera_media/90815.JPG?X-Amz,,," class="img-responsive" />
+            </a>
+        </td>
     </tr>
-     */
+    */
     public function Camera_List($active_camera_id) {
         //return $active_camera_id;
 
@@ -3453,61 +3455,55 @@ class CamerasController extends Controller
     /* Web Function */
 
     public function activetab() {
-        $tab = $_POST['tab'];
-        $user = Auth::user();
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
 
-        $data['tab'] = $tab;
-        $user->update($data);
-        return $tab;
-
-        //$ret['a'] = 1;
-        //$ret['b'] = 2;
-        //$ret['c'] = 3;
-        //return json_encode($ret); // OK
+        $sel_camera_tab = $_POST['tab'];
+        $data['sel_camera_tab'] = $sel_camera_tab;
+        Auth::user()->update($data);
+        return $sel_camera_tab;
     }
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812
     //public function cameras($camera_id) {
     public function cameras() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $user_id = $user->id;
-            //$cameras = DB::table('cameras')->where('user_id', $user_id)->get();
-            // foreach ($cameras as $camera) {
-            //     echo $camera->description;
-            //     echo '<br/>';
-            // }
-            //return;
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
 
-            $camera = DB::table('cameras')
-                ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
-                ->where('user_id', $user_id)
-                ->first();
-            if ($camera) {
-                $camera_id = $camera->id;
+        $user = Auth::user();
+        $user_id = $user->id;
+        $camera_id = $user->sel_camera;
 
-                /* search Photo */
-                //$query = array(
-                //    'camera_id' => $camera_id,
-                //);
-                //$photos = DB::table('photos')->where($query);
+        $data['sel_menu'] = 'camera';
+        $user->update($data);
 
-                //$camera = Camera::findOrFail($camera_id);
-                $camera = Camera::find($camera_id);
-                $photos = $camera->photos()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate($camera->thumbs);
+        //$camera = DB::table('cameras')
+        //    ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
+        //    ->where('user_id', $user_id)
+        //    ->first();
 
-                //session()->flash('success', 'Welcome !!');
-                return view('cameras', compact('user', 'camera', 'photos'));
+        $cameras = DB::table('cameras')
+            ->where('user_id', $user_id);
 
-            } else {
-                return view('cameras_empty', compact('user'));
+        if ($cameras->count() > 0) {
+            //$camera = Camera::findOrFail($camera_id);
+            $camera = Camera::find($camera_id);
+            if (!$camera) {
+                $camera = Camera::first();
             }
 
+            $photos = $camera->photos()
+                ->orderBy('created_at', 'desc')
+                ->paginate($camera->thumbs);
+
+            //session()->flash('success', 'Welcome !!');
+            return view('cameras', compact('user', 'camera', 'photos'));
         } else {
-            session()->flash('warning', 'Please login first.');
-            return redirect()->route('login');
+            return view('cameras_empty', compact('user'));
         }
     }
 
@@ -3555,14 +3551,14 @@ class CamerasController extends Controller
 
     /* /cameras/getdetail/{camera_id} */
     public function getdetail($camera_id) {
-        //$user   = Auth::user();
-        //$camera = Camera::findOrFail($camera_id);
-        //$photos = $camera->photos()
-        //    ->orderBy('created_at', 'desc')
-        //    ->paginate(10);
-        ////return view('cameras', compact('camera', 'photos')); // OK
-        //return view('cameras', compact('user', 'camera', 'photos')); // OK
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
 
+        $user = Auth::user();
+        $data['sel_camera'] = $camera_id;
+        $user->update($data);
         return redirect()->route('cameras');
     }
 
@@ -3886,168 +3882,160 @@ class CamerasController extends Controller
     //    return view('support.emailpolicy', compact('user', 'camera', 'photos'));
     //}
 
-    public function account_profile() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('account.profile', compact('user'));
-        } else {
-            return view('account.profile');
-        }
-        // return view('help.plans');
-    }
+    //public function account_profile() {
+    //    if (!Auth::check()) {
+    //        session()->flash('warning', 'Please Login first');
+    //        return redirect()->route('login');
+    //    }
+    //
+    //    $user = Auth::user();
+    //    $data['sel_menu'] = 'account';
+    //    $user->update($data);
+    //    return view('account.profile', compact('user'));
+    //}
 
     /*----------------------------------------------------------------------------------*/
     public function admin() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('admin.dashboard', compact('user'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        return view('admin.dashboard', compact('user'));
     }
 
     public function admin_users() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $users = DB::table('users')
-                //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-                //->where(['camera_id' => $camera_id])
-                //->orderBy('created_at', 'desc')
-                ->paginate(20);
-
-            //return view('admin.users', compact('user', 'users'));
-            return view('admin.user', compact('users'));
-
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $users = DB::table('users')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['camera_id' => $camera_id])
+            //->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        //return view('admin.users', compact('user', 'users'));
+        return view('admin.user', compact('users'));
     }
 
     public function admin_email() {
-        //return 'admin_email';
-        if (Auth::check()) {
-            $user = Auth::user();
-            $emails = DB::table('emails')
-                //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-                //->where(['camera_id' => $camera_id])
-                //->orderBy('created_at', 'desc')
-                ->paginate(20);
-            return view('admin.email', compact('user', 'emails'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $emails = DB::table('emails')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['camera_id' => $camera_id])
+            //->orderBy('created_at', 'desc')
+            ->paginate(20);
+        return view('admin.email', compact('user', 'emails'));
     }
 
     public function admin_cameras() {
-        //return 'admin_cameras';
-        if (Auth::check()) {
-            $user = Auth::user();
-            $cameras = DB::table('cameras')
-                //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-                //->where(['camera_id' => $camera_id])
-                //->orderBy('created_at', 'desc')
-                ->paginate(20);
-            return view('admin.camera', compact('user', 'cameras'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $cameras = DB::table('cameras')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['camera_id' => $camera_id])
+            //->orderBy('created_at', 'desc')
+            ->paginate(20);
+        return view('admin.camera', compact('user', 'cameras'));
     }
 
     public function admin_plans() {
-        //return 'admin_plans';
-        if (Auth::check()) {
-            $user = Auth::user();
-            $plans = DB::table('plans')
-                //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-                //->where(['camera_id' => $camera_id])
-                //->orderBy('created_at', 'desc')
-                ->paginate(20);
-            return view('admin.plan', compact('user', 'plans'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $plans = DB::table('plans')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['camera_id' => $camera_id])
+            //->orderBy('created_at', 'desc')
+            ->paginate(20);
+        return view('admin.plan', compact('user', 'plans'));
     }
 
     public function admin_firmware() {
-        //return 'admin_firmware';
-        if (Auth::check()) {
-            $user = Auth::user();
-            $firmwares = DB::table('firmwares')->get();
-            return view('admin.firmware', compact('user', 'firmwares'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $firmwares = DB::table('firmwares')->get();
+        return view('admin.firmware', compact('user', 'firmwares'));
     }
 
     public function admin_sims() {
-        //return 'admin_sims';
-        if (Auth::check()) {
-            $user = Auth::user();
-            $sims = DB::table('sims')
-                //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-                //->where(['camera_id' => $camera_id])
-                //->orderBy('created_at', 'desc')
-                ->paginate(20);
-            return view('admin.sim', compact('user', 'sims'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $sims = DB::table('sims')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['camera_id' => $camera_id])
+            //->orderBy('created_at', 'desc')
+            ->paginate(20);
+        return view('admin.sim', compact('user', 'sims'));
     }
 
     public function admin_rmas() {
-        //return 'admin_rmas';
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('admin.rma', compact('user'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        return view('admin.rma', compact('user'));
     }
 
     public function admin_siteactivity() {
-        //return 'admin_siteactivity';
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('admin.siteactivity', compact('user'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        return view('admin.siteactivity', compact('user'));
     }
 
     public function admin_apilog() {
-        //return 'admin_apilog';
-        if (Auth::check()) {
-            $user = Auth::user();
-            $log_apis = DB::table('log_apis')
-                //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-                //->where(['camera_id' => $camera_id])
-                //->orderBy('created_at', 'desc')
-                ->paginate(20);
-            return view('admin.apilog', compact('user', 'log_apis'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        $log_apis = DB::table('log_apis')
+            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['camera_id' => $camera_id])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+        return view('admin.apilog', compact('user', 'log_apis'));
     }
 
     public function admin_viewlog() {
-        //return 'admin_viewlog';
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('admin.viewlog', compact('user'));
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        $user = Auth::user();
+        return view('admin.viewlog', compact('user'));
     }
 
     /* search */

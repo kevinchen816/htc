@@ -1,4 +1,4 @@
-<div class="tab-pane fade active in " id="security">
+<!--<div class="tab-pane fade " id="security">-->
     <div class="col-md-6">
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
@@ -70,4 +70,4 @@
             </div>
         </div>
     </div>
-</div>
+<!--</div>-->

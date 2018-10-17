@@ -12,14 +12,31 @@ use App\Models\Email;
 
 class AccountsController extends Controller
 {
-    public function profile() {
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('account.profile', compact('user'));
-        } else {
+    public function activetab(Request $request) {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        // plan, billing, devices, options, email
+        // plans, billing, remote, security, email
+        $sel_account_tab = $_POST['tab'];
+        $data['sel_account_tab'] = $sel_account_tab;
+        Auth::user()->update($data);
+        return $sel_account_tab;
+    }
+
+
+    public function profile() {
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $data['sel_menu'] = 'account';
+        $user->update($data);
+        return view('account.profile', compact('user'));
     }
 
     public function MyPlans() {
@@ -218,9 +235,5 @@ class AccountsController extends Controller
         $user = Auth::user();
         //$user_id = $user->id;
         return view('account.profile', compact('user'));
-    }
-
-    public function activetab(Request $request) {
-        return $request;
     }
 }

@@ -33,29 +33,55 @@
             <div class="col-md-12">
                 <div id="tabs-account"  >
                     <ul class="nav nav-tabs" id="account-tabs">
-                        <li><a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> My Plans</a></li>
-                        <li><a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> Billing</a></li>
-                        <li><a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> Devices</a></li>
-                        <li><a href="#security" data-toggle="tab" data-tab="security" aria-expanded="false"><span class="glyphicon glyphicon-paperclip"> </span> Options</a></li>
-                        <li><a href="#email-setup" data-toggle="tab" data-tab="email" aria-expanded="true"><span class="glyphicon glyphicon-list-alt"> </span> Email Setup</a></li>
+
+                        <li class={{ ($user->sel_account_tab == 'plans') ? "active" : "" }}>
+                            <a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> My Plans</a>
+                        </li>
+
+                        <li class={{ ($user->sel_account_tab == 'billing') ? "active" : "" }}>
+                            <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> Billing</a>
+                        </li>
+
+                        <li class={{ ($user->sel_account_tab == 'remote') ? "active" : "" }}>
+                            <a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> Devices</a>
+                        </li>
+
+                        <li class={{ ($user->sel_account_tab == 'security') ? "active" : "" }}>
+                            <a href="#security" data-toggle="tab" data-tab="security" aria-expanded="false"><span class="glyphicon glyphicon-paperclip"> </span> Options</a>
+                        </li>
+
+                        <li class={{ ($user->sel_account_tab == 'email') ? "active" : "" }}>
+                            <a href="#email-setup" data-toggle="tab" data-tab="email" aria-expanded="true"><span class="glyphicon glyphicon-list-alt"> </span> Email Setup</a>
+                        </li>
+
                         <!--<li !! $tabs['addplan'] ? 'class="active"' : ' ' !!><a href="#add-prepaid-plan" data-toggle="tab" data-tab="addplan" aria-expanded="true"><span class="glyphicon glyphicon-plus-sign"> </span> Add Prepaid Plans</a></li>-->
                     </ul>
 
                     <div id="ProfilebContent" class="tab-content "  style="margin-bottom:30px;">
-                        <!-- TAB - Options  -->
-                        @include('account._options')
-
                         <!-- TAB - My Plans  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'plans') ? 'active in' : '' }}" id="data-plans">
                         @include('account._plans')
+                        </div>
 
                         <!-- TAB - Billing  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'billing') ? 'active in' : '' }}" id="billing">
                         @include('account._billing')
-
-                        <!-- TAB - Email Setup  -->
-                        @include('account._emails')
+                        </div>
 
                         <!-- TAB - Devices  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'remote') ? 'active in' : '' }}" id="remote">
                         @include('account._devices')
+                        </div>
+
+                        <!-- TAB - Options  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'security') ? 'active in' : '' }}" id="security">
+                        @include('account._options')
+                        </div>
+
+                        <!-- TAB - Email Setup  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'email') ? 'active in' : '' }}" id="email-setup">
+                        @include('account._emails')
+                        </div>
                     </div>
                 </div>
 
@@ -142,6 +168,7 @@
             //alert('put tab ' + tabname);
             $.post(url,
             {
+                _token: '{{ csrf_token() }}',
                 tab: tabname,
             },
             function (data, status) {

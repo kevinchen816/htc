@@ -19,7 +19,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('confirmed')->default('No'); // Yes, No
-            $table->string('tab')->default('overview');
+
+            $table->string('sel_menu')->default('plan');            // plan, camera, account, help, support, user
+            $table->integer('sel_camera')->nullable();              // camera_id
+            $table->string('sel_camera_tab')->default('overview');  // overview, gallery, settings, actions, options
+            $table->string('sel_account_tab')->default('plan');     // plans, billing, remote, security, email
+                                                                    // plan, billing, devices, options, email
+
             $table->rememberToken();
             $table->timestamps();
         });
