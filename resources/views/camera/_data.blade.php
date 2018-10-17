@@ -67,29 +67,23 @@
             </div>
 
             <!-- CAMERA DATA - TAB -->
-            <!-- <div id="tabs-54" class="tab-container"> -->
             <div id="tabs-{{ $camera->id}}" class="tab-container">
 
-                <!-- <ul class="nav nav-tabs" id="cameratabs-54"> -->
                 <ul class="nav nav-tabs" id="cameratabs-{{ $camera->id }}">
-                    <!-- <li class="active" >-->
                     <li class={{ ($user->sel_camera_tab == 'overview') ? "active" : "" }}>
                         <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">
-                        <!-- <a href="#overview-54" data-toggle="tab" data-tab="overview" data-url="/cameras/overview/54" aria-expanded="true">  -->
                             <span class="glyphicon glyphicon-list-alt"> </span> Overview
                         </a>
                     </li>
 
                     <li class={{ ($user->sel_camera_tab == 'gallery') ? "active" : "" }}>
                         <a href="#gallery-{{ $camera->id }}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
-                        <!-- <a href="#gallery-{{$camera->id}}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true"> -->
                             <span class="glyphicon glyphicon-picture"> </span> Gallery
                         </a>
                     </li>
 
                     <li class={{ ($user->sel_camera_tab == 'settings') ? "active" : "" }}>
                         <a href="#settings-{{ $camera->id }}" data-toggle="tab" data-tab="settings" aria-expanded="false">
-                        <!-- <a href="#settings-{{$camera->id}}" data-toggle="tab" data-tab="settings" aria-expanded="false"> -->
                             <span class="glyphicon glyphicon-edit"> </span> Settings
                         </a>
                     </li>

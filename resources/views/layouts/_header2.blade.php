@@ -32,32 +32,25 @@
                     <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
 @if (Auth::check())
-    @if ($user->sel_menu == 'plan')
-                    <li class="active"><a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
-    @else
-                    <li class=""><a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
-    @endif
+                    <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
+                        <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                    </li>
 
-    @if ($user->sel_menu == 'camera')
-                    <li class="active"><a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a></li>
-    @else
-                    <li class=""><a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a></li>
-    @endif
+                    <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
+                        <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
+                    </li>
 
-    @if ($user->sel_menu == 'account')
-                    <li class="active"><a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a></li>
-    @else
-                    <li class=""><a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a></li>
-    @endif
+                    <li class={{ ($user->sel_menu == 'account') ? "active" : "" }}>
+                        <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a>
+                    </li>
+
+                    <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
+                        <a href="{{ route('help.plans') }}">PLAN INFO</a>
+                    </li>
 @else
                     <li class=""><a href="https://portal.ridgetec.com/tour/start">DEMO</a></li>
-@endif
-
-    @if ($user->sel_menu == 'help')
-                    <li class="active"><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
-    @else
                     <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
-    @endif
+@endif
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
