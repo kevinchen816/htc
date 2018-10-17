@@ -63,7 +63,7 @@
                             <li><a href="{{ route('users.edit', Auth::user()->id) }}">User Edit</a></li>
                             <li><a href="{{ route('plans.index') }}">Plans</a></li>
                             <li>
-                                <!--<a href="{{ route('admin', Auth::user()->id) }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>-->
+                                <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">

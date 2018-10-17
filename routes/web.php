@@ -44,10 +44,32 @@ Route::get('/signup', 'UsersController@create')->name('signup');
 Route::get('/login', 'SessionsController@create')->name('login');
 Route::post('/login', 'SessionsController@store')->name('login');
 Route::delete('/logout', 'SessionsController@destroy')->name('logout');
-// Route::post('/logout', 'SessionsController@destroy')->name('logout');
+Route::post('/logout', 'SessionsController@destroy')->name('logout');
 
-// Route::get('/admin', function() {return '/admin';})->name('admin');
-Route::get('/admin', function() {return view('/admin/home');})->name('admin');
+//Route::get('/admin', function() {return view('/admin/home');})->name('admin');
+Route::get('/admin', 'Api\CamerasController@admin')->name('admin');
+Route::get('/admin/users', 'Api\CamerasController@admin_users')->name('admin.users');
+Route::get('/admin/email', 'Api\CamerasController@admin_email')->name('admin.email');
+Route::get('/admin/cameras', 'Api\CamerasController@admin_cameras')->name('admin.cameras');
+Route::get('/admin/plans', 'Api\CamerasController@admin_plans')->name('admin.plans');
+Route::get('/admin/firmware', 'Api\CamerasController@admin_firmware')->name('admin.firmware');
+Route::get('/admin/sims', 'Api\CamerasController@admin_sims')->name('admin.sims');
+Route::get('/admin/rmas', 'Api\CamerasController@admin_rmas')->name('admin.rmas');
+Route::get('/admin/siteactivity', 'Api\CamerasController@admin_siteactivity')->name('admin.siteactivity');
+Route::get('/admin/apilog', 'Api\CamerasController@admin_apilog')->name('admin.apilog');
+Route::get('/admin/viewlog', 'Api\CamerasController@admin_viewlog')->name('admin.viewlog');
+
+// **** post
+Route::post('/admin/user-search', 'Api\CamerasController@admin_user_search')->name('admin.user-search');
+Route::post('/admin/email-search', 'Api\CamerasController@admin_email_search')->name('admin.email-search');
+Route::post('/admin/camera-search', 'Api\CamerasController@admin_camera_search')->name('admin.camera-search');
+Route::post('/admin/api-search', 'Api\CamerasController@admin_camera_search')->name('admin.api-search');
+
+Route::get('/admin/clear-search/users', 'Api\CamerasController@admin_clear_search_users')->name('admin.clear-search.users');
+Route::get('/admin/clear-search/emails', 'Api\CamerasController@admin_clear_search_users')->name('admin.clear-search.emails');
+Route::get('/admin/clear-search/cameras', 'Api\CamerasController@admin_clear_search_cameras')->name('admin.clear-search.cameras');
+Route::get('/admin/clear-search/sims', 'Api\CamerasController@admin_clear_search_sims')->name('admin.clear-search.sims');
+Route::get('/admin/clear-search/apilog', 'Api\CamerasController@admin_clear_search_apilog')->name('admin.clear-search.apilog');
 
 /*-----------------------------------------------------------*/
 //Route::get('/plans/add-plan','Api\CamerasController@plans_addplan_create')->name('add.plan');

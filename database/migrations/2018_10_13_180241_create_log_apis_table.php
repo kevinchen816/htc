@@ -19,7 +19,7 @@ class CreateLogApisTable extends Migration
             $table->integer('user_id')->index();
             $table->integer('camera_id')->index();
 
-            $table->string('iemi')->index(); // module_id
+            $table->string('imei')->index(); // module_id
             $table->string('iccid')->index();
             //$table->string('model_id');
 
