@@ -47,6 +47,7 @@
                             @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                             {!! $cc->LogApi_List($log_apis) !!}
 
+<!--
                             <tr>
                                 <td>104515</td>
                                 <td>Upload Photo</td>
@@ -70,7 +71,9 @@
                                 </td>
                                 <td>10/09/2018 5:49:44 pm</td>
                             </tr>
+-->
 
+<!--
                             <tr>
                                 <td>104562</td>
 
@@ -123,6 +126,7 @@ Action Process Time Limit:  2m
                                                                     </td>
                                 <td>10/09/2018 6:58:42 pm</td>
                             </tr>
+-->
 
                         </tbody>
                     </table>

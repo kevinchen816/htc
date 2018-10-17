@@ -33,6 +33,10 @@
                                         <button type="button" class="btn btn-default btn-xs" data-color="info">Heartbeat Only</button>
                                         <input type="checkbox" class="hidden camera-select" name="notifyonreport[]" value="77"   />
                                     </span>
+                                    <span class="button-checkbox">
+                                        <button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Upload</button>
+                                        <input type="checkbox" class="hidden camera-select" name="notifyonupload[]" value="77"  checked  />
+                                    </span>
                                 </td>
 
                                 <td>

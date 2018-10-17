@@ -33,7 +33,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="iccid inputSmall">SIM ICCID</label>
                                 <div class="col-md-8">
-                                    <input type="text" value="" name="iccid" maxlength="70" id="iccid" class="form-control input-sm" placeholder="Input ICCID">
+                                    <input type="text" value="{{ old('iccid') }}" name="iccid" maxlength="70" id="iccid" class="form-control input-sm" placeholder="Input ICCID">
                                 </div>
                             </div>
 

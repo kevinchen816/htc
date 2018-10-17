@@ -6,7 +6,7 @@
             <h4>You are creating your own Account</h4>
 
             <p>
-            Registration for an account is <span class="label label-warning">FREE</span>.  You will need an account in order to manage your cameras.
+            Registration for an account is <span class="label label-highlight">FREE</span>.  You will need an account in order to manage your cameras.
             If you have purchased a new camera but do not yet have an account, then this is your first step.
             </p>
 

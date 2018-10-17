@@ -3470,7 +3470,7 @@ class CamerasController extends Controller
     //public function cameras($camera_id) {
     public function cameras() {
         if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
+            //session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
 
@@ -3499,9 +3499,8 @@ class CamerasController extends Controller
             $photos = $camera->photos()
                 ->orderBy('created_at', 'desc')
                 ->paginate($camera->thumbs);
-
-            //session()->flash('success', 'Welcome !!');
-            return view('cameras', compact('user', 'camera', 'photos'));
+            //return view('cameras', compact('user', 'camera', 'photos'));
+            return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
         } else {
             return view('cameras_empty', compact('user'));
         }

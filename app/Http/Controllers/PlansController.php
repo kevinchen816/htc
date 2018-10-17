@@ -24,53 +24,54 @@ class PlansController extends Controller
         return view('plans.add-plan', compact('user'));
     }
 
+    /*
+        Error: Please input an ICCID.
+        Error: Invalid ICCID. Verify that you have input the ICCID correctly.
+        Error: Please read and agree to the TERMS and CONDITIONS.
+        Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
+    */
     public function add(Request $request) {
+//{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"submit-new-plan":"update"}
+//{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
 //return $request;
-
-//Error: Please input an ICCID.
-//Error: Invalid ICCID. Verify that you have input the ICCID correctly.
-//Error: Please read and agree to the TERMS and CONDITIONS.
-//Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
-
         //$result = $this->validate($request, [
         //    'iccid' => 'required|unique:plans|max:20',
         //]);
-
-//$ret['result'] = $result;
-//return $ret;
-
-        if (Auth::check()) {
-            $user = Auth::user();
-
-            if (!$request->iccid) {
-                session()->flash('danger', 'Error: Please input an ICCID.');
-                return redirect()->back();
-            }
-
-            $plan = DB::table('plans')
-                ->where('iccid', $request->iccid)
-                ->first();
-            if ($plan) {
-                session()->flash('danger', 'Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.');
-                return redirect()->back();
-            }
-
-            $plan = Plan::create([
-                'iccid' => $request->iccid,
-                'status' => 'active',
-                //'points' => $request->points,
-                'user_id' => Auth::user()->id,
-            ]);
-
-            //session()->flash('success', 'Create Success');
-            //return redirect()->route('plans.show', [$plan]);
-            //return view('plans.show', compact('user', 'plan'));
-            return redirect()->route('account.profile');
-
-        } else {
+        if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
         }
+
+        if (!$request->iccid) {
+            session()->flash('danger', 'Error: Please input an ICCID.');
+            return redirect()->back();
+        }
+
+        if (!$request['agree-terms']) {
+            session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
+            return redirect()->back();
+        }
+
+        $plan = DB::table('plans')
+            ->where('iccid', $request->iccid)
+            ->first();
+        if ($plan) {
+            session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
+            return redirect()->back();
+        }
+
+        //$user = Auth::user();
+        $plan = Plan::create([
+            'iccid' => $request->iccid,
+            'status' => 'active',
+            'points' => 50000, //$request->points, // for test
+            'user_id' => Auth::user()->id,
+        ]);
+
+        //session()->flash('success', 'Create Success');
+        //return redirect()->route('plans.show', [$plan]);
+        //return view('plans.show', compact('user', 'plan'));
+        return redirect()->route('account.profile');
     }
 
     /*----------------------------------------------------------------------------------*/

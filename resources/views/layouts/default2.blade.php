@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <!-- <link href="https://portal.ridgetec.com/css/styles.css" rel="stylesheet"> -->
-    <link href="/css/styles.css" rel="stylesheet">  <!-- kevin -->
+    <link href="/css/styles.css" rel="stylesheet"> <!-- kevin -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -135,6 +135,45 @@
         padding-top: 0px;
         margin-bottom:6px;
     }
+</style>
+
+<style>
+    .alert-help {
+        background-color: #333;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+    }
+    .help-heading {
+        color: red!important;
+        background-color: #111;
+        padding: 10px 10px 10px 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+.alert-ratetier {
+    padding-top:0px;
+    padding-left:0px;
+    border-style: solid;
+    border-width: 2px 2px 2px 2px;
+    border-color: #9d0b0e;
+    background-color: #000;
+}
+.label-tier {
+    background-color: #9d0b0e!important;
+    padding-left: 10px;
+    border-radius: 0px 0px 30px 0px;
+}
+.tier-desc {
+    padding-left:5px!important;
+    padding-top:10px;
+}
+
+.label-highlight {
+    background-color: #777;
+    color: lime;
+}
 </style>
 
 </head>

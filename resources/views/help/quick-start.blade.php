@@ -1,4 +1,5 @@
 @extends('layouts.default2')
+
 @section('content')
 <div class="container">
     <h3>QUICK START GUIDE</h3>
