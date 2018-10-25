@@ -38,6 +38,10 @@
                             <a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> My Plans</a>
                         </li>
 
+                        <li class={{ ($user->sel_account_tab == 'billing') ? "active" : "" }}>
+                            <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> Billing</a>
+                        </li>
+
                         <li class={{ ($user->sel_account_tab == 'remote') ? "active" : "" }}>
                             <a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> Devices</a>
                         </li>
@@ -57,6 +61,11 @@
                         <!-- TAB - My Plans  -->
                         <div class="tab-pane fade {{ ($user->sel_account_tab == 'plans') ? 'active in' : '' }}" id="data-plans">
                         @include('account._plans')
+                        </div>
+
+                        <!-- TAB - Billing  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'billing') ? 'active in' : '' }}" id="billing">
+                        @include('account._billing')
                         </div>
 
                         <!-- TAB - Devices  -->

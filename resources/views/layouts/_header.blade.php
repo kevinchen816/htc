@@ -10,7 +10,10 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>RemoteCam</h2>
+                <!-- Branding Image -->
+                <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="10ware Home">
+                    <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
+                </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -33,15 +36,32 @@
                         <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
-                    <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
-                        <a href="{{ route('my.plans') }}"><i class="fa fa-gear"></i> My Plans</a>
-                    </li>
-
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
                     </li>
+
+                    <li class={{ ($user->sel_menu == 'account') ? "active" : "" }}>
+                        <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a>
+                    </li>
+
+                    <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
+                        <a href="{{ route('help.plans') }}">PLAN INFO</a>
+                    </li>
 @else
+                    <!--<li class=""><a href="https://portal.ridgetec.com/tour/start">DEMO</a></li>-->
+                    <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
 @endif
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             Support <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="{{ route('help.quick-start') }}">Camera Quick Start Guide</a>
+                            </li>
+                        </ul>
+                    </li>
 
 @if (Auth::check())
                     <li class="{{ ($user->sel_menu == 'user') ? 'dropdown active' : 'dropdown' }}">
@@ -50,7 +70,11 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
+                            <!--<li><a href="{{ route('users.show', Auth::user()->id) }}">User Show</a></li>-->
+                            <li><a href="{{ route('users.edit', Auth::user()->id) }}">User</a></li>
+                            <li><a href="{{ route('plans.index') }}">Plans</a></li>
                             <li>
+                                <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">

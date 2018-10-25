@@ -24,6 +24,116 @@ class PlansController extends Controller
         return view('plans.add-plan', compact('user'));
     }
 
+    public function my_plans() {
+        $user = Auth::user();
+        $data['sel_menu'] = 'my_plans';
+        $user->update($data);
+        return view('plans.my-plans', compact('user'));
+    }
+
+    public function MyPlans() {
+        //return 'Hello';
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        $plans = DB::table('plans')
+            ->where('user_id', $user_id)
+            ->get();
+
+        $handle = '';
+        foreach ($plans as $plan) {
+            //$camera_name = '(No Camera)';
+            //if ($plan->camera_id) {
+            //    $camera = Camera::find($plan->camera_id);
+            //    if ($camera) {
+            //        $camera_name = $camera->description;
+            //    }
+            //}
+
+            $handle .= '<div class="row">';
+            $handle .=     '<div class="col-md-12">';
+            $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
+            $handle .=             '<div class="row">';
+            $handle .=                 '<div class="col-md-5">';
+            $handle .=                     '<i class="fa fa-dot-circle"></i>';
+            $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
+            $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
+            $handle .=                     '<p></p>';
+            $handle .=                 '</div>';
+            $handle .=                 '<div class="col-md-5">';
+            $handle .=                 '</div>'; // <!-- end col -->
+            $handle .=             '</div>';
+            $handle .=         '</div>';
+            $handle .=     '</div>';
+            $handle .= '</div>';
+
+            $handle .= '<div class="row">';
+            $handle .=     '<div class="col-sm-6">';
+            $handle .=         '<table class="table plan-table">';
+            $handle .=             '<tbody>';
+//            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
+            $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
+            $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
+            $handle .=                 '</tr>';
+//            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
+            //$handle .=                 '<tr><td class="pull-right">Camera:</td>';
+            //$handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
+            //$handle .=                 '</tr>';
+            $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
+            $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
+            $handle .=                 '</tr>';
+            $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
+            $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
+            $handle .=                 '</tr>';
+//            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
+//            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
+//            $handle .=                 '</tr>';
+            $handle .=             '</tbody>';
+            $handle .=         '</table>';
+            $handle .=     '</div>';
+            $handle .= '</div>';
+        }
+        return $handle;
+    }
+
+    public function my_plans2() {
+
+        if (!Auth::check()) {
+            session()->flash('warning', 'Please Login first');
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $data['sel_menu'] = 'my_plans';
+        $user->update($data);
+
+        $user_id = $user->id;
+        $plans = DB::table('plans')
+            ->where('user_id', $user_id)
+            //->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return view('plans.my-plans2', compact('user', 'plans'));
+    }
+
+    public function MyPlans2($plans) {
+        //$user = Auth::user();
+        //$user_id = $user->id;
+        //
+        //$plans = DB::table('plans')
+        //    ->where('user_id', $user_id)
+        //    ->get();
+
+        $handle = '';
+        foreach ($plans as $plan) {
+            $handle .= '<tr>';
+            $handle .=    '<td>'.$plan->iccid.'</td>';
+            $handle .=    '<td>'.$plan->points.'</td>';
+            $handle .=    '<td>'.$plan->points_used.'</td>';
+            $handle .=    '<td>'.$plan->status.'</td>';
+        }
+        return $handle;
+    }
+
     /*
         Error: Please input an ICCID.
         Error: Invalid ICCID. Verify that you have input the ICCID correctly.
@@ -43,20 +153,22 @@ class PlansController extends Controller
         }
 
         if (!$request->iccid) {
-            session()->flash('danger', 'Error: Please input an ICCID.');
+            //session()->flash('danger', 'Error: Please input an ICCID.');
+            session()->flash('danger', 'Please input ICCID.');
             return redirect()->back();
         }
 
-        if (!$request['agree-terms']) {
-            session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
-            return redirect()->back();
-        }
+        //if (!$request['agree-terms']) {
+        //    session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
+        //    return redirect()->back();
+        //}
 
         $plan = DB::table('plans')
             ->where('iccid', $request->iccid)
             ->first();
         if ($plan) {
-            session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
+            //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
+            session()->flash('danger', 'ICCID had used.');
             return redirect()->back();
         }
 

@@ -28,6 +28,11 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     Notifications
+                    <span class="pull-right">
+                        <a href="/account/profile-emails" class="btn btn-xs btn-primary">
+                            <i class="fa fa-gear"></i> Manage Addresses
+                        </a>
+                    </span>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -45,6 +50,34 @@
                                 <button type="button" class="btn btn-default btn-xs" data-color="info">kevin@10ware.com</button>
                                 <input type="checkbox" class="hidden" name="54_email_owner" id="54_email_owner" checked />
                             </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default panel-primary custom-settings-panel">
+                <div class="panel-heading">
+                    High Activity Suppression
+                    <!--<a class="btn btn-info btn-xs ToggleHelp pull-right" help-id="activity-suppression"><i class="fa fa-question"></i></a>-->
+                    <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="activity-suppression">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="button-checkbox">
+                                <button type="button" class="btn btn-default btn-xs" data-color="info">Use Activity Suppression</button>
+                                <input type="checkbox" class="hidden" name="54_bw_option" id="54_bw_option"   />
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-6 control-label" for="inputSmall">Average Uploads per Hour</label>
+                        <div class="col-md-5">
+                            <input type="text" name="54_bw_medias_hour_est" maxlength="30" value="0" id="54_bw_medias_hour_est" class="form-control input-sm" placeholder="Input Ceiling Rate">
+                            <span class="help-block"> Reccomended: set Quiet Time from 5s to 30s</span>
                         </div>
                     </div>
                 </div>
@@ -120,6 +153,20 @@
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
+                    Block Mode Settings (Kevin Test)
+                </div>
+                <div class="panel-body">
+                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
+                    {!! $cc->Settings_Block_Mode($camera) !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default panel-primary custom-settings-panel">
+                <div class="panel-heading">
                     <!--<input type="checkbox"   data-size="normal" class="tog" name="dutytime_54" id="dutytime_54" data-toggle="toggle" data-on="Enabled" data-off="Disabled"> Duty Time/Hours of operation-->
                     <span class="button-checkbox">
                         <button type="button" class="btn btn-default btn-xs" data-color="info"></button>
@@ -154,7 +201,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="row">

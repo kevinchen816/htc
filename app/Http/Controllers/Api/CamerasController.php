@@ -2250,13 +2250,14 @@ class CamerasController extends Controller
     /*----------------------------------------------------------------------------------*/
     /* Common Functions */
     public function CameraFieldValueConvert($camera, $column, $name) {
-        if ($name == 'off') {
-            $name = 'Off';
-
-        } else if ($name == 'on') {
-            $name = 'On';
-
-        } else if ($column == 'camera_mode') {
+        //if ($name == 'off') {
+        //    $name = 'Off';
+       //
+        //} else if ($name == 'on') {
+        //    $name = 'On';
+       //
+        //} else
+        if ($column == 'camera_mode') {
             if ($name === 'p') {
                 $name = 'Photo';
             } else if ($name === 'v') {
@@ -2308,15 +2309,18 @@ class CamerasController extends Controller
             $percent = round(($free / $size) * 100, 0);
 
             $free = round($free / 1024, 2);
-            $name = $free . ' GB (' . $percent . '%free)';
+            $name = $free . ' GB (' . $percent . '% free)';
 
-        } elseif ($column == 'points_used') {
-            $used    = $name;
-            $size    = $camera['points'];
-            $percent = round(($used / $size) * 100, 0);
-
-            $used = number_format($used, 2, '.', '');
-            $name = $used . ' (' . $percent . '%free)';
+        //} elseif ($column == 'points_used') {
+        //    $used    = $name;
+        //    $size    = $camera['points'];
+        //
+        //    if ($size > 0) {
+        //        $percent = round(($used / $size) * 100, 0);
+       //
+        //        $used = number_format($used, 2, '.', '');
+        //        $name = $used . ' (' . $percent . '%free)';
+        //    }
         }
         return $name;
     }
@@ -2330,6 +2334,7 @@ class CamerasController extends Controller
             $field_value = $camera[$key];
             $field_title = $value;
             $field_text  = $this->CameraFieldValueConvert($camera, $field_name, $field_value);
+//$field_text  = $field_value;
 
             $handle .= '<div class="row">';
             $handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
@@ -2351,12 +2356,12 @@ class CamerasController extends Controller
     public function OverviewStatus($camera) {
         $lists = array(
             'description'  => 'Description',
-            'location'     => 'Location',
+//            'location'     => 'Location',
             'module_id'    => 'Module ID',
             'iccid'        => 'SIM ICCID',
-            'points'       => 'Plan Points',
-            'points_used'  => 'Points Used',
-            'model_id'     => 'Model',
+//            'points'       => 'Plan Points',
+//            'points_used'  => 'Points Used',
+//            'model_id'     => 'Model',
             'signal_value' => 'Signal',
             'battery'      => 'Battery',
             'card_size'    => 'Card Size',
@@ -2399,18 +2404,18 @@ class CamerasController extends Controller
             'wm_sclimit'        => 'Schedule File Limit',
             'hb_interval'       => 'Heartbeat Interval',
             'online_max_time'   => 'Max Online Time',
-            'cellularpw'        => 'Cellular Password',
-            'remotecontrol'     => 'Remote Control',
-            'blockmode1'        => 'Block Mode 1',
-            'blockmode2'        => 'Block Mode 2',
-            'blockmode3'        => 'Block Mode 3',
-            'blockmode4'        => 'Block Mode 4',
-            'blockmode5'        => 'Block Mode 5',
-            'blockmode7'        => 'Block Mode 7',
-            'blockmode8'        => 'Block Mode 8',
-            'blockmode9'        => 'Block Mode 9',
-            'blockmode10'       => 'Block Mode 10',
-            'blockmode11'       => 'Block Mode 11',
+//            'cellularpw'        => 'Cellular Password',
+//            'remotecontrol'     => 'Remote Control',
+//            'blockmode1'        => 'Block Mode 1',
+//            'blockmode2'        => 'Block Mode 2',
+//            'blockmode3'        => 'Block Mode 3',
+//            'blockmode4'        => 'Block Mode 4',
+//            'blockmode5'        => 'Block Mode 5',
+//            'blockmode7'        => 'Block Mode 7',
+//            'blockmode8'        => 'Block Mode 8',
+//            'blockmode9'        => 'Block Mode 9',
+//            'blockmode10'       => 'Block Mode 10',
+//            'blockmode11'       => 'Block Mode 11',
         );
 
         $handle = $this->CameraPanelBody($camera->id, $lists);
@@ -2419,15 +2424,15 @@ class CamerasController extends Controller
 
     public function OverviewEvent($camera) {
         $lists = array(
-            'last_contact'     => 'Last Contact',
+//            'last_contact'     => 'Last Contact',
             'last_armed'       => 'Last Armed',
             'arm_photos'       => 'Photos since armed',
             'arm_points'       => 'Points since armed',
             'last_hb'          => 'Last Heartbeat',
             'last_photo'       => 'Last Photo',
-            'last_schedule'    => 'Last Scheduled Upload',
+//            'last_schedule'    => 'Last Scheduled Upload',
             'last_settings'    => 'Last Settings',
-            'expected_contact' => 'Expected Contact',
+//            'expected_contact' => 'Expected Contact',
         );
 
         $handle = $this->CameraPanelBody($camera->id, $lists);
@@ -2805,13 +2810,13 @@ class CamerasController extends Controller
                 'help'        => '',
             ),
 
-            'location'    => array(
-                'title'       => 'Camera Location',
-                'type'        => 'input',
-                'format'      => 'maxlength="30"',
-                'placeholder' => 'Input Camera Location',
-                'help'        => '',
-            ),
+            //'location'    => array(
+            //    'title'       => 'Camera Location',
+            //    'type'        => 'input',
+            //    'format'      => 'maxlength="30"',
+            //    'placeholder' => 'Input Camera Location',
+            //    'help'        => '',
+            //),
 
             'region' => array(
                 'title' => 'Camera Region',
@@ -3358,14 +3363,14 @@ class CamerasController extends Controller
                 'placeholder' => 'Input Cellular Password',
                 'help' => 'Input 6 digits. Blank for no password. If you input a password, it is required when you power the camera into Setup mode. This means if your camera is stolen, the thief is not able to set cellular mode to OFF, which means he can only use the camera in cellular mode.',
             ),
-            'remotecontrol' => array(
-                'title' => 'Remote Control',
-                'options' => array(
-                    array('name' => 'Disabled', 'value' => 'off'),
-                    array('name' => '24 Hour', 'value' => '24h'),
-                ),
-                'help' => 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.',
-            ),
+            //'remotecontrol' => array(
+            //    'title' => 'Remote Control',
+            //    'options' => array(
+            //        array('name' => 'Disabled', 'value' => 'off'),
+            //        array('name' => '24 Hour', 'value' => '24h'),
+            //    ),
+            //    'help' => 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.',
+            //),
 
         );
 

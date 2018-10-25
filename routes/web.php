@@ -79,6 +79,9 @@ Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
 Route::resource('/plans', 'PlansController');
 Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
+//Route::get('/myplans','PlansController@my_plans')->name('my.plans');
+Route::get('/myplans','PlansController@my_plans2')->name('my.plans');
+
 /*-----------------------------------------------------------*/
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');

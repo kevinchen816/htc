@@ -1,7 +1,7 @@
 @extends('layouts.default2')
 
 @section('welcome')
-@include('layouts._welcome')
+<br>
 @stop
 
 @section('content')
@@ -43,19 +43,6 @@
                         <a class="btn btn-primary" href="{{ route('signup') }}" role="button">Register</a>
                     </p>
 
-                    <hr>
-
-                    <!--
-                    <p>
-                        <a class="btn btn-primary" href="{{ route('logout') }}" role="button">Logout</a>
-                    </p>
-                    -->
-                    <!--
-                        <form action="{{ route('logout') }}" method="POST">
-                          {{ csrf_field() }}
-                          <button type="submit" class="btn btn-block btn-danger">Logout</button>
-                        </form>
-                    -->
                 </div>
             </div>
         </div>

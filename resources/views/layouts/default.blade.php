@@ -76,8 +76,8 @@
         }
 
     </style>
-<link rel="stylesheet" href="/css/thumbnail-gallery.css" media="screen">
-<link rel="stylesheet" href="/css/gallery.css" media="screen">
+<link rel="stylesheet" href="https://portal.ridgetec.com/css/thumbnail-gallery.css" media="screen">
+<link rel="stylesheet" href="https://portal.ridgetec.com/css/gallery.css" media="screen">
 <style>
     .custom-time-toggle-td {
         padding-right: 2px;

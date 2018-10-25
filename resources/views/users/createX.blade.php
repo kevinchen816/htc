@@ -1,13 +1,13 @@
 @extends('layouts.default2')
 
 @section('welcome')
-<br>
+@include('layouts._welcome')
 @stop
 
 @section('content')
 <div class="container">
 <div class="row">
-    <div class="col-md-offset-2 col-md-8">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h5>Register</h5>
@@ -15,6 +15,7 @@
             <div class="panel-body">
                 @include('shared._errors')
 
+                <div class="col-md-6">
                     <form method="POST" action="{{ route('users.store') }}">
                         {{ csrf_field() }}
 
@@ -40,7 +41,11 @@
 
                         <button type="submit" class="btn btn-primary">Register</button>
                     </form>
+                </div>
 
+                <div class="col-md-6">
+                @include('users._register_help')
+                </div>
             </div>
         </div>
     </div>

@@ -4,6 +4,10 @@
             <div class="panel-heading">
                 <div class="panel-title">
                     <span style="font-size: .70em;" >Request Actions</span>
+                    <a class="btn btn-xs btn-primary pull-right" id="action-show">
+                        <i class="fa fa-angle-up"></i>
+                        Commands
+                    </a>
                 </div>
             </div>
             <div class="panel-body  " id="commandhistory-{{ $camera->id }}">
@@ -31,6 +35,9 @@
                                         <label for="password inputSmall" class="control-label">Account Password:</label>
                                         <input id="{{ $camera->id }}_password_format" type="password" class="form-control input-sm" name="password" required>
                                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-trash"></i> Erase SD Card</button>
+                                        <!--<p>Erase SD card temporarily disabled. Your camera needs
+                                                        to upgrade to firmware 20181003 or higher.</p>-->
+
                                     </div>
                                     <div class="alert alert-sm alert-info">
                                         <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the Erase SD Card button.
@@ -39,11 +46,28 @@
                                     </div>
                                 </form>
                             </td>
+                            <!-- <td><a href="/cameras/actionqueue/{{ $camera->id }}/FC" class="btn btn-sm btn-success">Format SD Card</a></td>-->
                         </tr>
 
                         @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
                         {!! $actions_ctrl->Commands($camera) !!}
 
+                        <!--<tr>
+                            <td>
+                                <a data-param="FW" class="btn btn-sm btn-success action-queue-15" camera-id="{{ $camera->id }}">Update Firmware to (20181003)</a>
+                            </td>
+                        </tr>-->
+
+                        <tr>
+                            <td>
+@if ($camera->log == 1)
+                                <a data-param="LD" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Disable</a>
+@else
+                                <a data-param="LE" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Enable</a>
+@endif
+                                <a data-param="LU" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Upload</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -84,7 +108,7 @@
     </div>
 </div>
 
-<!--<div class="row">
+<div class="row">
     <div class="col-md-3">
     </div>
     <div class="col-md-9">
@@ -118,7 +142,7 @@
             </div>
         </div>
     </div>
-</div>-->
+</div>
 
 <script type="text/javascript">
 $(document).ready(function () {
