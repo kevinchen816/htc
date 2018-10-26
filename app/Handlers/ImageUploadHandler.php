@@ -116,15 +116,21 @@ class ImageUploadHandler
     }
 
     public function save_buffer($camera_id, $file, $blockid, $blocknbr) {
-        $path_upload = public_path().'/uploads/block/'.$blockid;
-        //$filename = $blocknbr . '.BIN';
-        $filename = sprintf("%05u.BIN", $blocknbr);
-        $savepath = $file->move($path_upload, $filename);
+        $ClientOriginalName = $file->getClientOriginalName();
 
+        $path_upload = public_path().'/uploads/block/'.$blockid;
+        $savename = sprintf("%05u.BIN", $blocknbr);
+        $savepath = $file->move($path_upload, $savename);
+
+        if ($blocknbr == 1) {
+            $filename = $path_upload.'/filename.txt';
+            file_put_contents($filename, $ClientOriginalName);
+        }
+
+        $ret['imagename'] = $ClientOriginalName;
+        $ret['savename'] = $savename;
+        $ret['savepath'] = $savepath;
         //$ret['filesize'] = $file->getClientSize();
-        //$ret['ImageName'] = $file->getClientOriginalName();  // "PICT0001.JPG"
-        //$ret['savename'] = $savename;
-        $ret['savepath'] = "$savepath";
         $ret['err'] = 0;
         return $ret;
     }
@@ -163,7 +169,9 @@ class ImageUploadHandler
             return $ret;
         }
 
-        $tagert_name =  $path_block .'/'. $filename;
+        $ClientOriginalName = file_get_contents($path_block.'/filename.txt');
+
+        $tagert_name =  $path_block .'/'. $ClientOriginalName;
         if (file_exists($tagert_name)) {
             unlink($tagert_name);
         }
@@ -184,10 +192,12 @@ class ImageUploadHandler
         /* https://www.cnblogs.com/mslagee/p/6223140.html */
         $crc32_check = hexdec(hash_file('crc32b', $tagert_name));
         if ($crc32_check == $crc32) {
-            //$extension = strtoupper($file->getClientOriginalExtension()); // JPG
-            $extension = 'JPG';
-            $filename = time() . '_' . str_random(10) . '.' . $extension;
-            $to_file = public_path().'/uploads/'.$camera_id.'/'.$filename;
+            ////$extension = strtoupper($file->getClientOriginalExtension()); // JPG
+            //$extension = 'JPG';
+            //$savename = time() . '_' . str_random(10) . '.' . $extension;
+
+            $savename = time().'_'.$ClientOriginalName;
+            $to_file = public_path().'/uploads/'.$camera_id.'/'.$savename;
             $ret = copy($tagert_name, $to_file);
             if($ret == true) {
                 $err = 0;
@@ -202,15 +212,19 @@ class ImageUploadHandler
         $ret['err'] = $err;
         $ret['CRC32'] = $crc32_check;
         if ($err == 0) {
-//            foreach ($files as $file) {
-//                unlink($file);
-//            }
-//            unlink($tagert_name);
-//            rmdir($path_block);
+            foreach ($files as $file) {
+                unlink($file);
+            }
+            unlink($tagert_name);
+            rmdir($path_block);
 
             //$ret['path'] = "$tagert_name";
             //$ret['to_file'] = "$to_file";
-            $ret['filename'] = $filename;   // 1538422239_Cf7PQK04w4.JPG
+//            $ret['filename'] = $filename;   // 1538422239_Cf7PQK04w4.JPG
+
+            $ret['imagename'] = $ClientOriginalName;
+            $ret['savename'] = $savename;
+            //$ret['savepath'] = $savepath;
             $ret['filesize'] = filesize($to_file);
         }
         return $ret;

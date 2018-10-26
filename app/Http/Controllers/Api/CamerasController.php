@@ -1331,7 +1331,8 @@ class CamerasController extends Controller
             if ($blocknbr <= 0) {
                 return $this->Response_Result(ERR_INVALID_BLOCK_NUMBER, $camera);
             } else if ($blocknbr == 1) {
-                $blockid = date('ymdhis').'_'.$camera_id; // 'rt5bb7b9586d6fb'
+                //$blockid = date('ymdhis').'_'.$camera_id; // 'rt5bb7b9586d6fb'
+                $blockid = $camera_id.'_'.date('ymdhis');
             } else {
                 if (!isset($request->blockid)) {
                     return $this->Response_Result(ERR_NO_BLOCK_ID, $camera);
@@ -1451,7 +1452,6 @@ class CamerasController extends Controller
                 $photo->camera_id           = $camera_id;
                 $photo->filename            = $request->FileName;
                 $photo->imagename           = $ret['imagename'];
-//                $photo->savename            = $ret['savename']; // TODO (del)
                 $photo->thumb_name          = $ret['savename'];
                 $photo->filesize            = $ret['filesize'];
                 $photo->points              = $points;
@@ -1666,7 +1666,6 @@ class CamerasController extends Controller
                 $data['resolution'] = $request->upload_resolution;
                 $data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $ret['imagename'];
-//                $data['savename'] = $ret['savename'];
                 $data['original_name'] = $ret['savename'];
                 $data['filesize'] = $filesize;
                 $data['points'] = $points;
@@ -1788,7 +1787,6 @@ class CamerasController extends Controller
                 $param['camera_id'] = $camera_id;
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
-//                $param['savename'] = $ret['savename'];
                 $param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
 
