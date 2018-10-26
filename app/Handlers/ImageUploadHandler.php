@@ -169,7 +169,9 @@ class ImageUploadHandler
             return $ret;
         }
 
-        $ClientOriginalName = file_get_contents($path_block.'/filename.txt');
+        $temp = $path_block.'/filename.txt';
+        $ClientOriginalName = file_get_contents($temp);
+        unlink($temp);
 
         $tagert_name =  $path_block .'/'. $ClientOriginalName;
         if (file_exists($tagert_name)) {
