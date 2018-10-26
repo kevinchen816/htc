@@ -1935,12 +1935,12 @@ class CamerasController extends Controller
     /*{"iccid":"89860117851014783481","module_id":"861107032685597","model_id":"lookout-na",
        "RequestID":"4980","version":"20180720"}*/
     public function firmware(Request $request) {
+        $model_id = $request->model_id;
         $firmware = DB::table('firmwares')
             ->where(['model' => $model_id, 'active' => 1])
             ->first();
         if ($firmware) {
             /* /firmware/lookout-na/20180816/IMAGE.ZIP */
-            $model_id = $request->model_id;
             $version = $firmware->version;
             $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
             $pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
