@@ -202,11 +202,11 @@ class ImageUploadHandler
         $ret['err'] = $err;
         $ret['CRC32'] = $crc32_check;
         if ($err == 0) {
-            foreach ($files as $file) {
-                unlink($file);
-            }
-            unlink($tagert_name);
-            rmdir($path_block);
+//            foreach ($files as $file) {
+//                unlink($file);
+//            }
+//            unlink($tagert_name);
+//            rmdir($path_block);
 
             //$ret['path'] = "$tagert_name";
             //$ret['to_file'] = "$to_file";
