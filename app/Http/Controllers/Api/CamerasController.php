@@ -1040,46 +1040,46 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function Photo_Add($param) {
-        $photo = new Photo;
-        $photo->camera_id           = $param->camera_id; // TODO
-        $photo->filename            = $param->filename;
-        $photo->imagename           = $param->imagename;
-        $photo->savename            = $param->savename;
-        $photo->filesize            = $param->filesize;
-        $photo->filetype            = 1;
-        $photo->points              = $param->points;
+    //public function Photo_Add($param) {
+    //    $photo = new Photo;
+    //    $photo->camera_id           = $param->camera_id; // TODO
+    //    $photo->filename            = $param->filename;
+    //    $photo->imagename           = $param->imagename;
+    //    $photo->savename            = $param->savename;
+    //    $photo->filesize            = $param->filesize;
+    //    $photo->filetype            = 1;
+    //    $photo->points              = $param->points;
+    //
+    //    $photo->resolution          = $param->upload_resolution;
+    //    $photo->photo_quality       = $param->photo_quality;
+    //    $photo->photo_compression   = $param->photo_compression;
+    //    $photo->source              = $param->Source;
+    //    $photo->datetime            = $param->DateTime;
+    //    $photo->save();
+    //    return $photo;
+    //}
 
-        $photo->resolution          = $param->upload_resolution;
-        $photo->photo_quality       = $param->photo_quality;
-        $photo->photo_compression   = $param->photo_compression;
-        $photo->source              = $param->Source;
-        $photo->datetime            = $param->DateTime;
-        $photo->save();
-        return $photo;
-    }
-
-    public function Video_Add($param) {
-        $photo = new Photo;
-        $photo->camera_id           = $param->camera_id; // TODO
-        $photo->filename            = $param->filename;
-        $photo->imagename           = $param->imagename;
-        $photo->savename            = $param->savename;
-        $photo->filesize            = $param->filesize; // $param->video_filesize;
-        $photo->filetype            = 2;
-        $photo->points              = $param->points;
-
-        $photo->resolution          = $param->upload_resolution;
-        $photo->photo_quality       = $param->photo_quality;
-        $photo->video_length        = (integer) ($param->video_length);
-        $photo->video_sound         = $param->video_sound;
-        $photo->video_rate          = $param->video_rate;
-        $photo->video_bitrate       = $param->video_bitrate;
-        $photo->source              = $param->Source;
-        $photo->datetime            = $param->DateTime;
-        $photo->save();
-        return $photo;
-    }
+    //public function Video_Add($param) {
+    //    $photo = new Photo;
+    //    $photo->camera_id           = $param->camera_id; // TODO
+    //    $photo->filename            = $param->filename;
+    //    $photo->imagename           = $param->imagename;
+    //    $photo->savename            = $param->savename;
+    //    $photo->filesize            = $param->filesize; // $param->video_filesize;
+    //    $photo->filetype            = 2;
+    //    $photo->points              = $param->points;
+    //
+    //    $photo->resolution          = $param->upload_resolution;
+    //    $photo->photo_quality       = $param->photo_quality;
+    //    $photo->video_length        = (integer) ($param->video_length);
+    //    $photo->video_sound         = $param->video_sound;
+    //    $photo->video_rate          = $param->video_rate;
+    //    $photo->video_bitrate       = $param->video_bitrate;
+    //    $photo->source              = $param->Source;
+    //    $photo->datetime            = $param->DateTime;
+    //    $photo->save();
+    //    return $photo;
+    //}
 
     /*----------------------------------------------------------------------------------*/
     public function hello(Request $request) {
@@ -1435,21 +1435,53 @@ class CamerasController extends Controller
 
             if ($err == 0) {
                 $param = $request;
-                $param['camera_id'] = $camera_id;
-                $param['filename'] = $request->FileName;
-                $param['imagename'] = $ret['imagename'];
-                $param['savename'] = $ret['savename'];
-                $param['extension'] = $ret['extension'];
+                //$param['camera_id'] = $camera_id;
+                //$param['filename'] = $request->FileName;
+                //$param['imagename'] = $ret['imagename'];
+                //
+                //$param['savename'] = $ret['savename'];
+                //$param['thumb_name'] = $ret['savename'];
+                //
+                //$param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
-
                 $points = $this->Plan_Update($param);
-                $param['points'] = $points;
+                //$param['points'] = $points;
+
+                $photo = new Photo;
+                $photo->camera_id           = $camera_id;
+                $photo->filename            = $request->FileName;
+                $photo->imagename           = $ret['imagename'];
+//                $photo->savename            = $ret['savename']; // TODO (del)
+                $photo->thumb_name          = $ret['savename'];
+                $photo->filesize            = $ret['filesize'];
+                $photo->points              = $points;
+                $photo->resolution          = $request->upload_resolution;
+                $photo->source              = $request->Source;
+                $photo->datetime            = $request->DateTime;
+
                 if ($api == 'video_thumb') {
-                    $photo = $this->Video_Add($param);
+                    $photo->filetype   = 2;
+                    $photo->uploadtype = 3;
+                    //$photo = $this->Video_Add($param);
+
+                    //$photo->photo_quality       = $param->photo_quality;
+                    $photo->video_length        = (integer) ($param->video_length);
+                    $photo->video_sound         = $param->video_sound;
+                    $photo->video_rate          = $param->video_rate;
+                    $photo->video_bitrate       = $param->video_bitrate;
+                    $photo->save();
+
                 } else {
-                    $photo = $this->Photo_Add($param);
+                    $photo->filetype   = 1;
+                    $photo->uploadtype = 1;
+                    //$photo = $this->Photo_Add($param);
+
+                    $photo->photo_quality       = $param->photo_quality;
+                    $photo->photo_compression   = $param->photo_compression;
+                    $photo->save();
                 }
-                $this->Camera_Status_Update($param, 'upload');
+                //$this->Camera_Status_Update($param, 'upload');
+                $this->Camera_Status_Update($request, 'upload');
 
                 if ($request->RequestID) {
                     $request_id = $request->RequestID;
@@ -1629,10 +1661,13 @@ class CamerasController extends Controller
 
                 /* update Photo */
                 $data = [];
+                $data['action'] = 0;
+                $data['uploadtype'] = 2; // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
                 $data['resolution'] = $request->upload_resolution;
                 $data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $ret['imagename'];
-                $data['savename'] = $ret['savename'];
+//                $data['savename'] = $ret['savename'];
+                $data['original_name'] = $ret['savename'];
                 $data['filesize'] = $filesize;
                 $data['points'] = $points;
                 $photos->update($data);
@@ -1753,7 +1788,7 @@ class CamerasController extends Controller
                 $param['camera_id'] = $camera_id;
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
-                $param['savename'] = $ret['savename'];
+//                $param['savename'] = $ret['savename'];
                 $param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
 
@@ -1763,10 +1798,13 @@ class CamerasController extends Controller
 
                 /* update Photo */
                 $data = [];
+                $data['action'] = 0;
+                $data['uploadtype'] = 4; // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
                 $data['resolution'] = $request->upload_resolution;
                 //$data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $ret['imagename'];
-                $data['savename'] = $ret['savename'];
+//                $data['savename'] = $ret['savename'];
+                $data['original_name'] = $ret['savename'];
                 $data['filesize'] = $filesize;
                 $data['points'] = $points;
                 $photos->update($data);
@@ -2205,20 +2243,6 @@ class CamerasController extends Controller
                 $param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
 
-                /* update Plan */
-                //$points = $this->Plan_Update($param);
-                //$param['points'] = $points;
-
-                /* update Photo */
-                //$data = [];
-                //$data['resolution'] = $request->upload_resolution;
-                //$data['photo_compression'] = $request->photo_compression;
-                //$data['imagename'] = $ret['imagename'];
-                //$data['savename'] = $ret['savename'];
-                //$data['filesize'] = $filesize;
-                //$data['points'] = $points;
-                //$photos->update($data);
-
                 /* update Camera Status */
                 $this->Camera_Status_Update($param, 'log');
 
@@ -2499,7 +2523,8 @@ class CamerasController extends Controller
                 $caption = sprintf('%s | %s | %s | %s (Q=%s) | Points: %.2f', $photo->filename, $photo->datetime, $source, $resolution, $quality, $photo->points);
             }
             $title = sprintf('%s (%d)', $photo->filename, $photo->id); // PICT0001.JPG (1)
-            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
+//            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
+            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
             $download = sprintf('/cameras/download/%d/%d', $camera_id, $photo_id);
 
             $handle .= '<div class="col-xs-'.$col.' custom-thumbnail-grid-column column-number-'.$column.'">';
@@ -2510,39 +2535,75 @@ class CamerasController extends Controller
             $handle .=         '</label>';
             $handle .=     '</div>';
 
-            if (($photo->filetype == 2) && (!$photo->action)) {
-            $handle .=     '<div class="image-highdef pull-right">';
-            $handle .=         '<label style="font-size: 1.5em; margin-right: 4px;">';
-            $handle .=             '<span class="cr"><i class="cr-icon fa fa-play-circle" style="color:lime;"></i></span>';
-            $handle .=         '</label>';
-            $handle .=     '</div>';
-            }
-
-            if ($photo->action) {
-            $handle .=     '<div class="image-highdef pull-right" id="pending-'.$photo_id.'">';
-            } else {
-            $handle .=     '<div class="image-highdef pull-right" hidden id="pending-'.$photo_id.'">';
-            }
-
+            /* pending request */
+            $hidden = ($photo->action) ? '' : 'hidden';
+            $handle .=     '<div class="image-highdef pull-right" '.$hidden.' id="pending-'.$photo_id.'">';
             $handle .=         '<label style="font-size: 1.0em; margin-right: 4px;">';
             $handle .=             '<span class="cr"><i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i></span>';
             $handle .=         '</label>';
             $handle .=     '</div>';
 
-            $handle .=     '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
-            $handle .=         'href="'.$filepath.'" ';
-            $handle .=         'data-caption="'. $caption.'"';
-            $handle .=         'data-camera="'.$camera_id.'" ';
-            $handle .=         'data-id="'.$photo_id.'" ';
-            $handle .=         'data-highres="0" ';
-            $handle .=         'data-pending="0">';
+            if (!$photo->action) {
+                // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                if ($photo->uploadtype == 2) {
+                    $handle .= '<div class="image-highdef pull-right">';
+                    $handle .= '    <label style="font-size: 1.5em; margin-right: 4px;">';
+                    $handle .= '        <span class="cr"><i class="cr-icon fa fa-camera" style="color:lime;"></i></span>';
+                    $handle .= '    </label>';
+                    $handle .= '</div>';
+                } else if ($photo->uploadtype == 3) {
+                    $handle .=     '<div class="image-highdef pull-right">';
+                    $handle .=         '<label style="font-size: 1.5em; margin-right: 4px;">';
+                    $handle .=             '<span class="cr"><i class="cr-icon fa fa-play-circle" style="color:lime;"></i></span>';
+                    $handle .=         '</label>';
+                    $handle .=     '</div>';
+                }
+            }
 
-            $handle .=         '<img src="'.$filepath.'"';
-            $handle .=             'class="img-responsive custom-thumb"';
-            $handle .=             'title="'.$title.'" ';
-            $handle .=             'alt="'.$photo->filename.'" ';
-            $handle .=             'data-description="'.$photo->filename.'">';
-            $handle .=     '</a>';
+            if ($photo->uploadtype == 4) { /* original video */
+                $videopath = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
+
+                $handle .= '<div class="thumb-anchor">';
+                $handle .=     '<img src="'.$filepath.'"';
+                $handle .= '        class="img-responsive custom-thumb"';
+                $handle .=         'title="'.$title.'" ';
+                $handle .=         'alt="'.$photo->filename.'" ';
+                $handle .=         'data-description="'.$photo->filename.'">';
+                $handle .= '</div>';
+
+                $handle .= '<div class="popup-video" video-url="'.$videopath.'"';
+                //$handle .=     'data-caption="PICT0003.MP4 | 10/26/2018 12:26:44 am | Motion | Standard Low | Points: 24.00" ';
+                $handle .=     'data-caption="'. $caption.'"';
+                $handle .=     'data-camera="'.$camera_id.'" ';
+                $handle .=     'data-id="'.$photo_id.'" ';
+                $handle .=     'data-poster="" ';
+                $handle .=     'data-width="640" ';
+                $handle .=     'data-height="360" controls>';
+                $handle .= '</div>';
+
+            } else {
+                if ($photo->uploadtype == 2) {
+                    $photo_path = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
+                } else {
+                    $photo_path = $filepath;
+                }
+
+                $handle .= '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
+                //$handle .=     'href="'.$filepath.'" ';
+                $handle .=     'href="'.$photo_path.'" ';
+                $handle .=     'data-caption="'. $caption.'"';
+                $handle .=     'data-camera="'.$camera_id.'" ';
+                $handle .=     'data-id="'.$photo_id.'" ';
+                $handle .=     'data-highres="0" ';
+                $handle .=     'data-pending="0">';
+
+                $handle .=     '<img src="'.$filepath.'"';
+                $handle .=         'class="img-responsive custom-thumb"';
+                $handle .=         'title="'.$title.'" ';
+                $handle .=         'alt="'.$photo->filename.'" ';
+                $handle .=         'data-description="'.$photo->filename.'">';
+                $handle .= '</a>';
+            }
 
             $handle .=     '<p class="thumbnail-timestamp pull-right" style="font-size: .70em">';
             $handle .=         '<a href="'.$download.'"><i class="fa fa-download"></i></a> ';
@@ -3704,7 +3765,7 @@ class CamerasController extends Controller
         $photo  = $photos->first();
 
         /* /uploads/camera_id/1539695099_2Q7NJJh7ur.ZIP */
-        $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->savename;
+        $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->thumb_name;
 
         // TODO: check file exist
         return response()->download($pathToFile, $photo->imagename);
@@ -3755,7 +3816,9 @@ class CamerasController extends Controller
                     $photo->delete();
 
                 } else if ($action == 'h') {
-                    if ($photo->filetype == 1) {
+                    //if ($photo->filetype == 1) {
+                    // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                    if ($photo->uploadtype == 1) {
                         $param['action_code'] = 'UO';
                         $param['photo_id'] = $photo_id;
                         $param['filename'] = $filename;
@@ -3768,7 +3831,9 @@ class CamerasController extends Controller
                     }
 
                 } else if ($action == 'o') {
-                    if ($photo->filetype == 1) {
+                    //if ($photo->filetype == 1) {
+                    // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                    if ($photo->uploadtype == 1) {
                         $param['action_code'] = 'UO';
                         $param['photo_id'] = $photo_id;
                         $param['filename'] = $filename;
@@ -3780,7 +3845,9 @@ class CamerasController extends Controller
                     }
 
                 } else if ($action == 'v') {
-                    if ($photo->filetype == 2) {
+                    //if ($photo->filetype == 2) {
+                    // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                    if ($photo->uploadtype == 3) {
                         $param['action_code'] = 'UV';
                         $param['photo_id'] = $photo_id;
                         $param['filename'] = $filename;

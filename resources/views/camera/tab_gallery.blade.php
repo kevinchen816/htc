@@ -726,7 +726,7 @@
 
 
         $('.popup-video').click(function () {
-            alert('==> .popup-video'); // kk-debug
+//alert('==> .popup-video'); // kk-debug
             var url = $(this).attr('video-url');
             var poster = $(this).attr('data-poster');
             $('#video-source').attr('src', url);
@@ -773,7 +773,7 @@
         });
 
         $('#modal-video-dlg').on('hide.bs.modal', function () {
-            alert('==> #modal-video-dlg'); // kk-debug
+//alert('==> #modal-video-dlg'); // kk-debug
             var video_block = $('#video-block');
             //console.log('user is closing video so pause it');
             if (video_block) {

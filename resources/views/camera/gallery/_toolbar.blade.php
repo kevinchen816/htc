@@ -41,11 +41,11 @@
                                 Delete
                             </a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a class="btn" data-toggle="modal" data-target="#HighresModal" data-type="highres">
                                 Request HighRes MAX
                             </a>
-                        </li>
+                        </li>-->
                         <li>
                             <a class="btn" data-toggle="modal" data-target="#OriginalModal" data-type="original">
                                 Request Original

@@ -22,9 +22,14 @@ class CreatePhotosTable extends Migration
             //$table->string('model_id');
 
             $table->string('filename');
-            $table->integer('filetype')->nullable();
+            $table->integer('filetype')->nullable();    // 1:JPG, 2:MP4
+            $table->integer('uploadtype')->nullable();  // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+
             $table->string('imagename');
-            $table->string('savename')->nullable(); // 'filepath'
+//            $table->string('savename')->nullable(); // 'filepath'
+            $table->string('thumb_name')->nullable();
+            $table->string('original_name')->nullable();
+
             $table->integer('filesize')->nullable();
 
             $table->integer('resolution')->nullable(); //$table->string('upload_resolution');
@@ -43,8 +48,8 @@ class CreatePhotosTable extends Migration
             //$table->integer('video_filesize')->nullable();
 
             $table->string('source')->nullable();
-            $table->integer('action')->nullable();
-            $table->integer('original')->nullable();
+            $table->integer('action')->default(0);
+            $table->integer('original')->default(0);
 
             //$table->string('datetime', 14);
             //$table->timestamp('datetime');  // 1970-01-01 00:00:01 ~ 2038-01-19 03:14:07 UTC
