@@ -1652,7 +1652,7 @@ class CamerasController extends Controller
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
                 $param['savename'] = $ret['savename'];
-                $param['extension'] = $ret['extension'];
+                //$param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
 
                 /* update Plan */
@@ -1787,7 +1787,7 @@ class CamerasController extends Controller
                 $param['camera_id'] = $camera_id;
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
-                $param['extension'] = $ret['extension'];
+                //$param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
 
                 /* update Plan */
@@ -2238,7 +2238,7 @@ class CamerasController extends Controller
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
                 $param['savename'] = $ret['savename'];
-                $param['extension'] = $ret['extension'];
+                //$param['extension'] = $ret['extension'];
                 $param['filesize'] = $ret['filesize'];
 
                 /* update Camera Status */
