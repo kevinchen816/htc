@@ -3855,7 +3855,7 @@ class CamerasController extends Controller
             "hb_interval",
             "online_max_time",
             "cellularpw",
-            "remotecontrol",
+//            "remotecontrol",
         );
 
         $Timelapse_Settings = array(
@@ -3892,7 +3892,9 @@ class CamerasController extends Controller
         foreach ($Control_Settings as $key) {
             //$name = $camera_id.'_'.$key;
             //$data[$key] = $request[$name];
-            $data[$key] = $request[$camera_id.'_'.$key];
+            if (isset($request[$camera_id.'_'.$key])) {
+                $data[$key] = $request[$camera_id.'_'.$key];
+            }
         }
 //return $data;
 
@@ -3914,7 +3916,9 @@ class CamerasController extends Controller
         }
 
         foreach ($Block_Mode_Settings as $key) {
-            $data[$key] = $request[$camera_id.'_'.$key];
+            if (isset($request[$camera_id.'_'.$key])) {
+                $data[$key] = $request[$camera_id.'_'.$key];
+            }
         }
 //return $data;
 
