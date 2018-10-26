@@ -183,7 +183,8 @@ class PlansController extends Controller
         //session()->flash('success', 'Create Success');
         //return redirect()->route('plans.show', [$plan]);
         //return view('plans.show', compact('user', 'plan'));
-        return redirect()->route('account.profile');
+//        return redirect()->route('account.profile');
+        return redirect()->route('my.plans');
     }
 
     /*----------------------------------------------------------------------------------*/
