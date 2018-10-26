@@ -1896,6 +1896,7 @@ class CamerasController extends Controller
                 ->first();
             if ($firmware) {
                 $version = $firmware->version;
+
                 if ($request->version < $version) {
                     $freespace =  (integer) ($request->Cardspace);
                     if ($freespace < 10) {
@@ -1906,6 +1907,13 @@ class CamerasController extends Controller
                         $err = 2;
                     } else {
                         $err = 1;
+
+                        /* /firmware/lookout-na/20180816/IMAGE.ZIP */
+                        $model_id = $request->model_id;
+                        $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
+                        $pathname = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+
+                        $crc32 = hexdec(hash_file('crc32b', $pathname));
                     }
                 } else {
                     $err = 0;
@@ -1914,6 +1922,10 @@ class CamerasController extends Controller
         }
 
         $response = $this->Response_Result($err, $camera);
+        if ($err == 1) {
+            $response['crc32'] = (string) $crc32;
+        }
+
         if ($user_id && $camera) {
             $this->LogApi_Add('firmwareinfo', 1, $user_id, $camera->id, $request, $response);
         }
@@ -1923,18 +1935,14 @@ class CamerasController extends Controller
     /*{"iccid":"89860117851014783481","module_id":"861107032685597","model_id":"lookout-na",
        "RequestID":"4980","version":"20180720"}*/
     public function firmware(Request $request) {
-        $model_id = $request->model_id;
         $firmware = DB::table('firmwares')
             ->where(['model' => $model_id, 'active' => 1])
             ->first();
         if ($firmware) {
-            $version = $firmware->version;
-            if ($firmware->type == 1) {
-                $filename = 'IMAGE.ZIP';
-            } else {
-                $filename = 'IMAGE.BIN';
-            }
             /* /firmware/lookout-na/20180816/IMAGE.ZIP */
+            $model_id = $request->model_id;
+            $version = $firmware->version;
+            $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
             $pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
 
             // TODO: check file exist
