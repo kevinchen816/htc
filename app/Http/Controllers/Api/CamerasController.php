@@ -972,7 +972,8 @@ class CamerasController extends Controller
         return 0;
     }
 
-    public function Camera_Status_Update($param, $api_type = null) {
+    //public function Camera_Status_Update($param, $api_type = null) {
+    public function Camera_Status_Update($param, $api_type = null, $upload_original = 0) {
         $module_id = $param->module_id;
         $cameras = DB::table('cameras')->where('module_id', $module_id);
         $camera = $cameras->first();
@@ -998,7 +999,10 @@ class CamerasController extends Controller
             $data['cellular']     = $param->cellular;
 
             $data['last_filename'] = $param->filename;
-            $data['last_savename'] = $param->savename;
+
+            if ($upload_original == 0) {
+                $data['last_savename'] = $param->savename;
+            }
 
             if ($param->Source != 'setup') {
                 $data['arm_photos'] = $camera->arm_photos+1;
@@ -1439,12 +1443,9 @@ class CamerasController extends Controller
                 //$param['camera_id'] = $camera_id;
                 //$param['filename'] = $request->FileName;
                 //$param['imagename'] = $ret['imagename'];
-                //
-                //$param['savename'] = $ret['savename'];
-                //$param['thumb_name'] = $ret['savename'];
-                //
-                //$param['extension'] = $ret['extension'];
+                $param['savename'] = $ret['savename'];
                 $param['filesize'] = $ret['filesize'];
+
                 $points = $this->Plan_Update($param);
                 //$param['points'] = $points;
 
@@ -1480,8 +1481,7 @@ class CamerasController extends Controller
                     $photo->photo_compression   = $param->photo_compression;
                     $photo->save();
                 }
-                //$this->Camera_Status_Update($param, 'upload');
-                $this->Camera_Status_Update($request, 'upload');
+                $this->Camera_Status_Update($param, 'upload');
 
                 if ($request->RequestID) {
                     $request_id = $request->RequestID;
@@ -1652,8 +1652,7 @@ class CamerasController extends Controller
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
                 $param['savename'] = $ret['savename'];
-                //$param['extension'] = $ret['extension'];
-                $param['filesize'] = $ret['filesize'];
+                $param['filesize'] = $filesize;
 
                 /* update Plan */
                 $points = $this->Plan_Update($param);
@@ -1672,7 +1671,7 @@ class CamerasController extends Controller
                 $photos->update($data);
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'upload');
+                $this->Camera_Status_Update($param, 'upload', 1);
 
                 /* update Action */
                 $data = [];
@@ -1808,7 +1807,7 @@ class CamerasController extends Controller
                 $photos->update($data);
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'upload');
+                $this->Camera_Status_Update($param, 'upload', 1);
 
                 /* update Action */
                 $data = [];

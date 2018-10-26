@@ -154,13 +154,13 @@ class ActionsController extends Controller
             ->first();
         if ($firmware) {
             $version = $firmware->version;
-            //if ($version > $camera->dsp_version) {
+            if ($version > $camera->dsp_version) {
                 $handle .= '<tr>';
                 $handle .=     '<td>';
                 $handle .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Update Firmware to ('.$version.')</a>';
                 $handle .=     '</td>';
                 $handle .= '</tr>';
-            //}
+            }
         }
 
         //$handle .= '<tr>';

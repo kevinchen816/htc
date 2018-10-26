@@ -11,7 +11,8 @@
                         <div class="panel panel-default panel-primary custom-settings-panel">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    Delete this Camera
+                                    <i class="fa fa-times-circle" style="color:red"></i> Delete this Camera
+                                    <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="delete-camera"><i class="fa fa-question"></i></a>
                                 </h4>
                             </div>
                             <div class="panel-body">
@@ -23,7 +24,6 @@
                                         <label for="password inputSmall" class="col-md-5 control-label">Account Password</label>
                                         <div class="col-md-6">
                                             <input id="{{ $camera->id }}_password_delete" type="password" class="form-control input-sm" name="password" required>
-                                            <br>
                                             <button type="submit" class="btn btn-sm btn-primary">Delete Camera</button>
                                         </div>
                                     </div>
@@ -31,6 +31,18 @@
                                         <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the delete camera button.</p>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default panel-primary custom-settings-panel">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    Other Options
+                                </h4>
+                            </div>
+                            <div class="panel-body">
+                                <a href="/cameras/apilog/{{ $camera->id }}" class="btn btn-sm btn-primary">View Camera Activity Log</a>
                             </div>
                         </div>
                     </div>
