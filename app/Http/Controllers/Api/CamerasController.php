@@ -2115,7 +2115,7 @@ class CamerasController extends Controller
                     $param['request_id'] = $request->RequestID;
                     //$param['photo_id'] = ;
                     //$param['photo_cnt'] = ;
-                    $this->Action_Completed($param);
+//                    $this->Action_Completed($param);
                 }
 
                 $response = $this->Response_Result($err, $camera);
