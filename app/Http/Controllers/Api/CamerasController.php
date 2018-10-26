@@ -626,7 +626,7 @@ class CamerasController extends Controller
 
     public function Action_Update($param) {
         //$ret = 0;
-        $request_id = $param['request_id'];
+        $request_id = (integer) $param['request_id'];
         $actions = DB::table('actions')->where('id', $request_id);
         $action  = $actions->first();
         if ($action) {
@@ -1890,20 +1890,26 @@ class CamerasController extends Controller
         if ($err == 0) {
             $this->Camera_Status_Update($request);
 
-            $version = '20180816'; // TODO
-            if ($request->version < $version) {
-                $freespace =  (integer) ($request->Cardspace);
-                if ($freespace < 10) {
-                    $err = 2;
-                } else if ($request->Battery == 'l') {
-                    $err = 2;
-                } else if ($request->Battery == 'e') {
-                    $err = 2;
+            //$version = '20180816'; // TODO
+            $firmware = DB::table('firmwares')
+                ->where(['model' => $camera->model_id, 'active' => 1])
+                ->first();
+            if ($firmware) {
+                $version = $firmware->version;
+                if ($request->version < $version) {
+                    $freespace =  (integer) ($request->Cardspace);
+                    if ($freespace < 10) {
+                        $err = 2;
+                    } else if ($request->Battery == 'l') {
+                        $err = 2;
+                    } else if ($request->Battery == 'e') {
+                        $err = 2;
+                    } else {
+                        $err = 1;
+                    }
                 } else {
-                    $err = 1;
+                    $err = 0;
                 }
-            } else {
-                $err = 0;
             }
         }
 
@@ -2097,7 +2103,7 @@ class CamerasController extends Controller
 
                 $action = $this->Action_FindFirst($camera->id, ACTION_PENDING);
                 if ($action) {
-                    $response['RequestID'] = $action->id;
+                    $response['RequestID'] = (string) $action->id;
                 }
 
                 if ($user_id && $camera) {
