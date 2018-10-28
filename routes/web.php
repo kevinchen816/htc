@@ -11,6 +11,14 @@
 |
 */
 
+/*
+      Route::group(['https'], function () {
+
+            // your routers
+
+        });
+*/
+
 //Route::get('/', function () {
 //    //return view('welcome');
 //    // return view('10ware');
