@@ -1,4 +1,5 @@
 @extends('layouts.default2')
+
 @section('content')
 <div class="fixed-navbar-container">
     <div class="container">

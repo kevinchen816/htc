@@ -3687,8 +3687,25 @@ class CamerasController extends Controller
 
     /*----------------------------------------------------------------------------------*/
     /* Web Function */
+    public function back_to_login($portal) {
+        //if (!Auth::check()) {
+            //session()->flash('warning', 'Please Login first');
+            if ($portal == 10) {
+                return redirect()->route('login.10ware');
+            } else if ($portal == 11) {
+                return redirect()->route('login.germany');
+            } else {
+                return redirect()->route('login');
+            }
+        //}
+    }
 
     public function activetab() {
+        $portal = $_POST['portal'];
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
         if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
@@ -3697,12 +3714,12 @@ class CamerasController extends Controller
         $sel_camera_tab = $_POST['tab'];
         $data['sel_camera_tab'] = $sel_camera_tab;
         Auth::user()->update($data);
+
         return $sel_camera_tab;
     }
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812
-    //public function cameras($camera_id) {
-    public function cameras() {
+    public function camerasX() {
         if (!Auth::check()) {
             //session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
@@ -3711,6 +3728,7 @@ class CamerasController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
         $camera_id = $user->sel_camera;
+        $portal = $user->portal;
 
         $data['sel_menu'] = 'camera';
         $user->update($data);
@@ -3734,10 +3752,70 @@ class CamerasController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate($camera->thumbs);
             //return view('cameras', compact('user', 'camera', 'photos'));
-            return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
+            //return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
+            return view('cameras', compact('portal', 'user', 'cameras', 'camera', 'photos'));
         } else {
-            return view('cameras_empty', compact('user'));
+            return view('cameras_empty', compact('portal', 'user'));
         }
+    }
+
+    public function cameras_portal($portal) {
+        if (!Auth::check()) {
+            ////session()->flash('warning', 'Please Login first');
+            //if ($portal == 10) {
+            //    return redirect()->route('login.10ware');
+            //} else if ($portal == 11) {
+            //    return redirect()->route('login.germany');
+            //} else {
+            //    return redirect()->route('login');
+            //}
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+        $camera_id = $user->sel_camera;
+        $portal = $user->portal;
+
+        $data['sel_menu'] = 'camera';
+        $user->update($data);
+
+        //$camera = DB::table('cameras')
+        //    ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
+        //    ->where('user_id', $user_id)
+        //    ->first();
+
+        $cameras = DB::table('cameras')
+            ->where('user_id', $user_id);
+
+        if ($cameras->count() > 0) {
+            //$camera = Camera::findOrFail($camera_id);
+            $camera = Camera::find($camera_id);
+            if (!$camera) {
+                $camera = Camera::first();
+            }
+
+            $photos = $camera->photos()
+                ->orderBy('created_at', 'desc')
+                ->paginate($camera->thumbs);
+            //return view('cameras', compact('user', 'camera', 'photos'));
+            //return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
+            return view('cameras', compact('portal', 'user', 'cameras', 'camera', 'photos'));
+        } else {
+            return view('cameras_empty', compact('portal', 'user'));
+        }
+    }
+
+    public function cameras() {
+        return $this->cameras_portal(0);
+    }
+
+    public function cameras_10ware() {
+        return $this->cameras_portal(10);
+    }
+
+    public function cameras_germany() {
+        return $this->cameras_portal(11);
     }
 
     public function delete(Request $request) {

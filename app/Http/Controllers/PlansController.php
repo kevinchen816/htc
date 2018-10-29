@@ -21,14 +21,18 @@ class PlansController extends Controller
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
         $user->update($data);
-        return view('plans.add-plan', compact('user'));
+
+        $portal = $user->portal;
+        return view('plans.add-plan', compact('portal', 'user'));
     }
 
     public function my_plans() {
         $user = Auth::user();
         $data['sel_menu'] = 'my_plans';
         $user->update($data);
-        return view('plans.my-plans', compact('user'));
+
+        $portal = $user->portal;
+        return view('plans.my-plans', compact('portal', 'user'));
     }
 
     public function MyPlans() {
@@ -112,7 +116,9 @@ class PlansController extends Controller
             ->where('user_id', $user_id)
             //->orderBy('created_at', 'desc')
             ->paginate(10);
-        return view('plans.my-plans2', compact('user', 'plans'));
+
+        $portal = $user->portal;
+        return view('plans.my-plans2', compact('portal', 'user', 'plans'));
     }
 
     public function MyPlans2($plans) {
@@ -184,7 +190,16 @@ class PlansController extends Controller
         //return redirect()->route('plans.show', [$plan]);
         //return view('plans.show', compact('user', 'plan'));
 //        return redirect()->route('account.profile');
-        return redirect()->route('my.plans');
+
+        $portal = $request->portal;
+        if ($portal == 10) {
+            return redirect()->route('my.plans.10ware');
+        } else if ($portal == 11) {
+            return redirect()->route('my.plans.germany');
+        } else {
+            return redirect()->route('my.plans.germany');
+        }
+        //return redirect()->route('my.plans');
     }
 
     /*----------------------------------------------------------------------------------*/

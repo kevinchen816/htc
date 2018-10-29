@@ -1,4 +1,4 @@
-@extends('layouts.default2')
+@extends('portal.10ware.layouts.default2')
 
 @section('welcome')
 <br>
@@ -16,9 +16,8 @@
                 <div class="panel-body">
                     @include('shared._errors')
 
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login.10ware') }}">
                         {{ csrf_field() }}
-                        <input name="portal" type="hidden" value="{{ $portal }}">
 
                         <div class="form-group">
                             <label for="email">E-Mail Address</label>
@@ -41,13 +40,7 @@
 
                     <p>
                         Need to Register for a new account? <br/>
-                        @if (isset($portal) && $portal == 10)
-                            <a class="btn btn-primary" href="{{ route('signup.10ware') }}" role="button">Register</a>
-                        @elseif (isset($portal) && $portal == 11)
-                            <a class="btn btn-primary" href="{{ route('signup.germany') }}" role="button">Register</a>
-                        @else
-                            <a class="btn btn-primary" href="{{ route('signup') }}" role="button">Register</a>
-                        @endif
+                        <a class="btn btn-primary" href="{{ route('signup') }}" role="button">Register</a>
                     </p>
 
                 </div>

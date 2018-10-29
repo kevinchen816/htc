@@ -154,10 +154,12 @@ console.log('#width='+width);
 //_token: 'zyj7Xun779JLytaKxnVwAMe5HImSLY24qodO9VIX',
         //alert('tabname = ' + tabname);
         //alert('url = ' + url);
+        //alert('portal = ' + {{ $portal }});
         $.post("/cameras/activetab",
         {
             _token: '{{ csrf_token() }}',
             tab: tabname,
+            portal: {{ $portal }},
         },
         function(data, status){
 //alert('#data='+data);

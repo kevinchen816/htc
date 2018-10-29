@@ -24,7 +24,21 @@ class SessionsController extends Controller
 
     // GET /login
     public function create() {
-        return view('sessions.create');
+        //return view('sessions.create');
+        $portal = 0;
+        return view('sessions.create', compact('portal'));
+    }
+
+    public function login_10ware() {
+        //return view('portal.10ware.sessions.create');
+        $portal = 10;
+        return view('sessions.create', compact('portal'));
+    }
+
+    public function login_germany() {
+        //return view('portal.germany.sessions.create');
+        $portal = 11;
+        return view('sessions.create', compact('portal'));
     }
 
     // POST /login
@@ -44,7 +58,15 @@ class SessionsController extends Controller
             $data['sel_account_tab'] = 'plans';
             $user->update($data);
 
-            return redirect()->route('cameras');
+            $portal = $request->portal;
+            if ($portal == 10) {
+                return redirect()->route('cameras.10ware');
+            } else if ($portal == 11) {
+                return redirect()->route('cameras.germany');
+            } else {
+                return redirect()->route('cameras');
+            }
+            //return redirect()->route('cameras');
 
             /* intended 方法，该方法可将页面重定向到上一次请求尝试访问的页面上，
                并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上 */
@@ -59,6 +81,26 @@ class SessionsController extends Controller
     public function destroy() {
         Auth::logout();
         //session()->flash('success', '您已成功退出！');
-        return redirect('login');
+        //return redirect('login');
+        return redirect()->route('login');
+    }
+
+    public function destroy_10ware() {
+        Auth::logout();
+        //return redirect('admin');
+//        return redirect('login');
+        //return redirect('login.10ware');
+        //return 'logout';
+
+        //$portal = 10;
+        //return view('sessions.create', compact('portal'));
+        return redirect()->route('login.10ware');
+    }
+
+    public function destroy_germany() {
+        Auth::logout();
+        return redirect()->route('login.germany');
     }
 }
+
+

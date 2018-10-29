@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>RemoteCam</h2>
+                <h2>RemoteCam (Germany)</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -65,13 +65,7 @@
                         </ul>
                     </li>
 @else
-                @if (isset($portal) && $portal == 10)
-                    <li class=""><a href="{{ route('login.10ware') }}">Log in1</a></li>
-                @elseif (isset($portal) && $portal == 11)
-                    <li class=""><a href="{{ route('login.germany') }}">Log in2</a></li>
-                @else
-                    <li class=""><a href="{{ route('login') }}">Log in</a></li>
-                @endif
+                    <li class=""><a href="{{ route('login.germany') }}">Log in</a></li>
 @endif
                 </ul>
             </div>

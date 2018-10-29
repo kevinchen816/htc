@@ -21,7 +21,7 @@ class UsersController extends Controller
     {
         $this->middleware('auth', [
             // 'except' => ['show', 'create', 'store']
-            'except' => ['show', 'create', 'store', 'index']
+            'except' => ['show', 'create', 'store', 'index', 'create_10ware', 'create_germany']
         ]);
 
         $this->middleware('guest', [
@@ -46,7 +46,18 @@ class UsersController extends Controller
     /*----------------------------------------------------------------------------------*/
     /* GET /users/create - 创建用户页面 (Register) */
     public function create() {
-        return view('users.create');
+        $portal = 0;
+        return view('users.create', compact('portal'));
+    }
+
+    public function create_10ware() {
+        $portal = 10;
+        return view('users.create', compact('portal'));
+    }
+
+    public function create_germany() {
+        $portal = 11;
+        return view('users.create', compact('portal'));
     }
 
     /* POST /users - 创建用户 */
@@ -61,6 +72,8 @@ class UsersController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'portal' => $request->portal,
+            'permission' => 0,
         ]);
 
         Auth::Login($user);

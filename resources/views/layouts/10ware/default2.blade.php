@@ -179,11 +179,8 @@
 </head>
 <body>
     <div id="app">
-
-@if (isset($portal) && $portal == 10)
+@if ($portal == '10ware')
         @include('layouts.10ware._header2')
-@elseif (isset($portal) && $portal == 11)
-        @include('layouts.germany._header2')
 @else
         @include('layouts._header2')
 @endif
@@ -208,13 +205,7 @@
         </div>
     </div>
 
-@if (isset($portal) && $portal == 10)
-    @include('layouts.10ware._footer')
-@elseif (isset($portal) && $portal == 11)
-    @include('layouts.germany._footer')
-@else
     @include('layouts._footer')
-@endif
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

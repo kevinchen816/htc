@@ -1,4 +1,5 @@
 @extends('layouts.default2')
+
 @section('header')
 <br>
 @stop
@@ -20,6 +21,7 @@
                         <form method="POST" action="{{ route('add.plan') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                             {{ csrf_field() }}
                             <input name="mode" type="hidden" value="new">
+                            <input name="portal" type="hidden" value="{{ $portal }}">
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="iccid inputSmall">SIM ICCID</label>

@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>RemoteCam</h2>
+                <h2>RemoteCam (10ware)</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -30,15 +30,15 @@
 
 @if (Auth::check())
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
-                        <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                        <a href="{{ route('add.plan.10ware') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
-                        <a href="{{ route('my.plans') }}"><i class="fa fa-gear"></i> My Plans</a>
+                        <a href="{{ route('my.plans.10ware') }}"><i class="fa fa-gear"></i> My Plans</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
-                        <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
+                        <a href="{{ route('cameras.10ware') }}"><i class="fa fa-camera"></i> My Cameras</a>
                     </li>
 @else
 @endif
@@ -51,13 +51,13 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="{{ route('logout') }}"
+                                <a href="{{ route('logout.10ware') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                <form id="logout-form" action="{{ route('logout.10ware') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
                                 </form>
@@ -65,13 +65,7 @@
                         </ul>
                     </li>
 @else
-                @if (isset($portal) && $portal == 10)
-                    <li class=""><a href="{{ route('login.10ware') }}">Log in1</a></li>
-                @elseif (isset($portal) && $portal == 11)
-                    <li class=""><a href="{{ route('login.germany') }}">Log in2</a></li>
-                @else
-                    <li class=""><a href="{{ route('login') }}">Log in</a></li>
-                @endif
+                    <li class=""><a href="{{ route('login.10ware') }}">Log in</a></li>
 @endif
                 </ul>
             </div>

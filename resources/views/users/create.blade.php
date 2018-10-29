@@ -17,6 +17,7 @@
 
                     <form method="POST" action="{{ route('users.store') }}">
                         {{ csrf_field() }}
+                        <input name="portal" type="hidden" value="{{ $portal }}">
 
                         <div class="form-group">
                             <label for="name">Name</label>
