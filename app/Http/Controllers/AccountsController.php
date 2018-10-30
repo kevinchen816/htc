@@ -268,7 +268,115 @@ class AccountsController extends Controller
 
     /*-----------------------------------------------------------*/
     // 4242 4242 4242 4242
+    /*
+        {"_token":"a0HAJf1b5WAGZkDFWFriD8FDZNdzyNCGj1r2YtMm","cardholder-name":"Kevin","cardholder-phone":"18664933085",
+         "stripeToken":"tok_1DR0OHG8UgnSL68UTWNMptbB"}
+    */
     public function billing(Request $request) {
-        return $request;
+//return $request;
+        // Set your secret key: remember to change this to your live secret key in production
+        // See your keys here: https://dashboard.stripe.com/account/apikeys
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        // Token is created using Checkout or Elements!
+        // Get the payment token ID submitted by the form:
+        $token = $_POST['stripeToken'];
+        $charge = \Stripe\Charge::create([
+            'amount' => 168,
+            'currency' => 'usd',
+            'description' => 'Example charge',
+            'source' => $token,
+        ]);
+
+return $charge;
     }
+
+/*
+    public function billing2(Request $request) {
+        \Stripe\Stripe::setApiKey('sk_test_LfAFK776KACX3gaKrSxXNJ0r'); //私钥
+        $post = request()->post();
+        if (empty($post['order_id']) || empty($post['stripe_token']))
+            return ['status' => -1, 'msg' => '参数错误'];
+
+        try{
+            $charge = \Stripe\Charge::create(
+                [
+                    'amount' => 10.10,  //支付金额
+                    'currency' => 'USD',
+                    'source' => $post['stripe_token'], //token
+                    //附加信息
+                    'metadata' => [
+                        'order_sn' => 'KT123456666', //订单号
+                        'name' => 'xxx', //姓名
+                        'tel' =>  '11234566', //电话号
+                        'zip_code' =>  '111111'  //邮编
+                    ]
+                ]
+            );
+        }catch (\Exception $e){
+            return ['status' => -1, 'msg' => $e->getMessage()];
+        }
+
+        $event = $charge->jsonSerialize();
+
+        if ($event['status'] == 'succeeded' || $event['status'] == 'pending'){
+            return ['status' => 1, 'msg' => '支付成功'];
+        }else{
+            return ['status' => -1, 'msg' => $event['status']];
+        }
+    }
+*/
+
+/*
+// WebHook异步通知
+
+\Stripe\Stripe::setApiKey('sk_test_xxxxxxxxxxxxxxxxxxxxxx');  //私钥
+
+$endpoint_secret = 'whsec_xxxxxxxxxxxxxxxxx'; //webhook私钥
+
+$payload = @file_get_contents("php://input");
+$sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];
+$event = null;
+
+try {
+    $event = \Stripe\Webhook::constructEvent(
+        $payload, $sig_header, $endpoint_secret
+    );
+
+    $data = $event->data->object;
+
+    if (empty($data->metadata->order_sn)) {
+        http_response_code(400); // Invalid payload
+        exit();
+    }
+
+    $order_sn = $data->metadata->order_sn;  //取出订单号
+
+    if ($event->type == 'charge.succeeded'){
+        //succeeded 成功
+
+    }elseif($event->type == 'charge.pending'){
+        //pending 审核
+
+    }elseif($event->type == 'charge.refunded'){
+        //refunded 退款
+
+    }elseif ($event->type == 'charge.failed') {
+        //failed 失败，（信用卡验证失败也会发该请求）
+
+    }
+
+} catch(\UnexpectedValueException $e) {
+    http_response_code(400); // Invalid payload
+    exit();
+} catch(\Stripe\Error\SignatureVerification $e) {
+    http_response_code(400); // Invalid signature
+    exit();
+}
+
+http_response_code(200);  //成功请返回200请求码
+exit();
+
+*/
+
 }
