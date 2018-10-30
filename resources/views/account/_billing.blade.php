@@ -21,7 +21,7 @@
         <div id="form-errors" class="alert alert-danger hidden">
         </div>
 
-        <form method="POST" action="https://portal.ridgetec.com/account/profile-billing" accept-charset="UTF-8" class="form-horizontal" role="form" id="payment-form">
+        <form method="POST" action="{{ route('account.profile-billing') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="payment-form">
             {{ csrf_field() }}
 
             <div class="form-group">
@@ -77,7 +77,8 @@
             $(document).ready(function(){
 
                 // Create a Stripe client
-                var stripe = Stripe('pk_live_QPN3uXwIOGzb9gA2NDp1ZhVC');
+                //var stripe = Stripe('pk_live_QPN3uXwIOGzb9gA2NDp1ZhVC');
+                var stripe = Stripe('pk_test_3eKxfF6P2wzBFYaowK8CVxBV');
 
                 // Create an instance of Elements
                 var elements = stripe.elements();
@@ -146,14 +147,14 @@
                     stripe.createToken(card, cardData).then(function(result) {
                         console.log(result);
                         if (result.error && result.error.message) {
-                            //alert(result.error.message);
+                            alert(result.error.message);
                             $('#form-errors').text(result.error.message);
                             $('#form-errors').removeClass('hidden');
                             $('#form-errors').show();
                             pmtform.find('btn-update').prop('disabled', false);
                         }
                         else {
-                            //alert(result.token.id);
+                            alert(result.token.id);
                             pmtform.append('<input type="hidden" name="stripeToken" id="stripe-token" value="" />');
                             $('#stripe-token').val(result.token.id);
                             $("#payment-form").submit();

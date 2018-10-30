@@ -178,8 +178,8 @@ Route::get('/account/profile', 'AccountsController@profile')->name('account.prof
 Route::get('/10ware/account/profile', 'AccountsController@profile_10ware')->name('account.profile.10ware');
 
 Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
-
-Route::post('/account/profile-emails', 'AccountsController@Emails_Save')->name('account.profile-emails');
+Route::post('/account/profile-billing', 'AccountsController@billing')->name('account.profile-billing');
+Route::post('/account/profile-emails', 'AccountsController@emails_save')->name('account.profile-emails');
 //Route::get('/account/profile-emails', 'AccountsController@profile_emails')->name('account.profile-emails'); // TODO
 
 /* default.blade.php */

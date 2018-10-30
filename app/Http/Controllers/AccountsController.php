@@ -218,7 +218,7 @@ class AccountsController extends Controller
         return $handle;
     }
 
-    public function Emails_Save(Request $request) {
+    public function emails_save(Request $request) {
         $portal = $request->portal;
         if (!Auth::check()) {
             return $this->back_to_login($portal);
@@ -265,4 +265,10 @@ class AccountsController extends Controller
     //    //$user_id = $user->id;
     //    return view('account.profile', compact('user'));
     //}
+
+    /*-----------------------------------------------------------*/
+    // 4242 4242 4242 4242
+    public function billing(Request $request) {
+        return $request;
+    }
 }
