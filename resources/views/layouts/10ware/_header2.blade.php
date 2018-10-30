@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>RemoteCam (10ware)</h2>
+                <h2>10ware Portal</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -39,6 +39,10 @@
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras.10ware') }}"><i class="fa fa-camera"></i> My Cameras</a>
+                    </li>
+
+                    <li class={{ ($user->sel_menu == 'account') ? "active" : "" }}>
+                        <a href="{{ route('account.profile.10ware') }}"><i class="fa fa-gear"></i> My Account</a>
                     </li>
 @else
 @endif

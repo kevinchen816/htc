@@ -99,8 +99,8 @@ Route::get('/admin/clear-search/apilog', 'Api\CamerasController@admin_clear_sear
 /*-----------------------------------------------------------*/
 //Route::get('/plans/add-plan','Api\CamerasController@plans_addplan_create')->name('add.plan');
 Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
-Route::get('/10ware/plans/add-plan','PlansController@view')->name('add.plan.10ware');
-Route::get('/germany/plans/add-plan','PlansController@view')->name('add.plan.germany');
+Route::get('/10ware/plans/add-plan','PlansController@view_10ware')->name('add.plan.10ware');
+Route::get('/germany/plans/add-plan','PlansController@view_germany')->name('add.plan.germany');
 
 Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
 
@@ -110,13 +110,20 @@ Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete
 
 //Route::get('/myplans','PlansController@my_plans')->name('my.plans');
 Route::get('/myplans','PlansController@my_plans2')->name('my.plans');
-Route::get('/10ware/myplans','PlansController@my_plans2')->name('my.plans.10ware');
-Route::get('/germany/myplans','PlansController@my_plans2')->name('my.plans.germany');
+Route::get('/10ware/myplans','PlansController@my_plans2_10ware')->name('my.plans.10ware');
+Route::get('/germany/myplans','PlansController@my_plans2_germany')->name('my.plans.germany');
 
 /*-----------------------------------------------------------*/
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
 Route::get('/10ware/cameras', 'Api\CamerasController@cameras_10ware')->name('cameras.10ware');
 Route::get('/germany/cameras', 'Api\CamerasController@cameras_germany')->name('cameras.germany');
+
+//Route::group(['prefix' => 'accounts/{account_id}'], function () {
+//    Route::get('detail', function ($account_id)    {
+//        // accounts/{account_id}/detail
+//    });
+//});
+
 
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
 Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail')->name('camera.getdetail');
@@ -168,9 +175,12 @@ Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@apilog')->name(
 
 /*-----------------------------------------------------------*/
 Route::get('/account/profile', 'AccountsController@profile')->name('account.profile');
+Route::get('/10ware/account/profile', 'AccountsController@profile_10ware')->name('account.profile.10ware');
+
 Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
+
 Route::post('/account/profile-emails', 'AccountsController@Emails_Save')->name('account.profile-emails');
-Route::get('/account/profile-emails', 'AccountsController@profile_emails')->name('account.profile-emails');
+//Route::get('/account/profile-emails', 'AccountsController@profile_emails')->name('account.profile-emails'); // TODO
 
 /* default.blade.php */
     // $('#show_cameras').click(function() { /* default.blade.php */

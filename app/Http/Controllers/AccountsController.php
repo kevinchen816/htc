@@ -12,10 +12,25 @@ use App\Models\Email;
 
 class AccountsController extends Controller
 {
+    public function back_to_login($portal) {
+        //if (!Auth::check()) {
+            //session()->flash('warning', 'Please Login first');
+            //return redirect()->route('login');
+            if ($portal == 10) {
+                return redirect()->route('login.10ware');
+            } else if ($portal == 11) {
+                return redirect()->route('login.germany');
+            } else {
+                return redirect()->route('login');
+            }
+        //}
+    }
+
+    /*-----------------------------------------------------------*/
     public function activetab(Request $request) {
+        $portal = $_POST['portal'];
         if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
+            return $this->back_to_login($portal);
         }
 
         // plan, billing, devices, options, email
@@ -26,19 +41,29 @@ class AccountsController extends Controller
         return $sel_account_tab;
     }
 
-
-    public function profile() {
+    /*-----------------------------------------------------------*/
+    public function _profile($portal) {
         if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
+            return $this->back_to_login($portal);
         }
 
         $user = Auth::user();
         $data['sel_menu'] = 'account';
         $user->update($data);
-        return view('account.profile', compact('user'));
+
+        //return view('account.profile', compact('user'));
+        return view('account.profile', compact('portal', 'user'));
     }
 
+    public function profile() {
+        return $this->_profile(0);
+    }
+
+    public function profile_10ware() {
+        return $this->_profile(10);
+    }
+
+    /*-----------------------------------------------------------*/
     public function MyPlans() {
         //return 'Hello';
         $user = Auth::user();
@@ -79,21 +104,23 @@ class AccountsController extends Controller
             $handle .=     '<div class="col-sm-6">';
             $handle .=         '<table class="table plan-table">';
             $handle .=             '<tbody>';
-            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
+//            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
+            $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
             $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
-            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
-            $handle .=                 '</tr>';
+//            //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
+//            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
+//            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
+//            $handle .=                 '</tr>';
             $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
             $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
             $handle .=                 '</tr>';
             $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
             $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
-            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
-            $handle .=                 '</tr>';
+//            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
+//            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
+//            $handle .=                 '</tr>';
             $handle .=             '</tbody>';
             $handle .=         '</table>';
             $handle .=     '</div>';
@@ -102,6 +129,7 @@ class AccountsController extends Controller
         return $handle;
     }
 
+    /*-----------------------------------------------------------*/
     public function Emails() {
         $user = Auth::user();
         $user_id = $user->id;
@@ -191,9 +219,9 @@ class AccountsController extends Controller
     }
 
     public function Emails_Save(Request $request) {
+        $portal = $request->portal;
         if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
+            return $this->back_to_login($portal);
         }
 
         $user = Auth::user();
@@ -222,18 +250,19 @@ class AccountsController extends Controller
             $count--;
         }
 
-        session()->flash('success', 'Success: Account Emails Saved. Some new email recipients were sent system email verifications. Until verified these addresses will not get any email.');
+        //session()->flash('success', 'Success: Account Emails Saved. Some new email recipients were sent system email verifications. Until verified these addresses will not get any email.');
+        session()->flash('success', 'Success: Account Emails Saved.');
         return redirect()->back();
     }
 
-    public function profile_emails() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
-        $user = Auth::user();
-        //$user_id = $user->id;
-        return view('account.profile', compact('user'));
-    }
+    //public function profile_emails() { // TODO
+    //    if (!Auth::check()) {
+    //        session()->flash('warning', 'Please Login first');
+    //        return redirect()->route('login');
+    //    }
+    //
+    //    $user = Auth::user();
+    //    //$user_id = $user->id;
+    //    return view('account.profile', compact('user'));
+    //}
 }

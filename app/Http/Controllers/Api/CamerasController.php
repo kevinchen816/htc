@@ -840,6 +840,11 @@ class CamerasController extends Controller
                     $ret['ActionCode'] = $action_code;
                     $ret['ParameterList'] = $param_list;
                 }
+
+                //http://php.net/manual/zh/function.date-default-timezone-set.php
+                //http://php.net/manual/zh/timezones.php
+                //$ret['timezone'] = $camera->timezone;
+                date_default_timezone_set($camera->timezone);
             }
         //} else if ($err == 1) {
             // do nothing
@@ -2287,10 +2292,12 @@ class CamerasController extends Controller
     public function CameraFieldValueConvert($camera, $column, $name) {
         //if ($name == 'off') {
         //    $name = 'Off';
-       //
+
+       //
         //} else if ($name == 'on') {
         //    $name = 'On';
-       //
+
+       //
         //} else
         if ($column == 'camera_mode') {
             if ($name === 'p') {
@@ -2352,7 +2359,8 @@ class CamerasController extends Controller
         //
         //    if ($size > 0) {
         //        $percent = round(($used / $size) * 100, 0);
-       //
+
+       //
         //        $used = number_format($used, 2, '.', '');
         //        $name = $used . ' (' . $percent . '%free)';
         //    }

@@ -1,6 +1,8 @@
 <!--<div class="tab-pane fade" id="email-setup" style="padding-top: 10px;">-->
     <form method="POST" action="{{ route('account.profile-emails') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emails-form">
         {{ csrf_field() }}
+        <input name="portal" type="hidden" value="{{ $portal }}">
+
         <div class="row">
             <div class="well well-sm">
                 <button type="submit" class="btn btn-sm btn-primary">Save All Changes</button>

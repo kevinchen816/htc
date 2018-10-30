@@ -11,13 +11,26 @@ use DB;
 
 class PlansController extends Controller
 {
-    public function view() {
-        // if (Auth::check()) {
-        //     $user = Auth::user();
-        //     return view('account.profile', compact('user'));
-        // } else {
-        //     return view('account.profile');
-        // }
+    public function back_to_login($portal) {
+        //if (!Auth::check()) {
+            //session()->flash('warning', 'Please Login first');
+            //return redirect()->route('login');
+            if ($portal == 10) {
+                return redirect()->route('login.10ware');
+            } else if ($portal == 11) {
+                return redirect()->route('login.germany');
+            } else {
+                return redirect()->route('login');
+            }
+        //}
+    }
+
+    /*-----------------------------------------------------------*/
+    public function _view($portal) {
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
         $user->update($data);
@@ -26,120 +39,19 @@ class PlansController extends Controller
         return view('plans.add-plan', compact('portal', 'user'));
     }
 
-    public function my_plans() {
-        $user = Auth::user();
-        $data['sel_menu'] = 'my_plans';
-        $user->update($data);
-
-        $portal = $user->portal;
-        return view('plans.my-plans', compact('portal', 'user'));
+    public function view() {
+        return $this->_view(0);
     }
 
-    public function MyPlans() {
-        //return 'Hello';
-        $user = Auth::user();
-        $user_id = $user->id;
-
-        $plans = DB::table('plans')
-            ->where('user_id', $user_id)
-            ->get();
-
-        $handle = '';
-        foreach ($plans as $plan) {
-            //$camera_name = '(No Camera)';
-            //if ($plan->camera_id) {
-            //    $camera = Camera::find($plan->camera_id);
-            //    if ($camera) {
-            //        $camera_name = $camera->description;
-            //    }
-            //}
-
-            $handle .= '<div class="row">';
-            $handle .=     '<div class="col-md-12">';
-            $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
-            $handle .=             '<div class="row">';
-            $handle .=                 '<div class="col-md-5">';
-            $handle .=                     '<i class="fa fa-dot-circle"></i>';
-            $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
-            $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
-            $handle .=                     '<p></p>';
-            $handle .=                 '</div>';
-            $handle .=                 '<div class="col-md-5">';
-            $handle .=                 '</div>'; // <!-- end col -->
-            $handle .=             '</div>';
-            $handle .=         '</div>';
-            $handle .=     '</div>';
-            $handle .= '</div>';
-
-            $handle .= '<div class="row">';
-            $handle .=     '<div class="col-sm-6">';
-            $handle .=         '<table class="table plan-table">';
-            $handle .=             '<tbody>';
-//            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
-            $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
-            $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
-            $handle .=                 '</tr>';
-//            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
-            //$handle .=                 '<tr><td class="pull-right">Camera:</td>';
-            //$handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
-            //$handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
-            $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
-            $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
-            $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
-            $handle .=                 '</tr>';
-//            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
-//            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
-//            $handle .=                 '</tr>';
-            $handle .=             '</tbody>';
-            $handle .=         '</table>';
-            $handle .=     '</div>';
-            $handle .= '</div>';
-        }
-        return $handle;
+    public function view_10ware() {
+        return $this->_view(10);
     }
 
-    public function my_plans2() {
-
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
-        $user = Auth::user();
-        $data['sel_menu'] = 'my_plans';
-        $user->update($data);
-
-        $user_id = $user->id;
-        $plans = DB::table('plans')
-            ->where('user_id', $user_id)
-            //->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        $portal = $user->portal;
-        return view('plans.my-plans2', compact('portal', 'user', 'plans'));
+    public function view_germany() {
+        return $this->_view(11);
     }
 
-    public function MyPlans2($plans) {
-        //$user = Auth::user();
-        //$user_id = $user->id;
-        //
-        //$plans = DB::table('plans')
-        //    ->where('user_id', $user_id)
-        //    ->get();
-
-        $handle = '';
-        foreach ($plans as $plan) {
-            $handle .= '<tr>';
-            $handle .=    '<td>'.$plan->iccid.'</td>';
-            $handle .=    '<td>'.$plan->points.'</td>';
-            $handle .=    '<td>'.$plan->points_used.'</td>';
-            $handle .=    '<td>'.$plan->status.'</td>';
-        }
-        return $handle;
-    }
-
+    /*-----------------------------------------------------------*/
     /*
         Error: Please input an ICCID.
         Error: Invalid ICCID. Verify that you have input the ICCID correctly.
@@ -153,9 +65,9 @@ class PlansController extends Controller
         //$result = $this->validate($request, [
         //    'iccid' => 'required|unique:plans|max:20',
         //]);
+        $portal = $request->portal;
         if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
+            return $this->back_to_login($portal);
         }
 
         if (!$request->iccid) {
@@ -191,7 +103,6 @@ class PlansController extends Controller
         //return view('plans.show', compact('user', 'plan'));
 //        return redirect()->route('account.profile');
 
-        $portal = $request->portal;
         if ($portal == 10) {
             return redirect()->route('my.plans.10ware');
         } else if ($portal == 11) {
@@ -200,6 +111,135 @@ class PlansController extends Controller
             return redirect()->route('my.plans.germany');
         }
         //return redirect()->route('my.plans');
+    }
+
+    /*-----------------------------------------------------------*/
+//    public function my_plans() {
+//        $user = Auth::user();
+//        $data['sel_menu'] = 'my_plans';
+//        $user->update($data);
+//
+//        $portal = $user->portal;
+//        return view('plans.my-plans', compact('portal', 'user'));
+//    }
+
+// move to AccountsController::MyPlans()
+//    public function MyPlans() {
+//        //return 'Hello';
+//        $user = Auth::user();
+//        $user_id = $user->id;
+//
+//        $plans = DB::table('plans')
+//            ->where('user_id', $user_id)
+//            ->get();
+//
+//        $handle = '';
+//        foreach ($plans as $plan) {
+//            //$camera_name = '(No Camera)';
+//            //if ($plan->camera_id) {
+//            //    $camera = Camera::find($plan->camera_id);
+//            //    if ($camera) {
+//            //        $camera_name = $camera->description;
+//            //    }
+//            //}
+//
+//            $handle .= '<div class="row">';
+//            $handle .=     '<div class="col-md-12">';
+//            $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
+//            $handle .=             '<div class="row">';
+//            $handle .=                 '<div class="col-md-5">';
+//            $handle .=                     '<i class="fa fa-dot-circle"></i>';
+//            $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
+//            $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
+//            $handle .=                     '<p></p>';
+//            $handle .=                 '</div>';
+//            $handle .=                 '<div class="col-md-5">';
+//            $handle .=                 '</div>'; // <!-- end col -->
+//            $handle .=             '</div>';
+//            $handle .=         '</div>';
+//            $handle .=     '</div>';
+//            $handle .= '</div>';
+//
+//            $handle .= '<div class="row">';
+//            $handle .=     '<div class="col-sm-6">';
+//            $handle .=         '<table class="table plan-table">';
+//            $handle .=             '<tbody>';
+////            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
+//            $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
+//            $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
+//            $handle .=                 '</tr>';
+////            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
+//            //$handle .=                 '<tr><td class="pull-right">Camera:</td>';
+//            //$handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
+//            //$handle .=                 '</tr>';
+//            $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
+//            $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
+//            $handle .=                 '</tr>';
+//            $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
+//            $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
+//            $handle .=                 '</tr>';
+////            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
+////            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
+////            $handle .=                 '</tr>';
+//            $handle .=             '</tbody>';
+//            $handle .=         '</table>';
+//            $handle .=     '</div>';
+//            $handle .= '</div>';
+//        }
+//        return $handle;
+//    }
+
+    /*-----------------------------------------------------------*/
+    public function _my_plans2($portal) {
+        if (!Auth::check()) {
+            //session()->flash('warning', 'Please Login first');
+            //return redirect()->route('login');
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $data['sel_menu'] = 'my_plans';
+        $user->update($data);
+
+        $user_id = $user->id;
+        $plans = DB::table('plans')
+            ->where('user_id', $user_id)
+            //->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $portal = $user->portal;
+        return view('plans.my-plans2', compact('portal', 'user', 'plans'));
+    }
+
+    public function my_plans2() {
+        return $this->_my_plans2(0);
+    }
+
+    public function my_plans2_10ware() {
+        return $this->_my_plans2(10);
+    }
+
+    public function my_plans2_germany() {
+        return $this->_my_plans2(11);
+    }
+
+    public function MyPlans2($plans) {
+        //$user = Auth::user();
+        //$user_id = $user->id;
+        //
+        //$plans = DB::table('plans')
+        //    ->where('user_id', $user_id)
+        //    ->get();
+
+        $handle = '';
+        foreach ($plans as $plan) {
+            $handle .= '<tr>';
+            $handle .=    '<td>'.$plan->iccid.'</td>';
+            $handle .=    '<td>'.$plan->points.'</td>';
+            $handle .=    '<td>'.$plan->points_used.'</td>';
+            $handle .=    '<td>'.$plan->status.'</td>';
+        }
+        return $handle;
     }
 
     /*----------------------------------------------------------------------------------*/

@@ -1,9 +1,10 @@
 @extends('layouts.default2')
+
 @section('header')
 <div class="row">
     <h4>
         <ol class="breadcrumb">
-            <li class="active">My Account (kevin@10ware.com)</li>
+            <li class="active">My Account ({{ $user->email }})</li>
         </ol>
     </h4>
 </div>
@@ -11,7 +12,6 @@
 
 @section('content')
 <div id="app">
-    @include('layouts._header2')
 
     <style>
         .table.plan-table tr {

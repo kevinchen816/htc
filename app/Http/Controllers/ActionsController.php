@@ -28,6 +28,22 @@ class ActionsController extends Controller
     //    }
     //}
 
+    /*-----------------------------------------------------------*/
+    public function back_to_login($portal) {
+        //if (!Auth::check()) {
+            //session()->flash('warning', 'Please Login first');
+            //return redirect()->route('login');
+            if ($portal == 10) {
+                return redirect()->route('login.10ware');
+            } else if ($portal == 11) {
+                return redirect()->route('login.germany');
+            } else {
+                return redirect()->route('login');
+            }
+        //}
+    }
+
+    /*-----------------------------------------------------------*/
     /*
         <tr>
             <td>Scheduled Update</td>
@@ -40,8 +56,7 @@ class ActionsController extends Controller
     //public function History($camera) {
     public function History($portal, $camera) {
         if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
+            return $this->back_to_login($portal);
         }
 
         //$action_txt = array (

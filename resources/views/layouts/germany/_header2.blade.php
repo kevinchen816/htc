@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>RemoteCam (Germany)</h2>
+                <h2>RemoteCam</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">

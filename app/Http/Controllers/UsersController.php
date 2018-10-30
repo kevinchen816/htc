@@ -29,6 +29,16 @@ class UsersController extends Controller
         ]);
     }
 
+    public function route_to_cameras($portal) {
+        if ($portal == 10) {
+            return redirect()->route('cameras.10ware');
+        } else if ($portal == 11) {
+            return redirect()->route('cameras.germany');
+        } else {
+            return redirect()->route('cameras');
+        }
+    }
+
     /*----------------------------------------------------------------------------------*/
     /*
         GET    /users/create        -> create()     // 创建用户页面 (Register)
@@ -68,17 +78,20 @@ class UsersController extends Controller
             'password' => 'required|confirmed|min:6'
         ]);
 
+        $portal = $request->portal;
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'portal' => $request->portal,
+            'portal' => $portal,
             'permission' => 0,
         ]);
 
         Auth::Login($user);
 
-        return redirect()->route('cameras');
+        //return redirect()->route('cameras');
+        return $this->route_to_cameras($portal);
+
 
         //if (Auth::check()) {
         //    session()->flash('success', 'Register Success !!');

@@ -1,9 +1,10 @@
 @extends('layouts.default2')
+
 @section('header')
 <div class="row">
     <h4>
         <ol class="breadcrumb">
-            <li class="active">My Account (kevin@10ware.com)</li>
+            <li class="active">My Account ({{ $user->email }})</li>
         </ol>
     </h4>
 </div>
@@ -11,7 +12,6 @@
 
 @section('content')
 <div id="app">
-    @include('layouts._header2')
 
     <style>
         .table.plan-table tr {
@@ -38,6 +38,10 @@
                             <a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> My Plans</a>
                         </li>
 
+                        <li class={{ ($user->sel_account_tab == 'billing') ? "active" : "" }}>
+                            <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> Billing</a>
+                        </li>
+
                         <li class={{ ($user->sel_account_tab == 'remote') ? "active" : "" }}>
                             <a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> Devices</a>
                         </li>
@@ -57,6 +61,11 @@
                         <!-- TAB - My Plans  -->
                         <div class="tab-pane fade {{ ($user->sel_account_tab == 'plans') ? 'active in' : '' }}" id="data-plans">
                         @include('account._plans')
+                        </div>
+
+                        <!-- TAB - Billing  -->
+                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'billing') ? 'active in' : '' }}" id="billing">
+                        @include('account._billing')
                         </div>
 
                         <!-- TAB - Devices  -->
@@ -155,12 +164,12 @@
             e.preventDefault();
             var tabname = $(this).attr("data-tab");
             var url = "/account/activetab";
-
             //alert('put tab ' + tabname);
             $.post(url,
             {
                 _token: '{{ csrf_token() }}',
                 tab: tabname,
+                portal: {{ $portal }},
             },
             function (data, status) {
                 //alert("Data: " + data + "\nStatus: " + status);
