@@ -28,22 +28,22 @@
                     <li class=""><a href="https://portal.ridgetec.com/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
                     <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
-@if (Auth::check())
+@if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
-                        <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                        <a href="{{ route('add.plan.germany') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
-                        <a href="{{ route('my.plans') }}"><i class="fa fa-gear"></i> My Plans</a>
+                        <a href="{{ route('my.plans.germany') }}"><i class="fa fa-gear"></i> My Plans</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
-                        <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
+                        <a href="{{ route('cameras.germany') }}"><i class="fa fa-camera"></i> My Cameras</a>
                     </li>
 @else
 @endif
 
-@if (Auth::check())
+@if (Auth::check() && isset($user))
                     <li class="{{ ($user->sel_menu == 'user') ? 'dropdown active' : 'dropdown' }}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ $user->name }}  <span class="caret"></span>
@@ -51,13 +51,13 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="{{ route('logout') }}"
+                                <a href="{{ route('logout.germany') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                <form id="logout-form" action="{{ route('logout.germany') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
                                 </form>

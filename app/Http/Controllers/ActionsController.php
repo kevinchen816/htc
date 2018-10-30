@@ -37,7 +37,8 @@ class ActionsController extends Controller
             <td>49 photos uploaded.</td>
         </tr>
     */
-    public function History($camera) {
+    //public function History($camera) {
+    public function History($portal, $camera) {
         if (!Auth::check()) {
             session()->flash('warning', 'Please Login first');
             return redirect()->route('login');
@@ -154,6 +155,7 @@ class ActionsController extends Controller
             ->first();
         if ($firmware) {
             $version = $firmware->version;
+            //$version = '20190101';
             if ($version > $camera->dsp_version) {
                 $handle .= '<tr>';
                 $handle .=     '<td>';

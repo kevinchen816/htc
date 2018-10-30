@@ -69,7 +69,7 @@
                     </thead>
                     <tbody>
                         @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
-                        {!! $actions_ctrl->History($portal, $camera) !!}
+                        {!! $actions_ctrl->History($camera) !!}
 
                         <!--<tr>
                             <td>Scheduled Update</td>
@@ -123,39 +123,70 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
+    $(".sms-button").click(function() {
+        //alert('action queue');
+        sms = $(this).attr('data-param');
+        id = $(this).attr('camera-id');
+        url = '/cameras/sendsms/' + id + '/' + sms;
+
+        $("#sms-message").load(url);
+    });
+
     $(".action-queue-{{ $camera->id }}").click(function() {
         //alert('action queue');
         action = $(this).attr('data-param');
         id = $(this).attr('camera-id');
-        //url = '/cameras/actionqueue/' + id + '/' + action;
-        var url = '/cameras/actionqueue/{{ $portal }}/' + id + '/' + action;
+        url = '/cameras/actionqueue/' + id + '/' + action;
+        //alert(url);
         $('#action-' + id).load(url);
+        //alert(url);
     });
 
     $( ".action-cancel-{{ $camera->id }}" ).click(function(event) {
         event.preventDefault();
         actionid = $(this).attr('data-param');
-        //url='/cameras/actioncancel/' + actionid;
-        //url='/cameras/actioncancel/'+'{{ $portal}}'+'/' + actionid;
-        var url='/cameras/actioncancel/{{ $portal }}/' + actionid;
+        url='/cameras/actioncancel/' + actionid;
         $('#action-{{ $camera->id }}').load(url);
     });
 
     $('#clear-missing').click(function(event) {
-        //var url = '/cameras/clearmissing/{{ $camera->id }}';
-        //var url='/cameras/clearmissing/'+'{{ $portal}}'+'/' + actionid;
-        var url='/cameras/clearmissing/{{ $portal }}/' + actionid;
+        var url = '/cameras/clearmissing/{{ $camera->id }}';
+        //alert(url);
+        //console.log('url = ' + url);
         $('#action-{{ $camera->id }}').load(url);
     });
 
     $('.missing-request').click(function(event) {
         missingid = $(this).attr('missing-id');
         //console.log('.missingid ' + missingid);
-        //var url = '/cameras/requestmissing/{{ $camera->id }}/' + missingid;
-        var url = '/cameras/requestmissing/{{ $portal }}/{{ $camera->id }}/' + missingid;
+        var url = '/cameras/requestmissing/{{ $camera->id }}/' + missingid;
         //console.log('url = ' + url);
         $('#action-{{ $camera->id }}').load(url);
 
     });
+
+    $('.show-highres').click(function(event) {
+        actionid = $(this).attr('action-id');
+        console.log('.showhighres ' + actionid);
+        url = '/cameras/getmediaurl/' + actionid;
+        $(this).addClass('hidden');
+        $('#action-img-' + actionid).load(url);
+    });
+
+    $('#action-show').click(function() {
+        val = $("#commandhistory-{{ $camera->id }}").hasClass('hidden');
+        //console.log('action show click ' + val);
+
+        if (val) {
+            $("#commandhistory-{{ $camera->id }}").show(250);
+            $("#commandhistory-{{ $camera->id }}").removeClass('hidden');
+            $('#action-show').html('<i class="fa fa-angle-up"></i> Commands');
+        }
+        else {
+            $("#commandhistory-{{ $camera->id }}").hide(250);
+            $("#commandhistory-{{ $camera->id }}").addClass('hidden');
+            $('#action-show').html('<i class="fa fa-angle-down"></i> Commands');
+        };
+    })
 });
 </script>

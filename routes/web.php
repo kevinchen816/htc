@@ -25,15 +25,17 @@
 //    return view('home');
 //})->name('home');
 
-Route::get('/', 'Api\CamerasController@cameras')->name('home');
-////Route::get('/', 'SessionsController@create')->name('home');
-
 Route::get('/test', function () {
     return view('test');
 })->name('test');
 
-Route::get('/10ware', 'Api\CamerasController@cameras_10ware')->name('home.10ware');
-Route::get('/germany', 'Api\CamerasController@cameras_germany')->name('home.germany');
+////Route::get('/', 'SessionsController@create')->name('home');
+//Route::get('/', 'Api\CamerasController@cameras')->name('home');
+//Route::get('/10ware', 'Api\CamerasController@cameras_10ware')->name('home.10ware');
+//Route::get('/germany', 'Api\CamerasController@cameras_germany')->name('home.germany');
+Route::get('/', 'Api\CamerasController@home')->name('home');
+Route::get('/10ware', 'Api\CamerasController@home_10ware')->name('home.10ware');
+Route::get('/germany', 'Api\CamerasController@home_germany')->name('home.germany');
 
 /*
 /register
@@ -118,6 +120,8 @@ Route::get('/germany/cameras', 'Api\CamerasController@cameras_germany')->name('c
 
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
 Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail')->name('camera.getdetail');
+Route::get('/10ware/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_10ware')->name('camera.getdetail.10ware');
+Route::get('/germany/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_germany')->name('camera.getdetail.germany');
 
 /* Overview */
 Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
@@ -133,6 +137,8 @@ Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.
 
 /* Actions */
 Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
+Route::get('/10ware/cameras/actions/{camera_id}', 'Api\CamerasController@actions_10ware')->name('camera.actions.10ware');;
+Route::get('/germany/cameras/actions/{camera_id}', 'Api\CamerasController@actions_germany')->name('camera.actions.germany');;
 
 /* Options */
 Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
@@ -145,12 +151,18 @@ Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.del
 
 Route::get('/cameras/sendsms/{camera_id}/{sms}', 'Api\CamerasController@sendsms')->name('camera.sendsms');
 
-Route::get('/cameras/actionqueue/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');
+//Route::get('/cameras/actionqueue/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');
+Route::get('/cameras/actionqueue/{portal}/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');
 Route::post('/cameras/actionqueue/', 'Api\CamerasController@actionqueue_post')->name('camera.actionqueue_post');
-Route::get('/cameras/actioncancel/{action_id}', 'Api\CamerasController@actioncancel')->name('camera.actioncancel');
 
-Route::get('/cameras/clearmissing/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
-Route::get('/cameras/requestmissing/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
+//Route::get('/cameras/actioncancel/{action_id}', 'Api\CamerasController@actioncancel')->name('camera.actioncancel');
+Route::get('/cameras/actioncancel/{portal}/{action_id}', 'Api\CamerasController@actioncancel')->name('camera.actioncancel');
+
+//Route::get('/cameras/clearmissing/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
+Route::get('/cameras/clearmissing/{portal}/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
+
+//Route::get('/cameras/requestmissing/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
+Route::get('/cameras/requestmissing/{portal}/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
 
 Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@apilog')->name('camera.apilog');
 

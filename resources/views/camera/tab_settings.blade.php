@@ -1,6 +1,7 @@
 <form method="POST" action="{{ route('camera.settings') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="camerasettings-form{{ $camera->id }}">
     {{ csrf_field() }}
     <!-- <input name="_token" type="hidden" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
+    <input name="portal" type="hidden" value="{{ $portal }}">
     <input name="id" type="hidden" value="{{ $camera->id }}">
 
     <div class="row">

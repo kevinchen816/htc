@@ -184,6 +184,7 @@
                         name="pictureForm"
                         id="gallery-form-{{ $camera->id }}">
                         {{ csrf_field() }}
+                        <input name="portal" type="hidden" value="{{ $portal }}">
                         <input name="id" type="hidden" value="{{ $camera->id }}">
 
                         <div class="thumbnail-gallery" data-token="">

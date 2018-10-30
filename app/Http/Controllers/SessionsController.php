@@ -26,19 +26,22 @@ class SessionsController extends Controller
     public function create() {
         //return view('sessions.create');
         $portal = 0;
-        return view('sessions.create', compact('portal'));
+        $portal_name = '';
+        return view('sessions.create', compact('portal', 'portal_name'));
     }
 
     public function login_10ware() {
         //return view('portal.10ware.sessions.create');
         $portal = 10;
-        return view('sessions.create', compact('portal'));
+        $portal_name = '10ware';
+        return view('sessions.create', compact('portal', 'portal_name'));
     }
 
     public function login_germany() {
         //return view('portal.germany.sessions.create');
         $portal = 11;
-        return view('sessions.create', compact('portal'));
+        $portal_name = 'germany';
+        return view('sessions.create', compact('portal', 'portal_name'));
     }
 
     // POST /login

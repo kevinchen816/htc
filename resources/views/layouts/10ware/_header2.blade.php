@@ -28,7 +28,7 @@
                     <li class=""><a href="https://portal.ridgetec.com/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
                     <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
-@if (Auth::check())
+@if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
                         <a href="{{ route('add.plan.10ware') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
@@ -43,7 +43,7 @@
 @else
 @endif
 
-@if (Auth::check())
+@if (Auth::check() && isset($user))
                     <li class="{{ ($user->sel_menu == 'user') ? 'dropdown active' : 'dropdown' }}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ $user->name }}  <span class="caret"></span>
