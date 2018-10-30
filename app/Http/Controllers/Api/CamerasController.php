@@ -3709,6 +3709,20 @@ class CamerasController extends Controller
         //}
     }
 
+    //public function back_to_logout($portal) {
+    //    //if (!Auth::check()) {
+    //        //session()->flash('warning', 'Please Login first');
+    //        //return redirect()->route('login');
+    //        if ($portal == 10) {
+    //            return redirect()->route('logout.10ware');
+    //        } else if ($portal == 11) {
+    //            return redirect()->route('logout.germany');
+    //        } else {
+    //            return redirect()->route('logout');
+    //        }
+    //    //}
+    //}
+
     public function route_to_cameras($portal) {
         if ($portal == 10) {
             return redirect()->route('cameras.10ware');
@@ -3791,10 +3805,24 @@ class CamerasController extends Controller
         }
 
         $user = Auth::user();
+        $user_portal = $user->portal;
+        if ($portal != $user_portal) {
+            if ($user_portal == 10) {
+                session()->flash('warning', 'Please use 10ware portal.');
+            } else if ($user_portal == 11) {
+                session()->flash('warning', 'Please use German portal.');
+            } else {
+                session()->flash('warning', 'Please use TEST portal.');
+            }
+
+            Auth::logout();
+            return $this->back_to_login($portal);
+            //return $this->back_to_logout($portal); // NG
+        }
+
+        //$portal = $user->portal;
         $user_id = $user->id;
         $camera_id = $user->sel_camera;
-        $portal = $user->portal;
-
         $data['sel_menu'] = 'camera';
         $user->update($data);
 
