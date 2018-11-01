@@ -37,6 +37,8 @@ Route::get('/', 'Api\CamerasController@home')->name('home');
 Route::get('/10ware', 'Api\CamerasController@home_10ware')->name('home.10ware');
 Route::get('/germany', 'Api\CamerasController@home_germany')->name('home.germany');
 
+Route::get('/stripe', 'AccountsController@stripe');
+
 /*
 /register
 

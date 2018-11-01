@@ -267,11 +267,27 @@ class AccountsController extends Controller
     //}
 
     /*-----------------------------------------------------------*/
+    // composer require stripe/stripe-php
     // 4242 4242 4242 4242
     /*
         {"_token":"a0HAJf1b5WAGZkDFWFriD8FDZNdzyNCGj1r2YtMm","cardholder-name":"Kevin","cardholder-phone":"18664933085",
          "stripeToken":"tok_1DR0OHG8UgnSL68UTWNMptbB"}
     */
+    public function stripe() {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $token = 'tok_1DRfjeG8UgnSL68UwpYMG4Kf';
+        $charge = \Stripe\Charge::create([
+            'amount' => 168,
+            'currency' => 'usd',
+            'description' => 'Example charge',
+            'source' => $token,
+        ]);
+
+return $charge;
+        //return 'OK';
+    }
+
     public function billing(Request $request) {
 //return $request;
         // Set your secret key: remember to change this to your live secret key in production
@@ -380,3 +396,28 @@ exit();
 */
 
 }
+
+/*
+{
+"id":"ch_1DRfkRG8UgnSL68UPte47gdT",
+"object":"charge",
+"amount":168,
+"amount_refunded":0,
+"application":null,
+"application_fee":null,
+"balance_transaction":"txn_1DRfkRG8UgnSL68Uc8PLZqma",
+"captured":true,"created":1541077087,
+"currency":"usd",
+"customer":null,
+"description":"Example charge",
+"destination":null,
+"dispute":null,
+"failure_code":null,
+"failure_message":null,
+"fraud_details":[],
+"invoice":null,
+"livemode":false,
+"metadata":[],
+"on_behalf_of":null,"order":null,"outcome":{"network_status":"approved_by_network","reason":null,"risk_level":"normal","risk_score":36,"seller_message":"Payment complete.","type":"authorized"},"paid":true,"payment_intent":null,"receipt_email":null,"receipt_number":null,"refunded":false,"refunds":{"object":"list","data":[],"has_more":false,"total_count":0,"url":"\/v1\/charges\/ch_1DRfkRG8UgnSL68UPte47gdT\/refunds"},"review":null,"shipping":null,"source":{"id":"card_1DRfjeG8UgnSL68UhOlA9f77","object":"card","address_city":null,"address_country":null,"address_line1":null,"address_line1_check":null,"address_line2":null,"address_state":null,"address_zip":null,"address_zip_check":null,"brand":"Visa","country":"US","customer":null,"cvc_check":"pass","dynamic_last4":null,"exp_month":1,"exp_year":2019,"fingerprint":"e1uOCX2OaLtiKe7m","funding":"credit","last4":"4242","metadata":[],"name":null,"tokenization_method":null},"source_transfer":null,"statement_descriptor":null,"status":"succeeded","transfer_group":null}
+
+*/
