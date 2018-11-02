@@ -267,6 +267,7 @@ class AccountsController extends Controller
     //}
 
     /*-----------------------------------------------------------*/
+    //
     // composer require stripe/stripe-php
     // 4242 4242 4242 4242
     /*
@@ -309,23 +310,23 @@ return $charge;
 
 /*
     public function billing2(Request $request) {
-        \Stripe\Stripe::setApiKey('sk_test_LfAFK776KACX3gaKrSxXNJ0r'); //私钥
+        \Stripe\Stripe::setApiKey('sk_test_LfAFK776KACX3gaKrSxXNJ0r'); //脣陆脭驴
         $post = request()->post();
         if (empty($post['order_id']) || empty($post['stripe_token']))
-            return ['status' => -1, 'msg' => '参数错误'];
+            return ['status' => -1, 'msg' => '虏脦脢媒麓铆脦贸'];
 
         try{
             $charge = \Stripe\Charge::create(
                 [
-                    'amount' => 10.10,  //支付金额
+                    'amount' => 10.10,  //脰搂赂露陆冒露卯
                     'currency' => 'USD',
                     'source' => $post['stripe_token'], //token
-                    //附加信息
+                    //赂陆录脫脨脜脧垄
                     'metadata' => [
-                        'order_sn' => 'KT123456666', //订单号
-                        'name' => 'xxx', //姓名
-                        'tel' =>  '11234566', //电话号
-                        'zip_code' =>  '111111'  //邮编
+                        'order_sn' => 'KT123456666', //露漏碌楼潞脜
+                        'name' => 'xxx', //脨脮脙没
+                        'tel' =>  '11234566', //碌莽禄掳潞脜
+                        'zip_code' =>  '111111'  //脫脢卤脿
                     ]
                 ]
             );
@@ -336,7 +337,7 @@ return $charge;
         $event = $charge->jsonSerialize();
 
         if ($event['status'] == 'succeeded' || $event['status'] == 'pending'){
-            return ['status' => 1, 'msg' => '支付成功'];
+            return ['status' => 1, 'msg' => '脰搂赂露鲁脡鹿娄'];
         }else{
             return ['status' => -1, 'msg' => $event['status']];
         }
@@ -344,11 +345,11 @@ return $charge;
 */
 
 /*
-// WebHook异步通知
+// WebHook脪矛虏陆脥篓脰陋
 
-\Stripe\Stripe::setApiKey('sk_test_xxxxxxxxxxxxxxxxxxxxxx');  //私钥
+\Stripe\Stripe::setApiKey('sk_test_xxxxxxxxxxxxxxxxxxxxxx');  //脣陆脭驴
 
-$endpoint_secret = 'whsec_xxxxxxxxxxxxxxxxx'; //webhook私钥
+$endpoint_secret = 'whsec_xxxxxxxxxxxxxxxxx'; //webhook脣陆脭驴
 
 $payload = @file_get_contents("php://input");
 $sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];
@@ -366,19 +367,19 @@ try {
         exit();
     }
 
-    $order_sn = $data->metadata->order_sn;  //取出订单号
+    $order_sn = $data->metadata->order_sn;  //脠隆鲁枚露漏碌楼潞脜
 
     if ($event->type == 'charge.succeeded'){
-        //succeeded 成功
+        //succeeded 鲁脡鹿娄
 
     }elseif($event->type == 'charge.pending'){
-        //pending 审核
+        //pending 脡贸潞脣
 
     }elseif($event->type == 'charge.refunded'){
-        //refunded 退款
+        //refunded 脥脣驴卯
 
     }elseif ($event->type == 'charge.failed') {
-        //failed 失败，（信用卡验证失败也会发该请求）
+        //failed 脢搂掳脺拢卢拢篓脨脜脫脙驴篓脩茅脰陇脢搂掳脺脪虏禄谩路垄赂脙脟毛脟贸拢漏
 
     }
 
@@ -390,7 +391,7 @@ try {
     exit();
 }
 
-http_response_code(200);  //成功请返回200请求码
+http_response_code(200);  //鲁脡鹿娄脟毛路碌禄脴200脟毛脟贸脗毛
 exit();
 
 */
