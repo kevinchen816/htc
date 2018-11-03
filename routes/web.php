@@ -27,7 +27,11 @@
 
 Route::get('/test', function () {
     return view('test');
-})->name('test');
+});
+
+Route::get('/env', function () {
+    return env('APP_ENV');
+});
 
 ////Route::get('/', 'SessionsController@create')->name('home');
 //Route::get('/', 'Api\CamerasController@cameras')->name('home');
