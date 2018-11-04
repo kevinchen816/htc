@@ -358,8 +358,10 @@ return var_dump($ret);
         //     'source' => $stripeToken,
         // ]);
 
- $ret = $user->updateCard($stripeToken);
-// $response['user'] = $user;
+
+//$ret = $user->updateCard($stripeToken);
+//return 'OK';	
+	// $response['user'] = $user;
 // $response['stripeToken'] = $stripeToken;
 // $response['ret'] = $ret;
 // return $response;
@@ -375,16 +377,16 @@ return var_dump($ret);
             id_au_10000_m,  id_au_10000_3m,
             id_au_20000_m,  id_au_20000_3m,
         */
-        // $subscription_name = 'main'; // iccie OR iccid + plan_id ?
-        // $plan_id = 'id_us_500_3days'; // id_us_5000_m, id_us_5000_3m, id_us_5000_m, id_us_5000_3m
+         $subscription_name = 'main'; // iccie OR iccid + plan_id ?
+         $plan_id = 'id_us_500_3days'; // id_us_5000_m, id_us_5000_3m, id_us_5000_m, id_us_5000_3m
         // // $email = 'test.10ware.com';
         // // $ret = $user->newSubscription('main_test', 'plan_DuMDwpbpnIAhBz')->create($stripeToken);
-        // $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken);
+         $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken);
         // // $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
         // //     'email' => $email,
         // // ]);
 //        $user->charge(100);
-// return $ret;
+ return $ret;
 	return var_dump($ret);
 	return 'OK';
 
