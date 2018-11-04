@@ -358,7 +358,7 @@ return var_dump($ret);
         //     'source' => $stripeToken,
         // ]);
 
-// $ret = $user->updateCard($stripeToken);
+ $ret = $user->updateCard($stripeToken);
 // $response['user'] = $user;
 // $response['stripeToken'] = $stripeToken;
 // $response['ret'] = $ret;
@@ -383,9 +383,10 @@ return var_dump($ret);
         // // $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
         // //     'email' => $email,
         // // ]);
-        $user->charge(100);
+//        $user->charge(100);
 // return $ret;
-return 'OK';
+	return var_dump($ret);
+	return 'OK';
 
 // $invoices = $user->invoices();
 // return view('account.__invoice', compact('invoices'));
