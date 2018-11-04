@@ -346,6 +346,40 @@ return var_dump($ret);
         return $ret;
     }
 
+    public function stripe_new() { // for test
+       \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $ret = \Stripe\Customer::create([
+          "description" => "Customer for test@example.com",
+          "source" => "tok_visa" // obtained with Stripe.js
+        ]);
+        return $ret;
+    }
+
+    public function stripe_charge() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $ret = \Stripe\Token::create([
+          "card" => [
+            "number" => "4242424242424242",
+            "exp_month" => 11,
+            "exp_year" => 2019,
+            "cvc" => "314"
+          ]
+        ]);
+return $ret;
+
+        // $stripeToken = ;
+        // $charge = \Stripe\Charge::create([
+        //     'amount' => 1000,
+        //     'currency' => 'usd',
+        //     'description' => 'Example charge',
+        //     'source' => $stripeToken,
+        // ]);
+
+        return $ret;
+    }
+
     /*-----------------------------------------------------------*/
     /*
     {
@@ -372,7 +406,7 @@ return var_dump($ret);
 
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here: https://dashboard.stripe.com/account/apikeys
-//        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+       // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         // Token is created using Checkout or Elements!
         // Get the payment token ID submitted by the form:
@@ -384,11 +418,11 @@ return var_dump($ret);
         //     'source' => $stripeToken,
         // ]);
 
-//$ret = $user->updateCard($stripeToken);
-	// $response['user'] = $user;
-// $response['stripeToken'] = $stripeToken;
-// $response['ret'] = $ret;
-// return $response;
+$ret = $user->updateCard($stripeToken);
+$response['user'] = $user;
+$response['stripeToken'] = $stripeToken;
+$response['ret'] = $ret;
+return $response;
 
         /*
             plan_id:
