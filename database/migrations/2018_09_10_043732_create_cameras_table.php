@@ -33,8 +33,8 @@ class CreateCamerasTable extends Migration
             <option value="CN" selected="selected">China</option>
             <option value="EU">Europe</option>
             */
-            $table->string('region')->nullable()->default('USA');
-            $table->string('timezone')->nullable();
+            $table->string('region')->nullable()->default('AU');
+            $table->string('timezone')->nullable()->default('Australia/Sydney');
 
             $table->integer('points')->default(0);
             $table->integer('points_used')->default(0);

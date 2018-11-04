@@ -18,7 +18,7 @@ class PlansController extends Controller
             if ($portal == 10) {
                 return redirect()->route('login.10ware');
             } else if ($portal == 11) {
-                return redirect()->route('login.germany');
+                return redirect()->route('login.de');
             } else {
                 return redirect()->route('login');
             }
@@ -98,17 +98,23 @@ class PlansController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
+        // plan, billing, devices, options, email
+        // plans, billing, remote, security, email
+        $data['sel_account_tab'] = 'plans';
+        Auth::user()->update($data);
+
         //session()->flash('success', 'Create Success');
         //return redirect()->route('plans.show', [$plan]);
         //return view('plans.show', compact('user', 'plan'));
 //        return redirect()->route('account.profile');
 
         if ($portal == 10) {
-            return redirect()->route('my.plans.10ware');
+            //return redirect()->route('my.plans.10ware');
+            return redirect()->route('account.profile');
         } else if ($portal == 11) {
-            return redirect()->route('my.plans.germany');
+            return redirect()->route('my.plans.de');
         } else {
-            return redirect()->route('my.plans.germany');
+            return redirect()->route('account.profile');
         }
         //return redirect()->route('my.plans');
     }

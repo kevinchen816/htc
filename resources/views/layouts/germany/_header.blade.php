@@ -10,7 +10,8 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>RemoteCam</h2>
+                <!-- <h2>RemoteCam</h2> -->
+                <h2>KMCam Portal</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -30,15 +31,15 @@
 
 @if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
-                        <a href="{{ route('add.plan.germany') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                        <a href="{{ route('add.plan.de') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
-                        <a href="{{ route('my.plans.germany') }}"><i class="fa fa-gear"></i> My Plans</a>
+                        <a href="{{ route('my.plans.de') }}"><i class="fa fa-gear"></i> My Plans</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
-                        <a href="{{ route('cameras.germany') }}"><i class="fa fa-camera"></i> My Cameras</a>
+                        <a href="{{ route('cameras.de') }}"><i class="fa fa-camera"></i> My Cameras</a>
                     </li>
 @else
 @endif
@@ -51,13 +52,13 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="{{ route('logout.germany') }}"
+                                <a href="{{ route('logout.de') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>
 
-                                <form id="logout-form" action="{{ route('logout.germany') }}" method="POST" style="display: none;">
+                                <form id="logout-form" action="{{ route('logout.de') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
                                 </form>
@@ -65,7 +66,7 @@
                         </ul>
                     </li>
 @else
-                    <li class=""><a href="{{ route('login.germany') }}">Log in</a></li>
+                    <li class=""><a href="{{ route('login.de') }}">Log in</a></li>
 @endif
                 </ul>
             </div>

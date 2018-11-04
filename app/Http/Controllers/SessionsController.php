@@ -31,14 +31,12 @@ class SessionsController extends Controller
     }
 
     public function login_10ware() {
-        //return view('portal.10ware.sessions.create');
         $portal = 10;
         $portal_name = '10ware';
         return view('sessions.create', compact('portal', 'portal_name'));
     }
 
     public function login_germany() {
-        //return view('portal.germany.sessions.create');
         $portal = 11;
         $portal_name = 'germany';
         return view('sessions.create', compact('portal', 'portal_name'));
@@ -65,7 +63,7 @@ class SessionsController extends Controller
             if ($portal == 10) {
                 return redirect()->route('cameras.10ware');
             } else if ($portal == 11) {
-                return redirect()->route('cameras.germany');
+                return redirect()->route('cameras.de');
             } else {
                 return redirect()->route('cameras');
             }
@@ -102,7 +100,7 @@ class SessionsController extends Controller
 
     public function destroy_germany() {
         Auth::logout();
-        return redirect()->route('login.germany');
+        return redirect()->route('login.de');
     }
 }
 

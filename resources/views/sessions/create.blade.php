@@ -1,4 +1,4 @@
-@extends('layouts.default2')
+@extends('layouts.default')
 
 @section('welcome')
 <br>
@@ -44,7 +44,7 @@
                         @if (isset($portal) && $portal == 10)
                             <a class="btn btn-primary" href="{{ route('signup.10ware') }}" role="button">Register</a>
                         @elseif (isset($portal) && $portal == 11)
-                            <a class="btn btn-primary" href="{{ route('signup.germany') }}" role="button">Register</a>
+                            <a class="btn btn-primary" href="{{ route('signup.de') }}" role="button">Register</a>
                         @else
                             <a class="btn btn-primary" href="{{ route('signup') }}" role="button">Register</a>
                         @endif

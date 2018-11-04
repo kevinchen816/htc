@@ -92,7 +92,7 @@
                         @if ($portal == 10)
                         <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions.10ware', $camera->id) }}" aria-expanded="false">
                         @elseif ($portal == 11)
-                        <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions.germany', $camera->id) }}" aria-expanded="false">
+                        <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions.de', $camera->id) }}" aria-expanded="false">
                         @else
                         <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions', $camera->id) }}" aria-expanded="false">
                         @endif

@@ -36,7 +36,7 @@ class ActionsController extends Controller
             if ($portal == 10) {
                 return redirect()->route('login.10ware');
             } else if ($portal == 11) {
-                return redirect()->route('login.germany');
+                return redirect()->route('login.de');
             } else {
                 return redirect()->route('login');
             }

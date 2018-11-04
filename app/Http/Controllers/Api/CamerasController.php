@@ -57,6 +57,20 @@ class CamerasController extends Controller
 
     private $error;
 
+    public function _datetime_get($camera) {
+        //http://php.net/manual/zh/function.date-default-timezone-set.php
+        //http://php.net/manual/zh/timezones.php
+        if (isset($camera) && $camera) {
+            $tz = date_default_timezone_get();
+            date_default_timezone_set($camera->timezone);
+            $ret = date('Y-m-d H:i:s');
+            date_default_timezone_set($tz);
+        } else {
+            $ret = date('Y-m-d H:i:s');
+        }
+        return $ret;
+    }
+
     /* reference vendor/symfony/dom-crawler/Field/FileFormField.php */
     public function setErrorCode($error) {
         //$codes = array(UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE, UPLOAD_ERR_PARTIAL, UPLOAD_ERR_NO_FILE, UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE, UPLOAD_ERR_EXTENSION);
@@ -814,9 +828,7 @@ class CamerasController extends Controller
         }
     */
     public function Response_Result($err, $camera = null, $datalist = null) {
-        // date_default_timezone_set("Asia/Shanghai");
         $ret['ResultCode'] = $err;
-        //if ($err == 0) {
         if (($err == 0)||($err == 1)||($err == 2)) {
             if ($datalist) {
                 $ret['DataList'] = $datalist;
@@ -840,22 +852,12 @@ class CamerasController extends Controller
                     $ret['ActionCode'] = $action_code;
                     $ret['ParameterList'] = $param_list;
                 }
-
-                //http://php.net/manual/zh/function.date-default-timezone-set.php
-                //http://php.net/manual/zh/timezones.php
-                //$ret['timezone'] = $camera->timezone;
-                date_default_timezone_set($camera->timezone);
             }
-        //} else if ($err == 1) {
-            // do nothing
-
-        //} else if ($err == 2) {
-            // do nothing
 
         } else {
             $ret['ErrorMsg'] = $this->getErrorMessage($err);
         }
-        $ret['DateTimeStamp'] = date('Y-m-d H:i:s');
+        $ret['DateTimeStamp'] = $this->_datetime_get($camera);
         return $ret;
     }
 
@@ -1290,14 +1292,14 @@ class CamerasController extends Controller
          "blocknbr":1,
          "DateTimeStamp":"2018-07-18 03:00:43"}
     */
-    public function uploadblock_response($blockid, $blocknbr) {
-        // date_default_timezone_set("Asia/Shanghai");
-        $ret['ResultCode'] = 0; //$err;
-        $ret['blockid'] = $blockid;
-        $ret['blocknbr'] = $blocknbr;
-        $ret['DateTimeStamp'] = date('Y-m-d H:i:s');
-        return $ret;
-    }
+    // public function uploadblock_response($blockid, $blocknbr) {
+    //     // date_default_timezone_set("Asia/Shanghai");
+    //     $ret['ResultCode'] = 0; //$err;
+    //     $ret['blockid'] = $blockid;
+    //     $ret['blocknbr'] = $blocknbr;
+    //     $ret['DateTimeStamp'] = date('Y-m-d H:i:s');
+    //     return $ret;
+    // }
 
     public function uploadblock_merge($camera, $filename, $blockid, $crc32) {
         $uploader = new ImageUploadHandler;
@@ -1368,7 +1370,14 @@ class CamerasController extends Controller
                         $ret = $this->Response_Result(ERR_CRC32_FAIL, $camera);
                         $ret['CRC32'] = $crc32;
                     } else {
-                        $ret = $this->uploadblock_response($blockid, $blocknbr);
+                        // $ret = $this->uploadblock_response($blockid, $blocknbr);
+
+                        // date_default_timezone_set("Asia/Shanghai");
+                        $ret = [];
+                        $ret['ResultCode'] = 0; //$err;
+                        $ret['blockid'] = $blockid;
+                        $ret['blocknbr'] = $blocknbr;
+                        $ret['DateTimeStamp'] = $this->_datetime_get($camera);
                     }
                     return $ret;
                 }
@@ -2915,6 +2924,7 @@ class CamerasController extends Controller
 
         //$region = $this->Settings_Region('USA');
         $region = $this->Settings_Region($camera['region']);
+
         $label = 'Time Zone';
         $options = $region['options'];
         $field_name = 'timezone';
@@ -3680,7 +3690,7 @@ class CamerasController extends Controller
             if ($portal == 10) {
                 $handle .= '        <a href="/10ware/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             } else if ($portal == 11) {
-                $handle .= '        <a href="/germany/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
+                $handle .= '        <a href="/de/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             } else {
                 $handle .= '        <a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             }
@@ -3710,7 +3720,7 @@ class CamerasController extends Controller
             if ($portal == 10) {
                 return redirect()->route('login.10ware');
             } else if ($portal == 11) {
-                return redirect()->route('login.germany');
+                return redirect()->route('login.de');
             } else {
                 return redirect()->route('login');
             }
@@ -3724,7 +3734,7 @@ class CamerasController extends Controller
     //        if ($portal == 10) {
     //            return redirect()->route('logout.10ware');
     //        } else if ($portal == 11) {
-    //            return redirect()->route('logout.germany');
+    //            return redirect()->route('logout.de');
     //        } else {
     //            return redirect()->route('logout');
     //        }
@@ -3735,7 +3745,7 @@ class CamerasController extends Controller
         if ($portal == 10) {
             return redirect()->route('cameras.10ware');
         } else if ($portal == 11) {
-            return redirect()->route('cameras.germany');
+            return redirect()->route('cameras.de');
         } else {
             return redirect()->route('cameras');
         }
@@ -4558,7 +4568,7 @@ class CamerasController extends Controller
 // https://laravelacademy.org/post/6140.html
 $users = DB::table('users')->select('name', 'email as user_email')->get();
 
-// 强制查询返回不重复的结果�?$users = DB::table('users')->distinct()->get();
+// å¼ºåˆ¶æŸ¥è¯¢è¿”å›žä¸é‡å¤çš„ç»“æžœé›?$users = DB::table('users')->distinct()->get();
 
 $query = DB::table('users')->select('name');
 $users = $query->addSelect('age')->get();
@@ -4580,7 +4590,7 @@ $users = DB::table('users')
 ->whereDate('created_at', '2016-10-10')
 ->get();
 
-// 原生表达�?$users = DB::table('users')
+// åŽŸç”Ÿè¡¨è¾¾å¼?$users = DB::table('users')
 ->select(DB::raw('count(*) as user_count, status'))
 ->where('status', '<>', 1)
 ->groupBy('status')

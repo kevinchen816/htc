@@ -23,6 +23,7 @@
 
         <form method="POST" action="{{ route('account.profile-billing') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="payment-form">
             {{ csrf_field() }}
+            <input name="portal" type="hidden" value="{{ $portal }}">
 
             <div class="form-group">
                 <label class="col-md-3 control-label">Cardholder Name</label>
@@ -77,7 +78,6 @@
             $(document).ready(function(){
 
                 // Create a Stripe client
-                //var stripe = Stripe('pk_live_QPN3uXwIOGzb9gA2NDp1ZhVC');
                 var stripe = Stripe('pk_test_3eKxfF6P2wzBFYaowK8CVxBV');
 
                 // Create an instance of Elements

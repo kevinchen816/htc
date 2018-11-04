@@ -20,16 +20,38 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('confirmed')->default('No'); // Yes, No
 
+            // "laravel/cashier"
+            $table->string('stripe_id')->nullable();
+            $table->string('card_brand')->nullable();
+            $table->string('card_last_four')->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('subscription_ends_at')->nullable(); // ?
+
             $table->integer('portal')->default(0);
             $table->integer('permission')->default(0);
             $table->string('sel_menu')->default('plan');            // plan, camera, account, help, support, user
             $table->integer('sel_camera')->nullable();              // camera_id
             $table->string('sel_camera_tab')->default('overview');  // overview, gallery, settings, actions, options
-            $table->string('sel_account_tab')->default('planspermission');     // plans, billing, remote, security, email
+            //$table->string('sel_account_tab')->default('planspermission');     // plans, billing, remote, security, email
+            $table->string('sel_account_tab')->default('plans');     // plans, billing, remote, security, email
                                                                    // plan, billing, devices, options, email
             $table->rememberToken();
             $table->timestamps();
         });
+
+        // "laravel/cashier": "~7.0"
+        Schema::create('subscriptions', function ($table) {
+            $table->increments('id');
+            $table->integer('user_id');
+            $table->string('name');
+            $table->string('stripe_id');
+            $table->string('stripe_plan');
+            $table->integer('quantity');
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
+            $table->timestamps();
+        });
+
     }
 
     /**
@@ -40,5 +62,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('subscriptions');
     }
 }

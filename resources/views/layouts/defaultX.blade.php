@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'RemoteCam Portal')</title>
+    <title>@yield('title', 'KMCam Portal')</title>
 
     <!-- Styles -->
     <!-- <link href="https://portal.ridgetec.com/css/app.css" rel="stylesheet"> -->
@@ -179,14 +179,8 @@
 </head>
 <body>
     <div id="app">
+        @include('layouts._header')
 
-@if (isset($portal) && $portal == 10)
-        @include('layouts.10ware._header2')
-@elseif (isset($portal) && $portal == 11)
-        @include('layouts.germany._header2')
-@else
-        @include('layouts._header2')
-@endif
         <div class="fixed-navbar-container">
             <div class="container">
                 @include('shared._messages')
@@ -208,13 +202,7 @@
         </div>
     </div>
 
-@if (isset($portal) && $portal == 10)
-    @include('layouts.10ware._footer')
-@elseif (isset($portal) && $portal == 11)
-    @include('layouts.germany._footer')
-@else
     @include('layouts._footer')
-@endif
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

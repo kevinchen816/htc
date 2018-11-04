@@ -2,6 +2,7 @@
     <!--<div class="panel panel-default panel-primary custom-settings-panel">-->
     <form method="POST" action="https://portal.ridgetec.com/account/data-plans" accept-charset="UTF-8" class="form-horizontal" role="form" id="data-plans-form">
         {{ csrf_field() }}
+        <input name="portal" type="hidden" value="{{ $portal }}">
 
         <div class="row">
             <div class="col-md-12">

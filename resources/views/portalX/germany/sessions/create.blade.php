@@ -1,4 +1,4 @@
-@extends('portal.10ware.layouts.default2')
+@extends('layouts.default')
 
 @section('welcome')
 <br>
@@ -16,7 +16,7 @@
                 <div class="panel-body">
                     @include('shared._errors')
 
-                    <form method="POST" action="{{ route('login.10ware') }}">
+                    <form method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group">

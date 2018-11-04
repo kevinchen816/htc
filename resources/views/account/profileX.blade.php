@@ -1,12 +1,14 @@
-@extends('layouts.default2')
+@extends('layouts.default')
 
 @section('header')
+<div class="container">
 <div class="row">
     <h4>
         <ol class="breadcrumb">
             <li class="active">My Account ({{ $user->email }})</li>
         </ol>
     </h4>
+</div>
 </div>
 @stop
 
@@ -164,7 +166,6 @@
             e.preventDefault();
             var tabname = $(this).attr("data-tab");
             var url = "/account/activetab";
-
             //alert('put tab ' + tabname);
             $.post(url,
             {

@@ -1,5 +1,7 @@
-@extends('layouts.default2')
+@extends('layouts.default')
+
 @section('header')
+<div class="container">
 <div class="row">
     <h4>
     <ol class="breadcrumb">
@@ -7,6 +9,7 @@
         <li class="active">Data Plan Information</li>
     </ol>
     </h4>
+</div>
 </div>
 @stop
 

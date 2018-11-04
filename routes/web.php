@@ -25,6 +25,8 @@
 //    return view('home');
 //})->name('home');
 
+use Illuminate\Http\Request;
+
 Route::get('/test', function () {
     return view('test');
 });
@@ -36,12 +38,25 @@ Route::get('/env', function () {
 ////Route::get('/', 'SessionsController@create')->name('home');
 //Route::get('/', 'Api\CamerasController@cameras')->name('home');
 //Route::get('/10ware', 'Api\CamerasController@cameras_10ware')->name('home.10ware');
-//Route::get('/germany', 'Api\CamerasController@cameras_germany')->name('home.germany');
+//Route::get('/de', 'Api\CamerasController@cameras_germany')->name('home.de');
 Route::get('/', 'Api\CamerasController@home')->name('home');
 Route::get('/10ware', 'Api\CamerasController@home_10ware')->name('home.10ware');
-Route::get('/germany', 'Api\CamerasController@home_germany')->name('home.germany');
+Route::get('/de', 'Api\CamerasController@home_germany')->name('home.de');
 
-Route::get('/stripe', 'AccountsController@stripe');
+Route::get('/stripe', 'AccountsController@stripe'); // for test
+
+Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
+    // return $invoiceId;
+    return $request->user()->downloadInvoice($invoiceId, [
+        'vendor'  => 'Your Company',
+        'product' => 'Your Product',
+    ]);
+});
+
+Route::post(
+    'stripe/webhook',
+    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+);
 
 /*
 /register
@@ -59,23 +74,23 @@ Route::resource('/users', 'UsersController');
 //Route::get('/register', 'UsersController@register')->name('register');
 Route::get('/signup', 'UsersController@create')->name('signup');
 Route::get('/10ware/signup', 'UsersController@create_10ware')->name('signup.10ware');
-Route::get('/germany/signup', 'UsersController@create_germany')->name('signup.germany');
+Route::get('/de/signup', 'UsersController@create_germany')->name('signup.de');
 
 Route::get('/login', 'SessionsController@create')->name('login');
 Route::get('/10ware/login', 'SessionsController@login_10ware')->name('login.10ware');
-Route::get('/germany/login', 'SessionsController@login_germany')->name('login.germany');
+Route::get('/de/login', 'SessionsController@login_germany')->name('login.de');
 
 Route::post('/login', 'SessionsController@store')->name('login');
 //Route::post('/10ware/login', 'SessionsController@store_10ware')->name('login.10ware');
-//Route::post('/germany/login', 'SessionsController@store_germany')->name('login.germany');
+//Route::post('/de/login', 'SessionsController@store_germany')->name('login.de');
 
 Route::delete('/logout', 'SessionsController@destroy')->name('logout');
 Route::delete('/10ware/logout', 'SessionsController@destroy_10ware')->name('logout.10ware');
-Route::delete('/germany/logout', 'SessionsController@destroy_germany')->name('logout.germany');
+Route::delete('/de/logout', 'SessionsController@destroy_germany')->name('logout.de');
 
 Route::post('/logout', 'SessionsController@destroy')->name('logout');
 Route::post('/10ware/logout', 'SessionsController@destroy_10ware')->name('logout.10ware');
-Route::post('/germany/logout', 'SessionsController@destroy_germany')->name('logout.germany');
+Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de');
 
 //Route::get('/admin', function() {return view('/admin/home');})->name('admin');
 Route::get('/admin', 'Api\CamerasController@admin')->name('admin');
@@ -106,7 +121,7 @@ Route::get('/admin/clear-search/apilog', 'Api\CamerasController@admin_clear_sear
 //Route::get('/plans/add-plan','Api\CamerasController@plans_addplan_create')->name('add.plan');
 Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
 Route::get('/10ware/plans/add-plan','PlansController@view_10ware')->name('add.plan.10ware');
-Route::get('/germany/plans/add-plan','PlansController@view_germany')->name('add.plan.germany');
+Route::get('/de/plans/add-plan','PlansController@view_germany')->name('add.plan.de');
 
 Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
 
@@ -117,12 +132,12 @@ Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete
 //Route::get('/myplans','PlansController@my_plans')->name('my.plans');
 Route::get('/myplans','PlansController@my_plans2')->name('my.plans');
 Route::get('/10ware/myplans','PlansController@my_plans2_10ware')->name('my.plans.10ware');
-Route::get('/germany/myplans','PlansController@my_plans2_germany')->name('my.plans.germany');
+Route::get('/de/myplans','PlansController@my_plans2_germany')->name('my.plans.de');
 
 /*-----------------------------------------------------------*/
 Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
 Route::get('/10ware/cameras', 'Api\CamerasController@cameras_10ware')->name('cameras.10ware');
-Route::get('/germany/cameras', 'Api\CamerasController@cameras_germany')->name('cameras.germany');
+Route::get('/de/cameras', 'Api\CamerasController@cameras_germany')->name('cameras.de');
 
 //Route::group(['prefix' => 'accounts/{account_id}'], function () {
 //    Route::get('detail', function ($account_id)    {
@@ -134,7 +149,7 @@ Route::get('/germany/cameras', 'Api\CamerasController@cameras_germany')->name('c
 Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
 Route::get('/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail')->name('camera.getdetail');
 Route::get('/10ware/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_10ware')->name('camera.getdetail.10ware');
-Route::get('/germany/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_germany')->name('camera.getdetail.germany');
+Route::get('/de/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_germany')->name('camera.getdetail.de');
 
 /* Overview */
 Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
@@ -151,7 +166,7 @@ Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.
 /* Actions */
 Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
 Route::get('/10ware/cameras/actions/{camera_id}', 'Api\CamerasController@actions_10ware')->name('camera.actions.10ware');;
-Route::get('/germany/cameras/actions/{camera_id}', 'Api\CamerasController@actions_germany')->name('camera.actions.germany');;
+Route::get('/de/cameras/actions/{camera_id}', 'Api\CamerasController@actions_germany')->name('camera.actions.de');;
 
 /* Options */
 Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');

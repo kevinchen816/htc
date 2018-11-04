@@ -1,4 +1,4 @@
-@extends('layouts.default2')
+@extends('layouts.default')
 @section('header')
 <div class="row">
     <h4>

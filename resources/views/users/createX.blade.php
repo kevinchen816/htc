@@ -1,4 +1,4 @@
-@extends('layouts.default2')
+@extends('layouts.default')
 
 @section('welcome')
 @include('layouts._welcome')

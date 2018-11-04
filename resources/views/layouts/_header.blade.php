@@ -10,10 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="10ware Home">
-                    <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
-                </a>
+                <h2>KMCam Portal</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -31,9 +28,13 @@
                     <li class=""><a href="https://portal.ridgetec.com/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
                     <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
-@if (Auth::check())
+@if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
                         <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                    </li>
+
+                    <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
+                        <a href="{{ route('my.plans') }}"><i class="fa fa-gear"></i> My Plans</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
@@ -48,7 +49,6 @@
                         <a href="{{ route('help.plans') }}">PLAN INFO</a>
                     </li>
 @else
-                    <!--<li class=""><a href="https://portal.ridgetec.com/tour/start">DEMO</a></li>-->
                     <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
 @endif
 
@@ -63,18 +63,14 @@
                         </ul>
                     </li>
 
-@if (Auth::check())
+@if (Auth::check() && isset($user))
                     <li class="{{ ($user->sel_menu == 'user') ? 'dropdown active' : 'dropdown' }}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ $user->name }}  <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <!--<li><a href="{{ route('users.show', Auth::user()->id) }}">User Show</a></li>-->
-                            <li><a href="{{ route('users.edit', Auth::user()->id) }}">User</a></li>
-                            <li><a href="{{ route('plans.index') }}">Plans</a></li>
                             <li>
-                                <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
@@ -89,7 +85,13 @@
                         </ul>
                     </li>
 @else
+                @if (isset($portal) && $portal == 10)
+                    <li class=""><a href="{{ route('login.10ware') }}">Log in1</a></li>
+                @elseif (isset($portal) && $portal == 11)
+                    <li class=""><a href="{{ route('login.de') }}">Log in2</a></li>
+                @else
                     <li class=""><a href="{{ route('login') }}">Log in</a></li>
+                @endif
 @endif
                 </ul>
             </div>

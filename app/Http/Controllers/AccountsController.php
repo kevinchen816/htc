@@ -19,7 +19,7 @@ class AccountsController extends Controller
             if ($portal == 10) {
                 return redirect()->route('login.10ware');
             } else if ($portal == 11) {
-                return redirect()->route('login.germany');
+                return redirect()->route('login.de');
             } else {
                 return redirect()->route('login');
             }
@@ -267,45 +267,129 @@ class AccountsController extends Controller
     //}
 
     /*-----------------------------------------------------------*/
+    // [composer.json]
+    // "stripe/stripe-php": "^6.20"
+    // "laravel/cashier": "~6.0"
     //
     // composer require stripe/stripe-php
     // 4242 4242 4242 4242
+    // 5555555555554444
+    // 378282246310005
     /*
         {"_token":"a0HAJf1b5WAGZkDFWFriD8FDZNdzyNCGj1r2YtMm","cardholder-name":"Kevin","cardholder-phone":"18664933085",
          "stripeToken":"tok_1DR0OHG8UgnSL68UTWNMptbB"}
     */
-    public function stripe() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+    public function stripe() { // for test
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        $token = 'tok_1DRfjeG8UgnSL68UwpYMG4Kf';
-        $charge = \Stripe\Charge::create([
-            'amount' => 168,
-            'currency' => 'usd',
-            'description' => 'Example charge',
-            'source' => $token,
-        ]);
+        $user = Auth::user();
+        $user_id = $user->id;
 
-return $charge;
-        //return 'OK';
+        // $token = 'tok_1DRfjeG8UgnSL68UwpYMG4Kf';
+        // $ret = \Stripe\Charge::create([
+        //     'amount' => 1000,
+        //     'currency' => 'usd',
+        //     'description' => 'Example charge',
+        //     'source' => $token,
+        // ]);
+
+/*
+    plan_id:
+    id_us_2500_m_895,
+    id_us_5000_m_1295,   id_us_5000_3m_3695,
+    id_us_10000_m_1995,  id_us_10000_3m_5795,
+    id_us_20000_m_2695,  id_us_20000_3m_7795,
+
+    id_au_5000_m,   id_au_5000_3m,
+    id_au_10000_m,  id_au_10000_3m,
+    id_au_20000_m,  id_au_20000_3m,
+*/
+$ret = $user->subscribed('main'); // true, false
+// $ret = $user->subscription('main')->onGracePeriod();
+// $ret = $user->subscription('main')->cancelled();
+return var_dump($ret);
+// return $ret;
+
+// $ret = $user->subscription('main')->cancel();
+// $ret = $user->subscription('main')->cancelNow();
+// $invoices = $user->invoices();
+// return $invoices;
+
+// $ret = $user->subscription('main')->resume();
+// return var_dump($ret);
+        //return redirect()->back();
     }
 
+    /*-----------------------------------------------------------*/
+    /*
+    {
+    "name":"main",
+    "stripe_id":"sub_DuMETFmgmIV10k",
+    "stripe_plan":"plan_DuMDwpbpnIAhBz",
+    "quantity":1,
+    "trial_ends_at":null,
+    "ends_at":null,
+    "user_id":1,
+    "updated_at":"2018-11-04 06:22:39",
+    "created_at":"2018-11-04 06:22:39",
+    "id":2}
+    */
     public function billing(Request $request) {
-//return $request;
+// return $request;
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here: https://dashboard.stripe.com/account/apikeys
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         // Token is created using Checkout or Elements!
         // Get the payment token ID submitted by the form:
-        $token = $_POST['stripeToken'];
-        $charge = \Stripe\Charge::create([
-            'amount' => 168,
-            'currency' => 'usd',
-            'description' => 'Example charge',
-            'source' => $token,
-        ]);
+        $stripeToken = $_POST['stripeToken'];
+        // $charge = \Stripe\Charge::create([
+        //     'amount' => 1000,
+        //     'currency' => 'usd',
+        //     'description' => 'Example charge',
+        //     'source' => $stripeToken,
+        // ]);
 
-return $charge;
+// $ret = $user->updateCard($stripeToken);
+// $response['user'] = $user;
+// $response['stripeToken'] = $stripeToken;
+// $response['ret'] = $ret;
+// return $response;
+
+        /*
+            plan_id:
+            id_us_2500_m_895,
+            id_us_5000_m_1295,   id_us_5000_3m_3695,
+            id_us_10000_m_1995,  id_us_10000_3m_5795,
+            id_us_20000_m_2695,  id_us_20000_3m_7795,
+
+            id_au_5000_m,   id_au_5000_3m,
+            id_au_10000_m,  id_au_10000_3m,
+            id_au_20000_m,  id_au_20000_3m,
+        */
+        // $subscription_name = 'main'; // iccie OR iccid + plan_id ?
+        // $plan_id = 'id_us_500_3days'; // id_us_5000_m, id_us_5000_3m, id_us_5000_m, id_us_5000_3m
+        // // $email = 'test.10ware.com';
+        // // $ret = $user->newSubscription('main_test', 'plan_DuMDwpbpnIAhBz')->create($stripeToken);
+        // $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken);
+        // // $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
+        // //     'email' => $email,
+        // // ]);
+        $user->charge(100);
+// return $ret;
+return 'OK';
+
+// $invoices = $user->invoices();
+// return view('account.__invoice', compact('invoices'));
+//         return redirect()->back();
     }
 
 /*

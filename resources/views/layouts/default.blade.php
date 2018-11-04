@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', '10ware Portal')</title>
+    <title>@yield('title', 'KMCam Portal')</title>
 
     <!-- Styles -->
     <!-- <link href="https://portal.ridgetec.com/css/app.css" rel="stylesheet"> -->
@@ -19,7 +19,7 @@
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd" crossorigin="anonymous">
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet"> -->
+    <!--<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet">-->
 
     <!-- <link href="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet"> -->
     <link href="/css/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet"> <!-- kevin -->
@@ -76,8 +76,8 @@
         }
 
     </style>
-<link rel="stylesheet" href="https://portal.ridgetec.com/css/thumbnail-gallery.css" media="screen">
-<link rel="stylesheet" href="https://portal.ridgetec.com/css/gallery.css" media="screen">
+<link rel="stylesheet" href="/css/thumbnail-gallery.css" media="screen">
+<link rel="stylesheet" href="/css/gallery.css" media="screen">
 <style>
     .custom-time-toggle-td {
         padding-right: 2px;
@@ -179,8 +179,14 @@
 </head>
 <body>
     <div id="app">
-        @include('layouts._header2')
 
+@if (isset($portal) && $portal == 10)
+        @include('layouts.10ware._header')
+@elseif (isset($portal) && $portal == 11)
+        @include('layouts.germany._header')
+@else
+        @include('layouts._header')
+@endif
         <div class="fixed-navbar-container">
             <div class="container">
                 @include('shared._messages')
@@ -202,7 +208,13 @@
         </div>
     </div>
 
+@if (isset($portal) && $portal == 10)
+    @include('layouts.10ware._footer')
+@elseif (isset($portal) && $portal == 11)
+    @include('layouts.germany._footer')
+@else
     @include('layouts._footer')
+@endif
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

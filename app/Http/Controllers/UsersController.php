@@ -33,7 +33,7 @@ class UsersController extends Controller
         if ($portal == 10) {
             return redirect()->route('cameras.10ware');
         } else if ($portal == 11) {
-            return redirect()->route('cameras.germany');
+            return redirect()->route('cameras.de');
         } else {
             return redirect()->route('cameras');
         }
