@@ -44,6 +44,10 @@ Route::get('/10ware', 'Api\CamerasController@home_10ware')->name('home.10ware');
 Route::get('/de', 'Api\CamerasController@home_germany')->name('home.de');
 
 Route::get('/stripe', 'AccountsController@stripe'); // for test
+Route::get('/trial', 'AccountsController@trial'); // for test
+Route::get('/swap1', 'AccountsController@swap1'); // for test
+Route::get('/swap3', 'AccountsController@swap3'); // for test
+Route::get('/swap6', 'AccountsController@swap6'); // for test
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     // return $invoiceId;

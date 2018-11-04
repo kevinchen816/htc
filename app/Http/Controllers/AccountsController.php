@@ -320,6 +320,32 @@ return var_dump($ret);
         //return redirect()->back();
     }
 
+
+
+    public function trial() { // for test
+        $user = Auth::user();
+        $ret = $user->subscription('89860117851014783507')->onTrial();
+        return var_dump($ret);
+    }
+
+    public function swap1() { // for test
+        $user = Auth::user();
+        $ret = $user->subscription('89860117851014783481')->swap('plan_au_5000_1m_1000');
+        return $ret;
+    }
+
+    public function swap3() { // for test
+        $user = Auth::user();
+        $ret = $user->subscription('89860117851014783481')->swap('plan_au_5000_3m_3000');
+        return $ret;
+    }
+
+    public function swap6() { // for test
+        $user = Auth::user();
+        $ret = $user->subscription('89860117851014783481')->swap('plan_au_5000_6m_6000');
+        return $ret;
+    }
+
     /*-----------------------------------------------------------*/
     /*
     {
@@ -358,9 +384,7 @@ return var_dump($ret);
         //     'source' => $stripeToken,
         // ]);
 
-
 //$ret = $user->updateCard($stripeToken);
-//return 'OK';	
 	// $response['user'] = $user;
 // $response['stripeToken'] = $stripeToken;
 // $response['ret'] = $ret;
@@ -368,28 +392,36 @@ return var_dump($ret);
 
         /*
             plan_id:
-            id_us_2500_m_895,
-            id_us_5000_m_1295,   id_us_5000_3m_3695,
-            id_us_10000_m_1995,  id_us_10000_3m_5795,
-            id_us_20000_m_2695,  id_us_20000_3m_7795,
-
-            id_au_5000_m,   id_au_5000_3m,
-            id_au_10000_m,  id_au_10000_3m,
-            id_au_20000_m,  id_au_20000_3m,
+            plan_au_5000_1m_1000
+            plan_au_5000_3m_3000
+            plan_au_5000_6m_6000
         */
-         $subscription_name = 'main'; // iccie OR iccid + plan_id ?
-         $plan_id = 'id_us_500_3days'; // id_us_5000_m, id_us_5000_3m, id_us_5000_m, id_us_5000_3m
-        // // $email = 'test.10ware.com';
-        // // $ret = $user->newSubscription('main_test', 'plan_DuMDwpbpnIAhBz')->create($stripeToken);
-         $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken);
-        // // $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
-        // //     'email' => $email,
-        // // ]);
-//        $user->charge(100);
- return $ret;
-	return var_dump($ret);
-	return 'OK';
+        // $subscription_name = '89860117851014783481'; // iccid OR iccid + plan_id ?
+        // $subscription_name = '89860117851014783507'; // iccid OR iccid + plan_id ?
+        // $subscription_name = '8944503540145562674'; // iccid OR iccid + plan_id ?
+        $subscription_name = '89860117851014783482'; // iccid OR iccid + plan_id ?
+        $plan_id = 'plan_au_5000_1m_free'; // id_us_5000_m, id_us_5000_3m, id_us_5000_m, id_us_5000_3m
+        // $ret = $user->newSubscription('main', 'plan_DuMDwpbpnIAhBz')->create($stripeToken);
+//        $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken);
 
+// $user->trial_ends_at = Carbon::now()->addDays(14);
+// $user->save();
+
+// $date=date("Y/m/d");
+$date = date_create(date("Y/m/d"));
+$trial_ends_at = date_add($date, date_interval_create_from_date_string("30 days"));
+// $trial_ends_at = '2018-12-04';
+// $trial_ends_at = Carbon::now()->addDays(30);
+        $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
+            // 'trial_ends_at' => $trial_ends_at,
+        ]);
+
+$response['trial_ends_at'] = $trial_ends_at;
+$response['ret'] = $ret;
+return $response;
+// return $ret;
+
+//        $user->charge(100);
 // $invoices = $user->invoices();
 // return view('account.__invoice', compact('invoices'));
 //         return redirect()->back();
