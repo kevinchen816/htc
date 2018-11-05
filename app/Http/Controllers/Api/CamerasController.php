@@ -4049,18 +4049,20 @@ class CamerasController extends Controller
         //return redirect()->route('cameras');
     }
 
-    //public function gallerylayout($camera_id, $number) {
-    public function gallerylayout($portal, $camera_id, $number) {
+    public function gallerylayout($camera_id, $number) {
+    //public function gallerylayout($portal, $camera_id, $number) {
         $cameras = DB::table('cameras')->where('id', $camera_id);
         $cameras->update(['columns' => $number]);
+        $portal = 0;
         return $this->route_to_cameras($portal);
         //return redirect()->route('cameras');
     }
 
-    //public function gallerythumbs($camera_id, $number) {
-    public function gallerythumbs($portal, $camera_id, $number) {
+    public function gallerythumbs($camera_id, $number) {
+    //public function gallerythumbs($portal, $camera_id, $number) {
         $cameras = DB::table('cameras')->where('id', $camera_id);
         $cameras->update(['thumbs' => $number]);
+        $portal = 0;
         return $this->route_to_cameras($portal);
         //return redirect()->route('cameras');
     }

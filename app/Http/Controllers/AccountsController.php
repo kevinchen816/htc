@@ -357,25 +357,44 @@ return var_dump($ret);
     public function stripe_charge() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        $ret = \Stripe\Token::create([
-          "card" => [
-            "number" => "4242424242424242",
-            "exp_month" => 11,
-            "exp_year" => 2019,
-            "cvc" => "314"
-          ]
+//        $ret = \Stripe\Token::create([
+//          "card" => [
+//            "number" => "4242424242424242",
+//            "exp_month" => 11,
+//            "exp_year" => 2019,
+//            "cvc" => "314"
+//          ]
+//        ]);
+//return $ret;
+
+        //$stripeToken = ;
+        //$charge = \Stripe\Charge::create([
+        //    'amount' => 1000,
+        //    'currency' => 'usd',
+        //    'description' => 'Example charge',
+        //    'source' => $stripeToken,
+        //]);
+
+        $charge = \Stripe\Charge::create([
+            'amount' => 1234,
+            'currency' => 'usd',
+            'description' => 'Example charge',
+            'customer' => 'cus_DuqZY49LpKuvCS',
         ]);
-return $ret;
 
-        // $stripeToken = ;
-        // $charge = \Stripe\Charge::create([
-        //     'amount' => 1000,
-        //     'currency' => 'usd',
-        //     'description' => 'Example charge',
-        //     'source' => $stripeToken,
-        // ]);
+        return $charge;
+    }
 
-        return $ret;
+    public function stripe_sub() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $subscription = \Stripe\Subscription::create([
+            'customer' => 'cus_DuqZY49LpKuvCS',
+            'items' => [['plan' => 'ivory-expert-257']],
+            'billing_cycle_anchor' => 1543593600,
+        ]);
+
+        return $subscription;
     }
 
     /*-----------------------------------------------------------*/
