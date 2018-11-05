@@ -388,13 +388,23 @@ return var_dump($ret);
     public function stripe_sub() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        $subscription = \Stripe\Subscription::create([
-            'customer' => 'cus_DuqZY49LpKuvCS',
-            'items' => [['plan' => 'ivory-expert-257']],
-            'billing_cycle_anchor' => 1543593600,
-        ]);
+        //$subscription = \Stripe\Subscription::create([
+        //    'customer' => 'cus_DuqZY49LpKuvCS',
+        //    'items' => [['plan' => 'ivory-expert-257']],
+        //    'billing_cycle_anchor' => 1543593600,
+        //]);
+        //return $subscription;
 
-        return $subscription;
+//http://tool.chinaz.com/Tools/unixtime.aspx
+
+            //'trial_end' => 1546272000,
+            //'prorate' => false,
+//'billing_cycle_anchor' => 'now',
+        $ret = \Stripe\Subscription::update('sub_DuyX3F38Neuip7', [
+            'trial_end' => 'now',
+            'prorate' => true,
+        ]);
+        return $ret;
     }
 
     /*-----------------------------------------------------------*/
