@@ -53,9 +53,12 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <a class="navbar-brand" href="{{route('admin') }}">
+                <!--<a class="navbar-brand" href="{{route('admin') }}">
                     <img class="main-logo" src="/images/logo.png" alt="10ware logo" style="margin-top: 0px;"  width="140" />
-                </a>
+                </a>-->
+                <div style="color:white;">
+                <h2>KMCam Portal</h2>
+                </div>
             </div>
 
             <!-- Top Menu Items -->
