@@ -85,9 +85,9 @@
                     <ul class="dropdown-menu layout-grid">
                         <li>
 @if ($camera->columns == 2)
-                            <a href="{{ route('camera.gallerylayout', [$camera, 2]) }}" class="current-item" >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 2]) }}" class="current-item" >
 @else
-                            <a href="{{ route('camera.gallerylayout', [$camera, 2]) }}"  >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 2]) }}"  >
 @endif
                                 <span class="grid-block"></span>
                                 <span class="grid-block"></span>
@@ -96,9 +96,9 @@
 
                         <li>
 @if ($camera->columns == 3)
-                            <a href="{{ route('camera.gallerylayout', [$camera, 3]) }}" class="current-item" >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 3]) }}" class="current-item" >
 @else
-                            <a href="{{ route('camera.gallerylayout', [$camera, 3]) }}"  >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 3]) }}"  >
 @endif
                                 <span class="grid-block"></span>
                                 <span class="grid-block"></span>
@@ -108,9 +108,9 @@
 
                         <li>
 @if ($camera->columns == 4)
-                            <a href="{{ route('camera.gallerylayout', [$camera, 4]) }}" class="current-item" >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 4]) }}" class="current-item" >
 @else
-                            <a href="{{ route('camera.gallerylayout', [$camera, 4]) }}"  >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 4]) }}"  >
 @endif
                                 <span class="grid-block"></span>
                                 <span class="grid-block"></span>
@@ -121,9 +121,9 @@
 
                         <li>
 @if ($camera->columns == 6)
-                            <a href="{{ route('camera.gallerylayout', [$camera, 6]) }}" class="current-item" >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 6]) }}" class="current-item" >
 @else
-                            <a href="{{ route('camera.gallerylayout', [$camera, 6]) }}"  >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 6]) }}"  >
 @endif
                                 <span class="grid-block"></span>
                                 <span class="grid-block"></span>
@@ -136,9 +136,9 @@
 
                         <li>
 @if ($camera->columns == 12)
-                            <a href="{{ route('camera.gallerylayout', [$camera, 12]) }}" class="current-item" >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 12]) }}" class="current-item" >
 @else
-                            <a href="{{ route('camera.gallerylayout', [$camera, 12]) }}"  >
+                            <a href="{{ route('camera.gallerylayout', [$portal, $camera, 12]) }}"  >
 @endif
                                 <span class="grid-block"></span>
                                 <span class="grid-block"></span>
@@ -173,39 +173,39 @@
                     </button>
                     <ul class="dropdown-menu layout-grid">
 @if ($camera->thumbs == 10)
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 10]) }}" class="current-item">10 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 10]) }}" class="current-item">10 Per Page</a></li>
 @else
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 10]) }}">10 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 10]) }}">10 Per Page</a></li>
 @endif
 
 @if ($camera->thumbs == 20)
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 20]) }}" class="current-item">20 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 20]) }}" class="current-item">20 Per Page</a></li>
 @else
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 20]) }}">20 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 20]) }}">20 Per Page</a></li>
 @endif
 
 @if ($camera->thumbs == 30)
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 30]) }}" class="current-item">30 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 30]) }}" class="current-item">30 Per Page</a></li>
 @else
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 30]) }}">30 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 30]) }}">30 Per Page</a></li>
 @endif
 
 @if ($camera->thumbs == 40)
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 40]) }}" class="current-item">40 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 40]) }}" class="current-item">40 Per Page</a></li>
 @else
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 40]) }}">40 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 40]) }}">40 Per Page</a></li>
 @endif
 
 @if ($camera->thumbs == 60)
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 60]) }}" class="current-item">60 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 60]) }}" class="current-item">60 Per Page</a></li>
 @else
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 60]) }}">60 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 60]) }}">60 Per Page</a></li>
 @endif
 
 @if ($camera->thumbs == 80)
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 80]) }}" class="current-item">80 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 80]) }}" class="current-item">80 Per Page</a></li>
 @else
-                        <li><a href="{{ route('camera.gallerythumbs', [$camera, 80]) }}">80 Per Page</a></li>
+                        <li><a href="{{ route('camera.gallerythumbs', [$portal, $camera, 80]) }}">80 Per Page</a></li>
 @endif
                     </ul>
                 </div>
