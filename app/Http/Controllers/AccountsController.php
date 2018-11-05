@@ -348,11 +348,32 @@ return var_dump($ret);
        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         $ret = \Stripe\Customer::create([
-          "description" => "Customer for test@example.com",
+          "description" => "kevin@10ware.com", // cus_Dv0fI1h5DQi2tb
           "source" => "tok_visa" // obtained with Stripe.js
         ]);
         return $ret;
     }
+
+    public function stripe_card() { // for test
+       \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        // $customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
+        // $ret = $customer->sources->create(["source" => "tok_mastercard"]);
+        // return $ret;
+
+
+// $customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
+// $card = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9");
+// $card->name = "Kevin Chen";
+// $ret = $card->save();
+
+$customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
+$ret = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9")->delete();
+
+return $ret;
+    }
+
+
 
     public function stripe_charge() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
@@ -388,23 +409,24 @@ return var_dump($ret);
     public function stripe_sub() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        //$subscription = \Stripe\Subscription::create([
-        //    'customer' => 'cus_DuqZY49LpKuvCS',
-        //    'items' => [['plan' => 'ivory-expert-257']],
-        //    'billing_cycle_anchor' => 1543593600,
-        //]);
-        //return $subscription;
+        $subscription = \Stripe\Subscription::create([
+           'customer' => 'cus_DuqZY49LpKuvCS',
+           'items' => [['plan' => 'plan_au_5000_1m']],
+           // 'billing_cycle_anchor' => 1543593600,
+           'trial_end' => 1543593600,
+        ]);
+        return $subscription;
 
 //http://tool.chinaz.com/Tools/unixtime.aspx
 
             //'trial_end' => 1546272000,
             //'prorate' => false,
 //'billing_cycle_anchor' => 'now',
-        $ret = \Stripe\Subscription::update('sub_DuyX3F38Neuip7', [
-            'trial_end' => 'now',
-            'prorate' => true,
-        ]);
-        return $ret;
+        // $ret = \Stripe\Subscription::update('sub_DuyX3F38Neuip7', [
+        //     'trial_end' => 'now',
+        //     'prorate' => true,
+        // ]);
+        // return $ret;
     }
 
     /*-----------------------------------------------------------*/
