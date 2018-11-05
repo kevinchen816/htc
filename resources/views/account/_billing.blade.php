@@ -145,16 +145,16 @@
                         'name': $('#name').val()
                     };
                     stripe.createToken(card, cardData).then(function(result) {
-                        console.log(result);
+                        //console.log(result);
                         if (result.error && result.error.message) {
-                            alert(result.error.message);
+                            //alert(result.error.message);
                             $('#form-errors').text(result.error.message);
                             $('#form-errors').removeClass('hidden');
                             $('#form-errors').show();
                             pmtform.find('btn-update').prop('disabled', false);
                         }
                         else {
-                            alert(result.token.id);
+                            //alert(result.token.id);
                             pmtform.append('<input type="hidden" name="stripeToken" id="stripe-token" value="" />');
                             $('#stripe-token').val(result.token.id);
                             $("#payment-form").submit();

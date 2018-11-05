@@ -320,8 +320,6 @@ return var_dump($ret);
         //return redirect()->back();
     }
 
-
-
     public function trial() { // for test
         $user = Auth::user();
         $ret = $user->subscription('89860117851014783507')->onTrial();
@@ -396,6 +394,8 @@ return $ret;
     */
     public function billing(Request $request) {
 // return $request;
+return redirect()->back();
+
         $portal = $request->portal;
         if (!Auth::check()) {
             return $this->back_to_login($portal);

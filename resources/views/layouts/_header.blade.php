@@ -33,10 +33,6 @@
                         <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
-                    <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
-                        <a href="{{ route('my.plans') }}"><i class="fa fa-gear"></i> My Plans</a>
-                    </li>
-
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
                     </li>
