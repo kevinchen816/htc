@@ -294,15 +294,13 @@ class AccountsController extends Controller
         // ]);
 
 /*
-    plan_id:
-    id_us_2500_m_895,
-    id_us_5000_m_1295,   id_us_5000_3m_3695,
-    id_us_10000_m_1995,  id_us_10000_3m_5795,
-    id_us_20000_m_2695,  id_us_20000_3m_7795,
+5000 Points (1 Month)
+    plan_5000_1m_us
+    plan_5000_1m_au
 
-    id_au_5000_m,   id_au_5000_3m,
-    id_au_10000_m,  id_au_10000_3m,
-    id_au_20000_m,  id_au_20000_3m,
+15000 Points (3 Month)
+    plan_5000_3m_us
+    plan_5000_3m_au
 */
 $ret = $user->subscribed('main'); // true, false
 // $ret = $user->subscription('main')->onGracePeriod();
@@ -357,23 +355,19 @@ return var_dump($ret);
     public function stripe_card() { // for test
        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        // $customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
-        // $ret = $customer->sources->create(["source" => "tok_mastercard"]);
-        // return $ret;
-
+        $customer = \Stripe\Customer::retrieve("cus_DvGvznoT2EBbyn");
+        $ret = $customer->sources->create(["source" => "tok_mastercard"]);
+        return $ret;
 
 // $customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
 // $card = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9");
 // $card->name = "Kevin Chen";
 // $ret = $card->save();
 
-$customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
-$ret = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9")->delete();
-
-return $ret;
+//$customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
+//$ret = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9")->delete();
+//return $ret;
     }
-
-
 
     public function stripe_charge() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
@@ -397,10 +391,10 @@ return $ret;
         //]);
 
         $charge = \Stripe\Charge::create([
-            'amount' => 1234,
+            'amount' => 10000,
             'currency' => 'usd',
             'description' => 'Example charge',
-            'customer' => 'cus_DuqZY49LpKuvCS',
+            'customer' => 'cus_DvGvznoT2EBbyn',
         ]);
 
         return $charge;
@@ -410,8 +404,8 @@ return $ret;
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         $subscription = \Stripe\Subscription::create([
-           'customer' => 'cus_DuqZY49LpKuvCS',
-           'items' => [['plan' => 'plan_au_5000_1m']],
+           'customer' => 'cus_DvGvznoT2EBbyn',
+           'items' => [['plan' => 'plan_5000_3m_us']],
            // 'billing_cycle_anchor' => 1543593600,
            'trial_end' => 1543593600,
         ]);
@@ -429,6 +423,23 @@ return $ret;
         // return $ret;
     }
 
+//items":{"object":"list","data":[{"id":"si_DvH0QM6GF5Bllt","object":"subscription_item","created":1541494958,
+    public function stripe_change() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
+        $ret = \Stripe\Subscription::update('sub_DvH09yNROg5tdj', [
+          'cancel_at_period_end' => false,
+          'items' => [
+                [
+                    'id' => $subscription->items->data[0]->id,
+                    'plan' => 'plan_5000_1m_us',
+                ],
+            ],
+        ]);
+
+        return $ret;
+    }
     /*-----------------------------------------------------------*/
     /*
     {

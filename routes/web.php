@@ -48,6 +48,7 @@ Route::get('/stripe/new', 'AccountsController@stripe_new'); // for test
 Route::get('/stripe/card', 'AccountsController@stripe_card'); // for test
 Route::get('/stripe/charge', 'AccountsController@stripe_charge'); // for test
 Route::get('/stripe/sub', 'AccountsController@stripe_sub'); // for test
+Route::get('/stripe/change', 'AccountsController@stripe_change'); // for test
 Route::get('/trial', 'AccountsController@trial'); // for test
 Route::get('/swap1', 'AccountsController@swap1'); // for test
 Route::get('/swap3', 'AccountsController@swap3'); // for test

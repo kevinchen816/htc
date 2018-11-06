@@ -28,7 +28,7 @@
         </section>
         <section class="row" id="footer-bottom">
             <div class="col-sm-12 text-center">
-                <p class="copyright">&copy;2018 RemoteCam All rights reserved.</p>
+                <p class="copyright">&copy;2018 KMCam Pro All rights reserved.</p>
             </div>
         </section>
 
