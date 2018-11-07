@@ -343,18 +343,17 @@ return var_dump($ret);
     }
 
     public function stripe_new() { // for test
-       \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
         $ret = \Stripe\Customer::create([
-          "description" => "kevin@10ware.com", // cus_Dv0fI1h5DQi2tb
-          "source" => "tok_visa" // obtained with Stripe.js
+            "description" => "kevin@10ware.com", // cus_Dv0fI1h5DQi2tb
+//            "currency" =>  "usd"
+//          "source" => "tok_visa" // obtained with Stripe.js
         ]);
-        return $ret;
+        return var_dump($ret);
     }
 
     public function stripe_card() { // for test
        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
         $customer = \Stripe\Customer::retrieve("cus_DvGvznoT2EBbyn");
         $ret = $customer->sources->create(["source" => "tok_mastercard"]);
         return $ret;
@@ -367,6 +366,12 @@ return var_dump($ret);
 //$customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
 //$ret = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9")->delete();
 //return $ret;
+    }
+
+    public function stripe_customer() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        $ret = \Stripe\Customer::retrieve("cus_DvGvznoT2EBbyn");
+        return $ret;
     }
 
     public function stripe_charge() { // for test
@@ -400,30 +405,45 @@ return var_dump($ret);
         return $charge;
     }
 
+    /* http://tool.chinaz.com/Tools/unixtime.aspx */
     public function stripe_sub() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         $subscription = \Stripe\Subscription::create([
            'customer' => 'cus_DvGvznoT2EBbyn',
-           'items' => [['plan' => 'plan_5000_3m_us']],
-           // 'billing_cycle_anchor' => 1543593600,
-           'trial_end' => 1543593600,
+           'items' => [['plan' => 'plan_5000_1m_us']],
+           'billing_cycle_anchor' => 1543593600,    // 2018/12/01
+           //'trial_end' => 1543593600,             // 2018/12/01
         ]);
         return $subscription;
-
-//http://tool.chinaz.com/Tools/unixtime.aspx
-
-            //'trial_end' => 1546272000,
-            //'prorate' => false,
-//'billing_cycle_anchor' => 'now',
-        // $ret = \Stripe\Subscription::update('sub_DuyX3F38Neuip7', [
-        //     'trial_end' => 'now',
-        //     'prorate' => true,
-        // ]);
-        // return $ret;
     }
 
-//items":{"object":"list","data":[{"id":"si_DvH0QM6GF5Bllt","object":"subscription_item","created":1541494958,
+    public function stripe_cancel() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//"cancel_at_period_end": "true"
+        $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
+        $ret = $subscription->cancel();
+        return $ret;
+    }
+
+    public function stripe_pause() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//        $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
+//        $ret = $subscription->update(['cancel_at_period_end' => true]);
+        $ret = \Stripe\Subscription::update('sub_DvH09yNROg5tdj', [
+          'cancel_at_period_end' => true,
+        ]);
+        return $ret;
+    }
+
+    public function stripe_reactive() { // for test
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        $ret = \Stripe\Subscription::update('sub_DvH09yNROg5tdj', [
+          'cancel_at_period_end' => false,
+        ]);
+        return $ret;
+    }
+
     public function stripe_change() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
@@ -432,14 +452,43 @@ return var_dump($ret);
           'cancel_at_period_end' => false,
           'items' => [
                 [
-                    'id' => $subscription->items->data[0]->id,
-                    'plan' => 'plan_5000_1m_us',
+                    'id' => $subscription->items->data[0]->id, //"id":"si_DvH0QM6GF5Bllt"
+                    'plan' => 'plan_5000_3m_us',
                 ],
             ],
+        ]);
+        return $ret;
+    }
+
+    /*
+    {
+        "_token":"NU81sCo2nwHyYvMQYugQzrZzMr0O5p8szCRNe5nl",
+        "portal":"0",
+        "cardholder-name":"Kevin",
+        "cardholder-phone":"18664933085",
+        "stripeToken":"tok_1DThUGG8UgnSL68Ub0C7FfEh"
+    }
+    */
+    public function billing(Request $request) {
+//return $request;
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        //$stripeToken = $_POST['stripeToken'];
+        $stripeToken = $request->stripeToken;
+        $ret = \Stripe\Customer::create([
+            "email" => "kevin@10ware.com",
+            "description" => $_POST['cardholder-name'],
+
+//            "name" => $_POST['cardholder-name'],
+//            "phone" => $_POST['cardholder-phone'],
+//            "address" => 'ADDRESS.....',
+
+//            "currency" =>  "usd"
+            'source' => $stripeToken,
         ]);
 
         return $ret;
     }
+
     /*-----------------------------------------------------------*/
     /*
     {
@@ -454,9 +503,9 @@ return var_dump($ret);
     "created_at":"2018-11-04 06:22:39",
     "id":2}
     */
-    public function billing(Request $request) {
+    public function billingX(Request $request) {
 // return $request;
-return redirect()->back();
+//return redirect()->back();
 
         $portal = $request->portal;
         if (!Auth::check()) {
@@ -486,12 +535,6 @@ $response['stripeToken'] = $stripeToken;
 $response['ret'] = $ret;
 return $response;
 
-        /*
-            plan_id:
-            plan_au_5000_1m_1000
-            plan_au_5000_3m_3000
-            plan_au_5000_6m_6000
-        */
         // $subscription_name = '89860117851014783481'; // iccid OR iccid + plan_id ?
         // $subscription_name = '89860117851014783507'; // iccid OR iccid + plan_id ?
         // $subscription_name = '8944503540145562674'; // iccid OR iccid + plan_id ?

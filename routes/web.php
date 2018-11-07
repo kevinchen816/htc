@@ -35,6 +35,16 @@ Route::get('/env', function () {
     return env('APP_ENV');
 });
 
+/*
+https://restapi-telstra.jasper.com/rws/api/v1
+
+curl -X POST
+--header "Content-Type: application/json"
+--header "Accept: application/json"
+--header "Authorization: Basic ZHB0cmlhbFVzZXIxOmQ3MDNmNTJiLTEyMDAtNDMxOC1hZTBkLTBmNjA5MmIyZTZhYg=="
+-d "{ \"messageText\": \"Hello world\" }" "https://restapi10.jasper.com/rws/api/v1/devices/{iccid}/smsMessages"
+*/
+
 ////Route::get('/', 'SessionsController@create')->name('home');
 //Route::get('/', 'Api\CamerasController@cameras')->name('home');
 //Route::get('/10ware', 'Api\CamerasController@cameras_10ware')->name('home.10ware');
@@ -43,16 +53,21 @@ Route::get('/', 'Api\CamerasController@home')->name('home');
 Route::get('/10ware', 'Api\CamerasController@home_10ware')->name('home.10ware');
 Route::get('/de', 'Api\CamerasController@home_germany')->name('home.de');
 
-Route::get('/stripe', 'AccountsController@stripe'); // for test
-Route::get('/stripe/new', 'AccountsController@stripe_new'); // for test
-Route::get('/stripe/card', 'AccountsController@stripe_card'); // for test
-Route::get('/stripe/charge', 'AccountsController@stripe_charge'); // for test
-Route::get('/stripe/sub', 'AccountsController@stripe_sub'); // for test
-Route::get('/stripe/change', 'AccountsController@stripe_change'); // for test
-Route::get('/trial', 'AccountsController@trial'); // for test
-Route::get('/swap1', 'AccountsController@swap1'); // for test
-Route::get('/swap3', 'AccountsController@swap3'); // for test
-Route::get('/swap6', 'AccountsController@swap6'); // for test
+/* for stripe test */
+Route::get('/stripe', 'AccountsController@stripe');
+Route::get('/stripe/new', 'AccountsController@stripe_new');
+Route::get('/stripe/card', 'AccountsController@stripe_card');
+Route::get('/stripe/cus', 'AccountsController@stripe_customer');
+Route::get('/stripe/charge', 'AccountsController@stripe_charge');
+Route::get('/stripe/sub', 'AccountsController@stripe_sub');
+Route::get('/stripe/change', 'AccountsController@stripe_change');
+Route::get('/stripe/cancel', 'AccountsController@stripe_cancel');
+Route::get('/stripe/pause', 'AccountsController@stripe_pause');
+Route::get('/stripe/reactive', 'AccountsController@stripe_reactive');
+Route::get('/trial', 'AccountsController@trial');
+Route::get('/swap1', 'AccountsController@swap1');
+Route::get('/swap3', 'AccountsController@swap3');
+Route::get('/swap6', 'AccountsController@swap6');
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     // return $invoiceId;

@@ -45,6 +45,16 @@
                         @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
                         {!! $actions_ctrl->Commands($camera) !!}
 
+                        <tr>
+                            <td>
+@if ($camera->log == 1)
+                                <a data-param="LD" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Disable</a>
+@else
+                                <a data-param="LE" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Enable</a>
+@endif
+                                <a data-param="LU" class="btn btn-sm btn-success action-queue-{{ $camera->id }}" camera-id="{{ $camera->id }}">Log Upload</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
