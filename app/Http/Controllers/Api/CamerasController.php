@@ -2299,6 +2299,7 @@ if ($err == 0) { /* for test */
     $response['filename'] = $request->FileName;
     $response['imagename'] = $ret['imagename'];
     $response['savename'] = $ret['savename'];
+    $response['savepath'] = $ret['savepath'];
     //$response['extension'] = $ret['extension'];
     $response['filesize'] = $ret['filesize'];
 }
