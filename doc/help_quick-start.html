@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/ico" href="/favicon.ico"  />
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="F0W9Oh0o3RmrViGh0hkj7uKPof9BUgizlVSKNZxn">
+
+    <title>RidgeTec Portal</title>
+
+    <!-- Styles -->
+    <link href="https://portal.ridgetec.com/css/app.css" rel="stylesheet">
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd" crossorigin="anonymous">
+
+    <link href="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <link href="https://portal.ridgetec.com/css/styles.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- Scripts -->
+    <script>
+        window.Laravel = {"csrfToken":"F0W9Oh0o3RmrViGh0hkj7uKPof9BUgizlVSKNZxn"};
+    </script>
+    <script src="https://use.fontawesome.com/9712be8772.js"></script>
+
+    <style>
+        @media (max-width: 1100px) {
+            .navbar-header {
+                float: none;
+            }
+            .navbar-left,.navbar-right {
+                float: none !important;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+            .navbar-collapse {
+                border-top: 1px solid transparent;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+            }
+            .navbar-fixed-top {
+                        top: 0;
+                        border-width: 0 0 1px;
+                }
+            .navbar-collapse.collapse {
+                display: none!important;
+            }
+            .navbar-nav {
+                float: none!important;
+                        margin-top: 7.5px;
+                }
+                .navbar-nav>li {
+                float: none;
+            }
+            .navbar-nav>li>a {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            .collapse.in{
+                        display:block !important;
+                }
+        }
+
+    </style>
+    <style>
+    .alert-help {
+        background-color: #333;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+    }
+    .help-heading {
+        color: red!important;
+        background-color: #111;
+        padding: 10px 10px 10px 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+</style>
+
+</head>
+<body>
+
+    <div id="app">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid navbar-container">
+                <div class="navbar-header">
+
+                    <!-- Collapsed Hamburger -->
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <!-- Branding Image -->
+                    <a class="navbar-brand" href="http://www.ridgetecoutdoors.com" target="_blank" title="RidgeTec Home">
+                                                <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
+                                            </a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                    <!-- Left Side Of Navbar -->
+
+                    <!--<ul class="nav navbar-nav">
+
+                    </ul>-->
+
+                    <!-- Right Side Of Navbar -->
+                    <ul class="nav navbar-nav navbar-right">
+
+                                                    <li class=""><a href="https://portal.ridgetec.com/plans/add-plan"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
+
+
+                            <li class=""><a href="https://portal.ridgetec.com/cameras"><i class="fa fa-camera"></i> My Cameras</a></li>
+
+                            <li class=""><a href="https://portal.ridgetec.com/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
+                            <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>
+
+                            <li class="dropdown ">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                     Support <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="https://portal.ridgetec.com/help/quick-start">Camera Quick Start Guide</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Kevin <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                                                                <a href="https://portal.ridgetec.com/logout"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="https://portal.ridgetec.com/logout" method="POST" style="display: none;">
+                                            <input type="hidden" name="_token" value="F0W9Oh0o3RmrViGh0hkj7uKPof9BUgizlVSKNZxn">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                                            </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="fixed-navbar-container">
+            <div class="container">
+                                            </div>
+        </div>
+        <div class="container">
+    <h3>QUICK START GUIDE</h3>
+
+    <div class="alert alert-danger">
+        <h4>READ ME FIRST:  (IMPORTANT)</h4>
+        You will need the following before you begin:
+        <ul>
+            <li>12 AA batteries</li>
+            <li>SD card</li>
+            <li>Computer or mobile device with internet</li>
+            <li>The ability to check your email (to complete account registration)</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">What you will accomplish: (for best results, remain at your computer)</h4>
+        <ul>
+            <li>1. REGISTER for a new account using your email.</li>
+            <li>2. Power up camera to SETUP and record the ICCID #.</li>
+            <li>3. LOGIN to your new account and select ADD PLAN.</li>
+            <li>4. INPUT the ICCID #, Check AGREE,</li>
+            <li>5. Click CREATE NEW PLAN.</li>
+            <li>6. POWER up camera and VERIFY your web connection.  DO NOT SKIP THIS STEP!</li>
+            <li>7. View camera under MY CAMERAS and update CAMERA SETTINGS</li>
+            <li>8. INSTALL Mobile application (optional). Perform this last.</li>
+        </ul>
+
+        <span class="help-block">Please follow the detailed instructions below. </span>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">IN THE BOX: </h4>
+        <ul>
+            <li>1 x camera</li>
+            <li>1 x mounting strap</li>
+            <li>1 x antenna</li>
+            <li>1 x USB cable</li>
+            <li>1 x SIM card (pre-inserted)</li>
+        </ul>
+
+        <span class="help-block">NOTE:  SD Memory card and batteries are sold separately<</span>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">PREPARE YOUR CAMERA:</h4>
+        <ul>
+            <li>Screw antenna onto top of camera, first inserting plastic washer (do not overtighten).</li>
+            <li>Insert 12 NEW AA batteries (Energizer Lithium AA recommended).</li>
+            <li>Insert SD memory card (up to 64GB SD card).</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 1: REGISTER FOR AN ACCOUNT:</h4>
+        <ul>
+            <li>On computer or mobile device, visit portal.ridgetec.com.</li>
+            <li>On the LOGIN screen click REGISTER FOR A NEW ACCOUNT.</li>
+            <li>INPUT: Name, E-mail address and password (min 6 characters).</li>
+            <li>Click the REGISTER button.</li>
+            <li>Wait for the confirmation email from ridgetec.com.</li>
+            <li>Check your spam folder if you do not see the email.  Note: If you do not get the email click the Resend Confirmation Email link.</li>
+            <li>In the confirmation Email, click the VERIFY button to complete your REGISTRATION.</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 2: FIND SIM ICCID:</h4>
+        <ul>
+            <li>Prepare your camera with antenna, batteries and SD card.</li>
+            <li>Turn camera switch to SET. Press MENU button.</li>
+            <li>Press Down arrow once. (Select ICCID) Press OK.</li>
+            <li>RECORD ICCID # here:____________________________________________</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 3: ADD PLAN:</h4>
+        <ul>
+            <li>On computer or mobile device, visit portal.ridgetec.com.</li>
+            <li>Input your E-mail and Password.  Click the LOGIN button.</li>
+            <li>From the portal main menu, select ADD PLAN.</li>
+            <li>Note: On mobile devices, portal menus may collapse. Expand the main menu to reveal ADD PLAN.</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 4: INPUT SIM ICCID:</h4>
+        <ul>
+            <li>Input SIM ICCID #</li>
+            <li>Read our account Terms and Conditions (important)</li>
+            <li>Check the I AGREE TO THE TERMS check box.</li>
+        </ul>
+    </div>
+
+    <a name="step6"></a>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 5: CREATE NEW PLAN:</h4>
+        <ul>
+            <li>Click the CREATE NEW PLAN button.</li>
+            <li>The portal should indicate that your plan was added and if applicable indicate that a free month service was awarded.  </li>
+            <li>At this point the server will send an activation signal to your SIM.  </li>
+        </ul>
+        <span class="help-block">Note: The SIM activation can take from several seconds to several minutes.</span>
+    </div>
+
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 6: POWER UP CAMERA & VERIFY CONNECTION:</h4>
+        <ul>
+            <li>Turn camera switch to SET. Wait and monitor this screen for a cellular connection.</li>
+            <li>On the bottom of the screen, look for “Searching Network…”.</li>
+            <li>If “Cannot Find Network” is displayed, cycle power (turn camera OFF and then back to SETUP) until the camera connects to the network.</li>
+            <span class="help-block">Note: The SIM activation can take from several seconds to several minutes. So, multiple retries are normal.  Please be patient as this is a network carrier delay and normally occurs.  If the camera does not find a network, it may mean you do not have service in your area. Move to a new area with better service and try again.</span>
+            <li>Once the SIM activation is complete and a cellular connection is obtained, the screen will display a network name (the network name depends on model, carrier and location) along with signal strength in up to 5 bars.</li>
+            <li>Next, Verify your web and portal connection by performing two diagnostic steps:</li>
+            <div class="well">
+            <li>Press MENU.</li>
+            <li>Press down arrow three (3) times, select NETWORK TEST. (should return PASS). Press OK.</li>
+            <span class="help-block">PASS means you are on the internet.</span>
+            <li>Press down arrow, select REPORT TEST. (should return PASS). Press OK.</li>
+            <span class="help-block">PASS means your camera is functioning 100% with the portal.</span>
+            <span class="help-block">If both tests pass, your camera is 100% ready and the new camera is now added to your account and visible under MY CAMERAS in the portal and mobile application.</span>
+            <li>Turn camera switch to ON.</li>
+            </div>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 7: MY CAMERAS</h4>
+        <ul>
+            <li>Login to the Portal and click MY CAMERAS from the main menu. </li>
+            <span class="help-block">Note: On mobile devices, portal menus may collapse. Expand the main menu to reveal MY CAMERAS.</span>
+            <li>Click the ‘Refresh’ button in My Cameras (or in your browser) until your camera displays.</li>
+            <li>Select SETTINGS. Update your settings and click Save All Changes.</li>
+            <li>Please read the help under each setting and option to better understand all of your camera’s capabilities.</li>
+            <li>Any updated settings will automatically download the next time the camera connects to the portal.</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-help">
+        <h4 class="help-heading">Step 8: INSTALL MOBILE APP</h4>
+        <div style="padding-left: 10px;">
+        <p>Ridgetec supports both Android and iOS Applications.  Please visit the appropriate app store for your device. Search for “Ridgetec”.  Install the app. Please complete steps 1 through 7 before continuing.<p>
+        </div>
+
+        <ul>
+            <li>Launch and Login.</li>
+            <li>On first mobile Login, the portal requires a confirmation by the account owner via email for all new connections to the account by any mobile device.  This is for your account security.</li>
+            <li>Input E-mail and Password.  Click Login.</li>
+            <li>Initially you should get a message that indicates a confirmation email was sent and to verify the mobile device.</li>
+            <li>Click the VERIFY button in the email.</li>
+            <li>Login again and you should have access.</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-default">
+        <h4>The complete user manual, latest camera firmware, and frequently asked questions section is available at:  <a href="https://www.ridgetecoutdoors.com" target="_blank">www.ridgetecoutdoors.com</a></h4>
+        <div>
+          <span class="help-block">NOTE: by default the camera settings are not adjustable when Cellular Mode is ON (notice most menu items are greyed out).  This is by design as the camera will download the settings from the web portal.  If Cellular Mode is turned OFF, the camera settings can only be changed directly on the camera (camera will not transmit pictures when Cellular Mode is OFF). </span>
+          <br />
+        </div>
+
+        <h4>Thank you for purchasing your RIDGETEC camera.  </h4>
+        <div>
+        <span class="help-block">Should you experience any problem with your RIDGETEC camera please contact RIDGETEC, NOT the retail store, and we will be happy to assist you.
+            We know that in today’s competitive market place, customers have many choices when purchasing surveillance cameras.  We appreciate that you have chosen our high quality product, and we are confident that you have made the best choice.  It is our commitment to be uniquely better.  Our continued reputation is one of our top priorities and we take great pride in satisfying our customers.</span>
+            <br />
+        </div>
+        <h4>You can reach us:</h4>
+        <ul>
+            <li>by email at: sales@ridgetecoutdoors.com</li>
+            <li>by phone  at: 1-888-966-8929</li>
+        </ul>
+    </div>
+
+    <div class="alert alert-primary">
+        <h4>REGISTER YOUR CAMERA TODAY TO OBTAIN A 2-YEAR WARRANTY</h4>
+
+        <p>Register your product(s) online at:    <a href="https://www.ridgetecoutdoors.com" target="_blank">www.ridgetecoutdoors.com</a>
+
+
+        <p>FAQ, full user manual and the latest firmware updates are available at: <a href="https://www.ridgetecoutdoors.com" target="_blank">www.ridgetecoutdoors.com</a></p>
+
+
+        <p>Join our online community today</p>
+    </div>
+
+</div>
+
+        <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
+
+                <div style="position: fixed;"><a class="btn btn-sm btn-default btn-info help_close" style="border-radius: 25px 0px 0px 25px;"><i class="fa fa-times"></i></a></div>
+                <div id="help_content">
+                </div>
+
+        </div>
+
+    </div>
+        <footer id="footer" class="container-fluid">
+            <section id="top-footer" class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12 footer-list">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>QUICKLINKS</strong></p>
+                                <!--<p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/getting-started">QuickStart Guide</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/camera-setup">Troubleshooting Guide</a></p>-->
+
+                                <p><i class="fa fa-angle-right"> </i> <a href="http://www.ridgetecoutdoors.com" target="_blank">RidgeTec Home</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/privacy">Privacy Policy</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/terms">Terms and Conditions</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/support/emailpolicy">Email Policy</a></p>
+
+
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/support/contact">Contact Us</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>Canada</strong></p>
+                                <p>40-491 Wt Hill</p>
+                                <p>Lethbridge, AB, Canada T1J 1Y6</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>USA</strong></p>
+                                <p>5022 Red Bud Drive</p>
+                                <p>Grovetown, Ga 30813</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>Contact</strong></p>
+                                <p><a href="tel:1-888-966-8929">1-888-966-8929</a></p>
+                                <p><a href="mailto:sales@ridgetecoutdoors.com?subject=Sales%20Inquiry">sales@ridgetecoutdoors.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="row" id="footer-bottom">
+                <div class="col-sm-12 text-center">
+                    <a href="/" class="main-logo-img"><img src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" /></a>
+                    <p class="copyright">&copy;2018 RidgeTec All rights reserved.</p>
+                </div>
+            </section>
+
+        </footer>
+
+
+    <!-- bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <!-- Jquery-ui -->
+    <script src="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.js"></script>
+
+    <script src="https://portal.ridgetec.com/js/button-checkbox.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+
+    <!--<script src="https://portal.ridgetec.com/js/gallery.js"></script>-->
+    <script src="https://portal.ridgetec.com/js/jquery.slidereveal.min.js"></script>
+    <script>
+    $(document).ready(function(){
+
+        $( ".ToggleHelp" ).click(function() {
+            //alert('Toggle');
+            var id = $(this).attr('help-id');
+
+            $(".side-panel").removeClass('hidden');
+
+            $("#help_content").html($('#' + id).html());
+            $("#help_panel").slideReveal("toggle");
+        });
+
+
+        $( ".help_close" ).click(function() {
+            //alert('help close');
+            $("#help_panel").slideReveal("hide");
+        });
+
+        $(function() {
+            var ww = $( window ).width();
+            if (ww < 481) {
+                p = '85%';
+            }
+            else {
+                p = '50%';
+            }
+            var params = {
+              push: false,
+              overlay: true,
+              width: p,
+              position: "right",
+              //top: 60,
+              speed: 500
+            };
+
+            $("#help_panel").slideReveal(
+                    params
+                    );
+        });
+
+    });
+    </script>
+    </body>
+</html>

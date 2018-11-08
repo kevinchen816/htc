@@ -2293,6 +2293,16 @@ class CamerasController extends Controller
         if ($user_id && $camera) {
             $this->LogApi_Add('uploadlog', 1, $user_id, $camera->id, $request, $response);
         }
+
+if ($err == 0) { /* for test */
+    $response['camera_id'] = $camera_id;
+    $response['filename'] = $request->FileName;
+    $response['imagename'] = $ret['imagename'];
+    $response['savename'] = $ret['savename'];
+    //$response['extension'] = $ret['extension'];
+    $response['filesize'] = $ret['filesize'];
+}
+
         return $response;
     }
 

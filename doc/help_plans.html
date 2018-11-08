@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/ico" href="/favicon.ico"  />
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="F0W9Oh0o3RmrViGh0hkj7uKPof9BUgizlVSKNZxn">
+
+    <title>RidgeTec Portal</title>
+
+    <!-- Styles -->
+    <link href="https://portal.ridgetec.com/css/app.css" rel="stylesheet">
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd" crossorigin="anonymous">
+
+    <link href="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <link href="https://portal.ridgetec.com/css/styles.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- Scripts -->
+    <script>
+        window.Laravel = {"csrfToken":"F0W9Oh0o3RmrViGh0hkj7uKPof9BUgizlVSKNZxn"};
+    </script>
+    <script src="https://use.fontawesome.com/9712be8772.js"></script>
+
+    <style>
+        @media (max-width: 1100px) {
+            .navbar-header {
+                float: none;
+            }
+            .navbar-left,.navbar-right {
+                float: none !important;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+            .navbar-collapse {
+                border-top: 1px solid transparent;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+            }
+            .navbar-fixed-top {
+                        top: 0;
+                        border-width: 0 0 1px;
+                }
+            .navbar-collapse.collapse {
+                display: none!important;
+            }
+            .navbar-nav {
+                float: none!important;
+                        margin-top: 7.5px;
+                }
+                .navbar-nav>li {
+                float: none;
+            }
+            .navbar-nav>li>a {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            .collapse.in{
+                        display:block !important;
+                }
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div id="app">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid navbar-container">
+                <div class="navbar-header">
+
+                    <!-- Collapsed Hamburger -->
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <!-- Branding Image -->
+                    <a class="navbar-brand" href="http://www.ridgetecoutdoors.com" target="_blank" title="RidgeTec Home">
+                                                <img class="main-logo" src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" />
+                                            </a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                    <!-- Left Side Of Navbar -->
+
+                    <!--<ul class="nav navbar-nav">
+
+                    </ul>-->
+
+                    <!-- Right Side Of Navbar -->
+                    <ul class="nav navbar-nav navbar-right">
+
+                                                    <li class=""><a href="https://portal.ridgetec.com/plans/add-plan"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
+
+
+                            <li class=""><a href="https://portal.ridgetec.com/cameras"><i class="fa fa-camera"></i> My Cameras</a></li>
+
+                            <li class=""><a href="https://portal.ridgetec.com/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
+                            <li class="active"><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>
+
+                            <li class="dropdown ">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                     Support <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="https://portal.ridgetec.com/help/quick-start">Camera Quick Start Guide</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Kevin <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                                                                <a href="https://portal.ridgetec.com/logout"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="https://portal.ridgetec.com/logout" method="POST" style="display: none;">
+                                            <input type="hidden" name="_token" value="F0W9Oh0o3RmrViGh0hkj7uKPof9BUgizlVSKNZxn">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                                            </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="fixed-navbar-container">
+            <div class="container">
+                                <div class="container">
+    <div class="row">
+        <h4>
+                    <ol class="breadcrumb">
+
+									<li><a href="https://portal.ridgetec.com">Home</a></li>
+												<li class="active">Data Plan Information</li>
+					                	</ol>
+
+                </h4>
+    </div>
+</div>
+            </div>
+        </div>
+        <div class="container">
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default panel-primary default-help-panel">
+            <div class="panel-heading">
+                <h4 class="panel-title">Getting Started with a Camera Data Plan</h4>
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <!--<p>Ridgetec Cellular cameras require an activated SIM card or camera data plan in order to integrate with the Portal and Mobile Apps.
+                            All SIM cards and data plans must be obtained through Ridgetec.  Your camera
+                            will ship with a SIM card in the package.</p>-->
+
+                        <h4><strong>We offer the following, no contract, Pay as you go data plans:</strong></h4>
+                        <!--<p>
+                            <strong>Please Note:</strong>  </p>-->
+                        <p><span style="color:lime"><strong>**Our cameras ship with a FREE first month's service (5000 points).**</strong></span></p>
+                        <!--
+                        <p>
+                            The site will require a credit card for purchasing a Points Reserve and
+                            for recurring billing or Plan renewals on a periodic basis should you elect to use these options.
+                        </p>
+                        <p>
+                            Renewals and continued services are options that you will select as best meets your needs under the My Account | Data Plans page.
+                        </p>
+                        <hr>
+                        -->
+
+                        <!--<h4><strong>Pay as you go Plan Pricing</strong></h4>-->
+                                                                                                    <div class="well well-sm">
+                            <h4><strong>Pay as you Go/USA (AT&T)</strong>
+                                <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/>
+                            </h4>
+                            <div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">BRONZE</div><p class="tier-desc">2500 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">8.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00358]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">SILVER</div><p class="tier-desc">5000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></p>
+
+
+                                                            <p><span style="color:white;">36.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00246]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">GOLD</div><p class="tier-desc">10000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">19.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00200]</span></p>
+
+
+                                                            <p><span style="color:white;">57.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00193]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">PLATINUM PRO</div><p class="tier-desc">20000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">26.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00135]</span></p>
+
+
+                                                            <p><span style="color:white;">77.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00130]</span></p>
+
+
+                        </div></div></div>                        </div>
+                                                                            <div class="well well-sm">
+                            <h4><strong>Pay as you Go/Canada</strong>
+                                <img src="/images/cad.png" width="40" style="margin-bottom:10px;"/>
+                            </h4>
+                            <div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">SILVER</div><p class="tier-desc">5000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">14.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00299]</span></p>
+
+
+                                                            <p><span style="color:white;">42.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00286]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">GOLD</div><p class="tier-desc">10000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">22.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00230]</span></p>
+
+
+                                                            <p><span style="color:white;">64.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00216]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">PLATINUM PRO</div><p class="tier-desc">20000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">31.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00160]</span></p>
+
+
+                                                            <p><span style="color:white;">89.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00150]</span></p>
+
+
+                        </div></div></div>                        </div>
+                                                                            <div class="well well-sm">
+                            <h4><strong>Pay as you Go/Europe</strong>
+                                <img src="/images/eur.png" width="40" style="margin-bottom:10px;"/>
+                            </h4>
+                            <div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">BRONZE</div><p class="tier-desc">2500 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">8.00</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00320]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">SILVER</div><p class="tier-desc">5000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">11.00</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00220]</span></p>
+
+
+                                                            <p><span style="color:white;">31.00</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00207]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">GOLD</div><p class="tier-desc">10000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">17.00</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00170]</span></p>
+
+
+                                                            <p><span style="color:white;">50.00</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00167]</span></p>
+
+                                                                                                                                        </div></div></div><div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">PLATINUM PRO</div><p class="tier-desc">20000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">23.00</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00115]</span></p>
+
+
+                                                            <p><span style="color:white;">66.00</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00110]</span></p>
+
+
+                        </div></div></div>                        </div>
+                                                                            <div class="well well-sm">
+                            <h4><strong>Pay as you Go/Australia</strong>
+                                <img src="/images/aud.png" width="40" style="margin-bottom:10px;"/>
+                            </h4>
+                            <div class="alert alert-default alert-ratetier"><div class="row"><div class="col-md-5"><div class="label-tier">PLATINUM PRO</div><p class="tier-desc">24,000 Points per Month</p></div><div class="col-md-7">
+                                                            <p><span style="color:white;">20.00</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00083]</span></p>
+
+
+                        </div></div></div>                        </div>
+
+                        <h4>How our tiered pricing works</h4>
+                        <div class="panel-group">
+                            <div class="panel panel-default panel-moreinfo">
+                              <div class="panel-heading">
+                                    <a data-toggle="collapse" href="#tier-info"><i class="glyphicon glyphicon-expand"></i> Click for more info ...</a>
+                              </div>
+                              <div id="tier-info" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <span class="help-block"> Each tier indicates the <span style="color:white">cost</span> and the <span style="color:white">duration</span> in months.  The price is for the entire period.<br /><br />
+
+                                        <span style="color:white"><strong>Example: If you select a 3 Month tier under SILVER, you are paying for all 3 months. The total points awarded upfront will be 15,000.  You camera can utilize these points at any rate during the 3 month period.</strong></span><br/> <br />
+
+                                        To the right of each tier pricing is a <span style="color:white">Cost Per Point</span> amount.  The cpp tells you what it costs you per point as your camera uploads media
+                                        files to the portal.<!--  Of course, the lower the cpp then the cheaper it is to operate your camera at that tier. Please make a note of the points cost per upload on this page
+                                        to better understand your points requirements.--><br /><br />
+                                        <strong>Unused Points are not carried over into future periods.</strong>
+                                    </span>
+                                    <hr>
+                                    <strong>Automatic Billing option</strong>
+                                    <p>
+                                        Check this option on your plan to have the system continue billing you automatically.
+                                    </p>
+                                    <strong>Points Reserve Option</strong>
+                                    <p>
+                                        Purchase additional points to be used at any time should you run out of standard points. These points never expire and can be used for the life time of your plan.
+                                    </p>
+
+                                </div>
+
+                              </div>
+                            </div>
+                        </div>
+
+
+                        <h4>Pay as you go Plan features</h4>
+                        <div class="panel-group">
+                            <div class="panel panel-default panel-moreinfo">
+                              <div class="panel-heading">
+                                <!--<h4 class="panel-title">-->
+
+                                    <a data-toggle="collapse" href="#plan-features"><i class="glyphicon glyphicon-expand"></i> Click for more info ...</a>
+                                <!--</h4>-->
+                              </div>
+                              <div id="plan-features" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                </div>
+                                    <ul>
+                                        <li>Do not require a contract.</li>
+                                        <!--<li>Are good for at least one month at a time</li>-->
+                                        <li>Cancellable at any time.</li>
+                                        <!--<li>Provide at least 5000 Image Points in a given month</li>
+                                        <li>Are flat rate</li>
+                                        <li>Incur no premium charges</li>
+                                        <li>Incur no overages</li>-->
+                                        <li>Are automatically renewable.
+                                        </li>
+                                        <li>
+                                            Will use Consolidated Billing.  All of your active plans will generate a charge on the same day of the month.
+                                            <!--as once again the goal is to avoid frequently charging your credit card and make billing simpler to
+                                            understand.  This means that on the first automated renewal for a plan, there will likely be a discount assesed due to proration
+                                            in order to consolidate all plans to the same day for renewal billing. The discount means that your first renewal will cost less
+                                            because you prepaid an entire period during checkout and the renewal occurs before the initial end service date.-->
+                                        </li>
+                                    </ul>
+
+                              </div>
+                            </div>
+                        </div>
+
+
+                        <hr>
+
+                    </div>
+                    <div class="col-md-6">
+                        <h4><strong>What are Image Points?</strong></h4>
+<!--<p>
+    Our cellular cameras currently support 5 upload sizes in <strong>Photo Mode</strong> and 4 upload sizes in <strong>Video Mode</strong>.  Under your camera settings tab, this is referred to as <strong>Upload Resolution</strong>.
+</p>
+<p>
+    The values for Upload Resolution are:
+</p>
+
+<ul>
+    <li>Standard Low</li>
+    <li>Standard Medium</li>
+    <li>Standard High</li>
+    <li>High Def</li>
+    <li><span style="color:lightgreen;">*High Res MAX (per request)</span></li>
+</ul>
+<p><span style="color:lightgreen;">*High Res MAX applies only to on demand requests in Photo mode, not Video mode.</span></p>
+-->
+
+<ul>
+    <li>On each event, your camera will upload a photo to the portal.</li>
+    <li>You determine your upload cost in points using the chart below.</li>
+    <li>After reviewing the uploaded photos, you may request a larger size
+        photo (Photo Mode) or the playable video (Video Mode).</li>
+    <li>By only uploading a photo for each event, you will know the cost ahead of time, and avoid wasted points and battery power.</li>
+    <li>As you browse photos in the gallery, the points cost is enumerated in the caption.</li>
+    <li>The video upload cost is shown if the camera is in Video Mode.</li>
+    <li>You will know all points costs before you use the points putting you in complete control.</li>
+</ul>
+
+<div class="alert alert-default">
+<h4>
+    The point cost per photo is as follows:
+</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Upload Resolution</th>
+                <th>Photo Mode</th>
+                <th>Video Mode</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Standard Low</td>
+                <td>1.0</td>
+                <td>1.0</td>
+            </tr>
+            <tr>
+                <td>Standard Medium</td>
+                <td>2.5</td>
+                <td>2.0</td>
+            </tr>
+            <tr>
+                <td>Standard High</td>
+                <td>4.0</td>
+                <td>3.0</td>
+            </tr>
+            <tr>
+                <td>High Def</td>
+                <td>7.0</td>
+                <td>6.0</td>
+            </tr>
+            <tr>
+                <td>High Res MAX</td>
+                <td>13</td>
+                <td>N/A</td>
+            </tr>
+        </tbody>
+    </table>
+    <span class="help-block">Note: Increasing <strong>Upload Quality</strong> will result in higher point costs under Camera Settings.</span>
+</div>
+
+
+<h4>PIR and Time Lapse events</h4>
+<div class="panel-group">
+    <div class="panel panel-default panel-moreinfo">
+      <div class="panel-heading">
+            <a data-toggle="collapse" href="#events"><i class="glyphicon glyphicon-expand"></i> Click for more info ...</a>
+      </div>
+      <div id="events" class="panel-collapse collapse">
+        <div class="panel-body">
+            <p>In Photo or Video mode, your camera wakes, captures and uploads a photo to the portal. it will consume
+                points at a rate based on its <strong>Camera Mode</strong>, <strong>Upload Resolution</strong> and <strong>Photo Quality</strong> settings.
+                Use the chart above to understand how your plan's Image Points are used.
+            </p>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+
+<h4>Video and Original Image upload requests</h4>
+<div class="panel-group">
+    <div class="panel panel-default panel-moreinfo">
+      <div class="panel-heading">
+            <a data-toggle="collapse" href="#ondemand"><i class="glyphicon glyphicon-expand"></i> Click for more info ...</a>
+      </div>
+      <div id="ondemand" class="panel-collapse collapse">
+        <div class="panel-body">
+            <p>Your camera processes these as it connects to the portal. The Image Points used are based
+                on the size of the file captured to the camera's SD Card.  The size will vary based on Photo Resolution or Video Resolution, Quality, and Duration settings.
+                These files will be much larger than the uploaded photos per event, However, you are in control of the file sizes to some extent by the options you choose under camera
+                settings.
+            </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+<h4>Remote Control and SMS commands</h4>
+<div class="panel-group">
+    <div class="panel panel-default panel-moreinfo">
+      <div class="panel-heading">
+            <a data-toggle="collapse" href="#remote"><i class="glyphicon glyphicon-expand"></i> Click for more info ...</a>
+      </div>
+      <div id="remote" class="panel-collapse collapse">
+        <div class="panel-body">
+            <p>Your camera can operate with Remote Control turned on (see Camera Settings).  In remote control mode the camera remains in a standby state where an SMS
+                command can wake the camera up so it can snap a photo and/or talk to the server.  There are two buttons in the portal when Remote Control is enabled, these are SNAP and WAKE.
+                SNAP will send a real time command to the camera, waking it up to capture either photo or video based on Camera Mode then upload the photo to the portal.
+                The WAKE button will cause the camera to report in to the server immediately as if the HeartBeat event had just fired.  As the camera contacts the portal,
+                it will process any queued actions, such as Download Settings, Reguest High Res MAX, Request Video, etc.
+            </p>
+            <p>There will be a .10 USD charge to your account per each SMS command delivered to the camera.  The cost of each SMS command will be deducted from your plan's Points Reserve value (if present).</p>
+            <p>Note: Not all camera models and networks will support Remote Control and SMS features.</p>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<h4><strong></strong></h4>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+        <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
+
+                <div style="position: fixed;"><a class="btn btn-sm btn-default btn-info help_close" style="border-radius: 25px 0px 0px 25px;"><i class="fa fa-times"></i></a></div>
+                <div id="help_content">
+                </div>
+
+        </div>
+
+    </div>
+        <footer id="footer" class="container-fluid">
+            <section id="top-footer" class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12 footer-list">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>QUICKLINKS</strong></p>
+                                <!--<p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/getting-started">QuickStart Guide</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/camera-setup">Troubleshooting Guide</a></p>-->
+
+                                <p><i class="fa fa-angle-right"> </i> <a href="http://www.ridgetecoutdoors.com" target="_blank">RidgeTec Home</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/privacy">Privacy Policy</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/help/terms">Terms and Conditions</a></p>
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/support/emailpolicy">Email Policy</a></p>
+
+
+                                <p><i class="fa fa-angle-right"> </i> <a href="https://portal.ridgetec.com/support/contact">Contact Us</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>Canada</strong></p>
+                                <p>40-491 Wt Hill</p>
+                                <p>Lethbridge, AB, Canada T1J 1Y6</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>USA</strong></p>
+                                <p>5022 Red Bud Drive</p>
+                                <p>Grovetown, Ga 30813</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 footer-list-item">
+                            <div class="address alert" style="background-color:#444; height: 200px;">
+                                <p><strong>Contact</strong></p>
+                                <p><a href="tel:1-888-966-8929">1-888-966-8929</a></p>
+                                <p><a href="mailto:sales@ridgetecoutdoors.com?subject=Sales%20Inquiry">sales@ridgetecoutdoors.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="row" id="footer-bottom">
+                <div class="col-sm-12 text-center">
+                    <a href="/" class="main-logo-img"><img src="https://portal.ridgetec.com/images/logo.png" alt="RidgeTec logo" /></a>
+                    <p class="copyright">&copy;2018 RidgeTec All rights reserved.</p>
+                </div>
+            </section>
+
+        </footer>
+
+
+    <!-- bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <!-- Jquery-ui -->
+    <script src="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.js"></script>
+
+    <script src="https://portal.ridgetec.com/js/button-checkbox.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+
+    <!--<script src="https://portal.ridgetec.com/js/gallery.js"></script>-->
+    <script src="https://portal.ridgetec.com/js/jquery.slidereveal.min.js"></script>
+    <script>
+    $(document).ready(function(){
+
+        $( ".ToggleHelp" ).click(function() {
+            //alert('Toggle');
+            var id = $(this).attr('help-id');
+
+            $(".side-panel").removeClass('hidden');
+
+            $("#help_content").html($('#' + id).html());
+            $("#help_panel").slideReveal("toggle");
+        });
+
+
+        $( ".help_close" ).click(function() {
+            //alert('help close');
+            $("#help_panel").slideReveal("hide");
+        });
+
+        $(function() {
+            var ww = $( window ).width();
+            if (ww < 481) {
+                p = '85%';
+            }
+            else {
+                p = '50%';
+            }
+            var params = {
+              push: false,
+              overlay: true,
+              width: p,
+              position: "right",
+              //top: 60,
+              speed: 500
+            };
+
+            $("#help_panel").slideReveal(
+                    params
+                    );
+        });
+
+    });
+    </script>
+    </body>
+</html>
