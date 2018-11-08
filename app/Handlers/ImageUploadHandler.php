@@ -238,7 +238,7 @@ class ImageUploadHandler
         $OriginalName = $file->getClientOriginalName();
         $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
 
-        $camera_id = $camera->camera_id;
+        $camera_id = $camera->id;
         $path_upload = public_path().'/uploads/logs/'.$camera_id;
         //$savename = time() . '_' . str_random(10) . '.' . $extension;
         //$savename = date('ymdhis').'_'.$OriginalName;
@@ -251,11 +251,11 @@ class ImageUploadHandler
 
         $savepath = $file->move($path_upload, $savename);
 
-        $ret['imagename'] = $file->getClientOriginalName(); // "PICT0001.JPG"
-        $ret['savename'] = $savename;                       // "1538422239_Cf7PQK04w4.JPG"
+        $ret['imagename'] = $file->getClientOriginalName();
+        $ret['savename'] = $savename;
         $ret['savepath'] = "$savepath";
         $ret['extension'] = "$extension";
-        $ret['filesize'] = $file->getClientSize();          // 7032
+        $ret['filesize'] = $file->getClientSize();
         $ret['err'] = 0;
         return $ret;
     }
