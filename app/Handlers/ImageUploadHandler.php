@@ -232,8 +232,8 @@ class ImageUploadHandler
         return $ret;
     }
 
-    //public function save_log($camera_id, $file)
-    public function save_log($camera, $file)
+    public function save_log($camera_id, $file)
+    //public function save_log($camera, $file)
     {
         $OriginalName = $file->getClientOriginalName();
         $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
@@ -241,13 +241,15 @@ class ImageUploadHandler
         $camera_id = $camera->id;
         $path_upload = public_path().'/uploads/logs/'.$camera_id;
         //$savename = time() . '_' . str_random(10) . '.' . $extension;
-        //$savename = date('ymdhis').'_'.$OriginalName;
+        $savename = date('ymdhis').'_'.$OriginalName;
 
+/*
         $tz = date_default_timezone_get();
         date_default_timezone_set($camera->timezone);
         $ret = date('Y-m-d H:i:s');
         $savename = date('Ymd').'_'.date('hi').'_'.$OriginalName;
         date_default_timezone_set($tz);
+*/
 
         $savepath = $file->move($path_upload, $savename);
 

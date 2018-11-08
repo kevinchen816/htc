@@ -2240,8 +2240,8 @@ class CamerasController extends Controller
                             //$file = $request->Image;
                             $file = $request->log;
                             if ($file && $file->isValid()) {
-                                //$ret = $uploader->save_log($camera_id, $file);
-                                $ret = $uploader->save_log($camera, $file);
+                                $ret = $uploader->save_log($camera_id, $file);
+                                //$ret = $uploader->save_log($camera, $file);
                                 $err = $ret['err'];
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
