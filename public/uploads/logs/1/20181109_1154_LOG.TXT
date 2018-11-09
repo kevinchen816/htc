@@ -1,0 +1,2066 @@
+[2018/10/18 05:51:31] http_url : 54.183.242.212
+[2018/10/18 05:51:31] http_api : api/
+[2018/10/18 05:51:31] https : 0
+[2018/10/18 05:51:31] ---------------------------------------------
+[2018/10/18 05:51:31] 20181003 (4.36)
+[2018/10/18 05:51:31] BOOT=SETUP
+[2018/10/18 05:51:31] AT
+[2018/10/18 05:51:31] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:32] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:33] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:34] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:35] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:36] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:37] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:38] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] AT
+[2018/10/18 05:51:39] 
+RDY
+
+[2018/10/18 05:51:39] AT
+OK
+
+[2018/10/18 05:51:39] AT+CMEE=2
+OK
+
+[2018/10/18 05:51:39] ATE1
+OK
+
+[2018/10/18 05:51:39] AT+QURCCFG="urcport","uart1"
+OK
+
+[2018/10/18 05:51:40] 1
+AT+QINDCFG="all"
++QINDCFG: "all",1
+
+OK
+
+[2018/10/18 05:51:40] AT+QINDCFG="csq"
++QINDCFG: "csq",0
+
+OK
+
+[2018/10/18 05:51:40] AT+QINDCFG="smsfull"
++QINDCFG: "smsfull",0
+
+OK
+
+[2018/10/18 05:51:40] AT+QINDCFG="ring"
++QINDCFG: "ring",0
+
+OK
+
+[2018/10/18 05:51:40] AT+QINDCFG="smsincoming"
++QINDCFG: "smsincoming",1
+
+OK
+
+[2018/10/18 05:51:40] AT+QINDCFG="act"
++QINDCFG: "act",0
+
+OK
+
+[2018/10/18 05:51:40] AT+QCFG="nwscanseq"
++QCFG: "nwscanseq",0403010502
+
+OK
+
+[2018/10/18 05:51:40] AT+QCFG="nwscanseq",040301
+OK
+
+[2018/10/18 05:51:40] AT+QCFG="nwscanmode"
++QCFG: "nwscanmode",0
+
+OK
+
+[2018/10/18 05:51:40] AT+QCFG="nwscanmode",0
+OK
+
+[2018/10/18 05:51:40] AT+CGMR
+EC25EFAR02A09M4G
+
+OK
+
+[2018/10/18 05:51:40] AT+CSUB
+SubEdition: V01
+
+OK
+
+[2018/10/18 05:51:40] ATI
+Quectel
+EC25
+Revision: EC25EFAR02A09M4G
+
+OK
+
+[2018/10/18 05:51:40] AT+CVERSION
+VERSION: EC25EFAR02A09M4G
+Oct 26 2017 10:30:52
+Authors: QCT
+
+OK
+
+[2018/10/18 05:51:40] AT+QGMR
+EC25EFAR02A09M4G
+
+OK
+
+[2018/10/18 05:51:40] AT+QSIMDET?
++QSIMDET: 0,0
+
+OK
+
+[2018/10/18 05:51:40] AT+QSIMSTAT?
++QSIMSTAT: 0,1
+
+OK
+
+[2018/10/18 05:51:40] AT+CMEE=2
+OK
+
+[2018/10/18 05:51:40] AT+CPIN?
++CPIN: READY
+
+OK
+
+[2018/10/18 05:51:40] AT+CGSN
+861107030190590
+
+OK
+
+[2018/10/18 05:51:40] AT+QCCID
++QCCID: 89860117851014783507
+
+OK
+
+[2018/10/18 05:51:40] AT+CGREG?
++CGREG: 0,4
+
+OK
+
+[2018/10/18 05:51:40] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 05:51:41] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 05:51:42] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 05:51:42] AT+CGREG?
++CGREG: 0,1
+
+OK
+
+[2018/10/18 05:51:42] AT+COPS?
++COPS: 0,0,"CHN-UNICOM",7
+
+OK
+
+[2018/10/18 05:51:42] AT+QIDEACT=1
+OK
+
+[2018/10/18 05:51:42] AT+QICSGP=1,1,"truphone.com","","",1
+OK
+
+[2018/10/18 05:51:43] AT+QIACT=1
+OK
+
+[2018/10/18 05:51:43] AT+QIACT?
++QIACT: 1,1,1,"10.170.145.199"
+
+OK
+
++QIND: SMS DONE
+
+[2018/10/18 05:51:43] AT+QSMTPCFG="contextid",1
+OK
+
+[2018/10/18 05:51:43] AT+CSQ
++CSQ: 20,99
+
+OK
+
+[2018/10/18 05:51:48] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:51:54] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:52:00] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:52:06] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:52:12] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:52:14] ->hello
+[2018/10/18 05:52:14] AT+QHTTPCFG="contextid",1
+OK
+
+[2018/10/18 05:52:14] AT+QHTTPCFG="requestheader",1
+OK
+
+[2018/10/18 05:52:14] AT+QHTTPURL=31,10
+CONNECT
+
+[2018/10/18 05:52:14] http://54.183.242.212/api/hello
+[2018/10/18 05:52:14] 
+OK
+
+[2018/10/18 05:52:15] AT+QHTTPPOST=126,30,30
+CONNECT
+
+[2018/10/18 05:52:15] POST /api/hello HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 0
+
+
+[2018/10/18 05:52:15] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 05:52:15] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:52:24] ->report
+[2018/10/18 05:52:24] AT+QHTTPURL=32,10
+CONNECT
+
+[2018/10/18 05:52:24] http://54.183.242.212/api/report
+[2018/10/18 05:52:24] 
+OK
+
+[2018/10/18 05:52:24] AT+QHTTPPOST=406,30,30
+CONNECT
+
+[2018/10/18 05:52:24] POST /api/report HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 277
+
+
+[2018/10/18 05:52:24] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","cellular":"4G LTE","DataList":{"Battery":"f","SignalValue":"31","Cardspace":"7569MB","Cardsize":"7576MB","Temperature":"82F","mcu":"4.36","FirmwareVersion":"20181003","cellular":"4G LTE"}}
+
+[2018/10/18 05:52:25] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 05:52:25] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":801,"ErrorMsg":"Invalid SIM card","DateTimeStamp":"2018-10-18 05:52:26"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:52:25] Invalid SIM card
+[2018/10/18 05:52:25] ->report
+[2018/10/18 05:52:25] AT+QHTTPURL=32,10
+CONNECT
+
+[2018/10/18 05:52:25] http://54.183.242.212/api/report
+[2018/10/18 05:52:25] 
+OK
+
+[2018/10/18 05:52:26] AT+QHTTPPOST=406,30,30
+CONNECT
+
+[2018/10/18 05:52:26] POST /api/report HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 277
+
+
+[2018/10/18 05:52:26] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","cellular":"4G LTE","DataList":{"Battery":"f","SignalValue":"31","Cardspace":"7569MB","Cardsize":"7576MB","Temperature":"82F","mcu":"4.36","FirmwareVersion":"20181003","cellular":"4G LTE"}}
+
+[2018/10/18 05:52:26] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 05:52:26] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":801,"ErrorMsg":"Invalid SIM card","DateTimeStamp":"2018-10-18 05:52:27"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:52:26] Invalid SIM card
+[2018/10/18 05:52:59] ->report
+[2018/10/18 05:52:59] AT+QHTTPURL=32,10
+CONNECT
+
+[2018/10/18 05:52:59] http://54.183.242.212/api/report
+[2018/10/18 05:52:59] 
+OK
+
+[2018/10/18 05:53:00] AT+QHTTPPOST=406,30,30
+CONNECT
+
+[2018/10/18 05:53:00] POST /api/report HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 277
+
+
+[2018/10/18 05:53:00] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","cellular":"4G LTE","DataList":{"Battery":"f","SignalValue":"31","Cardspace":"7569MB","Cardsize":"7576MB","Temperature":"82F","mcu":"4.36","FirmwareVersion":"20181003","cellular":"4G LTE"}}
+
+[2018/10/18 05:53:01] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 05:53:01] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"DateTimeStamp":"2018-10-18 05:53:01"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:53:25] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:53:30] AT+CSQ
++CSQ: 31,99
+
+OK
+
+[2018/10/18 05:53:31] ->uploadthumb
+[2018/10/18 05:53:31] #pathname=D:\SEND\PICT0001.JPG
+[2018/10/18 05:53:31] #file_size=7627
+[2018/10/18 05:53:31] #174+9325=9499
+[2018/10/18 05:53:31] #checksum=fd09
+[2018/10/18 05:53:31] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 05:53:31] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 05:53:31] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 05:53:31] AT+IFC=2,2
+OK
+
+[2018/10/18 05:53:32] AT+IPR=3686400
+OK
+
+[2018/10/18 05:53:32] AT
+OK
+
+[2018/10/18 05:53:32] AT+QFUPL="RAM:POST.BIN",9499,5,1
+CONNECT
+
+[2018/10/18 05:53:32] POST /api/uploadthumb HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----tzspeyqialvlrhsjsujs
+Cache-Control: no-cache
+Content-Length: 9325
+
+
+[2018/10/18 05:53:32] -------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FileName"
+
+PICT0001.JPG
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="upload_resolution"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_quality"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_compression"
+
+24
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Source"
+
+setup
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="DateTime"
+
+20180101000904
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Battery"
+
+f
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="SignalValue"
+
+31
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardspace"
+
+7569MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardsize"
+
+7576MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Temperature"
+
+84F
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="mcu"
+
+4.36
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FirmwareVersion"
+
+20181003
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="cellular"
+
+4G LTE
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Image"; filename="PICT0001.JPG"
+Content-Type: image/jpeg
+
+
+[2018/10/18 05:53:32] 
+-------tzspeyqialvlrhsjsujs--
+
+[2018/10/18 05:53:32] AA
++QFUPL: 9499,fd09
+
+OK
+
+[2018/10/18 05:53:32] AT+IPR=115200
+OK
+
+[2018/10/18 05:53:33] AT+IFC=0,0
+OK
+
+[2018/10/18 05:53:33] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",9499
+
+OK
+
+[2018/10/18 05:53:33] AT+QHTTPURL=37,10
+CONNECT
+
+[2018/10/18 05:53:33] http://54.183.242.212/api/uploadthumb
+[2018/10/18 05:53:33] 
+OK
+
+[2018/10/18 05:53:33] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 05:53:36] 
++QHTTPPOSTFILE: 0,200
+
+[2018/10/18 05:53:36] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"DateTimeStamp":"2018-10-18 05:53:36"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:53:36] ->uploadthumb (done)
+[2018/10/18 05:53:53] #boot = SETUP (0x08)
+[2018/10/18 05:53:53] #mode = OFF (0x00)
+[2018/10/18 05:53:53] #CHANGE (684-685=-1)
+
+[2018/10/18 05:53:54] http_url : 54.183.242.212
+[2018/10/18 05:53:54] http_api : api/
+[2018/10/18 05:53:54] https : 0
+[2018/10/18 05:53:54] ---------------------------------------------
+[2018/10/18 05:53:54] 20181003 (4.36)
+[2018/10/18 05:53:54] BOOT=ON
+[2018/10/18 05:53:54] AT
+OK
+
+[2018/10/18 05:53:54] AT+CMEE=2
+OK
+
+[2018/10/18 05:53:54] AT+CPIN?
++CPIN: READY
+
+OK
+
+[2018/10/18 05:53:54] AT+CGSN
+861107030190590
+
+OK
+
+[2018/10/18 05:53:54] 861107030190590
+[2018/10/18 05:53:54] AT+QCCID
++QCCID: 89860117851014783507
+
+OK
+
+[2018/10/18 05:53:54] 89860117851014783507
+[2018/10/18 05:53:54] AT+CGREG?
++CGREG: 0,1
+
+OK
+
+[2018/10/18 05:53:54] AT+COPS?
++COPS: 0,0,"CHN-UNICOM",7
+
+OK
+
+[2018/10/18 05:53:54] AT+QIDEACT=1
+OK
+
+[2018/10/18 05:53:54] AT+QICSGP=1,1,"truphone.com","","",1
+OK
+
+[2018/10/18 05:53:55] AT+QIACT=1
+OK
+
+[2018/10/18 05:53:55] AT+QIACT?
++QIACT: 1,1,1,"10.170.145.199"
+
+OK
+
+[2018/10/18 05:53:55] AT+QSMTPCFG="contextid",1
+OK
+
+[2018/10/18 05:53:55] AT+CSMP?
++CSMP: 17,167,0,0
+
+OK
+
+[2018/10/18 05:53:55] AT+CMGF=1
+OK
+
+[2018/10/18 05:53:55] AT+CSCS="GSM"
+OK
+
+[2018/10/18 05:53:55] AT+CPMS="SM","SM","SM"
++CPMS: 0,50,0,50,0,50
+
+OK
+
+[2018/10/18 05:53:55] AT+CMGL="ALL"
+OK
+
+[2018/10/18 05:53:55] AT+CMGD=0,4
+OK
+
+[2018/10/18 05:53:55] AT+CMGL="ALL"
+OK
+
+[2018/10/18 05:53:55] ->status
+[2018/10/18 05:53:55] AT+QHTTPCFG="contextid",1
+OK
+
+[2018/10/18 05:53:55] AT+QHTTPCFG="requestheader",1
+OK
+
+[2018/10/18 05:53:55] AT+QHTTPURL=32,10
+CONNECT
+
+[2018/10/18 05:53:55] http://54.183.242.212/api/status
+[2018/10/18 05:53:55] 
+OK
+
+[2018/10/18 05:53:55] AT+QHTTPPOST=416,30,30
+CONNECT
+
+[2018/10/18 05:53:56] POST /api/status HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 287
+
+
+[2018/10/18 05:53:56] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","cellular":"4G LTE","Arm":"Y","DataList":{"Battery":"f","SignalValue":"31","Cardspace":"7569MB","Cardsize":"7576MB","Temperature":"84F","mcu":"4.36","FirmwareVersion":"20181003","cellular":"4G LTE"}}
+
+[2018/10/18 05:53:56] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 05:53:56] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"ActionCode":"DS","ParameterList":{"REQUESTID":"1"},"DateTimeStamp":"2018-10-18 05:53:57"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:53:57] ActionCode=DS
+[2018/10/18 05:53:57] REQUESTID=1
+[2018/10/18 05:53:57] ActionCode = DS
+[2018/10/18 05:53:57] ->downloadsettings
+[2018/10/18 05:53:57] AT+QHTTPURL=42,10
+CONNECT
+
+[2018/10/18 05:53:57] http://54.183.242.212/api/downloadsettings
+[2018/10/18 05:53:57] 
+OK
+
+[2018/10/18 05:53:57] AT+QHTTPPOST=243,30,30
+CONNECT
+
+[2018/10/18 05:53:57] POST /api/downloadsettings HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 104
+
+
+[2018/10/18 05:53:57] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","RequestID":"1"}
+
+[2018/10/18 05:53:57] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 05:53:58] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"DataList":{"cameramode":"p","photoresolution":"4","video_resolution":"7","video_rate":"4","video_bitrate":"500","video_bitrate7":"500","video_bitrate8":"500","video_bitrate9":"500","video_bitrate10":"500","video_bitrate11":"500","video_length":"5","video_sound":"on","photoburst":"1","burst_delay":"250","upload_resolution":"1","photo_quality":"1","photo_compression":"20","timestamp":"on","date_format":"Ymd","time_format":"24","temperature":"84F","quiettime":"5s","timelapse":"off","tls_start":"00:00","tls_stop":"23:59","tls_interval":"5m","wireless_mode":"instant","wm_schedule":"1h","wm_sclimit":"20","hb_interval":"1h","online_max_time":"2","cellularpw":"","remotecontrol":"off","dutytime":"off","dt_sun":"ffffff","dt_mon":"ffffff","dt_tue":"ffffff","dt_wed":"ffffff","dt_thu":"ffffff","dt_fri":"ffffff","dt_sat":"ffffff","use_crc32":"n","blockmode1":"off","blockmode2":"off","blockmode3":"off","blockmode4":"off","blockmode5":"off","blockmode7":"off","blockmode8":"off","blockmode9":"off","blockmode10":"off","blockmode11":"off"},"ActionCode":"PS","ParameterList":{"REQUESTID":"2"},"DateTimeStamp":"2018-10-18 05:53:58"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:53:58] ActionCode=PS
+[2018/10/18 05:53:58] REQUESTID=2
+[2018/10/18 05:53:58] #NOW=2018/10/18 05:53:58 (21238)
+[2018/10/18 05:53:58] BOOT=ON (next HB=06:00)
+[2018/10/18 05:53:58] ActionCode = PS
+[2018/10/18 05:54:00] ->uploadthumb
+[2018/10/18 05:54:00] #pathname=D:\SEND\PICT0002.JPG
+[2018/10/18 05:54:00] #file_size=5066
+[2018/10/18 05:54:00] #174+6845=7019
+[2018/10/18 05:54:00] #checksum=c10
+[2018/10/18 05:54:00] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",9499
+
+OK
+
+[2018/10/18 05:54:00] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 05:54:00] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 05:54:00] AT+IFC=2,2
+OK
+
+[2018/10/18 05:54:01] AT+IPR=3686400
+OK
+
+[2018/10/18 05:54:01] AT
+OK
+
+[2018/10/18 05:54:01] AT+QFUPL="RAM:POST.BIN",7019,5,1
+CONNECT
+
+[2018/10/18 05:54:01] POST /api/uploadthumb HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----tzspeyqialvlrhsjsujs
+Cache-Control: no-cache
+Content-Length: 6845
+
+
+[2018/10/18 05:54:01] -------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FileName"
+
+PICT0002.JPG
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="upload_resolution"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_quality"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_compression"
+
+20
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Source"
+
+ps
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="DateTime"
+
+20181018055358
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="RequestID"
+
+2
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Battery"
+
+f
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="SignalValue"
+
+31
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardspace"
+
+7568MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardsize"
+
+7576MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Temperature"
+
+84F
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="mcu"
+
+4.36
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FirmwareVersion"
+
+20181003
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="cellular"
+
+4G LTE
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Image"; filename="PICT0002.JPG"
+Content-Type: image/jpeg
+
+
+[2018/10/18 05:54:01] 
+-------tzspeyqialvlrhsjsujs--
+
+[2018/10/18 05:54:01] AA
++QFUPL: 7019,c10
+
+OK
+
+[2018/10/18 05:54:01] AT+IPR=115200
+OK
+
+[2018/10/18 05:54:02] AT+IFC=0,0
+OK
+
+[2018/10/18 05:54:02] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",7019
+
+OK
+
+[2018/10/18 05:54:02] AT+QHTTPURL=37,10
+CONNECT
+
+[2018/10/18 05:54:02] http://54.183.242.212/api/uploadthumb
+[2018/10/18 05:54:02] 
+OK
+
+[2018/10/18 05:54:02] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 05:54:05] 
++QHTTPPOSTFILE: 0,200
+
+[2018/10/18 05:54:05] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"DateTimeStamp":"2018-10-18 05:54:04"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:54:05] ->uploadthumb (done)
+[2018/10/18 05:54:04] #NOW=2018/10/18 05:54:04 (21244)
+[2018/10/18 05:54:04] BOOT=ON (next HB=06:00)
+[2018/10/18 05:54:04] #hb(1) i=60m, w=05:56 (356)
+[2018/10/18 05:54:04] #OFF (12703, 686-680=6) (3, 0) (0, 0)
+
+[2018/10/18 05:54:28] http_url : 54.183.242.212
+[2018/10/18 05:54:28] http_api : api/
+[2018/10/18 05:54:28] https : 0
+[2018/10/18 05:54:28] ---------------------------------------------
+[2018/10/18 05:54:28] 20181003 (4.36)
+[2018/10/18 05:54:29] BOOT=PIR
+[2018/10/18 05:54:30] AT
+[2018/10/18 05:54:30] AT
+[2018/10/18 05:54:31] AT
+[2018/10/18 05:54:31] AT
+[2018/10/18 05:54:32] AT
+[2018/10/18 05:54:33] AT
+[2018/10/18 05:54:33] AT
+[2018/10/18 05:54:34] AT
+[2018/10/18 05:54:34] AT
+[2018/10/18 05:54:35] AT
+[2018/10/18 05:54:35] AT
+[2018/10/18 05:54:36] AT
+[2018/10/18 05:54:36] AT
+[2018/10/18 05:54:37] AT
+[2018/10/18 05:54:37] AT
+[2018/10/18 05:54:38] AT
+[2018/10/18 05:54:38] 
+RDY
+
++CFUN: 1
+
+[2018/10/18 05:54:39] AT
+OK
+
+[2018/10/18 05:54:39] AT+CMEE=2
+OK
+
+[2018/10/18 05:54:39] AT+CPIN?
++CPIN: READY
+
+OK
+
+[2018/10/18 05:54:39] AT+CGREG?
++CGREG: 0,4
+
+OK
+
+[2018/10/18 05:54:39] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 05:54:40] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 05:54:40] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 05:54:41] AT+CGREG?
++CGREG: 0,1
+
+OK
+
+[2018/10/18 05:54:41] AT+COPS?
++COPS: 0,0,"CHN-UNICOM",7
+
+OK
+
+[2018/10/18 05:54:41] AT+QICSGP=1,1,"truphone.com","","",1
+OK
+
+[2018/10/18 05:54:41] AT+QIACT=1
+OK
+
+[2018/10/18 05:54:41] AT+QIACT?
++QIACT: 1,1,1,"10.95.69.204"
+
+OK
+
+[2018/10/18 05:54:41] AT+QSMTPCFG="contextid",1
+OK
+
+[2018/10/18 05:54:41] ->uploadthumb
+[2018/10/18 05:54:41] #pathname=D:\SEND\PICT0003.JPG
+[2018/10/18 05:54:41] #file_size=5146
+[2018/10/18 05:54:41] #174+6841=7015
+[2018/10/18 05:54:41] #checksum=cdb5
+[2018/10/18 05:54:43] AT+QFLST="RAM:*"
+OK
+
++QIND: SMS DONE
+
+[2018/10/18 05:54:43] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 05:54:43] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 05:54:43] AT+IFC=2,2
+OK
+
+[2018/10/18 05:54:43] AT+IPR=3686400
+OK
+
+[2018/10/18 05:54:44] AT
+OK
+
+[2018/10/18 05:54:44] AT+QFUPL="RAM:POST.BIN",7015,5,1
+CONNECT
+
+[2018/10/18 05:54:44] POST /api/uploadthumb HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----tzspeyqialvlrhsjsujs
+Cache-Control: no-cache
+Content-Length: 6841
+
+
+[2018/10/18 05:54:44] -------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FileName"
+
+PICT0003.JPG
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="upload_resolution"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_quality"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_compression"
+
+20
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Source"
+
+mt
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="DateTime"
+
+20181018055428
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Battery"
+
+f
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="SignalValue"
+
+20
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardspace"
+
+7567MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardsize"
+
+7576MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Temperature"
+
+84F
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="mcu"
+
+4.36
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FirmwareVersion"
+
+20181003
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="cellular"
+
+4G LTE
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Image"; filename="PICT0003.JPG"
+Content-Type: image/jpeg
+
+
+[2018/10/18 05:54:44] 
+-------tzspeyqialvlrhsjsujs--
+
+[2018/10/18 05:54:44] A
++QFUPL: 7015,cdb5
+
+OK
+
+[2018/10/18 05:54:44] AT+IPR=115200
+OK
+
+[2018/10/18 05:54:45] AT+IFC=0,0
+OK
+
+[2018/10/18 05:54:45] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",7015
+
+OK
+
+[2018/10/18 05:54:45] AT+QHTTPCFG="contextid",1
+OK
+
+[2018/10/18 05:54:45] AT+QHTTPCFG="requestheader",1
+OK
+
+[2018/10/18 05:54:45] AT+QHTTPURL=37,10
+CONNECT
+
+[2018/10/18 05:54:45] http://54.183.242.212/api/uploadthumb
+[2018/10/18 05:54:45] 
+OK
+
+[2018/10/18 05:54:45] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 05:54:46] 
++QHTTPPOSTFILE: 0,200
+
+[2018/10/18 05:54:46] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"DateTimeStamp":"2018-10-18 05:54:48"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 05:54:46] ->uploadthumb (done)
+[2018/10/18 05:54:46] #NOW=2018/10/18 05:54:46 (21286)
+[2018/10/18 05:54:46] #hb(1) i=60m, w=05:14 (314)
+[2018/10/18 05:54:46] #OFF (18485, 679-681=-2) (3, 0) (0, 0)
+
+[2018/10/18 06:00:02] http_url : 54.183.242.212
+[2018/10/18 06:00:02] http_api : api/
+[2018/10/18 06:00:02] https : 0
+[2018/10/18 06:00:02] ---------------------------------------------
+[2018/10/18 06:00:02] 20181003 (4.36)
+[2018/10/18 06:00:02] BOOT=HB
+[2018/10/18 06:00:02] AT
+[2018/10/18 06:00:03] AT
+[2018/10/18 06:00:03] AT
+[2018/10/18 06:00:04] AT
+[2018/10/18 06:00:04] AT
+[2018/10/18 06:00:05] AT
+[2018/10/18 06:00:05] AT
+[2018/10/18 06:00:06] AT
+[2018/10/18 06:00:06] AT
+[2018/10/18 06:00:07] AT
+[2018/10/18 06:00:07] AT
+[2018/10/18 06:00:08] AT
+[2018/10/18 06:00:08] AT
+[2018/10/18 06:00:09] AT
+[2018/10/18 06:00:09] AT
+[2018/10/18 06:00:10] AT
+[2018/10/18 06:00:10] AT
+[2018/10/18 06:00:11] 
+RDY
+
+[2018/10/18 06:00:11] AT
+OK
+
+[2018/10/18 06:00:11] AT+CMEE=2
+OK
+
+[2018/10/18 06:00:11] AT+CPIN?
++CPIN: READY
+
+OK
+
+[2018/10/18 06:00:11] AT+CGREG?
++CGREG: 0,4
+
+OK
+
+[2018/10/18 06:00:12] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:00:12] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:00:13] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:00:14] AT+CGREG?
++CGREG: 0,1
+
+OK
+
+[2018/10/18 06:00:14] AT+COPS?
++COPS: 0,0,"CHN-UNICOM",7
+
+OK
+
+[2018/10/18 06:00:14] AT+QICSGP=1,1,"truphone.com","","",1
+OK
+
+[2018/10/18 06:00:14] AT+QIACT=1
+OK
+
+[2018/10/18 06:00:14] AT+QIACT?
++QIACT: 1,1,1,"10.169.5.162"
+
+OK
+
+[2018/10/18 06:00:14] AT+QSMTPCFG="contextid",1
+OK
+
+[2018/10/18 06:00:14] #NOW=2018/10/18 06:00:14 (21614)
+[2018/10/18 06:00:14] BOOT=HB (next HB=07:00)
+[2018/10/18 06:00:14] ->report
+[2018/10/18 06:00:14] AT+QHTTPCFG="contextid",1
+OK
+
+[2018/10/18 06:00:14] AT+QHTTPCFG="requestheader",1
+OK
+
+[2018/10/18 06:00:14] AT+QHTTPURL=32,10
+CONNECT
+
+[2018/10/18 06:00:14] http://54.183.242.212/api/report
+[2018/10/18 06:00:14] 
+OK
+
+[2018/10/18 06:00:15] 
++QIND: SMS DONE
+AT+QHTTPPOST=406,30,30
+CONNECT
+
+[2018/10/18 06:00:15] POST /api/report HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 277
+
+
+[2018/10/18 06:00:15] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","cellular":"4G LTE","DataList":{"Battery":"f","SignalValue":"18","Cardspace":"7567MB","Cardsize":"7576MB","Temperature":"78F","mcu":"4.36","FirmwareVersion":"20181003","cellular":"4G LTE"}}
+
+[2018/10/18 06:00:15] 
+OK
+
++QHTTPPOST: 0,200
+
+[2018/10/18 06:00:15] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"DateTimeStamp":"2018-10-18 06:00:17"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 06:00:17] #NOW=2018/10/18 06:00:17 (21617)
+[2018/10/18 06:00:17] #hb(1) i=60m, w=59:43 (3583)
+[2018/10/18 06:00:17] #OFF (14606, 686-676=10) (3, 0) (0, 0)
+
+[2018/10/18 06:05:09] http_url : 54.183.242.212
+[2018/10/18 06:05:09] http_api : api/
+[2018/10/18 06:05:09] https : 0
+[2018/10/18 06:05:09] ---------------------------------------------
+[2018/10/18 06:05:09] 20181003 (4.36)
+[2018/10/18 06:05:09] BOOT=PIR
+[2018/10/18 06:05:10] AT
+[2018/10/18 06:05:10] AT
+[2018/10/18 06:05:11] AT
+[2018/10/18 06:05:11] AT
+[2018/10/18 06:05:12] AT
+[2018/10/18 06:05:12] AT
+[2018/10/18 06:05:13] AT
+[2018/10/18 06:05:14] AT
+[2018/10/18 06:05:14] AT
+[2018/10/18 06:05:15] AT
+[2018/10/18 06:05:15] AT
+[2018/10/18 06:05:16] AT
+[2018/10/18 06:05:16] AT
+[2018/10/18 06:05:17] AT
+[2018/10/18 06:05:17] AT
+[2018/10/18 06:05:18] AT
+[2018/10/18 06:05:18] AT
+[2018/10/18 06:05:19] AT
+[2018/10/18 06:05:19] AT
+OK
+
+[2018/10/18 06:05:19] AT+CMEE=2
+OK
+
+[2018/10/18 06:05:19] AT+CPIN?
++CPIN: READY
+
+OK
+
+[2018/10/18 06:05:19] AT+CGREG?
++CGREG: 0,4
+
+OK
+
+[2018/10/18 06:05:20] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:05:20] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:05:21] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:05:21] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:05:22] AT+CGREG?
++CGREG: 0,1
+
+OK
+
+[2018/10/18 06:05:22] AT+COPS?
++COPS: 0,0,"CHN-UNICOM",7
+
+OK
+
+[2018/10/18 06:05:22] AT+QICSGP=1,1,"truphone.com","","",1
+OK
+
+[2018/10/18 06:05:22] AT+QIACT=1
+OK
+
+[2018/10/18 06:05:22] AT+QIACT?
++QIACT: 1,1,1,"10.20.120.241"
+
+OK
+
++QIND: SMS DONE
+
+[2018/10/18 06:05:22] AT+QSMTPCFG="contextid",1
+OK
+
+[2018/10/18 06:05:22] ->uploadthumb
+[2018/10/18 06:05:22] #pathname=D:\SEND\PICT0004.JPG
+[2018/10/18 06:05:22] #file_size=5116
+[2018/10/18 06:05:22] #174+6811=6985
+[2018/10/18 06:05:22] #checksum=25b1
+[2018/10/18 06:05:24] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 06:05:24] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 06:05:24] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 06:05:24] AT+IFC=2,2
+OK
+
+[2018/10/18 06:05:24] AT+IPR=3686400
+OK
+
+[2018/10/18 06:05:24] AT
+OK
+
+[2018/10/18 06:05:24] AT+QFUPL="RAM:POST.BIN",6985,5,1
+CONNECT
+
+[2018/10/18 06:05:24] POST /api/uploadthumb HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----tzspeyqialvlrhsjsujs
+Cache-Control: no-cache
+Content-Length: 6811
+
+
+[2018/10/18 06:05:24] -------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FileName"
+
+PICT0004.JPG
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="upload_resolution"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_quality"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_compression"
+
+20
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Source"
+
+mt
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="DateTime"
+
+20181018060508
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Battery"
+
+f
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="SignalValue"
+
+19
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardspace"
+
+7566MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardsize"
+
+7576MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Temperature"
+
+77F
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="mcu"
+
+4.36
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FirmwareVersion"
+
+20181003
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="cellular"
+
+4G LTE
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Image"; filename="PICT0004.JPG"
+Content-Type: image/jpeg
+
+
+[2018/10/18 06:05:24] 
+-------tzspeyqialvlrhsjsujs--
+
+[2018/10/18 06:05:24] A
++QFUPL: 6985,25b1
+
+OK
+
+[2018/10/18 06:05:25] AT+IPR=115200
+OK
+
+[2018/10/18 06:05:25] AT+IFC=0,0
+OK
+
+[2018/10/18 06:05:25] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",6985
+
+OK
+
+[2018/10/18 06:05:25] AT+QHTTPCFG="contextid",1
+OK
+
+[2018/10/18 06:05:25] AT+QHTTPCFG="requestheader",1
+OK
+
+[2018/10/18 06:05:25] AT+QHTTPURL=37,10
+CONNECT
+
+[2018/10/18 06:05:25] http://54.183.242.212/api/uploadthumb
+[2018/10/18 06:05:25] 
+OK
+
+[2018/10/18 06:05:25] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 06:05:27] 
++QHTTPPOSTFILE: 0,200
+
+[2018/10/18 06:05:27] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"ActionCode":"LE","ParameterList":{"REQUESTID":"3"},"DateTimeStamp":"2018-10-18 06:05:27"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 06:05:27] ->uploadthumb (done)
+[2018/10/18 06:05:27] ActionCode=LE
+[2018/10/18 06:05:27] REQUESTID=3
+[2018/10/18 06:05:27] ActionCode = LE
+[2018/10/18 06:05:27] ->logstatus
+[2018/10/18 06:05:27] AT+QHTTPURL=35,10
+CONNECT
+
+[2018/10/18 06:05:27] http://54.183.242.212/api/logstatus
+[2018/10/18 06:05:27] 
+OK
+
+[2018/10/18 06:05:27] AT+QHTTPPOST=254,30,30
+CONNECT
+
+[2018/10/18 06:05:27] POST /api/logstatus HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 122
+
+
+[2018/10/18 06:05:27] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","status":"enable","RequestID":"3"}
+
+[2018/10/18 06:05:28] 
+OK
+
++QIND: PB DONE
+
++QHTTPPOST: 0,500
+
+[2018/10/18 06:05:28] #POST_FAIL (813)
+[2018/10/18 06:05:28] ->logstatus
+[2018/10/18 06:05:28] AT+QHTTPURL=35,10
+CONNECT
+
+[2018/10/18 06:05:28] http://54.183.242.212/api/logstatus
+[2018/10/18 06:05:28] 
+OK
+
+[2018/10/18 06:05:29] AT+QHTTPPOST=254,30,30
+CONNECT
+
+[2018/10/18 06:05:29] POST /api/logstatus HTTP/1.1
+Host: 54.183.242.212
+Content-Type: application/json
+Cache-Control: no-cache
+Content-Length: 122
+
+
+[2018/10/18 06:05:29] {"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","status":"enable","RequestID":"3"}
+
+[2018/10/18 06:05:30] 
+OK
+
++QHTTPPOST: 0,500
+
+[2018/10/18 06:05:30] #POST_FAIL (813)
+[2018/10/18 06:05:30] #NOW=2018/10/18 06:05:30 (21930)
+[2018/10/18 06:05:30] #hb(1) i=60m, w=54:30 (3270)
+[2018/10/18 06:05:30] #OFF (21444, 679-682=-3) (3, 0) (0, 0)
+
+[2018/10/18 06:08:02] http_url : 54.183.242.212
+[2018/10/18 06:08:02] http_api : api/
+[2018/10/18 06:08:02] https : 0
+[2018/10/18 06:08:02] ---------------------------------------------
+[2018/10/18 06:08:02] 20181003 (4.36)
+[2018/10/18 06:08:02] BOOT=PIR
+[2018/10/18 06:08:03] AT
+[2018/10/18 06:08:03] AT
+[2018/10/18 06:08:04] AT
+[2018/10/18 06:08:04] AT
+[2018/10/18 06:08:05] AT
+[2018/10/18 06:08:05] AT
+[2018/10/18 06:08:06] AT
+[2018/10/18 06:08:06] AT
+[2018/10/18 06:08:07] AT
+[2018/10/18 06:08:07] AT
+[2018/10/18 06:08:08] AT
+[2018/10/18 06:08:08] AT
+[2018/10/18 06:08:09] AT
+[2018/10/18 06:08:09] AT
+[2018/10/18 06:08:10] AT
+[2018/10/18 06:08:10] AT
+[2018/10/18 06:08:11] AT
+[2018/10/18 06:08:11] AT
+[2018/10/18 06:08:12] AT
+OK
+
+[2018/10/18 06:08:12] AT+CMEE=2
+OK
+
+[2018/10/18 06:08:12] AT+CPIN?
++CPIN: READY
+
+OK
+
+[2018/10/18 06:08:12] AT+CGREG?
++CGREG: 0,4
+
+OK
+
++CFU
+[2018/10/18 06:08:12] AT+CGREG?
++CGREG: 0,4
+
+OK
+
+[2018/10/18 06:08:13] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:08:14] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:08:14] AT+CGREG?
++CGREG: 0,2
+
+OK
+
+[2018/10/18 06:08:15] AT+CGREG?
++CGREG: 0,1
+
+OK
+
+[2018/10/18 06:08:15] AT+COPS?
++COPS: 0,0,"CHN-UNICOM",7
+
+OK
+
+[2018/10/18 06:08:15] AT+QICSGP=1,1,"truphone.com","","",1
+OK
+
+[2018/10/18 06:08:15] AT+QIACT=1
+OK
+
+[2018/10/18 06:08:15] AT+QIACT?
++QIACT: 1,1,1,"10.21.146.240"
+
+OK
+
+[2018/10/18 06:08:15] AT+QSMTPCFG="contextid",1
+OK
+
+[2018/10/18 06:08:15] ->uploadthumb
+[2018/10/18 06:08:15] #pathname=D:\SEND\PICT0005.JPG
+[2018/10/18 06:08:15] #file_size=5133
+[2018/10/18 06:08:15] #174+6828=7002
+[2018/10/18 06:08:15] #checksum=6abc
+[2018/10/18 06:08:17] AT+QFLST="RAM:*"
+OK
+
++QIND: SMS DONE
+
+[2018/10/18 06:08:17] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 06:08:17] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 06:08:17] AT+IFC=2,2
+OK
+
+[2018/10/18 06:08:17] AT+IPR=3686400
+OK
+
+[2018/10/18 06:08:17] AT
+OK
+
+[2018/10/18 06:08:17] AT+QFUPL="RAM:POST.BIN",7002,5,1
+CONNECT
+
+[2018/10/18 06:08:17] POST /api/uploadthumb HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----tzspeyqialvlrhsjsujs
+Cache-Control: no-cache
+Content-Length: 6828
+
+
+[2018/10/18 06:08:18] -------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FileName"
+
+PICT0005.JPG
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="upload_resolution"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_quality"
+
+1
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="photo_compression"
+
+20
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Source"
+
+mt
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="DateTime"
+
+20181018060802
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Battery"
+
+f
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="SignalValue"
+
+18
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardspace"
+
+7565MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Cardsize"
+
+7576MB
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Temperature"
+
+77F
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="mcu"
+
+4.36
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="FirmwareVersion"
+
+20181003
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="cellular"
+
+4G LTE
+-------tzspeyqialvlrhsjsujs
+Content-Disposition: form-data; name="Image"; filename="PICT0005.JPG"
+Content-Type: image/jpeg
+
+
+[2018/10/18 06:08:18] 
+-------tzspeyqialvlrhsjsujs--
+
+[2018/10/18 06:08:18] A
++QFUPL: 7002,6abc
+
+OK
+
+[2018/10/18 06:08:18] AT+IPR=115200
+OK
+
+[2018/10/18 06:08:18] AT+IFC=0,0
+OK
+
+[2018/10/18 06:08:18] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",7002
+
+OK
+
+[2018/10/18 06:08:18] AT+QHTTPCFG="contextid",1
+OK
+
+[2018/10/18 06:08:18] AT+QHTTPCFG="requestheader",1
+OK
+
+[2018/10/18 06:08:18] AT+QHTTPURL=37,10
+CONNECT
+
+[2018/10/18 06:08:18] http://54.183.242.212/api/uploadthumb
+[2018/10/18 06:08:18] 
+OK
+
+[2018/10/18 06:08:18] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 06:08:28] 
++QIND: PB DONE
+
++QHTTPPOSTFILE: 0,200
+
+[2018/10/18 06:08:28] AT+QHTTPREAD=30
+CONNECT
+{"ResultCode":0,"ActionCode":"LU","ParameterList":{"REQUESTID":"4"},"DateTimeStamp":"2018-10-18 06:08:25"}
+OK
+
++QHTTPREAD: 0
+
+[2018/10/18 06:08:28] ->uploadthumb (done)
+[2018/10/18 06:08:28] ActionCode=LU
+[2018/10/18 06:08:28] REQUESTID=4
+[2018/10/18 06:08:28] ActionCode = LU
+[2018/10/18 06:08:28] ->uploadlog
+[2018/10/18 06:08:28] #pathname=D:\LOG.TXT
+[2018/10/18 06:08:28] #file_size=38235
+[2018/10/18 06:08:28] #173+38762=38935
+[2018/10/18 06:08:28] #checksum=432
+[2018/10/18 06:08:28] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",7002
+
+OK
+
+[2018/10/18 06:08:28] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 06:08:28] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 06:08:28] AT+IFC=2,2
+OK
+
+[2018/10/18 06:08:28] AT+IPR=3686400
+OK
+
+[2018/10/18 06:08:29] AT
+OK
+
+[2018/10/18 06:08:29] AT+QFUPL="RAM:POST.BIN",38935,5,1
+CONNECT
+
+[2018/10/18 06:08:29] POST /api/uploadlog HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----jjmwotvoizjlqgremaku
+Cache-Control: no-cache
+Content-Length: 38762
+
+
+[2018/10/18 06:08:29] -------jjmwotvoizjlqgremaku
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------jjmwotvoizjlqgremaku
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------jjmwotvoizjlqgremaku
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------jjmwotvoizjlqgremaku
+Content-Disposition: form-data; name="RequestID"
+
+4
+-------jjmwotvoizjlqgremaku
+Content-Disposition: form-data; name="log"; filename="LOG.TXT"
+Content-Type: text/plain
+
+
+[2018/10/18 06:08:29] 
+-------jjmwotvoizjlqgremaku--
+
+[2018/10/18 06:08:29] AA
++QFUPL: 38935,432
+
+OK
+
+[2018/10/18 06:08:29] AT+IPR=115200
+OK
+
+[2018/10/18 06:08:29] AT+IFC=0,0
+OK
+
+[2018/10/18 06:08:29] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",38935
+
+OK
+
+[2018/10/18 06:08:29] AT+QHTTPURL=35,10
+CONNECT
+
+[2018/10/18 06:08:29] http://54.183.242.212/api/uploadlog
+[2018/10/18 06:08:29] 
+OK
+
+[2018/10/18 06:08:30] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 06:08:33] 
++QHTTPPOSTFILE: 0,500
+
+[2018/10/18 06:08:33] #POST_FAIL (813)
+[2018/10/18 06:08:33] ->uploadlog (done)
+[2018/10/18 06:08:33] ->uploadlog
+[2018/10/18 06:08:33] #pathname=D:\LOG.TXT
+[2018/10/18 06:08:33] #file_size=40119
+[2018/10/18 06:08:33] #173+40646=40819
+[2018/10/18 06:08:33] #checksum=17e
+[2018/10/18 06:08:33] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",38935
+
+OK
+
+[2018/10/18 06:08:33] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 06:08:33] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 06:08:33] AT+IFC=2,2
+OK
+
+[2018/10/18 06:08:33] AT+IPR=3686400
+OK
+
+[2018/10/18 06:08:34] AT
+OK
+
+[2018/10/18 06:08:34] AT+QFUPL="RAM:POST.BIN",40819,5,1
+CONNECT
+
+[2018/10/18 06:08:34] POST /api/uploadlog HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----rlikqpllptiowhbwpqvm
+Cache-Control: no-cache
+Content-Length: 40646
+
+
+[2018/10/18 06:08:34] -------rlikqpllptiowhbwpqvm
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------rlikqpllptiowhbwpqvm
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------rlikqpllptiowhbwpqvm
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------rlikqpllptiowhbwpqvm
+Content-Disposition: form-data; name="RequestID"
+
+4
+-------rlikqpllptiowhbwpqvm
+Content-Disposition: form-data; name="log"; filename="LOG.TXT"
+Content-Type: text/plain
+
+
+[2018/10/18 06:08:34] 
+-------rlikqpllptiowhbwpqvm--
+
+[2018/10/18 06:08:34] A
++QFUPL: 40819,17e
+
+OK
+
+[2018/10/18 06:08:34] AT+IPR=115200
+OK
+
+[2018/10/18 06:08:35] AT+IFC=0,0
+OK
+
+[2018/10/18 06:08:35] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",40819
+
+OK
+
+[2018/10/18 06:08:35] AT+QHTTPURL=35,10
+CONNECT
+
+[2018/10/18 06:08:35] http://54.183.242.212/api/uploadlog
+[2018/10/18 06:08:35] 
+OK
+
+[2018/10/18 06:08:35] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 06:08:39] 
++QHTTPPOSTFILE: 0,500
+
+[2018/10/18 06:08:39] #POST_FAIL (813)
+[2018/10/18 06:08:39] ->uploadlog (done)
+[2018/10/18 06:08:39] ->uploadlog
+[2018/10/18 06:08:39] #pathname=D:\LOG.TXT
+[2018/10/18 06:08:39] #file_size=42003
+[2018/10/18 06:08:39] #173+42530=42703
+[2018/10/18 06:08:39] #checksum=844
+[2018/10/18 06:08:39] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",40819
+
+OK
+
+[2018/10/18 06:08:39] AT+QFDEL="RAM:*"
+OK
+
+[2018/10/18 06:08:39] AT+QFLST="RAM:*"
+OK
+
+[2018/10/18 06:08:39] AT+IFC=2,2
+OK
+
+[2018/10/18 06:08:39] AT+IPR=3686400
+OK
+
+[2018/10/18 06:08:39] AT
+OK
+
+[2018/10/18 06:08:39] AT+QFUPL="RAM:POST.BIN",42703,5,1
+CONNECT
+
+[2018/10/18 06:08:39] POST /api/uploadlog HTTP/1.1
+Host: 54.183.242.212
+Content-Type: multipart/form-data; boundary=-----wglyweabgnphvfnpjakj
+Cache-Control: no-cache
+Content-Length: 42530
+
+
+[2018/10/18 06:08:39] -------wglyweabgnphvfnpjakj
+Content-Disposition: form-data; name="iccid"
+
+89860117851014783507
+-------wglyweabgnphvfnpjakj
+Content-Disposition: form-data; name="module_id"
+
+861107030190590
+-------wglyweabgnphvfnpjakj
+Content-Disposition: form-data; name="model_id"
+
+lookout-na
+-------wglyweabgnphvfnpjakj
+Content-Disposition: form-data; name="RequestID"
+
+4
+-------wglyweabgnphvfnpjakj
+Content-Disposition: form-data; name="log"; filename="LOG.TXT"
+Content-Type: text/plain
+
+
+[2018/10/18 06:08:40] 
+-------wglyweabgnphvfnpjakj--
+
+[2018/10/18 06:08:40] AA
++QFUPL: 42703,844
+
+OK
+
+[2018/10/18 06:08:40] AT+IPR=115200
+OK
+
+[2018/10/18 06:08:40] AT+IFC=0,0
+OK
+
+[2018/10/18 06:08:40] AT+QFLST="RAM:*"
++QFLST: "RAM:POST.BIN",42703
+
+OK
+
+[2018/10/18 06:08:40] AT+QHTTPURL=35,10
+CONNECT
+
+[2018/10/18 06:08:40] http://54.183.242.212/api/uploadlog
+[2018/10/18 06:08:40] 
+OK
+
+[2018/10/18 06:08:40] AT+QHTTPPOSTFILE="RAM:POST.BIN",180
+OK
+
+[2018/10/18 06:08:44] 
++QHTTPPOSTFILE: 0,500
+
+[2018/10/18 06:08:44] #POST_FAIL (813)
+[2018/10/18 06:08:44] ->uploadlog (done)
+[2018/10/18 06:08:44] #NOW=2018/10/18 06:08:44 (22124)
+[2018/10/18 06:08:44] #hb(1) i=60m, w=51:16 (3076)
+[2018/10/18 06:08:45] #OFF (42949, 678-682=-4) (3, 0) (0, 0)
+
