@@ -9,6 +9,7 @@
         "dingo/api": "2.0.0-alpha2",
         "encore/laravel-admin": "1.5.*",
         "fideloper/proxy": "~3.3",
+        "guzzlehttp/guzzle": "^6.3",
         "laravel/cashier": "^8.0",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",

@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Plan;
+use GuzzleHttp\Client;
 
 use Auth;
 use DB;
+
+// https://blog.csdn.net/m0sh1/article/details/80402589
+// composer require "guzzlehttp/guzzle:~6.3"
+// composer require guzzlehttp/guzzle
 
 class PlansController extends Controller
 {
@@ -52,6 +57,58 @@ class PlansController extends Controller
     }
 
     /*-----------------------------------------------------------*/
+    public function m2m_put($api, $body) {
+        $client = new \GuzzleHttp\Client();
+        //$res = $client->request('GET', 'https://api.github.com/repos/guzzle/guzzle');
+        //return $res->getStatusCode(); // "200"
+        //return $res->getHeader('content-type'); // ["application\/json; charset=utf-8"]
+        //return $res->getBody();
+
+        // Send an asynchronous request.
+        //$request = new \GuzzleHttp\Psr7\Request('GET', 'http://httpbin.org');
+        //$promise = $client->sendAsync($request)->then(function ($response) {
+        //    echo 'I completed! ' . $response->getBody();
+        //});
+        //$promise->wait();
+
+        $url = 'https://restapi-telstra.jasper.com/rws/api/v1/';
+        $url_api = $url.$api;
+        $res = $client->request('PUT', $url_api, [
+            'headers' => [
+                'Content-type'=> 'application/json',
+                'Authorization'=> 'Basic bWljaGFlbGxpOmMzZThlMTNlLTYxOTAtNGUwNy1iMzZjLTI4ZGZiMGM1Yzc4OQ==',
+            ],
+            'body' => $body
+        ]);
+        return $res->getStatusCode();
+    }
+
+    public function m2m_iccid_active($iccid) {
+        $api = 'devices/'.$iccid;
+        $body = json_encode(['status' => 'ACTIVATED']); // ACTIVATED, DEACTIVATED
+        $ret = $this->m2m_put($api, $body);
+        return $ret;
+    }
+
+    public function m2m_iccid_deactive($iccid) {
+        $api = 'devices/'.$iccid;
+        $body = json_encode(['status' => 'DEACTIVATED']); // ACTIVATED, DEACTIVATED
+        $ret = $this->m2m_put($api, $body);
+        return $ret;
+    }
+
+    /*-----------------------------------------------------------*/
+    public function stripe_new() {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        $ret = \Stripe\Customer::create([
+            "description" => "kevin@10ware.com", // cus_Dv0fI1h5DQi2tb
+//            "currency" =>  "usd"
+//          "source" => "tok_visa" // obtained with Stripe.js
+        ]);
+        return var_dump($ret);
+    }
+
+    /*-----------------------------------------------------------*/
     /*
         Error: Please input an ICCID.
         Error: Invalid ICCID. Verify that you have input the ICCID correctly.
@@ -59,9 +116,10 @@ class PlansController extends Controller
         Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
     */
     public function add(Request $request) {
-//{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"submit-new-plan":"update"}
-//{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
-//return $request;
+        //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"submit-new-plan":"update"}
+        //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
+        //return $request;
+
         //$result = $this->validate($request, [
         //    'iccid' => 'required|unique:plans|max:20',
         //]);
@@ -75,6 +133,7 @@ class PlansController extends Controller
             session()->flash('danger', 'Please input ICCID.');
             return redirect()->back();
         }
+        $iccid = $request->iccid;
 
         //if (!$request['agree-terms']) {
         //    session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
@@ -82,7 +141,7 @@ class PlansController extends Controller
         //}
 
         $plan = DB::table('plans')
-            ->where('iccid', $request->iccid)
+            ->where('iccid', $iccid)
             ->first();
         if ($plan) {
             //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
@@ -90,6 +149,30 @@ class PlansController extends Controller
             return redirect()->back();
         }
 
+        $user = Auth::user();
+        $stripeToken = $_POST['stripeToken'];
+        if (!$user->stripe_id) {
+            //$stripeToken = $_POST['stripeToken'];
+            $ret = $user->createAsStripeCustomer($stripeToken);
+            //$response['ret'] = $ret;
+            //return $response;
+        }
+
+//if ($user->subscribed('89860117851014783482')) {
+//if ($user->subscribedToPlan('plan_5000_1m_us', '89860117851014783482')) {
+//    return 'Yes';
+//} else {
+//    return 'No';
+//}
+
+        $subscription_name = $iccid; //'89860117851014783482'; // iccid OR iccid + plan_id ?
+        $plan_id = 'plan_5000_1m_us';
+        //$ret = $user->newSubscription($subscription_name, $plan_id);
+        $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
+            // 'trial_ends_at' => $trial_ends_at,
+        ]);
+
+        /* create Plan */
         //$user = Auth::user();
         $plan = Plan::create([
             'iccid' => $request->iccid,
@@ -107,6 +190,11 @@ class PlansController extends Controller
         //return redirect()->route('plans.show', [$plan]);
         //return view('plans.show', compact('user', 'plan'));
 //        return redirect()->route('account.profile');
+
+//$ret = $this->m2m_iccid_active('89610185002185155463');
+//$ret = $this->m2m_iccid_deactive('89610185002185155463');
+//return $ret;
+$ret = $this->m2m_iccid_active($iccid);
 
         if ($portal == 10) {
             //return redirect()->route('my.plans.10ware');
