@@ -28,7 +28,8 @@
 use Illuminate\Http\Request;
 
 Route::get('/test', function () {
-    return view('test');
+    //return view('test');
+    return http_response_code(200); // PHP 5.4 or greater
 });
 
 Route::get('/env', function () {
@@ -77,10 +78,16 @@ Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     ]);
 });
 
-Route::post(
-    'stripe/webhook',
-    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
-);
+// Route::post(
+//     'stripe/webhook',
+//     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+// );
+
+Route::post('/stripe/webhook', function (Request $request) {
+    return http_response_code(200);
+    // return 'hello kevin';
+});
+
 
 /*
 /register

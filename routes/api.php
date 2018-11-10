@@ -31,6 +31,7 @@ $api->version('v1', function($api) {
     });
 });
 
+
 // $api->version('v1', function($api) {
 //     $api->post('hello', function() {
 //         $result['ResultCode'] = 0;
