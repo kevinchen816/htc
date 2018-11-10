@@ -24,6 +24,7 @@ class WebhookController extends CashierController
     public function handleChargeSucceeded($payload)
     {
         // return var_dump($payload);
-        return view('test');
+        //return view('test');
+        return http_response_code(200); // PHP 5.4 or greater
     }
 }
