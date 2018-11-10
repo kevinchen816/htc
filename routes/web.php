@@ -83,6 +83,11 @@ Route::post(
     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
 );
 
+Route::post(
+    'stripewebhooks',
+    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+);
+
 // Route::post('/stripewebhooks', function (Request $request) {
 //     \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 //     return http_response_code(200);
