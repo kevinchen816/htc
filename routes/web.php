@@ -78,22 +78,22 @@ Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     ]);
 });
 
-// Route::post(
-//     'stripe/webhook',
-//     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
-// );
+Route::post(
+    'stripe/webhook',
+    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+);
 
-Route::post('/stripewebhooks', function (Request $request) {
-    \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-    return http_response_code(200);
-    // return 'hello kevin';
-});
+// Route::post('/stripewebhooks', function (Request $request) {
+//     \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//     return http_response_code(200);
+//     // return 'hello kevin';
+// });
 
-Route::post('/stripe/webhook', function (Request $request) {
-    \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-    return http_response_code(200);
-    // return 'hello kevin';
-});
+// Route::post('/stripe/webhook', function (Request $request) {
+//     \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//     return http_response_code(200);
+//     // return 'hello kevin';
+// });
 
 
 /*
