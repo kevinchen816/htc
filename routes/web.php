@@ -84,6 +84,16 @@ Route::post(
 );
 
 Route::post(
+    '/stripe-events/stripe/webhook',
+    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+);
+
+Route::post(
+    '/stripe-events',
+    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+);
+
+Route::post(
     'stripewebhooks',
     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
 );
