@@ -83,6 +83,11 @@ Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
 //     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
 // );
 
+Route::post('/stripewebhooks', function (Request $request) {
+    return http_response_code(200);
+    // return 'hello kevin';
+});
+
 Route::post('/stripe/webhook', function (Request $request) {
     return http_response_code(200);
     // return 'hello kevin';
