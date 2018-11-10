@@ -44,6 +44,7 @@
                                 </div>
                             </div>
 
+@if (0)
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Data Plan</label>
                                 <div class="col-md-8">
@@ -59,6 +60,7 @@
                                     </select>
                                 </div>
                             </div>
+@endif
 
                             <!--<div class="form-group">
                                 <label class="col-md-3 control-label">Cardholder Name</label>
@@ -74,7 +76,7 @@
                                 </div>
                             </div>-->
 
-@if (!$user->stripe_id)
+@if (0)
                              <div class="form-group">
                                 <label class="col-md-3 control-label">Card Number</label>
                                 <div class="col-md-6">

@@ -149,6 +149,7 @@ class PlansController extends Controller
             return redirect()->back();
         }
 
+/*
         $user = Auth::user();
         $stripeToken = $_POST['stripeToken'];
         if (!$user->stripe_id) {
@@ -171,6 +172,7 @@ class PlansController extends Controller
         $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
             // 'trial_ends_at' => $trial_ends_at,
         ]);
+*/
 
         /* create Plan */
         //$user = Auth::user();
@@ -191,10 +193,9 @@ class PlansController extends Controller
         //return view('plans.show', compact('user', 'plan'));
 //        return redirect()->route('account.profile');
 
-//$ret = $this->m2m_iccid_active('89610185002185155463');
-//$ret = $this->m2m_iccid_deactive('89610185002185155463');
-//return $ret;
-$ret = $this->m2m_iccid_active($iccid);
+////$ret = $this->m2m_iccid_active('89610185002185155463');
+////$ret = $this->m2m_iccid_deactive('89610185002185155463');
+//$ret = $this->m2m_iccid_active($iccid);
 
         if ($portal == 10) {
             //return redirect()->route('my.plans.10ware');
