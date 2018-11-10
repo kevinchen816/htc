@@ -3853,31 +3853,40 @@ if ($err == 0) { /* for test */
         //$portal = $user->portal;
         $user_id = $user->id;
         $camera_id = $user->sel_camera;
-        $data['sel_menu'] = 'camera';
-        $user->update($data);
 
         //$camera = DB::table('cameras')
         //    ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
         //    ->where('user_id', $user_id)
         //    ->first();
-
         $cameras = DB::table('cameras')
             ->where('user_id', $user_id);
 
         if ($cameras->count() > 0) {
-            //$camera = Camera::findOrFail($camera_id);
-            $camera = Camera::find($camera_id);
-            if (!$camera) {
-                $camera = Camera::first();
+            if (!$camera_id) {
+                $camera = $cameras->first();
+                $camera_id = $camera->id;
             }
+            $camera = Camera::findOrFail($camera_id);
 
+            //$photos = DB::table('photos')->where('camera_id', $camera_id)
             $photos = $camera->photos()
                 ->orderBy('created_at', 'desc')
                 ->paginate($camera->thumbs);
+
+            if (($user->sel_menu != 'camera')||($user->sel_camera != $camera_id)) {
+                $data['sel_menu'] = 'camera';
+                $data['sel_camera'] = $camera_id;
+                $user->update($data);
+            }
+
             //return view('cameras', compact('user', 'camera', 'photos'));
             //return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
             return view('cameras', compact('portal', 'portal_name', 'user', 'cameras', 'camera', 'photos'));
         } else {
+            if ($user->sel_menu != 'camera') {
+                $data['sel_menu'] = 'camera';
+                $user->update($data);
+            }
             return view('cameras_empty', compact('portal', 'portal_name', 'user'));
         }
     }
