@@ -410,10 +410,11 @@ return var_dump($ret);
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         $subscription = \Stripe\Subscription::create([
-           'customer' => 'cus_DvGvznoT2EBbyn',
+           'customer' => 'cus_Dx6kWaXPFqZXhD',
            'items' => [['plan' => 'plan_5000_1m_us']],
-           'billing_cycle_anchor' => 1543593600,    // 2018/12/01
-           //'trial_end' => 1543593600,             // 2018/12/01
+           // 'billing_cycle_anchor' => 1543593600,    // 2018/12/01
+           // 'trial_end' => 1543593600,             // 2018/12/01
+           'trial_end' => 1542643200,             // 2018/12/20
         ]);
         return $subscription;
     }
@@ -430,7 +431,7 @@ return var_dump($ret);
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 //        $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
 //        $ret = $subscription->update(['cancel_at_period_end' => true]);
-        $ret = \Stripe\Subscription::update('sub_DvH09yNROg5tdj', [
+        $ret = \Stripe\Subscription::update('sub_Dx7YQIW4g1fkxD', [
           'cancel_at_period_end' => true,
         ]);
         return $ret;
@@ -438,7 +439,7 @@ return var_dump($ret);
 
     public function stripe_reactive() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $ret = \Stripe\Subscription::update('sub_DvH09yNROg5tdj', [
+        $ret = \Stripe\Subscription::update('sub_Dx7YQIW4g1fkxD', [
           'cancel_at_period_end' => false,
         ]);
         return $ret;
@@ -460,6 +461,7 @@ return var_dump($ret);
         return $ret;
     }
 
+    /*-----------------------------------------------------------*/
     /*
     {
         "_token":"NU81sCo2nwHyYvMQYugQzrZzMr0O5p8szCRNe5nl",
@@ -470,43 +472,32 @@ return var_dump($ret);
     }
     */
     public function billing(Request $request) {
-//return $request;
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        //$stripeToken = $_POST['stripeToken'];
-        $stripeToken = $request->stripeToken;
-        $ret = \Stripe\Customer::create([
-            "email" => "kevin@10ware.com",
-            "description" => $_POST['cardholder-name'],
+//         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//         $stripeToken = $_POST['stripeToken'];
+//         $ret = \Stripe\Customer::create([
+//             "email" => "kevin@10ware.com",
+//             "description" => $_POST['cardholder-name'],
+// //            "name" => $_POST['cardholder-name'],
+// //            "phone" => $_POST['cardholder-phone'],
+// //            "address" => 'ADDRESS.....',
+// //            "currency" =>  "usd"
+//             'source' => $stripeToken,
+//         ]);
 
-//            "name" => $_POST['cardholder-name'],
-//            "phone" => $_POST['cardholder-phone'],
-//            "address" => 'ADDRESS.....',
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
 
-//            "currency" =>  "usd"
-            'source' => $stripeToken,
-        ]);
-
-        return $ret;
+        $stripeToken = $_POST['stripeToken'];
+        $user->updateCard($stripeToken);
+        session()->flash('success', 'Success: Update Card Information.');
+        return redirect()->back();
     }
 
     /*-----------------------------------------------------------*/
-    /*
-    {
-    "name":"main",
-    "stripe_id":"sub_DuMETFmgmIV10k",
-    "stripe_plan":"plan_DuMDwpbpnIAhBz",
-    "quantity":1,
-    "trial_ends_at":null,
-    "ends_at":null,
-    "user_id":1,
-    "updated_at":"2018-11-04 06:22:39",
-    "created_at":"2018-11-04 06:22:39",
-    "id":2}
-    */
-    public function billingX(Request $request) {
-// return $request;
-//return redirect()->back();
-
+    public function charge_test(Request $request) {
         $portal = $request->portal;
         if (!Auth::check()) {
             return $this->back_to_login($portal);
@@ -517,53 +508,18 @@ return var_dump($ret);
 
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here: https://dashboard.stripe.com/account/apikeys
-       // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         // Token is created using Checkout or Elements!
         // Get the payment token ID submitted by the form:
         $stripeToken = $_POST['stripeToken'];
-        // $charge = \Stripe\Charge::create([
-        //     'amount' => 1000,
-        //     'currency' => 'usd',
-        //     'description' => 'Example charge',
-        //     'source' => $stripeToken,
-        // ]);
-
-$ret = $user->updateCard($stripeToken);
-$response['user'] = $user;
-$response['stripeToken'] = $stripeToken;
-$response['ret'] = $ret;
-return $response;
-
-        // $subscription_name = '89860117851014783481'; // iccid OR iccid + plan_id ?
-        // $subscription_name = '89860117851014783507'; // iccid OR iccid + plan_id ?
-        // $subscription_name = '8944503540145562674'; // iccid OR iccid + plan_id ?
-        $subscription_name = '89860117851014783482'; // iccid OR iccid + plan_id ?
-        $plan_id = 'plan_au_5000_1m_free'; // id_us_5000_m, id_us_5000_3m, id_us_5000_m, id_us_5000_3m
-        // $ret = $user->newSubscription('main', 'plan_DuMDwpbpnIAhBz')->create($stripeToken);
-//        $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken);
-
-// $user->trial_ends_at = Carbon::now()->addDays(14);
-// $user->save();
-
-// $date=date("Y/m/d");
-$date = date_create(date("Y/m/d"));
-$trial_ends_at = date_add($date, date_interval_create_from_date_string("30 days"));
-// $trial_ends_at = '2018-12-04';
-// $trial_ends_at = Carbon::now()->addDays(30);
-        $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
-            // 'trial_ends_at' => $trial_ends_at,
+        $charge = \Stripe\Charge::create([
+            'amount' => 1000,
+            'currency' => 'usd',
+            'description' => 'Example charge',
+            'source' => $stripeToken,
         ]);
-
-$response['trial_ends_at'] = $trial_ends_at;
-$response['ret'] = $ret;
-return $response;
-// return $ret;
-
-//        $user->charge(100);
-// $invoices = $user->invoices();
-// return view('account.__invoice', compact('invoices'));
-//         return redirect()->back();
+        return $charge;
     }
 
 /*

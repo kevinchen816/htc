@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Plan;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 
 use Auth;
 use DB;
@@ -118,16 +119,18 @@ class PlansController extends Controller
     public function add(Request $request) {
         //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"submit-new-plan":"update"}
         //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
-        //return $request;
+        // return $request;
 
-        //$result = $this->validate($request, [
-        //    'iccid' => 'required|unique:plans|max:20',
-        //]);
         $portal = $request->portal;
         if (!Auth::check()) {
             return $this->back_to_login($portal);
         }
+        $user = Auth::user();
 
+        /* check ICCID */
+        //$result = $this->validate($request, [
+        //    'iccid' => 'required|unique:plans|max:20',
+        //]);
         if (!$request->iccid) {
             //session()->flash('danger', 'Error: Please input an ICCID.');
             session()->flash('danger', 'Please input ICCID.');
@@ -149,28 +152,26 @@ class PlansController extends Controller
             return redirect()->back();
         }
 
-        $user = Auth::user();
-        $stripeToken = $_POST['stripeToken'];
-        if (!$user->stripe_id) {
-            //$stripeToken = $_POST['stripeToken'];
-            $ret = $user->createAsStripeCustomer($stripeToken);
-            //$response['ret'] = $ret;
-            //return $response;
+        /* Stripe - create customer id */
+        if ($request->mode == 'new') {
+            $stripeToken = $_POST['stripeToken'];
+            if (!$user->stripe_id) {
+                // $ret = $user->createAsStripeCustomer($stripeToken);
+                $ret = $user->createAsStripeCustomer($stripeToken, [
+                    // 'currency' => 'usd',
+                ]);
+            }
         }
 
-//if ($user->subscribed('89860117851014783482')) {
-//if ($user->subscribedToPlan('plan_5000_1m_us', '89860117851014783482')) {
-//    return 'Yes';
-//} else {
-//    return 'No';
-//}
-
-        $subscription_name = $iccid; //'89860117851014783482'; // iccid OR iccid + plan_id ?
+        /* Stripe - subscribe plan */
+        $subscription_name = $iccid; //'89860117851014783481'
         $plan_id = 'plan_5000_1m_us';
-        //$ret = $user->newSubscription($subscription_name, $plan_id);
-        $ret = $user->newSubscription($subscription_name, $plan_id)->create($stripeToken, [
-            // 'trial_ends_at' => $trial_ends_at,
-        ]);
+        if (!$request['auto-bill']) {
+            $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+        } else {
+            $user->newSubscription($subscription_name, $plan_id)->create();
+        }
+        // $user->subscription($subscription_name)->cancel();
 
         /* create Plan */
         //$user = Auth::user();

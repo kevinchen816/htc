@@ -31,11 +31,11 @@
 
                         <div id="form-errors" class="alert alert-danger hidden">
                         </div>
-
-                        <form method="POST" action="{{ route('add.plan') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="addplan-form">
+@if ($user->stripe_id)
+                        <form method="POST" action="{{ route('add.plan') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                             {{ csrf_field() }}
                             <input name="portal" type="hidden" value="{{ $portal }}">
-                            <input name="mode" type="hidden" value="new">
+                            <input name="mode" type="hidden" value="add">
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="iccid inputSmall">SIM ICCID</label>
@@ -44,7 +44,6 @@
                                 </div>
                             </div>
 
-@if (1)
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Data Plan</label>
                                 <div class="col-md-8">
@@ -60,7 +59,67 @@
                                     </select>
                                 </div>
                             </div>
-@endif
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-7">
+                                    <span class="button-checkbox">
+                                        <button type="button" class="btn btn-default btn-xs" data-color="default">Auto Bill</button>
+                                        <input type="checkbox" class="hidden" name="auto-bill" id="auto-bill"  />
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-7">
+                                    <button type="submit" class="btn btn-primary  btn-sm" name="submit-new-plan" value="update">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+@else
+                        <form method="POST" action="{{ route('add.plan') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="addplan-form">
+                            {{ csrf_field() }}
+                            <input name="portal" type="hidden" value="{{ $portal }}">
+                            <input name="mode" type="hidden" value="new">
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="iccid inputSmall">SIM ICCID</label>
+                                <div class="col-md-8">
+                                    <input type="text" value="{{ old('iccid') }}" name="iccid" maxlength="70" id="iccid" class="form-control input-sm" placeholder="Input ICCID">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Data Plan</label>
+                                <div class="col-md-8">
+                                    <!--<select  class="bs-select form-control input-sm">-->
+                                    <select  class="bs-select form-control input-sm">
+                                        <!--<option value="p" selected="selected">Photo</option>-->
+                                        <option value="plan_5000_1m">5000 Points per Month</option>
+                                        <option value="plan_10000_1m">10000 Points per Month</option>
+                                        <option value="plan_20000_1m">20000 Points per Month</option>
+                                        <option value="plan_15000_3m">15000 Points for 3 Months</option>
+                                        <option value="plan_30000_3m">30000 Points for 3 Months</option>
+                                        <option value="plan_60000_3m">60000 Points for 3 Months</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-7">
+                                    <span class="button-checkbox">
+                                        <button type="button" class="btn btn-default btn-xs" data-color="default">Auto Bill</button>
+                                        <input type="checkbox" class="hidden" name="auto-bill" id="auto-bill"  />
+                                    </span>
+                                </div>
+                            </div>
 
                             <!--<div class="form-group">
                                 <label class="col-md-3 control-label">Cardholder Name</label>
@@ -76,7 +135,6 @@
                                 </div>
                             </div>-->
 
-@if (1)
                              <div class="form-group">
                                 <label class="col-md-3 control-label">Card Number</label>
                                 <div class="col-md-6">
@@ -109,7 +167,6 @@
                                     <button type="submit" class="btn btn-primary btn-sm" name="src" value="update" id="btn-update">Update Card Info</button>
                                 </div>
                             </div>-->
-@endif
 
                             <div class="form-group">
                                 <div class="col-md-3">
@@ -121,6 +178,8 @@
                                 </div>
                             </div>
                         </form>
+@endif
+
                 </div>
             </div>
         </div>
@@ -187,16 +246,14 @@
             pmtform.find('btn-update').prop('disabled', true);
             $('#form-errors').addClass('hidden');
 
-//alert($('#name').val());
-
             var cardData = {
                 'name': $('#name').val()
             };
-//return;
+
             stripe.createToken(card, cardData).then(function(result) {
                 //console.log(result);
                 if (result.error && result.error.message) {
-                    //alert(result.error.message);
+                    alert(result.error.message);
                     $('#form-errors').text(result.error.message);
                     $('#form-errors').removeClass('hidden');
                     $('#form-errors').show();
