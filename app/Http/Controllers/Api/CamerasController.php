@@ -1539,6 +1539,9 @@ class CamerasController extends Controller
         return $ret;
     }
 
+//  $msg = "test webhook";
+//  mail($customer_email, "Test suscrip", $msg);
+
     public function uploadthumb(Request $request) {
 //$file = $request->Image;
 //return $file->getClientOriginalName();

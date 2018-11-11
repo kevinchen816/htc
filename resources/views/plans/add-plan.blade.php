@@ -44,7 +44,7 @@
                                 </div>
                             </div>
 
-@if (0)
+@if (1)
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Data Plan</label>
                                 <div class="col-md-8">
@@ -76,7 +76,7 @@
                                 </div>
                             </div>-->
 
-@if (0)
+@if (1)
                              <div class="form-group">
                                 <label class="col-md-3 control-label">Card Number</label>
                                 <div class="col-md-6">
