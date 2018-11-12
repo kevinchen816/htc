@@ -28,8 +28,8 @@
 use Illuminate\Http\Request;
 
 Route::get('/test', function () {
-    //return view('test');
-    return http_response_code(200); // PHP 5.4 or greater
+    return view('test');
+    // return http_response_code(200); // PHP 5.4 or greater
 });
 
 Route::get('/env', function () {
@@ -187,6 +187,12 @@ Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
 Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
 Route::resource('/plans', 'PlansController');
 Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
+
+Route::get('/plan/pause/{plan}', 'PlansController@pause')->name('plan.pause');
+Route::get('/plan/active/{plan}', 'PlansController@active')->name('plan.active');
+Route::get('/plan/change/{plan}', 'PlansController@change')->name('plan.change');
+Route::get('/plan/cancel/{plan}', 'PlansController@cancel')->name('plan.cancel');
+
 
 //Route::get('/myplans','PlansController@my_plans')->name('my.plans');
 Route::get('/myplans','PlansController@my_plans2')->name('my.plans');

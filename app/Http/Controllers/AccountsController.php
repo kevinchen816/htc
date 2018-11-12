@@ -121,10 +121,24 @@ class AccountsController extends Controller
 //            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
 //            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
 //            $handle .=                 '</tr>';
+
+$handle .=                 '<tr>';
+            $handle .= '<td>';
+            // $handle .=     '<a href="/plan/mobilerevoke/77" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Pause</a>';
+            $handle .=     '<a href="/plan/pause/'.$plan->id.'" class="btn btn-xs btn-warning">Pause</a>';
+            $handle .=     '<a href="/plan/active/'.$plan->id.'" class="btn btn-xs btn-warning">Active</a>';
+            $handle .=     '<a href="/plan/change/'.$plan->id.'" class="btn btn-xs btn-warning">Change</a>';
+            $handle .=     '<a href="/plan/cancel/'.$plan->id.'" class="btn btn-xs btn-warning">Cancel</a>';
+
+            $handle .= '</td>';
+$handle .=                 '</tr>';
+
             $handle .=             '</tbody>';
             $handle .=         '</table>';
             $handle .=     '</div>';
             $handle .= '</div>';
+
+
         }
         return $handle;
     }
@@ -285,23 +299,6 @@ class AccountsController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        // $token = 'tok_1DRfjeG8UgnSL68UwpYMG4Kf';
-        // $ret = \Stripe\Charge::create([
-        //     'amount' => 1000,
-        //     'currency' => 'usd',
-        //     'description' => 'Example charge',
-        //     'source' => $token,
-        // ]);
-
-/*
-5000 Points (1 Month)
-    plan_5000_1m_us
-    plan_5000_1m_au
-
-15000 Points (3 Month)
-    plan_5000_3m_us
-    plan_5000_3m_au
-*/
 $ret = $user->subscribed('main'); // true, false
 // $ret = $user->subscription('main')->onGracePeriod();
 // $ret = $user->subscription('main')->cancelled();
@@ -314,7 +311,6 @@ return var_dump($ret);
 // return $invoices;
 
 // $ret = $user->subscription('main')->resume();
-// return var_dump($ret);
         //return redirect()->back();
     }
 
@@ -448,10 +444,15 @@ return var_dump($ret);
     public function stripe_change() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
-        $ret = \Stripe\Subscription::update('sub_DvH09yNROg5tdj', [
-          'cancel_at_period_end' => false,
-          'items' => [
+        $subscription = \Stripe\Subscription::retrieve('sub_DxCpW25xCDyLlx');
+// return var_dump($subscription);
+// return $subscription;
+
+        $ret = \Stripe\Subscription::update('sub_DxCpW25xCDyLlx', [
+            'cancel_at_period_end' => false,
+            // 'cancel_at_period_end' => true,
+            // 'prorate' => false,
+            'items' => [
                 [
                     'id' => $subscription->items->data[0]->id, //"id":"si_DvH0QM6GF5Bllt"
                     'plan' => 'plan_5000_3m_us',

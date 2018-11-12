@@ -166,6 +166,7 @@ class PlansController extends Controller
         /* Stripe - subscribe plan */
         $subscription_name = $iccid; //'89860117851014783481'
         $plan_id = 'plan_5000_1m_us';
+        // $plan_id = 'plan_100_1d_us';
         if (!$request['auto-bill']) {
             $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
         } else {
@@ -464,5 +465,72 @@ class PlansController extends Controller
 
         session()->flash('success', 'Delete Success');
         return view('plans.index', compact('user', 'plans'));
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function pause(Plan $plan) {
+        $portal = 0; //$request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
+
+        // $plan->delete();
+        // // return back();
+
+        // // $plans = Plan::all();
+        // $plans = Plan::paginate(5);
+
+        // $subscriptions = DB::table('subscriptions')->where('iccid', $iccid)->get();
+        // $subscription = $subscription->first();
+        $subscription_name = $plan->iccid;
+        $user->subscription($subscription_name)->cancel();
+
+        session()->flash('success', 'Pause Success');
+        // return view('plans.index', compact('user', 'plans'));
+        return redirect()->back();
+    }
+
+    public function active(Plan $plan) {
+        $portal = 0; //$request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
+
+        $subscription_name = $plan->iccid;
+        $user->subscription($subscription_name)->resume();
+
+        session()->flash('success', 'Active Success');
+        return redirect()->back();
+    }
+
+
+    public function change(Plan $plan) {
+        $portal = 0; //$request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
+
+        // $user->subscription('main')->swap('provider-plan-id');
+
+        $subscription_name = $plan->iccid;
+        $new_plan = 'plan_5000_3m_us';
+        $user->subscription($subscription_name)->swap($new_plan);
+
+        session()->flash('success', 'Change Success');
+        return redirect()->back();
+    }
+
+    public function cancel(Plan $plan) {
+        $portal = 0; //$request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
+
+        session()->flash('success', 'Cancel Success');
+        return redirect()->back();
     }
 }
