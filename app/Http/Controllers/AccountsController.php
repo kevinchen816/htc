@@ -122,6 +122,7 @@ class AccountsController extends Controller
 //            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
 //            $handle .=                 '</tr>';
 
+/*
 $handle .=                 '<tr>';
             $handle .= '<td>';
             // $handle .=     '<a href="/plan/mobilerevoke/77" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Pause</a>';
@@ -132,6 +133,7 @@ $handle .=                 '<tr>';
 
             $handle .= '</td>';
 $handle .=                 '</tr>';
+*/
 
             $handle .=             '</tbody>';
             $handle .=         '</table>';
