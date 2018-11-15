@@ -1229,7 +1229,7 @@ class CamerasController extends Controller
             $datalist['date_format']       = (string) $camera->date_format;
 
             $datalist['time_format']     = (string) $camera->time_format;
-            $datalist['temperature']     = (string) $camera->temperature;
+            $datalist['temperature']     = (string) $camera->temp_unit;
             $datalist['quiettime']       = (string) $camera->quiettime;
             $datalist['timelapse']       = (string) $camera->timelapse;
             $datalist['tls_start']       = date('H:i', strtotime($camera->tls_start));
