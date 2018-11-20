@@ -87,14 +87,65 @@ class AccountsController extends Controller
             $handle .=     '<div class="col-md-12">';
             $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
             $handle .=             '<div class="row">';
+
+            /* Silver 1 Month */
             $handle .=                 '<div class="col-md-5">';
             $handle .=                     '<i class="fa fa-dot-circle"></i>';
-            $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
-            $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
+            $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
+            $handle .=                     ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+            $handle .=                     ' <img src="/images/cad.png" width="30" style="margin-bottom:10px;"/>';
+//            $handle .=                     ' <span class="label label-success" style="font-size:0.9em;">Active</span>';
+            $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">Active</span>';
+
+            /* Auto-Reserve */
+            $handle .=                     '<p style="margin-top:4px;">';
+            $handle .=                          '<span class="button-checkbox" style="margin-left:20px;">';
+            $handle .=                              '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Reserve (<i class="fa fa-dollar-sign"></i>10)</button>';
+            $handle .=                              '<input type="checkbox" class="hidden camera-select" name="autoreserve[]" value="8"   />';
+            $handle .=                          '</span>';
+            $handle .=                     '</p>';
+            /* Auto-Bill */
+            $handle .=                     '<p>';
+            $handle .=                         '<span class="button-checkbox" style="margin-left:20px;">';
+            $handle .=                             '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Bill (renews after 19/12/2018 8:00:00 am)</button>';
+            $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
+            $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
+
+            $handle .=                         '</span>';
+            $handle .=                     '</p>';
+            /* */
             $handle .=                     '<p></p>';
             $handle .=                 '</div>';
+
+            /* Configure Plan Renewal */
             $handle .=                 '<div class="col-md-5">';
+            //$handle .=                     '<a href="/plans/setup-renewal/8"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+$handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+//$handle .=                     '<a href="/plans/add-plan"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+            $handle .=                         '<i class="glyphicon glyphicon-refresh"> </i> Configure Plan Renewal';
+            $handle .=                     '</a>';
+            $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
+            $handle .=                         '<p>';
+            $handle .=                             'Renew Tier:';
+            $handle .=                             '<strong>';
+            $handle .=                                  ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
+            $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+            $handle .=                             '</strong>';
+
+//<strong>
+//    <span class="label label-info" style="font-size: 1.00em;">Silver - 1 Month</span>
+//    <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>
+//</strong>
+
+            $handle .=                         '</p>';
+            $handle .=                         '<p>';
+            $handle .=                             'Renew Auto-Reserve:';
+            $handle .=                             '<strong>No</strong>';
+            $handle .=                         '</p>';
+            $handle .=                     '</div>';
+
             $handle .=                 '</div>'; // <!-- end col -->
+
             $handle .=             '</div>';
             $handle .=         '</div>';
             $handle .=     '</div>';
@@ -108,20 +159,31 @@ class AccountsController extends Controller
             $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
             $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
             $handle .=                 '</tr>';
-//            //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
-//            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
-//            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
-//            $handle .=                 '</tr>';
+            //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
+            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
+            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
+            $handle .=                 '</tr>';
             $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
             $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
             $handle .=                 '</tr>';
             $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
             $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
             $handle .=                 '</tr>';
-//            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
-//            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
-//            $handle .=                 '</tr>';
+            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
+            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
+            $handle .=                 '</tr>';
 
+            $handle .=                 '<tr>';
+            $handle .=                     '<td class="pull-right">Reserve:</td>';
+            $handle .=                     '<td>';
+            //$handle .=                         '(No Reserve)';
+            $handle .=                         '<strong><i class="fa fa-dollar-sign"></i>10.00 (6666.66 points) </strong>';
+            $handle .=                         '<br />';
+            $handle .=                         '<a href="/plans/buy-reserve/8" class="btn btn-xs btn-primary">';
+            $handle .=                             '<i class="glyphicon glyphicon-shopping-cart"></i> Buy Points Reserve (<i class="fa fa-dollar-sign"></i>10)';
+            $handle .=                         '</a>';
+            $handle .=                     '</td>';
+            $handle .=                 '</tr>';
 /*
 $handle .=                 '<tr>';
             $handle .= '<td>';
@@ -134,10 +196,39 @@ $handle .=                 '<tr>';
             $handle .= '</td>';
 $handle .=                 '</tr>';
 */
-
             $handle .=             '</tbody>';
             $handle .=         '</table>';
             $handle .=     '</div>';
+
+            $handle .=     '<div class="col-sm-6">';
+            $handle .=         '<div style="background-color:#222;padding-top:10px;padding-bottom:10px;">';
+            $handle .=             '<h4 style="margin-left:10px"><strong>Plan Activity</strong></h4>';
+
+            $handle .=                  '<h5 style="margin-left:24px">';
+            $handle .=                      '<i class="fa fa-sync" style="color:white;"></i>';
+            $handle .=                      '2018/11/20 23:43:59 | Points Reserve';
+            $handle .=                      '(#<a class="label label-highlight view-invoice" id="25" data-invoice="&lt;table class=&quot;table plan-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Invoice Date:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;2018/11/20 23:43:59&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Total:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;13.50&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Charge ID:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;ch_1DYbOMHMprYyJrNbd90lSYK3&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Card:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Visa&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Last4:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;4242&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Expire Date:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;1/2019&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Country:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;US&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Currency:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;aud&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=2&gt;&lt;hr&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;(1) Points Reserve:&lt;br /&gt;For IccID: 89860117851014783481&lt;/td&gt;&lt;td&gt;13.50&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;">00025</a>)';
+            $handle .=                  '</h5>';
+
+            $handle .=                  '<h5 style="margin-left:24px">';
+            $handle .=                      '<i class="fa fa-sync" style="color:white;"></i>';
+            $handle .=                      '2018/11/20 23:30:02 | Points Reserve';
+            $handle .=                      '(#<a class="label label-highlight view-invoice" id="24" data-invoice="&lt;table class=&quot;table plan-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Invoice Date:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;2018/11/20 23:30:02&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Total:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;10.00&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Charge ID:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;ch_1DYbArHMprYyJrNbULRs178r&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Card:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Visa&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Last4:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;4242&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Expire Date:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;1/2019&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Country:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;US&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;Currency:&lt;/td&gt;&lt;td&gt;&lt;strong&gt;usd&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=2&gt;&lt;hr&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;pull-right&quot;&gt;(1) Points Reserve:&lt;br /&gt;For IccID: 89860117851014783481&lt;/td&gt;&lt;td&gt;10.00&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;">00024</a>)';
+            $handle .=                  '</h5>';
+
+            $handle .=                 '<h5 style="margin-left:24px">';
+            $handle .=                     '<i class="fa fa-signal" style="color:lime;"></i>';
+            $handle .=                     '19/11/2018 9:45:36 pm | Activation';
+            $handle .=                 '</h5>';
+
+            $handle .=                 '<h5 style="margin-left:24px">';
+            $handle .=                     '<i class="fa fa-signal" style="color:orange;"></i>';
+            $handle .=                     '19/11/2018 9:45:28 pm | Suspension';
+            $handle .=                 '</h5>';
+
+            $handle .=         '</div>';
+            $handle .=     '</div>';
+
             $handle .= '</div>';
 
 

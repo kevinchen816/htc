@@ -18,6 +18,10 @@
             </p>
         </div>
 
+        <div class="alert alert-default" style="background-color: #333;">
+            <h4>The Active Card on file is: <span class="label label-highlight" style="font-size: 0.80em"> Visa ***********4242,  Expiry 1 / 2019</span></h4>
+        </div>
+
         <div id="form-errors" class="alert alert-danger hidden">
         </div>
 

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="robots" content="noindex,nofollow">
+        <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/ico" href="/favicon.ico"  />
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="c76I6IyJvFEdsRrsdmX5kxreqnvS1EnZ22e4gp3d">
+
+    <title>private</title>
+
+    <!-- Styles -->
+    <link href="http://www.ridgetec.us/css/app.css" rel="stylesheet">
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd" crossorigin="anonymous">
+
+    <link href="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <link href="http://www.ridgetec.us/css/styles.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- Scripts -->
+    <script>
+        window.Laravel = {"csrfToken":"c76I6IyJvFEdsRrsdmX5kxreqnvS1EnZ22e4gp3d"};
+    </script>
+    <script src="https://use.fontawesome.com/9712be8772.js"></script>
+
+    <style>
+        @media (max-width: 1100px) {
+            .navbar-header {
+                float: none;
+            }
+            .navbar-left,.navbar-right {
+                float: none !important;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+            .navbar-collapse {
+                border-top: 1px solid transparent;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+            }
+            .navbar-fixed-top {
+                        top: 0;
+                        border-width: 0 0 1px;
+                }
+            .navbar-collapse.collapse {
+                display: none!important;
+            }
+            .navbar-nav {
+                float: none!important;
+                        margin-top: 7.5px;
+                }
+                .navbar-nav>li {
+                float: none;
+            }
+            .navbar-nav>li>a {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            .collapse.in{
+                        display:block !important;
+                }
+        }
+
+    </style>
+    <style>
+.modal {
+}
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+}
+</style>
+
+</head>
+<body>
+
+    <div id="app">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid navbar-container">
+                <div class="navbar-header">
+
+                    <!-- Collapsed Hamburger -->
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <!-- Branding Image -->
+                    <a class="navbar-brand" href="http://www.ridgetecoutdoors.com" target="_blank" title="RidgeTec Home">
+                                                Private Site
+                                            </a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                    <!-- Left Side Of Navbar -->
+
+                    <!--<ul class="nav navbar-nav">
+
+                    </ul>-->
+
+                    <!-- Right Side Of Navbar -->
+                    <ul class="nav navbar-nav navbar-right">
+
+                                                    <li class="active"><a href="http://www.ridgetec.us/plans/add-plan"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
+
+
+                            <li class=""><a href="http://www.ridgetec.us/cameras"><i class="fa fa-camera"></i> My Cameras</a></li>
+
+                            <li class=""><a href="http://www.ridgetec.us/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
+                            <li class=""><a href="http://www.ridgetec.us/help/plans">PLAN INFO</a></li>
+
+                            <li class="dropdown ">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                     Support <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="http://www.ridgetec.us/help/quick-start">Camera Quick Start Guide</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Kevin <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                                                                    <a href="http://www.ridgetec.us/admin"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>
+                                                                                <a href="http://www.ridgetec.us/logout"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="http://www.ridgetec.us/logout" method="POST" style="display: none;">
+                                            <input type="hidden" name="_token" value="c76I6IyJvFEdsRrsdmX5kxreqnvS1EnZ22e4gp3d">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                                            </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="fixed-navbar-container">
+            <div class="container">
+                                            </div>
+        </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="panel panel-default panel-primary custom-settings-panel">
+
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Configure Plan Renewal (Auto-Bill)
+                        <strong>8944503540145562672</strong>
+                    </h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="col-md-6">
+
+                        <form method="POST" action="http://www.ridgetec.us/plans/setup-plan" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                            <input name="_token" type="hidden" value="c76I6IyJvFEdsRrsdmX5kxreqnvS1EnZ22e4gp3d">
+                            <input name="mode" type="hidden" value="setup">
+                            <input name="planid" type="hidden" value="6">
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <h4>Select a Rate Tier below
+                                    <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/>
+                                    </h4>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="alert alert-default alert-ratetier">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="label-tier">BRONZE</div>
+                                                <p class="tier-desc">2500 Points per Month</p>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier" checked value="15" ><span style="color:white;">8.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00179]</span><br />Initial Month  @ 5000 Points</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-default alert-ratetier">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="label-tier">SILVER</div>
+                                                <p class="tier-desc">5000 Points per Month</p>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier"  value="20" >
+                                                        <span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier"  value="22" ><span style="color:white;">36.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00246]</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-default alert-ratetier">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="label-tier">GOLD</div>
+                                                <p class="tier-desc">10000 Points per Month</p>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier"  value="24" ><span style="color:white;">19.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00200]</span></label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier"  value="26" ><span style="color:white;">57.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00193]</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-default alert-ratetier">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="label-tier">PLATINUM PRO</div>
+                                                <p class="tier-desc">20000 Points per Month</p>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier"  value="28" ><span style="color:white;">26.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00135]</span></label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label><input type="radio" name="tier"  value="30" ><span style="color:white;">77.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00130]</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <span class="help-block"> Each tier indicates the <span style="color:white">cost</span> and the <span style="color:white">duration</span> in months.  The price is for the entire period.<br /><br />
+                                    <span style="color:white"><strong>Example: If you select a 3 Month tier under SILVER, you are paying for all 3 months. The total points awarded upfront will be 15,000.  You camera can utilize these points at any rate during the 63month period.</strong></span><br/> <br />
+                                    To the right of each tier pricing is a <span style="color:white">Cost Per Point</span> amount.  The cpp tells you what it costs you per point as your camera uploads media
+                                    files to the portal.  Of course, the lower the cpp then the cheaper it is to operate your camera at that tier. Please make a note of the points cost per upload on this page
+                                    to better understand your points requirements.<br /><br />
+                                    <strong>Unused Points are not carried over into future periods.</strong>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="inputSmall">Points Reserve</label>
+                                <div class="col-md-8">
+                                    <select id="reserve" class="bs-select form-control input-sm"   name="reserve"><option value="no">No Thanks</option><option value="10" selected="selected">$10.00</option><option value="20">$20.00</option></select>
+                                    <span class="help-block"> Apply a Points Reserve in order to ensure your camera continues to operate until you can renew the data plan (no service interruption).
+                                        The Reserve amount you pay for now converts into points that remain on your account until needed, for example, if you run out of points
+                                        during a normal period, your camera will continue to operate and use the points reserve. Reserve Points
+                                        cost you the same as standard plan points.  There is no hidden price hike here.<br /><br />
+                                        <strong>Note: you will need a Points reserve if you plan to use Remote Control which requires SMS commands sent to the camera.</strong>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="inputSmall">Auto Reserve</label>
+                                <div class="col-md-8">
+                                    <div style="margin-top:10px;">
+
+                                    <span class="button-checkbox">
+                                        <button type="button" class="btn btn-default btn-xs" data-color="info">Automatically Refill Reserve ($10)</button>
+                                        <input type="checkbox" class="hidden" name="auto-reserve" id="auto-reserve" checked />
+                                    </span>
+
+                                    <span class="help-block"> Select to have the system automatically refill your Reserve Points any time they run out.
+                                        This will keep your camera running without interruption of service.  If you use all your points in a given period and as well all your Reserve Points,
+                                        then as needed the system will charge your credit card on file another $10 and refill your points reserve. Otherwise, your
+                                        camera will be suspended.<br />
+                                        You can change this setting later at any time under My Account Data Plans.
+                                    </span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-7">
+                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-saved"></i> Save Setup</button>
+                                    <a href="/plans/cancel" class="btn btn-sm btn-warning">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-6">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    </div>
+</div>
+        <div id="help_panel" class="side-panel hidden" style="overflow-y: auto;">
+
+                <div style="position: fixed;"><a class="btn btn-sm btn-default btn-info help_close" style="border-radius: 25px 0px 0px 25px;"><i class="fa fa-times"></i></a></div>
+                <div id="help_content">
+                </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <!-- Jquery-ui -->
+    <script src="http://www.ridgetec.us/jquery-ui-1.12.1/jquery-ui.js"></script>
+
+    <script src="http://www.ridgetec.us/js/button-checkbox.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+
+    <!--<script src="http://www.ridgetec.us/js/gallery.js"></script>-->
+    <script src="http://www.ridgetec.us/js/jquery.slidereveal.min.js"></script>
+    <script>
+    $(document).ready(function(){
+
+        $( ".ToggleHelp" ).click(function() {
+            //alert('Toggle');
+            var id = $(this).attr('help-id');
+
+            $(".side-panel").removeClass('hidden');
+
+            $("#help_content").html($('#' + id).html());
+            $("#help_panel").slideReveal("toggle");
+        });
+
+
+        $( ".help_close" ).click(function() {
+            //alert('help close');
+            $("#help_panel").slideReveal("hide");
+        });
+
+        $(function() {
+            var ww = $( window ).width();
+            if (ww < 481) {
+                p = '85%';
+            }
+            else {
+                p = '50%';
+            }
+            var params = {
+              push: false,
+              overlay: true,
+              width: p,
+              position: "right",
+              //top: 60,
+              speed: 500
+            };
+
+            $("#help_panel").slideReveal(
+                    params
+                    );
+        });
+
+    });
+    </script>
+    <script type="text/javascript">
+$(document).ready(function(){
+    });
+</script>
+</body>
+</html>

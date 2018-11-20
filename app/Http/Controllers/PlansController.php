@@ -533,4 +533,32 @@ class PlansController extends Controller
         session()->flash('success', 'Cancel Success');
         return redirect()->back();
     }
+
+    public function renew(Plan $plan) {
+//return $plan;
+
+        $portal = 0; //$request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
+//        $data['sel_menu'] = 'my_plans';
+//        $user->update($data);
+
+        $user_id = $user->id;
+        $plans = DB::table('plans')
+            ->where('user_id', $user_id)
+            //->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+//        $portal = $user->portal;
+        //return view('plans._usa', compact('portal', 'user', 'plans'));
+//        return view('plans._usa', compact('portal', 'user'));
+        return view('plans._australia', compact('portal', 'user'));
+    }
+
+    public function setup(Request $request) {
+return $request;
+
+    }
 }

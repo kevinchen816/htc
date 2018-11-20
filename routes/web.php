@@ -184,6 +184,9 @@ Route::get('/de/plans/add-plan','PlansController@view_germany')->name('add.plan.
 
 Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
 
+Route::get('/plans/setup-renewal/{plan}', 'PlansController@renew')->name('plans.renew');
+Route::post('/plans/setup-plan','PlansController@setup')->name('plans-setup');
+
 Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
 Route::resource('/plans', 'PlansController');
 Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
