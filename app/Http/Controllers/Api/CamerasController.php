@@ -3151,12 +3151,12 @@ if ($err == 0) { /* for test */
     }
 
     public function OverviewSettings($camera) {
-        //$obj = $camera;
-        $obj = json_decode($camera->settings);
-
         $txt = '';
         $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
         $txt .= '<br/>';
+
+        $obj = json_decode($camera->settings);
+        if (!$obj) { return $txt; }
 
         $txt .= $this->ovItemShowEx($this->itemCameraMode(), $obj->cameramode); // camera_mode
         if ($camera->camera_mode == 'p') {

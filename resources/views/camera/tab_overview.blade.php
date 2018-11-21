@@ -30,6 +30,7 @@
         </div>
     </div>
 
+@if ($camera->last_settings)
     <div class="panel panel-default panel-primary custom-settings-panel mobile-nopadding-nomargin">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -43,7 +44,7 @@
             </div>
         </div>
     </div>
-
+@endif
 </div>
 
 <div class="col-md-6 mobile-nopadding-nomargin">
