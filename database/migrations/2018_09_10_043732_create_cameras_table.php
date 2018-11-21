@@ -52,6 +52,7 @@ class CreateCamerasTable extends Migration
             /* settings */
             $table->string('camera_mode')->default('p');        // p, v
             $table->integer('photo_resolution')->default(4);    // 2, 4, 6, 8, 12
+            $table->integer('photo_flash')->default(2);         // 1, 2, 3
             $table->integer('photo_burst')->default(1);         // 1, 2, 3
             $table->integer('burst_delay')->default(250);       // 250, 500, 1000, 3000ms
 
@@ -125,6 +126,7 @@ class CreateCamerasTable extends Migration
 
             $table->dateTime('last_hb')->nullable();
             $table->dateTime('last_photo')->nullable();
+            $table->dateTime('last_video')->nullable();
             $table->dateTime('last_schedule')->nullable();
             $table->dateTime('last_settings')->nullable();      // Last Downloaded
 

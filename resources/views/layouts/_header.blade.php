@@ -33,14 +33,12 @@
                         <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
-                    <li class={{ ($user->sel_menu == 'cart') ? "active" : "" }}>
-                        <!--<a href="http://www.ridgetec.us/shop/cart">-->
-                        <a href="">
+                    <!--<li class={{ ($user->sel_menu == 'cart') ? "active" : "" }}>
+                        <a href="http://www.ridgetec.us/shop/cart">
                             <span class="glyphicon glyphicon-shopping-cart"> </span>
                             <div class="badge">1</div>
                         </a>
-                    </li>
-
+                    </li>-->
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>

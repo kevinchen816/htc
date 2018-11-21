@@ -7,9 +7,9 @@
                 <div class="well well-sm">
                     <h4>
                         My Camera Data Plans
-                        <!--<span class="pull-right">
+                        <span class="pull-right">
                             <button class="btn btn-sm btn-primary" type="submit">Save Changes</button>
-                        </span>-->
+                        </span>
                     </h4>
                 </div>
             </div>

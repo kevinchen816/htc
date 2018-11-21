@@ -153,26 +153,26 @@ class PlansController extends Controller
         }
 
         /* Stripe - create customer id */
-        if ($request->mode == 'new') {
-            $stripeToken = $_POST['stripeToken'];
-            if (!$user->stripe_id) {
-                // $ret = $user->createAsStripeCustomer($stripeToken);
-                $ret = $user->createAsStripeCustomer($stripeToken, [
-                    // 'currency' => 'usd',
-                ]);
-            }
-        }
+//        if ($request->mode == 'new') {
+//            $stripeToken = $_POST['stripeToken'];
+//            if (!$user->stripe_id) {
+//                // $ret = $user->createAsStripeCustomer($stripeToken);
+//                $ret = $user->createAsStripeCustomer($stripeToken, [
+//                    // 'currency' => 'usd',
+//                ]);
+//            }
+//        }
 
         /* Stripe - subscribe plan */
-        $subscription_name = $iccid; //'89860117851014783481'
-        $plan_id = 'plan_5000_1m_us';
-        // $plan_id = 'plan_100_1d_us';
-        if (!$request['auto-bill']) {
-            $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
-        } else {
-            $user->newSubscription($subscription_name, $plan_id)->create();
-        }
-        // $user->subscription($subscription_name)->cancel();
+//        $subscription_name = $iccid; //'89860117851014783481'
+//        $plan_id = 'plan_5000_1m_us';
+//        // $plan_id = 'plan_100_1d_us';
+//        if (!$request['auto-bill']) {
+//            $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+//        } else {
+//            $user->newSubscription($subscription_name, $plan_id)->create();
+//        }
+//        // $user->subscription($subscription_name)->cancel();
 
         /* create Plan */
         //$user = Auth::user();

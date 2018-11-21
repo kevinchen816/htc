@@ -169,7 +169,7 @@ class CamerasController extends Controller
             'China'         => 'CN',
             'Europe'        => 'EU',
         );
-        $array['help'] = '';
+        $array['help'] = 'Select the country where the camera is located.';
         return $array;
     }
 
@@ -204,6 +204,18 @@ class CamerasController extends Controller
             '12MP 16:9' => '12',
         );
         $array['help'] = 'Use this setting to control the size of the Photo saved on the SD Card.';
+        return $array;
+    }
+
+    public function itemPhotoFlash() {
+        //$array['title'] = 'Photo Flash';
+        $array['title'] = 'Flash';
+        $array['options'] = array(
+            'Bright'    => '1',
+            'Balanced'  => '2',
+            'Low Blur'  => '3',
+        );
+        $array['help'] = '';
         return $array;
     }
 
@@ -262,7 +274,7 @@ class CamerasController extends Controller
             'Standard High (1024x)'     => '10',
             'High Def (1280x)'          => '11',
         );
-        $array['help'] = '';
+        $array['help'] = 'This determines the frame size of the video in pixels, or how wide it is when viewed on your computer monitor. A higher resolution means the video file saved to the SD card is larger and when uploaded uses more battery and costs more image points from your data plan, but it will have more detail on the other hand.';
         return $array;
     }
 
@@ -277,7 +289,7 @@ class CamerasController extends Controller
             '15fps' => '15',
             '30fps' => '30',
         );
-        $array['help'] = '';
+        $array['help'] = 'Frame rate does not affect the size of the video file captured or reduce the points used to upload to the portal. A lower frame rate in low motion will improve the quality of each frame while motion blur may increase. A faster frame rate may reduce motion blur when there is higher motion and may reduce the image quality of each frame. Every environment is different. Please experiment to find the right value for your environment and needs.';
         return $array;
     }
 
@@ -293,7 +305,7 @@ class CamerasController extends Controller
             '8X'                => '2400',
             '16X/Highest Cost'  => '5000',
         );
-        $array['help'] = '';
+        $array['help'] = 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.';
         return $array;
     }
 
@@ -310,7 +322,7 @@ class CamerasController extends Controller
             '9s'    => '9',
             '10s'   => '10',
         );
-        $array['help'] = '';
+        $array['help'] = 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.';
         return $array;
     }
 
@@ -383,6 +395,16 @@ class CamerasController extends Controller
     }
 
     /* Timelapse */
+    public function itemTimeLapse() {
+        $array['title'] = 'Time Lapse';
+        $array['options'] = array(
+            'On'    => 'on',
+            'Off'   => 'off',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
     public function itemTimelapseStartTime() {
         $array['title'] = 'Timelapse Start Time';
         $array['type'] = 'hhmm';
@@ -473,7 +495,7 @@ class CamerasController extends Controller
             'Instant'   => 'instant',
             'Schedule'  => 'schedule',
         );
-        $array['help'] = '';
+        $array['help'] = 'In [Instant] the camera will capture a photo or video then attach to the network and upload the file. In [Schedule] it will wake up either when the timer is up (Schedule Interval) or when the file limit is reached (File Limit) and upload the pending files to the server. Using [Schedule] will save battery because it reduces the handshaking that occurs each time the camera has to connect to the network (5 to 10 seconds per photo in Instant mode). The mobile app will recieve a notification as each scheduled upload starts and completes. The Action tab will show the scheduled event and the number of photos uploaded.';
         return $array;
     }
 
@@ -484,7 +506,7 @@ class CamerasController extends Controller
             'Every 2 Hours' => '2h',
             'Every 4 Hours' => '4h',
         );
-        $array['help'] = '';
+        $array['help'] = 'The camera will use a timer to wake up and determine if there are files to upload based on the interval you select. If there are pending files, they will be uploaded to the server at that time.';
         return $array;
     }
 
@@ -496,7 +518,7 @@ class CamerasController extends Controller
             '40 Files'  => '40',
             '50 Files'  => '50',
         );
-        $array['help'] = '';
+        $array['help'] = 'As the camera captures photos or videos, it will maintain a file count. If the file count reaches your selected File Limit, then the camera will attach to the network at that time (not the Scheduled Interval) and upload all pending files. A lower limit may increase network connections and use more battery, while a higher value may reduce network connections and battery usage. File Limit will be more important during periods of high activity. If the File Limit is not reached in a schedule interval period then it has no effect. File Limit is the only way to ensure that all media files captured will get uploaded to the pportal.';
         return $array;
     }
 
@@ -509,7 +531,7 @@ class CamerasController extends Controller
             'Every 8 Hours' => '8h',
             'Every 12 Hours'=> '12h',
         );
-        $array['help'] = '';
+        $array['help'] = 'This timer will fire on the specified interval and will send a status to the server. The mobile app will recieve a notification when this occurs. This lets you know your camera is still functioning and its curent status. It will also process any pending Action items you have queued like High-Res Max, Video, Original, Settings.';
         return $array;
     }
 
@@ -527,7 +549,7 @@ class CamerasController extends Controller
             '9m' => '9',
             '10m'=> '10',
         );
-        $array['help'] = '';
+        $array['help'] = 'Use this setting to control the amount of time the camera will remain online, per event, processing pending action requests. A shorter time means the camera can return to PIR mode more quickly and continue capturing Photo and Video, otherwise the camera is busy and may miss PIR events due to action item processing. A longer time means your pending Action items should get completed sooner if the queue is large.';
         return $array;
     }
 
@@ -547,95 +569,285 @@ class CamerasController extends Controller
             'Disabled'  => 'off',
             '24 Hour'   => '24h',
         );
-        $array['help'] = '';
+        $array['help'] = 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.';
         return $array;
     }
 
-    //public function cvtQuietTime($value) {
-    //    if ($value < 60) {          // 0-59 (0s-59s)
-    //        $txt = $value.'s';
-    //    } else if ($value <= 119) { // 60-119 (1m-60m)
-    //        $txt = ($value-59).'m';
-    //    } else {                    // 119-142 (1h-24h)
-    //        $txt = ($value-118).'h';
-    //    }
-    //    return $txt;
-    //}
+    public function itemBattery($battery) {
+        if ($battery === 'f') {
+            $battery = '<i class="fa fa-battery-full" style="color: lime;"> </i> 100%';
+        } else if ($battery === 'h') {
+            $battery = '<i class="fa fa-battery-three-quarters" style="color: greenyellow;"> </i> 75 %';
+        } else if ($battery === 'm') {
+            $battery = '<i class="fa fa-battery-half" style="color: yellow;"> </i> 50 %';
+        } else if ($battery === 'l') {
+            $battery = '<i class="fa fa-battery-quarter" style="color: orange;"> </i> 25 %';
+        } else if ($battery === 'e') {
+            $battery = '<i class="fa fa-battery-empty" style="color: red;"> </i> 0 %';
+        //} else {
+        //    $battery = '[Unknown]';
+        }
+        return $battery;
+    }
 
-    public function cvtScheduleFileLimit($value) {
-        $txt = $value.' Files';
+    /*----------------------------------------------------------------------------------*/
+    public function ovItemShow($title, $value, $empty_txt=null) {
+        if (empty($value) && $empty_txt) {
+            $value = $empty_txt;
+        }
+
+        $txt = '';
+        $txt .= '<div class="row">';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        $txt .= '<span class="pull-right">'.$title .'</span>';
+        $txt .= '</div>';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        $txt .= '<strong>'.$value.'</strong>';
+        $txt .= '</div>';
+        $txt .= '</div>';
         return $txt;
     }
 
-    //public function cvtHeartbeatInterval($value) {
-    //    if ($value == 1) {
-    //        $txt = 'Every Hour';
-    //    } else if ($value == 2) {
-    //        $txt = 'Every 2 Hours';
-    //    } else if ($value == 4) {
-    //        $txt = 'Every 4 Hours';
-    //    } else if ($value == 8) {
-    //        $txt = 'Every 8 Hours';
-    //    } else if ($value == 12) {
-    //        $txt = 'Every 12 Hours';
-    //    } else {
-    //        $txt = $value;
-    //    }
-    //    return $txt;
-    //}
-
-    public function cvtActionProcessTimeLimit($value) {
-        if ($value == 5) {
-            $txt = 'Default ('.$value.'m)';
+    public function ovItemShowEx($array, $field_value, $title=null) {
+        if (!empty($array['type'])) {
+            $type = $array['type'];
         } else {
-            $txt = $value.'m';
+            $type = 'select';
         }
+
+        if ($type == 'input') {
+            $value = $field_value;
+        } else if ($type == 'hhmm') {
+            $value = substr($field_value, 0, 5); /* 23:59:00 */
+        } else {
+            $value = array_search($field_value, $array['options']);
+            $value = ($value) ? : $field_value;
+        }
+        $title = ($title) ? : $array['title'];
+        return $this->ovItemShow($title, $value);
+    }
+
+    public function stItemOption($id, $array, $field_name, $title = null) {
+        // $id = $camera->id;
+        $camera = Camera::findOrFail($id);
+
+        $zz = $id.'_'.$field_name;
+        $title = ($title) ? : $array['title'];
+        if (isset($array['help'])) {
+            $help  = $array['help'];
+        }
+
+        if (!empty($array['type'])) {
+            $type = $array['type'];
+        } else {
+            $type = 'select';
+        }
+
+        if ($type == 'hhmm') {
+            $field_value = substr($camera[$field_name], 0, 5); /* 23:59:00 */
+        } else {
+            $field_value = $camera[$field_name];
+        }
+
+        /* Camera Mode:camera_mode=p */
+        // $txt .= '<div>'.$title.':'.$field_name.'='.$field_value.'</div>';
+
+        /*
+            <div class="form-group" id="field-wrapper-54-cameramode">
+                <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
+                <div class="col-md-7">
+                    <select id="54_cameramode" class="bs-select form-control input-sm" name="54_cameramode">
+                        <option value="p" selected="selected">Photo</option>
+                        <option value="v">Video</option>
+                    </select>
+            ** OR **
+                    <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" maxlength="30" value="yyy" placeholder="zzz">
+            ** OR **
+                    <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" pattern="[0-9]{6}" value="yyy" placeholder="zzz">
+
+                    <span class="help-block"> .....</span>
+                </div>
+            </div>
+        */
+        $txt = '';
+        //$txt .= '<div class="form-group hidden" id="field-wrapper-'.$id.'-'.$field_name.'">';
+        $txt .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
+        $txt .=      '<label class="col-md-4 control-label" for="inputSmall">'.$title.'</label>';
+        $txt .=      '<div class="col-md-7">';
+
+        if ($type == 'input') {
+            $format = $array['format'];
+            $placeholder = $array['placeholder'];
+            // if (!empty($array['pattern']) {
+            //     $pattern = $array['pattern'];
+            //     //<input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw" pattern="[0-9]{6}" value="xxx" placeholder="xxx">
+            //     $txt .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" pattern="'.$pattern.'" value="'.$field_value.'" placeholder="'.$placeholder.'">';
+
+            // } else if (!empty($array['maxlength']) {
+            // $maxlength = $array['maxlength'];
+
+            /*<input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc" maxlength="30" value="xxx" placeholder="xxx">*/
+            $txt .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" '.$format.' value="'.$field_value.'" placeholder="'.$placeholder.'">';
+            // }
+
+        } else {
+            $options = $array['options'];
+            /*<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">*/
+            $txt .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
+            foreach ($options as $key => $value) {
+                /*<option value="p" selected="selected">Photo</option>*/
+                $selected = ($value == $field_value) ? 'selected="selected"' : '';
+                $txt .= '<option value="'.$value.'" '.$selected.'>'.$key.'</option>';
+            }
+            $txt .= '</select>';
+        }
+
+        if (!empty($help)) {
+            //$txt .= '<span class="help-block">'.$help.'</span>';
+            $txt .= '<span class="help-block-hidden hidden">'.$help.'</span>';
+        }
+        $txt .= '</div></div>';
         return $txt;
     }
 
-    public function cvtRemoteControl($value) {
-        if ($value == 'off') {
-            $txt = 'Disable';
-        } else if ($value == 'on') {
-            $txt = 'Enable';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
+    public function stRegion($region) {
+        $regions = array(
+            'USA' => array(
+                'title' => 'United States',
+                'options' => array(
+                    'Eastern Time'                     => 'America/New_York',
+                    'Central Time'                     => 'America/Chicago',
+                    'Mountain Time'                    => 'America/Denver',
+                    'Mountain Time (no DST)'           => 'America/Phoenix',
+                    'Pacific Time'                     => 'America/Los_Angeles',
+                    'Alaska Time'                      => 'America/Anchorage',
+                    'Hawaii-Aleutian'                  => 'America/Adak',
+                    'Hawaii-Aleutian Time (no DST)'    => 'Pacific/Honolulu',
+                ),
+            ),
+            'CA' => array(
+                'title' => 'Canada',
+                'options' => array(
+                    'Atlantic'     => 'Canada/Atlantic',
+                    'Central'      => 'Canada/Central',
+                    'Eastern'      => 'Canada/Eastern',
+                    'Mountain'     => 'Canada/Mountain',
+                    'Newfoundland' => 'Canada/Newfoundland',
+                    'Pacific'      => 'Canada/Pacific',
+                    'Saskatchewan' => 'Canada/Saskatchewan',
+                    'Yukon'        => 'Canada/Yukon',
 
-    public function cvtEveryHour($value) {
-        $value = intval($value);
-        if ($value == 1) {
-            $txt = 'Every Hour';
-        //} else if ($value == 2) {
-        //    $txt = 'Every 2 Hours';
-        //} else if ($value == 4) {
-        //    $txt = 'Every 4 Hours';
-        //} else if ($value == 8) {
-        //    $txt = 'Every 8 Hours';
-        //} else if ($value == 12) {
-        //    $txt = 'Every 12 Hours';
-        } else {
-            //$txt = $value;
-            $txt = 'Every '.$value.' Hours';
-        }
-        return $txt;
+                ),
+            ),
+            'AU' => array(
+                'title' => 'Australia',
+                'options' => array(
+                    'Adelaide'     => 'Australia/Adelaide',
+                    'Brisbane'     => 'Australia/Brisbane',
+                    'Broken_Hill'  => 'Australia/Broken_Hill',
+                    'Currie'       => 'Australia/Currie',
+                    'Darwin'       => 'Australia/Darwin',
+                    'Eucla'        => 'Australia/Eucla',
+                    'Hobart'       => 'Australia/Hobart',
+                    'Lindeman'     => 'Australia/Lindeman',
+                    'Lord_Howe'    => 'Australia/Lord_Howe',
+                    'Melbourne'    => 'Australia/Melbourne',
+                    'Perth'        => 'Australia/Perth',
+                    'Sydney'       => 'Australia/Sydney',
+                ),
+            ),
+            'CN' => array(
+                'title' => 'China',
+                'options' => array(
+                    'Hong_Kong' => 'Asia/Hong_Kong',
+                ),
+            ),
+            'EU' => array(
+                'title' => 'Europe',
+                'options' => array(
+                    'Amsterdam'    => 'Europe/Amsterdam',
+                    'Andorra'      => 'Europe/Andorra',
+                    'Astrakhan'    => 'Europe/Astrakhan',
+                    'Athens'       => 'Europe/Athens',
+                    'Belgrade'     => 'Europe/Belgrade',
+                    'Berlin'       => 'Europe/Berlin',
+                    'Bratislava'   => 'Europe/Bratislava',
+                    'Brussels'     => 'Europe/Brussels',
+                    'Bucharest'    => 'Europe/Bucharest',
+                    'Budapest'     => 'Europe/Budapest',
+                    'Busingen'     => 'Europe/Busingen',
+                    'Chisinau'     => 'Europe/Chisinau',
+                    'Copenhagen'   => 'Europe/Copenhagen',
+                    'Dublin'       => 'Europe/Dublin',
+                    'Gibraltar'    => 'Europe/Gibraltar',
+                    'Guernsey'     => 'Europe/Guernsey',
+                    'Helsinki'     => 'Europe/Helsinki',
+                    'Isle_of_Man'  => 'Europe/Isle_of_Man',
+                    'Istanbul'     => 'Europe/Istanbul',
+                    'Jersey'       => 'Europe/Jersey',
+                    'Kaliningrad'  => 'Europe/Kaliningrad',
+                    'Kiev'         => 'Europe/Kiev',
+                    'Kirov'        => 'Europe/Kirov',
+                    'Lisbon'       => 'Europe/Lisbon',
+                    'Ljubljana'    => 'Europe/Ljubljana',
+                    'London'       => 'Europe/London',
+                    'Luxembourg'   => 'Europe/Luxembourg',
+                    'Madrid'       => 'Europe/Madrid',
+                    'Malta'        => 'Europe/Malta',
+                    'Mariehamn'    => 'Europe/xMariehamnxxx',
+                    'Minsk'        => 'Europe/Minsk',
+                    'Monaco'       => 'Europe/Monaco',
+                    'Moscow'       => 'Europe/Moscow',
+                    'Oslo'         => 'Europe/Oslo',
+                    'Paris'        => 'Europe/Paris',
+                    'Podgorica'    => 'Europe/Podgorica',
+                    'Prague'       => 'Europe/Prague',
+                    'Riga'         => 'Europe/Riga',
+                    'Rome'         => 'Europe/Rome',
+                    'Samara'       => 'Europe/Samara',
+                    'San_Marino'   => 'Europe/San_Marino',
+                    'Sarajevo'     => 'Europe/Sarajevo',
+                    'Saratov'      => 'Europe/Saratov',
+                    'Simferopol'   => 'Europe/Simferopol',
+                    'Skopje'       => 'Europe/Skopje',
+                    'Sofia'        => 'Europe/Sofia',
+                    'Stockholm'    => 'Europe/Stockholm',
+                    'Tallinn'      => 'Europe/Tallinn',
+                    'Tirane'       => 'Europe/Tirane',
+                    'Ulyanovsk'    => 'Europe/Ulyanovsk',
+                    'Uzhgorod'     => 'Europe/Uzhgorod',
+                    'Vaduz'        => 'Europe/Vaduz',
+                    'Vatican'      => 'Europe/Vatican',
+                    'Vienna'       => 'Europe/Vienna',
+                    'Vilnius'      => 'Europe/Vilnius',
+                    'Volgograd'    => 'Europe/Volgograd',
+                    'Warsaw'       => 'Europe/Warsaw',
+                    'Zagreb'       => 'Europe/Zagreb',
+                    'Zaporozhye'   => 'Europe/Zaporozhye',
+                    'Zurich'       => 'Europe/Zurich',
+                ),
+            ),
+        );
+
+        $array = $regions[$region];
+        $array['help'] = 'Select the time zone where the camera is located.';
+        return $array;
     }
 
     // 0S - 10S - 59S - 1M - 59M - 1H - 12H - 24H
     // 0    10    59    60   118   119  130   142
-    public function cvtValueToHMS($value) {
-        if ($value < 60) {          // 0-59 (0s-59s)
-            $txt = $value;//.'s';
-        } else if ($value < 119) {  // 60-118 (1m-59m)
-            $txt = $value-59;//.'m';
-        } else {                    // 119-142 (1h-24h)
-            $txt = $value-118;//.'h';
-        }
-        return $txt;
-    }
+    //public function cvtValueToHMS($value) {
+    //    if ($value < 60) {          // 0-59 (0s-59s)
+    //        $txt = $value;//.'s';
+    //    } else if ($value < 119) {  // 60-118 (1m-59m)
+    //        $txt = $value-59;//.'m';
+    //    } else {                    // 119-142 (1h-24h)
+    //        $txt = $value-118;//.'h';
+    //    }
+    //    return $txt;
+    //}
 
+    /*----------------------------------------------------------------------------------*/
     public function TXT_Source($txt) {
         if ($txt == 'setup') {
             $txt = 'Menu';
@@ -651,24 +863,6 @@ class CamerasController extends Controller
         return $txt;
     }
 
-    public function ovItemShow($list, $v, $title = null) {
-        $title = ($title) ? : $list['title'];
-        $value = array_search($v, $list['options']);
-        $value = ($value) ? : $v;
-
-        $txt = '';
-        $txt .= '<div class="row">';
-        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-        $txt .= '<span class="pull-right">' . $title . '</span>';
-        $txt .= '</div>';
-        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-        $txt .= '<strong>' . $value . '</strong>';
-        $txt .= '</div>';
-        $txt .= '</div>';
-        return $txt;
-    }
-
-    /*----------------------------------------------------------------------------------*/
     public function TXT_UploadResolution($txt) {
         if ($txt == 1) {
             $txt = 'Standard Low';
@@ -2825,165 +3019,27 @@ if ($err == 0) { /* for test */
     }
 
     /*----------------------------------------------------------------------------------*/
-    /* Common Functions */
-    public function CameraFieldValueConvert($camera, $column, $name) {
-        //if ($name == 'off') {
-        //    $name = 'Off';
-
-       //
-        //} else if ($name == 'on') {
-        //    $name = 'On';
-
-       //
-        //} else
-        if ($column == 'camera_mode') {
-            if ($name === 'p') {
-                $name = 'Photo';
-            } else if ($name === 'v') {
-                $name = 'Video';
-            } else {
-                $name = 'Unknown';
-            }
-
-        } else if ($column == 'model_id') {
-            if ($name === 'lookout-na') {
-                $name = 'Lookout North America';
-            } else {
-                $name = 'Unknown';
-            }
-
-        } elseif ($column == 'signal_value') {
-
-        } elseif ($column == 'battery') {
-            if ($name === 'f') {
-                $name = '<i class="fa fa-battery-full" style="color: lime;"> </i> ';
-                $name .= '100%';
-            } else if ($name === 'h') {
-                $name = '<i class="fa fa-battery-three-quarters" style="color: lime;"> </i> ';
-                $name .= '75%';
-            } else if ($name === 'm') {
-                $name = '<i class="fa fa-battery-half" style="color: lime;"> </i> ';
-                $name .= '50%';
-            } else if ($name === 'l') {
-                $name = '<i class="fa fa-battery-quarter" style="color: lime;"> </i> ';
-                $name .= '25%';
-            } else if ($name === 'e') {
-                $name = '<i class="fa fa-battery-empty" style="color: lime;"> </i> ';
-                $name .= '0%';
-            } else {
-                $name = 'Unknown';
-            }
-
-        } elseif ($column == 'card_size') {
-            settype($name, "integer");
-            //$value = round($name/1024, 2);
-            $value = number_format($name / 1024, 2);
-            $name  = $value . ' GB';
-
-        } elseif ($column == 'card_space') {
-            //$free = $name;
-            //$size = $camera['card_size'];
-            //settype($free, 'integer');
-            //settype($size, 'integer');
-            //$percent = round(($free / $size) * 100, 0);
-            //
-            //$free = round($free / 1024, 2);
-            //$name = $free . ' GB (' . $percent . '% free)';
-
-            settype($name, "integer");
-            //$value = round($name/1024, 2);
-            $value = number_format($name / 1024, 2);
-            $name  = $value . ' GB';
-
-        //} elseif ($column == 'points_used') {
-        //    $used    = $name;
-        //    $size    = $camera['points'];
-        //
-        //    if ($size > 0) {
-        //        $percent = round(($used / $size) * 100, 0);
-
-       //
-        //        $used = number_format($used, 2, '.', '');
-        //        $name = $used . ' (' . $percent . '%free)';
-        //    }
-        }
-        return $name;
-    }
-
-    public function CameraPanelItem($name, $value) {
-        $txt = '';
-        $txt .= '<div class="row">';
-        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-        $txt .= '<span class="pull-right">' . $name . '</span>';
-        $txt .= '</div>';
-        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-        $txt .= '<strong>' . $value . '</strong>';
-        $txt .= '</div>';
-        $txt .= '</div>';
-        return $txt;
-    }
-
-    public function CameraPanelBody($id, $lists) {
-        $camera = Camera::findOrFail($id);
-
-        $handle = '';
-        foreach ($lists as $key => $value) {
-            $field_name  = $key;
-            $field_value = $camera[$key];
-            $field_text  = $this->CameraFieldValueConvert($camera, $field_name, $field_value);
-//$field_text = $field_value;
-
-            $field_title = $value;
-
-            //$handle .= '<div class="row">';
-            //$handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-            //$handle .= '<span class="pull-right">' . $field_title . '</span>';
-            //$handle .= '</div>';
-            //$handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-            //$handle .= '<strong>' . $field_text . '</strong>';
-            //$handle .= '</div>';
-            //$handle .= '</div>';
-            $handle .= $this->CameraPanelItem($field_title, $field_text);
-
-            //$handle .= PHP_EOL;
-        }
-        return $handle;
-    }
-
-    /*----------------------------------------------------------------------------------*/
     /* TAB Function
     /*----------------------------------------------------------------------------------*/
     /* TAB Overview */
     public function OverviewStatus($camera) {
-        $handle = '';
-        $handle .= $this->CameraPanelItem('Description', $camera->description);
-        $handle .= $this->CameraPanelItem('Location', $camera->location);
+        $txt = '';
+        $txt .= $this->ovItemShow('Description', $camera->description);
+        $txt .= $this->ovItemShow('Location', $camera->location);
 
         $percent_signal = round(($camera->signal_value/32)*100, 2);
-        $handle .= $this->CameraPanelItem('Signal', $percent_signal.'%');
+        $txt .= $this->ovItemShow('Signal', $percent_signal.' %');
 
-        $battery = $camera->battery;
-        if ($battery === 'f') {
-            $battery = '<i class="fa fa-battery-full" style="color: lime;"> </i> 100%';
-        } else if ($battery === 'h') {
-            $battery = '<i class="fa fa-battery-three-quarters" style="color: greenyellow;"> </i> 75%';
-        } else if ($battery === 'm') {
-            $battery = '<i class="fa fa-battery-half" style="color: yellow;"> </i> 50%';
-        } else if ($battery === 'l') {
-            $battery = '<i class="fa fa-battery-quarter" style="color: orange;"> </i> 25%';
-        } else if ($battery === 'e') {
-            $battery = '<i class="fa fa-battery-empty" style="color: red;"> </i> 0%';
-        } else {
-            $battery = 'Unknown';
-        }
-        $handle .= $this->CameraPanelItem('Battery', $battery);
+        $battery = $this->itemBattery($camera->battery);
+        $txt .= $this->ovItemShow('Battery', $battery);
 
         $card_size = intval($camera->card_size);
         $card_free = intval($camera->card_space);
         $percent_card_avail = round(($card_free/$card_size)*100, 2);
-        $handle .= $this->CameraPanelItem('SD Card', $percent_card_avail.'% available');
+        $txt .= $this->ovItemShow('SD Card', $percent_card_avail.' % available');
 
-        $handle .= $this->CameraPanelItem('Temperature', $camera->temperature);
+        $txt .= $this->ovItemShow('Temperature', $camera->temperature);
+        //$txt .= $this->ovItemShow('Temperature', '&#176;C');
 
         $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
         if ($plan->points > 0) {
@@ -2993,20 +3049,20 @@ if ($err == 0) { /* for test */
             $plan_points = '';
             $plan_points .= '<div class="progress progress-points">';
             $plan_points .=     '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="'.$percent_plan_used.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_used.'%; min-height: 22px; line-height: 18px;">';
-            $plan_points .=         $percent_plan_used.'% used';
+            $plan_points .=         $percent_plan_used.' % used';
             $plan_points .=     '</div>';
             $plan_points .=     '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percent_plan_avail.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_avail.'%; min-height: 22px; line-height: 18px;">';
-            $plan_points .=         $percent_plan_avail.'% avail';
+            $plan_points .=         $percent_plan_avail.' % avail';
             $plan_points .=     '</div>';
             $plan_points .= '</div>';
 
-            $handle .= $this->CameraPanelItem('Plan Points', $plan_points);
+            $txt .= $this->ovItemShow('Plan Points', $plan_points);
         }
-        $points_reserve  = '30.00 (20000.00 points)';
-        $points_reserve .= '<br /><a href="/plans/buy-reserve/7" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Buy Reserve (<i class="fa fa-dollar-sign"></i>10)</a>';
-        $handle .= $this->CameraPanelItem('Points Reserve', $points_reserve);
-        $handle .= '<br/>';
-        return $handle;
+        //$points_reserve  = '30.00 (20000.00 points)';
+        //$points_reserve .= '<br /><a href="/plans/buy-reserve/7" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Buy Reserve (<i class="fa fa-dollar-sign"></i>10)</a>';
+        //$txt .= $this->ovItemShow('Points Reserve', $points_reserve);
+        $txt .= '<br/>';
+        return $txt;
     }
 
     public function OverviewStatus2($camera) {
@@ -3022,116 +3078,95 @@ if ($err == 0) { /* for test */
             $points_used = $plan->points_used;
         }
 
-        $handle = '';
-        $handle .= $this->CameraPanelItem('Module ID', $camera->module_id);
-        $handle .= $this->CameraPanelItem('SIM ICCID', $camera->iccid);
-        $handle .= $this->CameraPanelItem('Model', $camera->model_id); // Lookout North America
-        //$handle .= $this->CameraPanelItem('Card Size', $card_size);
-        //$handle .= $this->CameraPanelItem('Card Free', $card_free);
-        $handle .= $this->CameraPanelItem('Card Free (Size)', $card_info);
-        $handle .= $this->CameraPanelItem('Firmware', $camera->dsp_version);
-        $handle .= $this->CameraPanelItem('MCU', $camera->mcu_version);
-        //$handle .= $this->CameraPanelItem('Carrier', 'TRUPHONE');
-        $handle .= $this->CameraPanelItem('Last Connection', $camera->cellular);
-        $handle .= $this->CameraPanelItem('Plan Points', $plan->points);
-        $handle .= $this->CameraPanelItem('Points Used', $points_used);
-        return $handle;
+        $txt = '';
+        $txt .= $this->ovItemShow('Module ID', $camera->module_id);
+        $txt .= $this->ovItemShow('SIM ICCID', $camera->iccid);
+        $txt .= $this->ovItemShow('Model', $camera->model_id); // Lookout North America
+        $txt .= $this->ovItemShow('Card Free (Size)', $card_info);
+        $txt .= $this->ovItemShow('Firmware', $camera->dsp_version);
+        $txt .= $this->ovItemShow('MCU', $camera->mcu_version);
+        //$txt .= $this->ovItemShow('Carrier', 'TRUPHONE');
+        $txt .= $this->ovItemShow('Last Connection', $camera->cellular);
+        $txt .= $this->ovItemShow('Plan Points', $plan->points);
+        $txt .= $this->ovItemShow('Points Used', $points_used);
+        return $txt;
     }
 
     public function OverviewSettings($camera) {
-        $lists = array(
-//            'blockmode1'        => 'Block Mode 1',
-//            'blockmode2'        => 'Block Mode 2',
-//            'blockmode3'        => 'Block Mode 3',
-//            'blockmode4'        => 'Block Mode 4',
-//            'blockmode5'        => 'Block Mode 5',
-//            'blockmode7'        => 'Block Mode 7',
-//            'blockmode8'        => 'Block Mode 8',
-//            'blockmode9'        => 'Block Mode 9',
-//            'blockmode10'       => 'Block Mode 10',
-//            'blockmode11'       => 'Block Mode 11',
-        );
+        $txt = '';
+        $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
+        $txt .= '<br/>';
 
-        $handle = '';
-        $handle .= $this->CameraPanelItem('Last Downloaded', $camera->last_settings);
-        $handle .= '<br/>';
-
-        $handle .= $this->ovItemShow($this->itemCameraMode(), $camera->camera_mode);
-//        if ($camera->camera_mode == 'p') {
-            $handle .= $this->ovItemShow($this->itemPhotoResolution(), $camera->photo_resolution);
-            $handle .= $this->ovItemShow($this->itemPhotoBurst(), $camera->photo_burst);
-            $handle .= $this->ovItemShow($this->itemBurstDelay(), $camera->burst_delay);
-            $handle .= $this->ovItemShow($this->itemUploadResolution(), $camera->upload_resolution);
-            $handle .= $this->ovItemShow($this->itemUploadQuality(), $camera->photo_quality);
-//        } else {
-$handle .= '<br/>';
-            $handle .= $this->ovItemShow($this->itemVideoResolution(), $camera->video_resolution);
-            $handle .= $this->ovItemShow($this->itemFrameRate(), $camera->video_fps);
-            $handle .= $this->ovItemShow($this->itemQualityLevel(), $camera->video_bitrate);
-            $handle .= $this->ovItemShow($this->itemVideoLength(), $camera->video_length);
-            $handle .= $this->ovItemShow($this->itemVideoSound(), $camera->video_sound);
-//        }
-        $handle .= '<br/>';
-
-        $handle .= $this->ovItemShow($this->itemTimeStamp(), $camera->timestamp);
-        $handle .= $this->ovItemShow($this->itemDateFormat(), $camera->date_format);
-        $handle .= $this->ovItemShow($this->itemTimeFormat(), $camera->time_format);
-        $handle .= $this->ovItemShow($this->itemTemperature(), $camera->temp_unit);
-        $handle .= '<br/>';
-
-        $handle .= $this->CameraPanelItem('Quiet Time', $camera->quiettime);
-        $handle .= '<br/>';
-
-        $handle .= $this->CameraPanelItem('Time Lapse', ucwords($camera->timelapse));
-        $handle .= $this->CameraPanelItem('Timelapse Start Time', $camera->tls_start);
-        $handle .= $this->CameraPanelItem('Timelapse Stop Time', $camera->tls_stop);
-        $handle .= $this->CameraPanelItem('Timelapse Interval', $camera->tls_interval);
-        $handle .= '<br/>';
-
-        $handle .= $this->CameraPanelItem('Wireless Mode', ucwords($camera->wireless_mode));
-
-        if ($camera->wireless_mode == 'schedule') {
-            $handle .= $this->CameraPanelItem('Schedule Interval', $this->cvtEveryHour($camera->wm_schedule));
-            $handle .= $this->CameraPanelItem('Schedule File Limit', $this->cvtScheduleFileLimit($camera->wm_sclimit));
+        $txt .= $this->ovItemShowEx($this->itemCameraMode(), $camera->camera_mode);
+        if ($camera->camera_mode == 'p') {
+            $txt .= $this->ovItemShowEx($this->itemPhotoResolution(), $camera->photo_resolution);
+            $txt .= $this->ovItemShowEx($this->itemPhotoFlash(), $camera->photo_flash);
+            $txt .= $this->ovItemShowEx($this->itemPhotoBurst(), $camera->photo_burst);
+            $txt .= $this->ovItemShowEx($this->itemBurstDelay(), $camera->burst_delay);
+            $txt .= $this->ovItemShowEx($this->itemUploadResolution(), $camera->upload_resolution);
+            $txt .= $this->ovItemShowEx($this->itemUploadQuality(), $camera->photo_quality);
+        } else {
+            $txt .= $this->ovItemShowEx($this->itemVideoResolution(), $camera->video_resolution);
+            $txt .= $this->ovItemShowEx($this->itemFrameRate(), $camera->video_fps);
+            $txt .= $this->ovItemShowEx($this->itemQualityLevel(), $camera->video_bitrate);
+            $txt .= $this->ovItemShowEx($this->itemVideoLength(), $camera->video_length);
+            $txt .= $this->ovItemShowEx($this->itemVideoSound(), $camera->video_sound);
         }
-        $handle .= $this->CameraPanelItem('Heartbeat Interval', $this->cvtEveryHour($camera->hb_interval));
-        $handle .= $this->CameraPanelItem('Action Process Time Limit', $this->cvtActionProcessTimeLimit($camera->online_max_time));
-        $handle .= $this->CameraPanelItem('Remote Control', $this->cvtRemoteControl($camera->remotecontrol));
-        $handle .= $this->CameraPanelItem('Cellular Password', $camera->cellularpw);
+        $txt .= '<br/>';
 
-//        $handle .= $this->CameraPanelBody($camera->id, $lists);
-        return $handle;
+        $txt .= $this->ovItemShowEx($this->itemTimeStamp(), $camera->timestamp);
+        $txt .= $this->ovItemShowEx($this->itemDateFormat(), $camera->date_format);
+        $txt .= $this->ovItemShowEx($this->itemTimeFormat(), $camera->time_format);
+        $txt .= $this->ovItemShowEx($this->itemTemperature(), $camera->temp_unit);
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemQuietTime(), $camera->quiettime);
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemTimeLapse(), $camera->timelapse);
+        if ($camera->timelapse == 'on') {
+            $txt .= $this->ovItemShowEx($this->itemTimelapseStartTime(), $camera->tls_start);
+            $txt .= $this->ovItemShowEx($this->itemTimelapseStopTime(), $camera->tls_stop);
+            $txt .= $this->ovItemShowEx($this->itemTimelapseInterval(), $camera->tls_interval);
+        }
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemWirelessMode(), $camera->wireless_mode);
+        if ($camera->wireless_mode == 'schedule') {
+            $txt .= $this->ovItemShowEx($this->itemScheduleInterval(), $camera->wm_schedule);
+            $txt .= $this->ovItemShowEx($this->itemScheduleFileLimit(), $camera->wm_sclimit);
+        }
+        $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $camera->hb_interval);
+        $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $camera->online_max_time);
+        $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $camera->remotecontrol);
+        $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $camera->cellularpw);
+        return $txt;
     }
 
     public function OverviewEvent($camera) {
-        $lists = array(
-//            'last_contact'     => 'Last Contact',
-            'last_armed'       => 'Last Armed',
-            'arm_photos'       => 'Photos since armed',
-            'arm_points'       => 'Points since armed',
-            'last_hb'          => 'Last Heartbeat',
-            'last_photo'       => 'Last Photo',
-//            'last_schedule'    => 'Last Scheduled Upload',
-            'last_settings'    => 'Last Settings',
-//            'expected_contact' => 'Expected Contact',
-        );
-
-        $handle = $this->CameraPanelBody($camera->id, $lists);
-        return $handle;
+        $txt = '';
+        $txt .= $this->ovItemShow('Last Contact', $camera->last_contact);
+        $txt .= $this->ovItemShow('Last Armed', $camera->last_armed);
+        $txt .= $this->ovItemShow('Uploads since armed', $camera->arm_photos);
+        $txt .= $this->ovItemShow('Points since armed', $camera->arm_points);
+        $txt .= $this->ovItemShow('Last Heartbeat', $camera->last_hb);
+        $txt .= $this->ovItemShow('Last Photo', $camera->last_photo);
+        $txt .= $this->ovItemShow('Last Video', $camera->last_video);
+        $txt .= $this->ovItemShow('Last Scheduled Upload', $camera->last_schedule); // 2018/10/06 03:03:12 | success
+        $txt .= $this->ovItemShow('Last Settings', $camera->last_settings);
+        //$txt .= $this->ovItemShow('Expected Contact', $camera->expected_contact, '[Unknown]');
+        return $txt;
     }
 
     public function OverviewStatisics($camera) {
-        // $lists = array(
-        //     'description'   => 'Time Lapse Last Hour',
-        //     'description'   => 'Quiet Time Override',
-        //     'description'   => 'Motions Last 15 Mins',
-        //     'description'   => 'Motions Last Hour',
-        //     'description'   => 'Motions 5 Min Average',
-        // );
-
-        // $handle = $this->CameraPanelBody($camera->id, $lists);
-        // return $handle;
-        return '';
+        $txt = '';
+        //$txt .= $this->ovItemShow('Time Lapse Last Hour', $camera->xx);
+        ////Activity Suppression:
+        //$txt .= $this->ovItemShow('Quiet Time Override', $camera->xx);
+        //$txt .= $this->ovItemShow('Motions Last 15 Mins', $camera->xx);
+        //$txt .= $this->ovItemShow('Motions Last Hour', $camera->xx);
+        //$txt .= $this->ovItemShow('Motions 5 Min Average', $camera->xx);
+        return $txt;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -3279,209 +3314,6 @@ $handle .= '<br/>';
 
     /*----------------------------------------------------------------------------------*/
     /* TAB Settings */
-    public function stItemOption($id, $array, $field_name, $title = null) {
-        // $id = $camera->id;
-        $camera = Camera::findOrFail($id);
-
-        $zz = $id.'_'.$field_name;
-        $title = ($title) ? : $array['title'];
-        if (isset($array['help'])) {
-            $help  = $array['help'];
-        }
-
-        if (!empty($array['type'])) {
-            $type = $array['type'];
-        } else {
-            $type = 'select';
-        }
-
-        if ($type == 'hhmm') {
-            $field_value = substr($camera[$field_name], 0, 5); /* 23:59:00 */
-        } else {
-            $field_value = $camera[$field_name];
-        }
-
-        /* Camera Mode:camera_mode=p */
-        // $txt .= '<div>'.$title.':'.$field_name.'='.$field_value.'</div>';
-
-        /*
-            <div class="form-group" id="field-wrapper-54-cameramode">
-                <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
-                <div class="col-md-7">
-                    <select id="54_cameramode" class="bs-select form-control input-sm" name="54_cameramode">
-                        <option value="p" selected="selected">Photo</option>
-                        <option value="v">Video</option>
-                    </select>
-            ** OR **
-                    <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" maxlength="30" value="yyy" placeholder="zzz">
-            ** OR **
-                    <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" pattern="[0-9]{6}" value="yyy" placeholder="zzz">
-
-                    <span class="help-block"> .....</span>
-                </div>
-            </div>
-        */
-        $txt = '';
-        //$txt .= '<div class="form-group hidden" id="field-wrapper-'.$id.'-'.$field_name.'">';
-        $txt .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
-        $txt .=      '<label class="col-md-4 control-label" for="inputSmall">'.$title.'</label>';
-        $txt .=      '<div class="col-md-7">';
-
-        if ($type == 'input') {
-            $format = $array['format'];
-            $placeholder = $array['placeholder'];
-            // if (!empty($array['pattern']) {
-            //     $pattern = $array['pattern'];
-            //     //<input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw" pattern="[0-9]{6}" value="xxx" placeholder="xxx">
-            //     $txt .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" pattern="'.$pattern.'" value="'.$field_value.'" placeholder="'.$placeholder.'">';
-
-            // } else if (!empty($array['maxlength']) {
-            // $maxlength = $array['maxlength'];
-
-            /*<input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc" maxlength="30" value="xxx" placeholder="xxx">*/
-            $txt .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" '.$format.' value="'.$field_value.'" placeholder="'.$placeholder.'">';
-            // }
-
-        } else {
-            $options = $array['options'];
-            /*<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">*/
-            $txt .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
-            foreach ($options as $key => $value) {
-                /*<option value="p" selected="selected">Photo</option>*/
-                $selected = ($value == $field_value) ? 'selected="selected"' : '';
-                $txt .= '<option value="'.$value.'" '.$selected.'>'.$key.'</option>';
-            }
-            $txt .= '</select>';
-        }
-
-        if (!empty($help)) {
-            //$txt .= '<span class="help-block">'.$help.'</span>';
-        }
-        $txt .= '</div></div>';
-        return $txt;
-    }
-
-    public function stRegion($region) {
-        $regions = array(
-            'USA' => array(
-                'title' => 'United States',
-                'options' => array(
-                    'Eastern Time'                     => 'America/New_York',
-                    'Central Time'                     => 'America/Chicago',
-                    'Mountain Time'                    => 'America/Denver',
-                    'Mountain Time (no DST)'           => 'America/Phoenix',
-                    'Pacific Time'                     => 'America/Los_Angeles',
-                    'Alaska Time'                      => 'America/Anchorage',
-                    'Hawaii-Aleutian'                  => 'America/Adak',
-                    'Hawaii-Aleutian Time (no DST)'    => 'Pacific/Honolulu',
-                ),
-            ),
-            'CA' => array(
-                'title' => 'Canada',
-                'options' => array(
-                    'Atlantic'     => 'Canada/Atlantic',
-                    'Central'      => 'Canada/Central',
-                    'Eastern'      => 'Canada/Eastern',
-                    'Mountain'     => 'Canada/Mountain',
-                    'Newfoundland' => 'Canada/Newfoundland',
-                    'Pacific'      => 'Canada/Pacific',
-                    'Saskatchewan' => 'Canada/Saskatchewan',
-                    'Yukon'        => 'Canada/Yukon',
-
-                ),
-            ),
-            'AU' => array(
-                'title' => 'Australia',
-                'options' => array(
-                    'Adelaide'     => 'Australia/Adelaide',
-                    'Brisbane'     => 'Australia/Brisbane',
-                    'Broken_Hill'  => 'Australia/Broken_Hill',
-                    'Currie'       => 'Australia/Currie',
-                    'Darwin'       => 'Australia/Darwin',
-                    'Eucla'        => 'Australia/Eucla',
-                    'Hobart'       => 'Australia/Hobart',
-                    'Lindeman'     => 'Australia/Lindeman',
-                    'Lord_Howe'    => 'Australia/Lord_Howe',
-                    'Melbourne'    => 'Australia/Melbourne',
-                    'Perth'        => 'Australia/Perth',
-                    'Sydney'       => 'Australia/Sydney',
-                ),
-            ),
-            'CN' => array(
-                'title' => 'China',
-                'options' => array(
-                    'Hong_Kong' => 'Asia/Hong_Kong',
-                ),
-            ),
-            'EU' => array(
-                'title' => 'Europe',
-                'options' => array(
-                    'Amsterdam'    => 'Europe/Amsterdam',
-                    'Andorra'      => 'Europe/Andorra',
-                    'Astrakhan'    => 'Europe/Astrakhan',
-                    'Athens'       => 'Europe/Athens',
-                    'Belgrade'     => 'Europe/Belgrade',
-                    'Berlin'       => 'Europe/Berlin',
-                    'Bratislava'   => 'Europe/Bratislava',
-                    'Brussels'     => 'Europe/Brussels',
-                    'Bucharest'    => 'Europe/Bucharest',
-                    'Budapest'     => 'Europe/Budapest',
-                    'Busingen'     => 'Europe/Busingen',
-                    'Chisinau'     => 'Europe/Chisinau',
-                    'Copenhagen'   => 'Europe/Copenhagen',
-                    'Dublin'       => 'Europe/Dublin',
-                    'Gibraltar'    => 'Europe/Gibraltar',
-                    'Guernsey'     => 'Europe/Guernsey',
-                    'Helsinki'     => 'Europe/Helsinki',
-                    'Isle_of_Man'  => 'Europe/Isle_of_Man',
-                    'Istanbul'     => 'Europe/Istanbul',
-                    'Jersey'       => 'Europe/Jersey',
-                    'Kaliningrad'  => 'Europe/Kaliningrad',
-                    'Kiev'         => 'Europe/Kiev',
-                    'Kirov'        => 'Europe/Kirov',
-                    'Lisbon'       => 'Europe/Lisbon',
-                    'Ljubljana'    => 'Europe/Ljubljana',
-                    'London'       => 'Europe/London',
-                    'Luxembourg'   => 'Europe/Luxembourg',
-                    'Madrid'       => 'Europe/Madrid',
-                    'Malta'        => 'Europe/Malta',
-                    'Mariehamn'    => 'Europe/xMariehamnxxx',
-                    'Minsk'        => 'Europe/Minsk',
-                    'Monaco'       => 'Europe/Monaco',
-                    'Moscow'       => 'Europe/Moscow',
-                    'Oslo'         => 'Europe/Oslo',
-                    'Paris'        => 'Europe/Paris',
-                    'Podgorica'    => 'Europe/Podgorica',
-                    'Prague'       => 'Europe/Prague',
-                    'Riga'         => 'Europe/Riga',
-                    'Rome'         => 'Europe/Rome',
-                    'Samara'       => 'Europe/Samara',
-                    'San_Marino'   => 'Europe/San_Marino',
-                    'Sarajevo'     => 'Europe/Sarajevo',
-                    'Saratov'      => 'Europe/Saratov',
-                    'Simferopol'   => 'Europe/Simferopol',
-                    'Skopje'       => 'Europe/Skopje',
-                    'Sofia'        => 'Europe/Sofia',
-                    'Stockholm'    => 'Europe/Stockholm',
-                    'Tallinn'      => 'Europe/Tallinn',
-                    'Tirane'       => 'Europe/Tirane',
-                    'Ulyanovsk'    => 'Europe/Ulyanovsk',
-                    'Uzhgorod'     => 'Europe/Uzhgorod',
-                    'Vaduz'        => 'Europe/Vaduz',
-                    'Vatican'      => 'Europe/Vatican',
-                    'Vienna'       => 'Europe/Vienna',
-                    'Vilnius'      => 'Europe/Vilnius',
-                    'Volgograd'    => 'Europe/Volgograd',
-                    'Warsaw'       => 'Europe/Warsaw',
-                    'Zagreb'       => 'Europe/Zagreb',
-                    'Zaporozhye'   => 'Europe/Zaporozhye',
-                    'Zurich'       => 'Europe/Zurich',
-                ),
-            ),
-        );
-        return $regions[$region];
-    }
-
     public function Settings_Identification($camera) {
         $id = $camera->id;
         $txt = '';
@@ -3499,6 +3331,7 @@ $handle .= '<br/>';
         $txt = '';
         $txt .= $this->stItemOption($id, $this->itemCameraMode(), 'camera_mode');
         $txt .= $this->stItemOption($id, $this->itemPhotoResolution(), 'photo_resolution');
+        $txt .= $this->stItemOption($id, $this->itemPhotoFlash(), 'photo_flash');
         $txt .= $this->stItemOption($id, $this->itemPhotoBurst(), 'photo_burst');
         $txt .= $this->stItemOption($id, $this->itemBurstDelay(), 'burst_delay');
         $txt .= $this->stItemOption($id, $this->itemUploadResolution(), 'upload_resolution');
@@ -3510,6 +3343,7 @@ $handle .= '<br/>';
         $txt .= $this->stItemOption($id, $this->itemVideoLength(), 'video_length');
         $txt .= $this->stItemOption($id, $this->itemVideoSound(), 'video_sound');
 
+        $txt .= '<hr>';
         $txt .= $this->stItemOption($id, $this->itemTimeStamp(), 'timestamp');
         $txt .= $this->stItemOption($id, $this->itemDateFormat(), 'date_format');
         $txt .= $this->stItemOption($id, $this->itemTimeFormat(), 'time_format');
@@ -3539,8 +3373,8 @@ $handle .= '<br/>';
         $txt .= $this->stItemOption($id, $this->itemScheduleFileLimit(), 'wm_sclimit');
         $txt .= $this->stItemOption($id, $this->itemHeartbeatInterval(), 'hb_interval');
         $txt .= $this->stItemOption($id, $this->itemActionProcessTimeLimit(), 'online_max_time');
-        $txt .= $this->stItemOption($id, $this->itemCellularPassword(), 'cellularpw');
         $txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
+        $txt .= $this->stItemOption($id, $this->itemCellularPassword(), 'cellularpw');
         return $txt;
     }
 
@@ -3668,7 +3502,7 @@ $handle .= '<br/>';
         foreach ($cameras as $camera) {
             $camera_id    = $camera->id;
             $description  = $camera->description;
-            $battery      = $this->CameraFieldValueConvert($camera, 'battery', $camera->battery);
+            $battery = $this->itemBattery($camera->battery);
             $last_contact = $camera->last_contact;
 
             if (!empty($camera->last_savename)) {
@@ -4178,8 +4012,6 @@ $handle .= '<br/>';
             $key = $dt_week[$week-1];
             $data[$key] = sprintf("%06x", $value);
         }
-        //return var_dump($data);
-//        return $data;
 
         foreach ($Control_Settings as $key) {
             //$name = $camera_id.'_'.$key;
@@ -4188,7 +4020,6 @@ $handle .= '<br/>';
                 $data[$key] = $request[$camera_id.'_'.$key];
             }
         }
-//return $data;
 
         if (isset($request[$camera_id.'_timelapse'])) {
             foreach ($Timelapse_Settings as $key) {

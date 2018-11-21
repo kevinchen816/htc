@@ -66,6 +66,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     Control Settings
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
@@ -78,6 +79,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     Trigger Settings
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
@@ -110,6 +112,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     Wireless Settings
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
@@ -123,6 +126,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     Block Mode Settings (Kevin Test)
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
@@ -276,8 +280,8 @@
             if (val == 'p') {
                 $('#field-wrapper-{{ $camera->id }}-photo_resolution').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-photo_resolution').show(250);
-                $('#field-wrapper-{{ $camera->id }}-flash').removeClass('hidden');
-                $('#field-wrapper-{{ $camera->id }}-flash').show(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_flash').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-photo_flash').show(250);
                 $('#field-wrapper-{{ $camera->id }}-upload_resolution').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-upload_resolution').show(250);
                 $('#field-wrapper-{{ $camera->id }}-photo_quality').removeClass('hidden');
@@ -366,6 +370,20 @@
                 $('#{{ $camera->id }}_tls_interval').val("off");
             };
         })
+
+        $( ".toggle-help-block" ).click(function() {
+
+            if ($('.help-block-hidden')[0]) {
+                $('.help-block-hidden').addClass('help-block');
+                $('.help-block').removeClass('help-block-hidden');
+                $('.help-block').removeClass('hidden');
+            } else {
+                $('.help-block').addClass('help-block-hidden');
+                $('.help-block').addClass('hidden');
+                $('.help-block-hidden').removeClass('help-block');
+            }
+
+        });
 
         $( "#Togglebutton{{ $camera->id }}-on" ).click(function() {
           $('.custom-time-button').prop('checked', true).change()

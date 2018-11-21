@@ -47,98 +47,12 @@
 </div>
 
 <div class="col-md-6 mobile-nopadding-nomargin">
-
     <div class="panel panel-default panel-primary custom-settings-panel mobile-nopadding-nomargin">
         <div class="panel-heading">
             <h4 class="panel-title">Event Data</h4>
         </div>
         <div class="panel-body">
             {!! $cc->OverviewEvent($camera) !!}
-
-<hr>
-
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Contact</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/10/18 04:00:17</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Armed</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/09/17 12:42:49</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Uploads since armed</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>1155</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Points since armed</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>1790</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Heartbeat</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/10/18 04:00:17</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Photo</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/10/18 03:06:32</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Video</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/10/15 10:43:58</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Scheduled Upload</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/10/06 03:03:12 | success</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Last Settings</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>2018/10/16 08:00:06</strong>
-</div>
-</div>
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<span class="pull-right">Expected Contact</span>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">
-<strong>[Unknown]</strong>
-</div>
-</div>
-
         </div>
     </div>
-
 </div>
