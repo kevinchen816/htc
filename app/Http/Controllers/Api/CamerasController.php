@@ -4042,7 +4042,7 @@ if ($err == 0) { /* for test */
             "hb_interval",
             "online_max_time",
             "cellularpw",
-//            "remotecontrol",
+            "remotecontrol",
         );
 
         $Timelapse_Settings = array(
