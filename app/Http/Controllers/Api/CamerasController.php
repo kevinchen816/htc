@@ -618,7 +618,9 @@ class CamerasController extends Controller
         if ($type == 'input') {
             $value = $field_value;
         } else if ($type == 'hhmm') {
-            $value = substr($field_value, 0, 5); /* 23:59:00 */
+            //$value = substr($field_value, 0, 5); /* 23:59:00 */
+            $value = date('H:i', strtotime($field_value));
+
         } else {
             $value = array_search($field_value, $array['options']);
             $value = ($value) ? : $field_value;
@@ -645,6 +647,7 @@ class CamerasController extends Controller
 
         if ($type == 'hhmm') {
             $field_value = substr($camera[$field_name], 0, 5); /* 23:59:00 */
+            //$field_value = date('H:i', strtotime($camera[$field_name]));
         } else {
             $field_value = $camera[$field_name];
         }
@@ -1917,6 +1920,7 @@ class CamerasController extends Controller
 
             $datalist['cameramode']        = (string) $camera->camera_mode;
             $datalist['photoresolution']   = (string) $camera->photo_resolution;
+            $datalist['flash']             = (string) $camera->photo_flash;
             $datalist['video_resolution']  = (string) $camera->video_resolution;
             $datalist['video_rate']        = (string) $camera->video_fps;
             $datalist['video_bitrate']     = (string) $camera->video_bitrate;
@@ -1973,7 +1977,10 @@ class CamerasController extends Controller
             $datalist['blockmode11'] = $camera->blockmode11;
 
             $cameras = DB::table('cameras')->where('id', $camera->id);
-            $cameras->update(['remotecurrent' => $camera->remotecontrol]);
+            $cameras->update([
+                'remotecurrent' => $camera->remotecontrol,
+                'settings' => json_encode($datalist),
+            ]);
 
             if ($request->RequestID) {
                 $param = array(
@@ -3092,7 +3099,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function OverviewSettings($camera) {
+    public function OverviewSettingsX($camera) {
         $txt = '';
         $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
         $txt .= '<br/>';
@@ -3140,6 +3147,60 @@ if ($err == 0) { /* for test */
         $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $camera->online_max_time);
         $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $camera->remotecontrol);
         $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $camera->cellularpw);
+        return $txt;
+    }
+
+    public function OverviewSettings($camera) {
+        //$obj = $camera;
+        $obj = json_decode($camera->settings);
+
+        $txt = '';
+        $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemCameraMode(), $obj->cameramode); // camera_mode
+        if ($camera->camera_mode == 'p') {
+            $txt .= $this->ovItemShowEx($this->itemPhotoResolution(), $obj->photoresolution); // photo_resolution
+            $txt .= $this->ovItemShowEx($this->itemPhotoFlash(), $obj->flash); // photo_flash
+            $txt .= $this->ovItemShowEx($this->itemPhotoBurst(), $obj->photoburst); // photo_burst
+            $txt .= $this->ovItemShowEx($this->itemBurstDelay(), $obj->burst_delay);
+            $txt .= $this->ovItemShowEx($this->itemUploadResolution(), $obj->upload_resolution);
+            $txt .= $this->ovItemShowEx($this->itemUploadQuality(), $obj->photo_quality);
+        } else {
+            $txt .= $this->ovItemShowEx($this->itemVideoResolution(), $obj->video_resolution);
+            $txt .= $this->ovItemShowEx($this->itemFrameRate(), $obj->video_rate); // video_fps
+            $txt .= $this->ovItemShowEx($this->itemQualityLevel(), $obj->video_bitrate);
+            $txt .= $this->ovItemShowEx($this->itemVideoLength(), $obj->video_length);
+            $txt .= $this->ovItemShowEx($this->itemVideoSound(), $obj->video_sound);
+        }
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemTimeStamp(), $obj->timestamp);
+        $txt .= $this->ovItemShowEx($this->itemDateFormat(), $obj->date_format);
+        $txt .= $this->ovItemShowEx($this->itemTimeFormat(), $obj->time_format);
+        $txt .= $this->ovItemShowEx($this->itemTemperature(), $obj->temperature); // temp_unit
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemQuietTime(), $obj->quiettime);
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemTimeLapse(), $obj->timelapse);
+        if ($obj->timelapse == 'on') {
+            $txt .= $this->ovItemShowEx($this->itemTimelapseStartTime(), $obj->tls_start);
+            $txt .= $this->ovItemShowEx($this->itemTimelapseStopTime(), $obj->tls_stop);
+            $txt .= $this->ovItemShowEx($this->itemTimelapseInterval(), $obj->tls_interval);
+        }
+        $txt .= '<br/>';
+
+        $txt .= $this->ovItemShowEx($this->itemWirelessMode(), $obj->wireless_mode);
+        if ($obj->wireless_mode == 'schedule') {
+            $txt .= $this->ovItemShowEx($this->itemScheduleInterval(), $obj->wm_schedule);
+            $txt .= $this->ovItemShowEx($this->itemScheduleFileLimit(), $obj->wm_sclimit);
+        }
+        $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $obj->hb_interval);
+        $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $obj->online_max_time);
+        $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $obj->remotecontrol);
+        $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $obj->cellularpw);
         return $txt;
     }
 
@@ -3964,6 +4025,7 @@ if ($err == 0) { /* for test */
             /* Basic Settings */
             "camera_mode",
             "photo_resolution",
+            "photo_flash",
             "photo_burst",
             "burst_delay",
             "upload_resolution",
