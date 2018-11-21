@@ -2368,14 +2368,19 @@ if ($err == 0) { /* for test */
             $name  = $value . ' GB';
 
         } elseif ($column == 'card_space') {
-            $free = $name;
-            $size = $camera['card_size'];
-            settype($free, 'integer');
-            settype($size, 'integer');
-            $percent = round(($free / $size) * 100, 0);
+            //$free = $name;
+            //$size = $camera['card_size'];
+            //settype($free, 'integer');
+            //settype($size, 'integer');
+            //$percent = round(($free / $size) * 100, 0);
+            //
+            //$free = round($free / 1024, 2);
+            //$name = $free . ' GB (' . $percent . '% free)';
 
-            $free = round($free / 1024, 2);
-            $name = $free . ' GB (' . $percent . '% free)';
+            settype($name, "integer");
+            //$value = round($name/1024, 2);
+            $value = number_format($name / 1024, 2);
+            $name  = $value . ' GB';
 
         //} elseif ($column == 'points_used') {
         //    $used    = $name;
@@ -2392,6 +2397,19 @@ if ($err == 0) { /* for test */
         return $name;
     }
 
+    public function CameraPanelItem($name, $value) {
+        $txt = '';
+        $txt .= '<div class="row">';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        $txt .= '<span class="pull-right">' . $name . '</span>';
+        $txt .= '</div>';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        $txt .= '<strong>' . $value . '</strong>';
+        $txt .= '</div>';
+        $txt .= '</div>';
+        return $txt;
+    }
+
     public function CameraPanelBody($id, $lists) {
         $camera = Camera::findOrFail($id);
 
@@ -2399,18 +2417,21 @@ if ($err == 0) { /* for test */
         foreach ($lists as $key => $value) {
             $field_name  = $key;
             $field_value = $camera[$key];
-            $field_title = $value;
             $field_text  = $this->CameraFieldValueConvert($camera, $field_name, $field_value);
-//$field_text  = $field_value;
+//$field_text = $field_value;
 
-            $handle .= '<div class="row">';
-            $handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-            $handle .= '<span class="pull-right">' . $field_title . '</span>';
-            $handle .= '</div>';
-            $handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-            $handle .= '<strong>' . $field_text . '</strong>';
-            $handle .= '</div>';
-            $handle .= '</div>';
+            $field_title = $value;
+
+            //$handle .= '<div class="row">';
+            //$handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+            //$handle .= '<span class="pull-right">' . $field_title . '</span>';
+            //$handle .= '</div>';
+            //$handle .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+            //$handle .= '<strong>' . $field_text . '</strong>';
+            //$handle .= '</div>';
+            //$handle .= '</div>';
+            $handle .= $this->CameraPanelItem($field_title, $field_text);
+
             //$handle .= PHP_EOL;
         }
         return $handle;
@@ -2421,58 +2442,127 @@ if ($err == 0) { /* for test */
     /*----------------------------------------------------------------------------------*/
     /* TAB Overview */
     public function OverviewStatus($camera) {
-        $lists = array(
-            'description'  => 'Description',
-//            'location'     => 'Location',
-            'module_id'    => 'Module ID',
-            'iccid'        => 'SIM ICCID',
-//            'points'       => 'Plan Points',
-//            'points_used'  => 'Points Used',
-//            'model_id'     => 'Model',
-            'signal_value' => 'Signal',
-            'battery'      => 'Battery',
-            'card_size'    => 'Card Size',
-            'card_space'   => 'Card Space',
-            'temperature'  => 'Temperature',
-            'dsp_version'  => 'Firmware',
-            'mcu_version'  => 'MCU',
-            'cellular'     => 'Last Connection',
-        );
+        $handle = '';
+        $handle .= $this->CameraPanelItem('Description', $camera->description);
+        $handle .= $this->CameraPanelItem('Location', $camera->location);
 
-        $handle = $this->CameraPanelBody($camera->id, $lists);
+        $percent_signal = round(($camera->signal_value/32)*100, 2);
+        $handle .= $this->CameraPanelItem('Signal', $percent_signal.'%');
+
+        $battery = $camera->battery;
+        if ($battery === 'f') {
+            $battery = '<i class="fa fa-battery-full" style="color: lime;"> </i> 100%';
+        } else if ($battery === 'h') {
+            $battery = '<i class="fa fa-battery-three-quarters" style="color: greenyellow;"> </i> 75%';
+        } else if ($battery === 'm') {
+            $battery = '<i class="fa fa-battery-half" style="color: yellow;"> </i> 50%';
+        } else if ($battery === 'l') {
+            $battery = '<i class="fa fa-battery-quarter" style="color: orange;"> </i> 25%';
+        } else if ($battery === 'e') {
+            $battery = '<i class="fa fa-battery-empty" style="color: red;"> </i> 0%';
+        } else {
+            $battery = 'Unknown';
+        }
+        $handle .= $this->CameraPanelItem('Battery', $battery);
+
+        $card_size = intval($camera->card_size);
+        $card_free = intval($camera->card_space);
+        $percent_card_avail = round(($card_free/$card_size)*100, 2);
+        $handle .= $this->CameraPanelItem('SD Card', $percent_card_avail.'% available');
+
+        $handle .= $this->CameraPanelItem('Temperature', $camera->temperature);
+
+        $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+        if ($plan->points > 0) {
+            $percent_plan_used = round(($plan->points_used/$plan->points)*100, 4);
+            $percent_plan_avail = 100-$percent_plan_used;
+
+            $plan_points = '';
+            $plan_points .= '<div class="progress progress-points">';
+            $plan_points .=     '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="'.$percent_plan_used.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_used.'%; min-height: 22px; line-height: 18px;">';
+            $plan_points .=         $percent_plan_used.'% used';
+            $plan_points .=     '</div>';
+            $plan_points .=     '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percent_plan_avail.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_avail.'%; min-height: 22px; line-height: 18px;">';
+            $plan_points .=         $percent_plan_avail.'% avail';
+            $plan_points .=     '</div>';
+            $plan_points .= '</div>';
+
+            $handle .= $this->CameraPanelItem('Plan Points', $plan_points);
+        }
+        $points_reserve  = '30.00 (20000.00 points)';
+        $points_reserve .= '<br /><a href="/plans/buy-reserve/7" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Buy Reserve (<i class="fa fa-dollar-sign"></i>10)</a>';
+        $handle .= $this->CameraPanelItem('Points Reserve', $points_reserve);
+        $handle .= '<br/>';
+        return $handle;
+    }
+
+    public function OverviewStatus2($camera) {
+        $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+        $card_size = number_format(intval($camera->card_size)/1024, 2).'GB';
+        $card_free = number_format(intval($camera->card_space)/1024, 2).'GB';
+        $card_info = $card_free.' ('.$card_size.')';
+
+        if ($plan->points > 0) {
+            $percent = round(($plan->points_used/$plan->points)*100, 4);
+            $points_used = $plan->points_used.' ('.$percent.'%)';
+        } else {
+            $points_used = $plan->points_used;
+        }
+
+        $handle = '';
+        $handle .= $this->CameraPanelItem('Module ID', $camera->module_id);
+        $handle .= $this->CameraPanelItem('SIM ICCID', $camera->iccid);
+        $handle .= $this->CameraPanelItem('Model', $camera->model_id); // Lookout North America
+        //$handle .= $this->CameraPanelItem('Card Size', $card_size);
+        //$handle .= $this->CameraPanelItem('Card Free', $card_free);
+        $handle .= $this->CameraPanelItem('Card Free (Size)', $card_info);
+        $handle .= $this->CameraPanelItem('Firmware', $camera->dsp_version);
+        $handle .= $this->CameraPanelItem('MCU', $camera->mcu_version);
+        //$handle .= $this->CameraPanelItem('Carrier', 'TRUPHONE');
+        $handle .= $this->CameraPanelItem('Last Connection', $camera->cellular);
+        $handle .= $this->CameraPanelItem('Plan Points', $plan->points);
+        $handle .= $this->CameraPanelItem('Points Used', $points_used);
         return $handle;
     }
 
     public function OverviewSettings($camera) {
         $lists = array(
-            'last_settings'     => 'Last Downloaded',
-            'camera_mode'       => 'Camera Mode',
-            'photo_resolution'  => 'Photo Resolution',
-            'video_resolution'  => 'Video Resolution',
-            'video_fps'         => 'Capture Rate',
-            'video_bitrate'     => 'Quality Level',
-            'video_length'      => 'Video Duration',
-            'video_sound'       => 'Video Sound',
-            'photo_burst'       => 'Photo Burst',
-            'burst_delay'       => 'Burst Delay',
-            'upload_resolution' => 'Upload Resolution',
-            'photo_quality'     => 'Upload Quality',
-            'timestamp'         => 'Time Stamp',
-            'date_format'       => 'Date Format',
-            'time_format'       => 'Time Format',
-            'temp_unit'         => 'Temperature',
-            'quiettime'         => 'Quiet Time',
-            'timelapse'         => 'Time Lapse',
-            'tls_start'         => 'Timelapse Start Time',
-            'tls_stop'          => 'Timelapse Stop Time',
-            'tls_interval'      => 'Timelapse Interval',
-            'wireless_mode'     => 'Wireless Mode',
-            'wm_schedule'       => 'Schedule Interval',
-            'wm_sclimit'        => 'Schedule File Limit',
-            'hb_interval'       => 'Heartbeat Interval',
-            'online_max_time'   => 'Max Online Time',
-//            'cellularpw'        => 'Cellular Password',
+//            'last_settings'     => 'Last Downloaded',
+
+//            'camera_mode'       => 'Camera Mode',
+//            'photo_resolution'  => 'Photo Resolution',
+//            'photo_burst'       => 'Photo Burst',
+//            'burst_delay'       => 'Burst Delay',
+//            'upload_resolution' => 'Upload Resolution',
+//            'photo_quality'     => 'Upload Quality',
+
+//            'video_resolution'  => 'Video Resolution',
+//            'video_fps'         => 'Capture Rate',
+//            'video_bitrate'     => 'Quality Level',
+//            'video_length'      => 'Video Duration',
+//            'video_sound'       => 'Video Sound',
+
+//            'timestamp'         => 'Time Stamp',
+//            'date_format'       => 'Date Format',
+//            'time_format'       => 'Time Format',
+//            'temp_unit'         => 'Temperature',
+
+//            'quiettime'         => 'Quiet Time',
+
+//            'timelapse'         => 'Time Lapse',
+//            'tls_start'         => 'Timelapse Start Time',
+//            'tls_stop'          => 'Timelapse Stop Time',
+//            'tls_interval'      => 'Timelapse Interval',
+
+//            'wireless_mode'     => 'Wireless Mode',
+//            'wm_schedule'       => 'Schedule Interval',
+//            'wm_sclimit'        => 'Schedule File Limit',
+//            'hb_interval'       => 'Heartbeat Interval',
+//            'online_max_time'   => 'Max Online Time',
 //            'remotecontrol'     => 'Remote Control',
+//            'cellularpw'        => 'Cellular Password',
+
+
 //            'blockmode1'        => 'Block Mode 1',
 //            'blockmode2'        => 'Block Mode 2',
 //            'blockmode3'        => 'Block Mode 3',
@@ -2485,8 +2575,254 @@ if ($err == 0) { /* for test */
 //            'blockmode11'       => 'Block Mode 11',
         );
 
-        $handle = $this->CameraPanelBody($camera->id, $lists);
+        $handle = '';
+        $handle .= $this->CameraPanelItem('Last Downloaded', $camera->last_settings);
+        $handle .= '<br/>';
+
+        $handle .= $this->CameraPanelItem('Camera Mode', $this->cvtCameraMode($camera->camera_mode));
+//        if ($camera->camera_mode == 'p') {
+            $photo_burst = ($camera->photo_burst == 1) ? 'Off' : $camera->photo_burst;
+
+            $handle .= $this->CameraPanelItem('Photo Resolution', $this->cvtPhotoResolution($camera->photo_resolution));
+            $handle .= $this->CameraPanelItem('Photo Burst', $photo_burst);
+            $handle .= $this->CameraPanelItem('Burst Delay', $camera->burst_delay.'ms');
+            $handle .= $this->CameraPanelItem('Upload Resolution', $this->cvtUploadResolution($camera->upload_resolution));
+            $handle .= $this->CameraPanelItem('Upload Quality', $this->cvtUploadQuality($camera->photo_quality));
+//        } else {
+$handle .= '<br/>';
+            $handle .= $this->CameraPanelItem('Video Resolution', $this->cvtVideoResolution($camera->video_resolution));
+            $handle .= $this->CameraPanelItem('Frame Rate', $camera->video_fps.'fps');
+            $handle .= $this->CameraPanelItem('Quality Level', $this->cvtQualityLevel($camera->video_bitrate));
+            $handle .= $this->CameraPanelItem('Video Length', $camera->video_length.'s');
+            $handle .= $this->CameraPanelItem('Video Sound', ucwords($camera->video_sound));
+//        }
+        $handle .= '<br/>';
+
+        $handle .= $this->CameraPanelItem('Time Stamp', ucwords($camera->timestamp));
+        $handle .= $this->CameraPanelItem('Date Format', $camera->date_format);
+        $handle .= $this->CameraPanelItem('Time Format', $this->cvtTimeFormat($camera->time_format));
+        $handle .= $this->CameraPanelItem('Temperature', $this->cvtTempUnit($camera->temp_unit));
+        $handle .= '<br/>';
+
+        $handle .= $this->CameraPanelItem('Quiet Time', $camera->quiettime);
+        $handle .= '<br/>';
+
+        $handle .= $this->CameraPanelItem('Time Lapse', ucwords($camera->timelapse));
+        $handle .= $this->CameraPanelItem('Timelapse Start Time', $camera->tls_start);
+        $handle .= $this->CameraPanelItem('Timelapse Stop Time', $camera->tls_stop);
+        $handle .= $this->CameraPanelItem('Timelapse Interval', $camera->tls_interval);
+        $handle .= '<br/>';
+
+        $handle .= $this->CameraPanelItem('Wireless Mode', ucwords($camera->wireless_mode));
+
+        if ($camera->wireless_mode == 'schedule') {
+            $handle .= $this->CameraPanelItem('Schedule Interval', $this->cvtEveryHour($camera->wm_schedule));
+            $handle .= $this->CameraPanelItem('Schedule File Limit', $this->cvtScheduleFileLimit($camera->wm_sclimit));
+        }
+        $handle .= $this->CameraPanelItem('Heartbeat Interval', $this->cvtEveryHour($camera->hb_interval));
+        $handle .= $this->CameraPanelItem('Action Process Time Limit', $this->cvtActionProcessTimeLimit($camera->online_max_time));
+        $handle .= $this->CameraPanelItem('Remote Control', $this->cvtRemoteControl($camera->remotecontrol));
+        $handle .= $this->CameraPanelItem('Cellular Password', $camera->cellularpw);
+
+//        $handle .= $this->CameraPanelBody($camera->id, $lists);
         return $handle;
+    }
+
+    public function cvtCameraMode($value) {
+        return ($value == 'p') ? 'Photo' : 'Video';
+    }
+
+    public function cvtPhotoResolution($value) {
+        if ($value == 4) {
+            $txt = '4MP 16:9';
+        } else if ($value == 6) {
+            $txt = '6MP 16:9';
+        } else if ($value == 8) {
+            $txt = '8MP 16:9';
+        } else if ($value == 12) {
+            $txt = '12MP 16:9';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+    public function cvtUploadResolution($value) {
+        if ($value == 1) {
+            $txt = 'Standard Low';
+        } else if ($value == 2) {
+            $txt = 'Standard Medium';
+        } else if ($value == 3) {
+            $txt = 'Standard High';
+        } else if ($value == 4) {
+            $txt = 'High Def (1280x)';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+    public function cvtUploadQuality($value) {
+        if ($value == 1) {
+            $txt = 'Low';
+        } else if ($value == 2) {
+            $txt = 'Medium';
+        } else if ($value == 3) {
+            $txt = 'High';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+/*
+Video Resolution    Standard Low (640x)
+Frame Rate          4fps
+Quality Level       1X/Lowest Cost
+Video Length        5s
+Video Sound         On
+*/
+
+    public function cvtVideoResolution($value) {
+        if ($value == 8) {
+            $txt = 'Standard Low (640x)';
+        } else if ($value == 9) {
+            $txt = 'Standard Medium (800x)';
+        } else if ($value == 10) {
+            $txt = 'Standard High (1024x)';
+        } else if ($value == 11) {
+            $txt = 'High Def (1280x)';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+
+/*
+<option value="300">1X/Lowest Cost</option>
+<option value="600">2X</option>
+<option value="900">3X</option>
+<option value="1200">4X/Balanced</option>
+<option value="1500">5X</option>
+<option value="1800">6X</option>
+<option value="2400">8X</option>
+<option value="5000">16X/Highest Cost</option>
+*/
+    public function cvtQualityLevel($value) {
+        if ($value == 300) {
+            $txt = '1X/Lowest Cost';
+        } else if ($value == 600) {
+            $txt = '2X';
+        } else if ($value == 900) {
+            $txt = '3X';
+        } else if ($value == 1200) {
+            $txt = '4X/Balanced';
+        } else if ($value == 1500) {
+            $txt = '5X';
+        } else if ($value == 1800) {
+            $txt = '6X';
+        } else if ($value == 2400) {
+            $txt = '8X';
+        } else if ($value == 5000) {
+            $txt = '16X/Highest Cost';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+    public function cvtTimeFormat($value) {
+        return $value.' Hour';
+    }
+
+    public function cvtTempUnit($value) {
+        return ($value == 'c') ? 'Celsius' : 'Fahrenheit';
+    }
+
+    public function cvtQuietTime($value) {
+        if ($value < 60) {          // 0-59 (0s-59s)
+            $txt = $value.'s';
+        } else if ($value <= 119) { // 60-119 (1m-60m)
+            $txt = ($value-59).'m';
+        } else {                    // 119-142 (1h-24h)
+            $txt = ($value-118).'h';
+        }
+        return $txt;
+    }
+
+    public function cvtScheduleFileLimit($value) {
+        $txt = $value.' Files';
+        return $txt;
+    }
+
+    //public function cvtHeartbeatInterval($value) {
+    //    if ($value == 1) {
+    //        $txt = 'Every Hour';
+    //    } else if ($value == 2) {
+    //        $txt = 'Every 2 Hours';
+    //    } else if ($value == 4) {
+    //        $txt = 'Every 4 Hours';
+    //    } else if ($value == 8) {
+    //        $txt = 'Every 8 Hours';
+    //    } else if ($value == 12) {
+    //        $txt = 'Every 12 Hours';
+    //    } else {
+    //        $txt = $value;
+    //    }
+    //    return $txt;
+    //}
+
+    public function cvtActionProcessTimeLimit($value) {
+        if ($value == 5) {
+            $txt = 'Default ('.$value.'m)';
+        } else {
+            $txt = $value.'m';
+        }
+        return $txt;
+    }
+
+    public function cvtRemoteControl($value) {
+        if ($value == 'off') {
+            $txt = 'Disable';
+        } else if ($value == 'on') {
+            $txt = 'Enable';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+    public function cvtEveryHour($value) {
+        $value = intval($value);
+        if ($value == 1) {
+            $txt = 'Every Hour';
+        //} else if ($value == 2) {
+        //    $txt = 'Every 2 Hours';
+        //} else if ($value == 4) {
+        //    $txt = 'Every 4 Hours';
+        //} else if ($value == 8) {
+        //    $txt = 'Every 8 Hours';
+        //} else if ($value == 12) {
+        //    $txt = 'Every 12 Hours';
+        } else {
+            //$txt = $value;
+            $txt = 'Every '.$value.' Hours';
+        }
+        return $txt;
+    }
+
+    // 0S - 10S - 59S - 1M - 59M - 1H - 12H - 24H
+    // 0    10    59    60   118   119  130   142
+    public function cvtValueToHMS($value) {
+        if ($value < 60) {          // 0-59 (0s-59s)
+            $txt = $value;//.'s';
+        } else if ($value < 119) {  // 60-118 (1m-59m)
+            $txt = $value-59;//.'m';
+        } else {                    // 119-142 (1h-24h)
+            $txt = $value-118;//.'h';
+        }
+        return $txt;
     }
 
     public function OverviewEvent($camera) {
@@ -2914,13 +3250,13 @@ if ($err == 0) { /* for test */
                 'help'        => '',
             ),
 
-            //'location'    => array(
-            //    'title'       => 'Camera Location',
-            //    'type'        => 'input',
-            //    'format'      => 'maxlength="30"',
-            //    'placeholder' => 'Input Camera Location',
-            //    'help'        => '',
-            //),
+            'location'    => array(
+                'title'       => 'Camera Location',
+                'type'        => 'input',
+                'format'      => 'maxlength="30"',
+                'placeholder' => 'Input Camera Location',
+                'help'        => '',
+            ),
 
             'region' => array(
                 'title' => 'Camera Region',

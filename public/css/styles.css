@@ -214,3 +214,13 @@ p.teaser {
     background-color: #777;
     color: lime;
 }
+
+.panel-moreinfo {
+    background-color: #555;
+}
+
+.progress-points {
+   margin-bottom: 2px!important;
+   height: 20px;
+   background-color: #777;
+}

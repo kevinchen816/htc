@@ -75,7 +75,11 @@
                 }
         }
 
-    </style>
+       .progress-points {
+          margin-bottom: 2px!important;
+          height: 20px;
+          background-color: #777;
+       }                                   </style>
 <link rel="stylesheet" href="/css/thumbnail-gallery.css" media="screen">
 <link rel="stylesheet" href="/css/gallery.css" media="screen">
 <style>
