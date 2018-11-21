@@ -141,6 +141,501 @@ class CamerasController extends Controller
         return $message;
     }
 
+    /*----------------------------------------------------------------------------------*/
+    public function itemCameraDescription() {
+        $array['title'] = 'Camera Description';
+        $array['type'] = 'input';
+        $array['format'] = 'maxlength="30"';
+        $array['placeholder'] = 'Input Camera Description';
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemCameraLocation() {
+        $array['title'] = 'Camera Location';
+        $array['type'] = 'input';
+        $array['format'] = 'maxlength="30"';
+        $array['placeholder'] = 'Input Camera Location';
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemCameraRegion() {
+        $array['title'] = 'Camera Region';
+        $array['options'] = array(
+            'United States' => 'USA',
+            'Canada'        => 'CA',
+            'Australia'     => 'AU',
+            'China'         => 'CN',
+            'Europe'        => 'EU',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function itemCameraMode() {
+        $array['title'] = 'Camera Mode';
+        $array['options'] = array(
+            'Photo' => 'p',
+            'Video' => 'v',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    /* Photo */
+    public function itemPhotoResolution() {
+        //$array = array(
+        //    'title' => 'Photo Resolution',
+        //    'options' => array(
+        //        '4MP 16:9'  => '4',
+        //        '6MP 16:9'  => '6',
+        //        '8MP 16:9'  => '8',
+        //        '12MP 16:9' => '12',
+        //    ),
+        //    'help' => 'Use this setting to control the size of the Photo saved on the SD Card.',
+        //);
+        $array['title'] = 'Photo Resolution';
+        $array['options'] = array(
+            '4MP 16:9'  => '4',
+            '6MP 16:9'  => '6',
+            '8MP 16:9'  => '8',
+            '12MP 16:9' => '12',
+        );
+        $array['help'] = 'Use this setting to control the size of the Photo saved on the SD Card.';
+        return $array;
+    }
+
+    public function itemPhotoBurst() {
+        $array['title'] = 'Photo Burst';
+        $array['options'] = array(
+            'Off'       => '1',
+            '2 Photos'  => '2',
+            '3 Photos'  => '3',
+        );
+        $array['help'] = 'Photo Burst is used to set the number of photos captured per event in Photo Mode. It is not used for Video mode. If Cellular mode is ON, then the camera will upload each photo of the burst to the portal.';
+        return $array;
+    }
+
+    public function itemBurstDelay() {
+        $array['title'] = 'Burst Delay';
+        $array['options'] = array(
+            '250ms' => '250',
+            '500ms' => '500',
+            '1s'    => '1000',
+            '3s'    => '3000',
+        );
+        $array['help'] = 'The Burst Delay is the elapsed time between each burst photo.';
+        return $array;
+    }
+
+    public function itemUploadResolution() {
+        $array['title'] = 'Upload Resolution';
+        $array['options'] = array(
+            'Standard Low'      => '1',
+            'Standard Medium'   => '2',
+            'Standard High'     => '3',
+            'High Def (1280x)'  => '4',
+        );
+        $array['help'] = 'Use this setting to control the size of the uploaded thumbnail.';
+        return $array;
+    }
+
+    public function itemUploadQuality() {
+        $array['title'] = 'Upload Quality';
+        $array['options'] = array(
+            'Low'       => '1',
+            'Medium'    => '2',
+            'High'      => '3',
+        );
+        $array['help'] = 'Use this setting to control the image quality and size of the uploaded thumbnail. A higher quality means clearer images but larger file sizes when uploaded to the portal. Use a Photo quality that best meets your application and budget. [Standard] quality will reduce the size and cost to upload each photo to the portal and is generally good enough for most applications. Keep in mind that you can request a High-res Max or the Original file from the SD card when/if you need it for more detail on this particular photo event.';
+        return $array;
+    }
+
+    /* Video */
+    public function itemVideoResolution() {
+        $array['title'] = 'Video Resolution';
+        $array['options'] = array(
+            'Standard Low (640x)'       => '8',
+            'Standard Medium (800x)'    => '9',
+            'Standard High (1024x)'     => '10',
+            'High Def (1280x)'          => '11',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemFrameRate() {
+        $array['title'] = 'Frame Rate';
+        $array['options'] = array(
+            '4fps'  => '4',
+            '6fps'  => '6',
+            '8fps'  => '8',
+            '10fps' => '10',
+            '12fps' => '12',
+            '15fps' => '15',
+            '30fps' => '30',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemQualityLevel() {
+        $array['title'] = 'Quality Level';
+        $array['options'] = array(
+            '1X/Lowest Cost'    => '300',
+            '2X'                => '600',
+            '3X'                => '900',
+            '4X/Balanced'       => '1200',
+            '5X'                => '1500',
+            '6X'                => '1800',
+            '8X'                => '2400',
+            '16X/Highest Cost'  => '5000',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemVideoLength() {
+        $array['title'] = 'Video Length';
+        $array['options'] = array(
+            '2s'    => '2',
+            '3s'    => '3',
+            '4s'    => '4',
+            '5s'    => '5',
+            '6s'    => '6',
+            '7s'    => '7',
+            '8s'    => '8',
+            '9s'    => '9',
+            '10s'   => '10',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemVideoSound() {
+        $array['title'] = 'Video Sound';
+        $array['options'] = array(
+            'On'    => 'on',
+            'Off'   => 'off',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    /* Timestamp */
+    public function itemTimeStamp() {
+        $array['title'] = 'Time Stamp';
+        $array['options'] = array(
+            'On'    => 'on',
+            'Off'   => 'off',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemDateFormat() {
+        $array['title'] = 'Date Format';
+        $array['options'] = array(
+            'mdY' =>    'mdY',
+            'Ymd' =>    'Ymd',
+            'dmY' =>    'dmY',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemTimeFormat() {
+        $array['title'] = 'Time Format';
+        $array['options'] = array(
+            '12 Hour'   => '12',
+            '24 Hour'   => '24',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemTemperature() {
+        $array['title'] = 'Temperature';
+        $array['options'] = array(
+            'Fahrenheit'    => 'f',
+            'Celsius'       => 'c',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    /* Quiet Time */
+    public function itemQuietTime() {
+        $array['title'] = 'Quiet Time';
+        $array['options'] = array(
+             '0s'=> '0s',  '5s'=> '5s', '10s'=>'10s', '15s'=>'15s',
+            '20s'=>'20s', '25s'=>'25s', '30s'=>'30s', '35s'=>'35s',
+            '40s'=>'40s', '45s'=>'45s', '50s'=>'50s', '55s'=>'55s',
+            '1m' => '1m',  '2m' =>'2m',  '3m'=> '3m',  '4m'=> '4m', '5m'=>'5m',
+            '10m'=>'10m', '15m'=>'15m', '20m'=>'20m', '25m'=>'25m',
+            '30m'=>'30m', '35m'=>'35m', '40m'=>'40m', '45m'=>'45m',
+            '50m'=>'50m', '55m'=>'55m', '60m'=>'60m',
+        );
+        $array['help'] = 'Quiet Time is a delay after the current event is complete (photo or video). It can be used to reduce the number of PIR events in a given time. If your camera is taking too many photos or videos, then increase the quiet time to reduce the frequency of PIR (motion) activations. PIR or motion capture, as well as Time Lapse capture is disabled while sleeping in the quiet time period.';
+        return $array;
+    }
+
+    /* Timelapse */
+    public function itemTimelapseStartTime() {
+        $array['title'] = 'Timelapse Start Time';
+        $array['type'] = 'hhmm';
+        $array['options'] = array(
+            '00:00'=>'00:00', '00:15'=>'00:15', '00:30'=>'00:30', '00:45'=>'00:45',
+            '01:00'=>'01:00', '01:15'=>'01:15', '01:30'=>'01:30', '01:45'=>'01:45',
+            '02:00'=>'02:00', '02:15'=>'02:15', '02:30'=>'02:30', '02:45'=>'02:45',
+            '03:00'=>'03:00', '03:15'=>'03:15', '03:30'=>'03:30', '03:45'=>'03:45',
+            '04:00'=>'04:00', '04:15'=>'04:15', '04:30'=>'04:30', '04:45'=>'04:45',
+            '05:00'=>'05:00', '05:15'=>'05:15', '05:30'=>'05:30', '05:45'=>'05:45',
+            '06:00'=>'06:00', '06:15'=>'06:15', '06:30'=>'06:30', '06:45'=>'06:45',
+            '07:00'=>'07:00', '07:15'=>'07:15', '07:30'=>'07:30', '07:45'=>'07:45',
+            '08:00'=>'08:00', '08:15'=>'08:15', '08:30'=>'08:30', '08:45'=>'08:45',
+            '09:00'=>'09:00', '09:15'=>'09:15', '09:30'=>'09:30', '09:45'=>'09:45',
+            '10:00'=>'10:00', '10:15'=>'10:15', '10:30'=>'10:30', '10:45'=>'10:45',
+            '11:00'=>'11:00', '11:15'=>'11:15', '11:30'=>'11:30', '11:45'=>'11:45',
+            '12:00'=>'12:00', '12:15'=>'12:15', '12:30'=>'12:30', '12:45'=>'12:45',
+            '13:00'=>'13:00', '13:15'=>'13:15', '13:30'=>'13:30', '13:45'=>'13:45',
+            '14:00'=>'14:00', '14:15'=>'14:15', '14:30'=>'14:30', '14:45'=>'14:45',
+            '15:00'=>'15:00', '15:15'=>'15:15', '15:30'=>'15:30', '15:45'=>'15:45',
+            '16:00'=>'16:00', '16:15'=>'16:15', '16:30'=>'16:30', '16:45'=>'16:45',
+            '17:00'=>'17:00', '17:15'=>'17:15', '17:30'=>'17:30', '17:45'=>'17:45',
+            '18:00'=>'18:00', '18:15'=>'18:15', '18:30'=>'18:30', '18:45'=>'18:45',
+            '19:00'=>'19:00', '19:15'=>'19:15', '19:30'=>'19:30', '19:45'=>'19:45',
+            '20:00'=>'20:00', '20:15'=>'20:15', '20:30'=>'20:30', '20:45'=>'20:45',
+            '21:00'=>'21:00', '21:15'=>'21:15', '21:30'=>'21:30', '21:45'=>'21:45',
+            '22:00'=>'22:00', '22:15'=>'22:15', '22:30'=>'22:30', '22:45'=>'22:45',
+            '23:00'=>'23:00', '23:15'=>'23:15', '23:30'=>'23:30', '23:45'=>'23:45',
+            //'23:59' => '23:59',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemTimelapseStopTime() {
+        $array['title'] = 'Timelapse Stop Time';
+        $array['type'] = 'hhmm';
+        $array['options'] = array(
+            '00:00'=>'00:00', '00:15'=>'00:15', '00:30'=>'00:30', '00:45'=>'00:45',
+            '01:00'=>'01:00', '01:15'=>'01:15', '01:30'=>'01:30', '01:45'=>'01:45',
+            '02:00'=>'02:00', '02:15'=>'02:15', '02:30'=>'02:30', '02:45'=>'02:45',
+            '03:00'=>'03:00', '03:15'=>'03:15', '03:30'=>'03:30', '03:45'=>'03:45',
+            '04:00'=>'04:00', '04:15'=>'04:15', '04:30'=>'04:30', '04:45'=>'04:45',
+            '05:00'=>'05:00', '05:15'=>'05:15', '05:30'=>'05:30', '05:45'=>'05:45',
+            '06:00'=>'06:00', '06:15'=>'06:15', '06:30'=>'06:30', '06:45'=>'06:45',
+            '07:00'=>'07:00', '07:15'=>'07:15', '07:30'=>'07:30', '07:45'=>'07:45',
+            '08:00'=>'08:00', '08:15'=>'08:15', '08:30'=>'08:30', '08:45'=>'08:45',
+            '09:00'=>'09:00', '09:15'=>'09:15', '09:30'=>'09:30', '09:45'=>'09:45',
+            '10:00'=>'10:00', '10:15'=>'10:15', '10:30'=>'10:30', '10:45'=>'10:45',
+            '11:00'=>'11:00', '11:15'=>'11:15', '11:30'=>'11:30', '11:45'=>'11:45',
+            '12:00'=>'12:00', '12:15'=>'12:15', '12:30'=>'12:30', '12:45'=>'12:45',
+            '13:00'=>'13:00', '13:15'=>'13:15', '13:30'=>'13:30', '13:45'=>'13:45',
+            '14:00'=>'14:00', '14:15'=>'14:15', '14:30'=>'14:30', '14:45'=>'14:45',
+            '15:00'=>'15:00', '15:15'=>'15:15', '15:30'=>'15:30', '15:45'=>'15:45',
+            '16:00'=>'16:00', '16:15'=>'16:15', '16:30'=>'16:30', '16:45'=>'16:45',
+            '17:00'=>'17:00', '17:15'=>'17:15', '17:30'=>'17:30', '17:45'=>'17:45',
+            '18:00'=>'18:00', '18:15'=>'18:15', '18:30'=>'18:30', '18:45'=>'18:45',
+            '19:00'=>'19:00', '19:15'=>'19:15', '19:30'=>'19:30', '19:45'=>'19:45',
+            '20:00'=>'20:00', '20:15'=>'20:15', '20:30'=>'20:30', '20:45'=>'20:45',
+            '21:00'=>'21:00', '21:15'=>'21:15', '21:30'=>'21:30', '21:45'=>'21:45',
+            '22:00'=>'22:00', '22:15'=>'22:15', '22:30'=>'22:30', '22:45'=>'22:45',
+            '23:00'=>'23:00', '23:15'=>'23:15', '23:30'=>'23:30', '23:45'=>'23:45',
+            '23:59' => '23:59',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemTimelapseInterval() {
+        $array['title'] = 'Timelapse Interval';
+        $array['options'] = array(
+            '5m'=>'5m',
+            '10m'=>'10m', '15m'=>'15m',
+            '20m'=>'20m', '25m'=>'25m',
+            '30m'=>'30m', '35m'=>'35m',
+            '40m'=>'40m', '45m'=>'45m',
+            '50m'=>'50m', '55m'=>'55m',
+            '1h'=>'1h', '2h'=>'2h', '4h'=>'4h', '6h'=>'6h', '8h'=>'8h', '10h'=>'10h', '12h'=>'12h',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    /* Wireless Settings */
+    public function itemWirelessMode() {
+        $array['title'] = 'Wireless Mode';
+        $array['options'] = array(
+            'Instant'   => 'instant',
+            'Schedule'  => 'schedule',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemScheduleInterval() {
+        $array['title'] = 'Schedule Interval';
+        $array['options'] = array(
+            'Every Hour'    => '1h',
+            'Every 2 Hours' => '2h',
+            'Every 4 Hours' => '4h',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemScheduleFileLimit() {
+        $array['title'] = 'Schedule File Limit';
+        $array['options'] = array(
+            '20 Files'  => '20',
+            '30 Files'  => '30',
+            '40 Files'  => '40',
+            '50 Files'  => '50',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemHeartbeatInterval() {
+        $array['title'] = 'Heartbeat Interval';
+        $array['options'] = array(
+            'Every Hour'    => '1h',
+            'Every 2 Hours' => '2h',
+            'Every 4 Hours' => '4h',
+            'Every 8 Hours' => '8h',
+            'Every 12 Hours'=> '12h',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemActionProcessTimeLimit() {
+        //$array['title'] = 'Max Online Time';
+        $array['title'] = 'Action Process Time Limit';
+        $array['options'] = array(
+            '2m' => '2',
+            '3m' => '3',
+            '4m' => '4',
+            'Default (5m)' => '5',
+            '6m' => '6',
+            '7m' => '7',
+            '8m' => '8',
+            '9m' => '9',
+            '10m'=> '10',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    public function itemCellularPassword() {
+        $array['title'] = 'Cellular Password';
+        $array['type'] = 'input';
+        //$array['pattern'] = '[0-9]{6}';
+        $array['format'] = 'pattern="[0-9]{6}"';
+        $array['placeholder'] = 'Input Cellular Password';
+        $array['help'] = 'Input 6 digits. Blank for no password. If you input a password, it is required when you power the camera into Setup mode. This means if your camera is stolen, the thief is not able to set cellular mode to OFF, which means he can only use the camera in cellular mode.';
+        return $array;
+    }
+
+    public function itemRemoteControl() {
+        $array['title'] = 'Remote Control';
+        $array['options'] = array(
+            'Disabled'  => 'off',
+            '24 Hour'   => '24h',
+        );
+        $array['help'] = '';
+        return $array;
+    }
+
+    //public function cvtQuietTime($value) {
+    //    if ($value < 60) {          // 0-59 (0s-59s)
+    //        $txt = $value.'s';
+    //    } else if ($value <= 119) { // 60-119 (1m-60m)
+    //        $txt = ($value-59).'m';
+    //    } else {                    // 119-142 (1h-24h)
+    //        $txt = ($value-118).'h';
+    //    }
+    //    return $txt;
+    //}
+
+    public function cvtScheduleFileLimit($value) {
+        $txt = $value.' Files';
+        return $txt;
+    }
+
+    //public function cvtHeartbeatInterval($value) {
+    //    if ($value == 1) {
+    //        $txt = 'Every Hour';
+    //    } else if ($value == 2) {
+    //        $txt = 'Every 2 Hours';
+    //    } else if ($value == 4) {
+    //        $txt = 'Every 4 Hours';
+    //    } else if ($value == 8) {
+    //        $txt = 'Every 8 Hours';
+    //    } else if ($value == 12) {
+    //        $txt = 'Every 12 Hours';
+    //    } else {
+    //        $txt = $value;
+    //    }
+    //    return $txt;
+    //}
+
+    public function cvtActionProcessTimeLimit($value) {
+        if ($value == 5) {
+            $txt = 'Default ('.$value.'m)';
+        } else {
+            $txt = $value.'m';
+        }
+        return $txt;
+    }
+
+    public function cvtRemoteControl($value) {
+        if ($value == 'off') {
+            $txt = 'Disable';
+        } else if ($value == 'on') {
+            $txt = 'Enable';
+        } else {
+            $txt = $value;
+        }
+        return $txt;
+    }
+
+    public function cvtEveryHour($value) {
+        $value = intval($value);
+        if ($value == 1) {
+            $txt = 'Every Hour';
+        //} else if ($value == 2) {
+        //    $txt = 'Every 2 Hours';
+        //} else if ($value == 4) {
+        //    $txt = 'Every 4 Hours';
+        //} else if ($value == 8) {
+        //    $txt = 'Every 8 Hours';
+        //} else if ($value == 12) {
+        //    $txt = 'Every 12 Hours';
+        } else {
+            //$txt = $value;
+            $txt = 'Every '.$value.' Hours';
+        }
+        return $txt;
+    }
+
+    // 0S - 10S - 59S - 1M - 59M - 1H - 12H - 24H
+    // 0    10    59    60   118   119  130   142
+    public function cvtValueToHMS($value) {
+        if ($value < 60) {          // 0-59 (0s-59s)
+            $txt = $value;//.'s';
+        } else if ($value < 119) {  // 60-118 (1m-59m)
+            $txt = $value-59;//.'m';
+        } else {                    // 119-142 (1h-24h)
+            $txt = $value-118;//.'h';
+        }
+        return $txt;
+    }
+
     public function TXT_Source($txt) {
         if ($txt == 'setup') {
             $txt = 'Menu';
@@ -156,6 +651,24 @@ class CamerasController extends Controller
         return $txt;
     }
 
+    public function ovItemShow($list, $v, $title = null) {
+        $title = ($title) ? : $list['title'];
+        $value = array_search($v, $list['options']);
+        $value = ($value) ? : $v;
+
+        $txt = '';
+        $txt .= '<div class="row">';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        $txt .= '<span class="pull-right">' . $title . '</span>';
+        $txt .= '</div>';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        $txt .= '<strong>' . $value . '</strong>';
+        $txt .= '</div>';
+        $txt .= '</div>';
+        return $txt;
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function TXT_UploadResolution($txt) {
         if ($txt == 1) {
             $txt = 'Standard Low';
@@ -2527,42 +3040,6 @@ if ($err == 0) { /* for test */
 
     public function OverviewSettings($camera) {
         $lists = array(
-//            'last_settings'     => 'Last Downloaded',
-
-//            'camera_mode'       => 'Camera Mode',
-//            'photo_resolution'  => 'Photo Resolution',
-//            'photo_burst'       => 'Photo Burst',
-//            'burst_delay'       => 'Burst Delay',
-//            'upload_resolution' => 'Upload Resolution',
-//            'photo_quality'     => 'Upload Quality',
-
-//            'video_resolution'  => 'Video Resolution',
-//            'video_fps'         => 'Capture Rate',
-//            'video_bitrate'     => 'Quality Level',
-//            'video_length'      => 'Video Duration',
-//            'video_sound'       => 'Video Sound',
-
-//            'timestamp'         => 'Time Stamp',
-//            'date_format'       => 'Date Format',
-//            'time_format'       => 'Time Format',
-//            'temp_unit'         => 'Temperature',
-
-//            'quiettime'         => 'Quiet Time',
-
-//            'timelapse'         => 'Time Lapse',
-//            'tls_start'         => 'Timelapse Start Time',
-//            'tls_stop'          => 'Timelapse Stop Time',
-//            'tls_interval'      => 'Timelapse Interval',
-
-//            'wireless_mode'     => 'Wireless Mode',
-//            'wm_schedule'       => 'Schedule Interval',
-//            'wm_sclimit'        => 'Schedule File Limit',
-//            'hb_interval'       => 'Heartbeat Interval',
-//            'online_max_time'   => 'Max Online Time',
-//            'remotecontrol'     => 'Remote Control',
-//            'cellularpw'        => 'Cellular Password',
-
-
 //            'blockmode1'        => 'Block Mode 1',
 //            'blockmode2'        => 'Block Mode 2',
 //            'blockmode3'        => 'Block Mode 3',
@@ -2579,29 +3056,27 @@ if ($err == 0) { /* for test */
         $handle .= $this->CameraPanelItem('Last Downloaded', $camera->last_settings);
         $handle .= '<br/>';
 
-        $handle .= $this->CameraPanelItem('Camera Mode', $this->cvtCameraMode($camera->camera_mode));
+        $handle .= $this->ovItemShow($this->itemCameraMode(), $camera->camera_mode);
 //        if ($camera->camera_mode == 'p') {
-            $photo_burst = ($camera->photo_burst == 1) ? 'Off' : $camera->photo_burst;
-
-            $handle .= $this->CameraPanelItem('Photo Resolution', $this->cvtPhotoResolution($camera->photo_resolution));
-            $handle .= $this->CameraPanelItem('Photo Burst', $photo_burst);
-            $handle .= $this->CameraPanelItem('Burst Delay', $camera->burst_delay.'ms');
-            $handle .= $this->CameraPanelItem('Upload Resolution', $this->cvtUploadResolution($camera->upload_resolution));
-            $handle .= $this->CameraPanelItem('Upload Quality', $this->cvtUploadQuality($camera->photo_quality));
+            $handle .= $this->ovItemShow($this->itemPhotoResolution(), $camera->photo_resolution);
+            $handle .= $this->ovItemShow($this->itemPhotoBurst(), $camera->photo_burst);
+            $handle .= $this->ovItemShow($this->itemBurstDelay(), $camera->burst_delay);
+            $handle .= $this->ovItemShow($this->itemUploadResolution(), $camera->upload_resolution);
+            $handle .= $this->ovItemShow($this->itemUploadQuality(), $camera->photo_quality);
 //        } else {
 $handle .= '<br/>';
-            $handle .= $this->CameraPanelItem('Video Resolution', $this->cvtVideoResolution($camera->video_resolution));
-            $handle .= $this->CameraPanelItem('Frame Rate', $camera->video_fps.'fps');
-            $handle .= $this->CameraPanelItem('Quality Level', $this->cvtQualityLevel($camera->video_bitrate));
-            $handle .= $this->CameraPanelItem('Video Length', $camera->video_length.'s');
-            $handle .= $this->CameraPanelItem('Video Sound', ucwords($camera->video_sound));
+            $handle .= $this->ovItemShow($this->itemVideoResolution(), $camera->video_resolution);
+            $handle .= $this->ovItemShow($this->itemFrameRate(), $camera->video_fps);
+            $handle .= $this->ovItemShow($this->itemQualityLevel(), $camera->video_bitrate);
+            $handle .= $this->ovItemShow($this->itemVideoLength(), $camera->video_length);
+            $handle .= $this->ovItemShow($this->itemVideoSound(), $camera->video_sound);
 //        }
         $handle .= '<br/>';
 
-        $handle .= $this->CameraPanelItem('Time Stamp', ucwords($camera->timestamp));
-        $handle .= $this->CameraPanelItem('Date Format', $camera->date_format);
-        $handle .= $this->CameraPanelItem('Time Format', $this->cvtTimeFormat($camera->time_format));
-        $handle .= $this->CameraPanelItem('Temperature', $this->cvtTempUnit($camera->temp_unit));
+        $handle .= $this->ovItemShow($this->itemTimeStamp(), $camera->timestamp);
+        $handle .= $this->ovItemShow($this->itemDateFormat(), $camera->date_format);
+        $handle .= $this->ovItemShow($this->itemTimeFormat(), $camera->time_format);
+        $handle .= $this->ovItemShow($this->itemTemperature(), $camera->temp_unit);
         $handle .= '<br/>';
 
         $handle .= $this->CameraPanelItem('Quiet Time', $camera->quiettime);
@@ -2626,203 +3101,6 @@ $handle .= '<br/>';
 
 //        $handle .= $this->CameraPanelBody($camera->id, $lists);
         return $handle;
-    }
-
-    public function cvtCameraMode($value) {
-        return ($value == 'p') ? 'Photo' : 'Video';
-    }
-
-    public function cvtPhotoResolution($value) {
-        if ($value == 4) {
-            $txt = '4MP 16:9';
-        } else if ($value == 6) {
-            $txt = '6MP 16:9';
-        } else if ($value == 8) {
-            $txt = '8MP 16:9';
-        } else if ($value == 12) {
-            $txt = '12MP 16:9';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
-
-    public function cvtUploadResolution($value) {
-        if ($value == 1) {
-            $txt = 'Standard Low';
-        } else if ($value == 2) {
-            $txt = 'Standard Medium';
-        } else if ($value == 3) {
-            $txt = 'Standard High';
-        } else if ($value == 4) {
-            $txt = 'High Def (1280x)';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
-
-    public function cvtUploadQuality($value) {
-        if ($value == 1) {
-            $txt = 'Low';
-        } else if ($value == 2) {
-            $txt = 'Medium';
-        } else if ($value == 3) {
-            $txt = 'High';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
-
-/*
-Video Resolution    Standard Low (640x)
-Frame Rate          4fps
-Quality Level       1X/Lowest Cost
-Video Length        5s
-Video Sound         On
-*/
-
-    public function cvtVideoResolution($value) {
-        if ($value == 8) {
-            $txt = 'Standard Low (640x)';
-        } else if ($value == 9) {
-            $txt = 'Standard Medium (800x)';
-        } else if ($value == 10) {
-            $txt = 'Standard High (1024x)';
-        } else if ($value == 11) {
-            $txt = 'High Def (1280x)';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
-
-
-/*
-<option value="300">1X/Lowest Cost</option>
-<option value="600">2X</option>
-<option value="900">3X</option>
-<option value="1200">4X/Balanced</option>
-<option value="1500">5X</option>
-<option value="1800">6X</option>
-<option value="2400">8X</option>
-<option value="5000">16X/Highest Cost</option>
-*/
-    public function cvtQualityLevel($value) {
-        if ($value == 300) {
-            $txt = '1X/Lowest Cost';
-        } else if ($value == 600) {
-            $txt = '2X';
-        } else if ($value == 900) {
-            $txt = '3X';
-        } else if ($value == 1200) {
-            $txt = '4X/Balanced';
-        } else if ($value == 1500) {
-            $txt = '5X';
-        } else if ($value == 1800) {
-            $txt = '6X';
-        } else if ($value == 2400) {
-            $txt = '8X';
-        } else if ($value == 5000) {
-            $txt = '16X/Highest Cost';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
-
-    public function cvtTimeFormat($value) {
-        return $value.' Hour';
-    }
-
-    public function cvtTempUnit($value) {
-        return ($value == 'c') ? 'Celsius' : 'Fahrenheit';
-    }
-
-    public function cvtQuietTime($value) {
-        if ($value < 60) {          // 0-59 (0s-59s)
-            $txt = $value.'s';
-        } else if ($value <= 119) { // 60-119 (1m-60m)
-            $txt = ($value-59).'m';
-        } else {                    // 119-142 (1h-24h)
-            $txt = ($value-118).'h';
-        }
-        return $txt;
-    }
-
-    public function cvtScheduleFileLimit($value) {
-        $txt = $value.' Files';
-        return $txt;
-    }
-
-    //public function cvtHeartbeatInterval($value) {
-    //    if ($value == 1) {
-    //        $txt = 'Every Hour';
-    //    } else if ($value == 2) {
-    //        $txt = 'Every 2 Hours';
-    //    } else if ($value == 4) {
-    //        $txt = 'Every 4 Hours';
-    //    } else if ($value == 8) {
-    //        $txt = 'Every 8 Hours';
-    //    } else if ($value == 12) {
-    //        $txt = 'Every 12 Hours';
-    //    } else {
-    //        $txt = $value;
-    //    }
-    //    return $txt;
-    //}
-
-    public function cvtActionProcessTimeLimit($value) {
-        if ($value == 5) {
-            $txt = 'Default ('.$value.'m)';
-        } else {
-            $txt = $value.'m';
-        }
-        return $txt;
-    }
-
-    public function cvtRemoteControl($value) {
-        if ($value == 'off') {
-            $txt = 'Disable';
-        } else if ($value == 'on') {
-            $txt = 'Enable';
-        } else {
-            $txt = $value;
-        }
-        return $txt;
-    }
-
-    public function cvtEveryHour($value) {
-        $value = intval($value);
-        if ($value == 1) {
-            $txt = 'Every Hour';
-        //} else if ($value == 2) {
-        //    $txt = 'Every 2 Hours';
-        //} else if ($value == 4) {
-        //    $txt = 'Every 4 Hours';
-        //} else if ($value == 8) {
-        //    $txt = 'Every 8 Hours';
-        //} else if ($value == 12) {
-        //    $txt = 'Every 12 Hours';
-        } else {
-            //$txt = $value;
-            $txt = 'Every '.$value.' Hours';
-        }
-        return $txt;
-    }
-
-    // 0S - 10S - 59S - 1M - 59M - 1H - 12H - 24H
-    // 0    10    59    60   118   119  130   142
-    public function cvtValueToHMS($value) {
-        if ($value < 60) {          // 0-59 (0s-59s)
-            $txt = $value;//.'s';
-        } else if ($value < 119) {  // 60-118 (1m-59m)
-            $txt = $value-59;//.'m';
-        } else {                    // 119-142 (1h-24h)
-            $txt = $value-118;//.'h';
-        }
-        return $txt;
     }
 
     public function OverviewEvent($camera) {
@@ -3001,911 +3279,291 @@ Video Sound         On
 
     /*----------------------------------------------------------------------------------*/
     /* TAB Settings */
-    public function Settings_Body($id, $lists) {
+    public function stItemOption($id, $array, $field_name, $title = null) {
         // $id = $camera->id;
         $camera = Camera::findOrFail($id);
 
-        $handle = '';
-        foreach ($lists as $key => $value) {
-            $field_name  = $key;
-            $field_value = $camera[$key];
-
-            $title = $value['title'];
-            $help  = $value['help'];
-
-            if (!empty($value['type'])) {
-                $type = $value['type'];
-            } else {
-                $type = 'select';
-            }
-
-            if ($type == 'hhmm') {
-                $field_value = substr($field_value, 0, 5); /* 23:59:00 */
-                //$handle .= $field_value; /* debug */
-            } else {
-                $field_value = $camera[$key];
-            }
-
-            $zz = $id.'_'.$field_name;
-
-            /* Camera Mode:camera_mode=p */
-            // $handle .= '<div>'.$title.':'.$field_name.'='.$field_value.'</div>';
-
-            /*
-                <div class="form-group" id="field-wrapper-54-cameramode">
-                    <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
-                    <div class="col-md-7">
-                        <select id="54_cameramode" class="bs-select form-control input-sm" name="54_cameramode">
-                            <option value="p" selected="selected">Photo</option>
-                            <option value="v">Video</option>
-                        </select>
-                ** OR **
-                        <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" maxlength="30" value="yyy" placeholder="zzz">
-                ** OR **
-                        <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" pattern="[0-9]{6}" value="yyy" placeholder="zzz">
-
-                        <span class="help-block"> .....</span>
-                    </div>
-                </div>
-            */
-            //$handle .= '<div class="form-group hidden" id="field-wrapper-'.$id.'-'.$field_name.'">';
-            $handle .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
-            $handle .=      '<label class="col-md-4 control-label" for="inputSmall">'.$title.'</label>';
-            $handle .=      '<div class="col-md-7">';
-
-            if ($type == 'input') {
-                $format = $value['format'];
-                $placeholder = $value['placeholder'];
-                // if (!empty($value['pattern']) {
-                //     $pattern = $value['pattern'];
-                //     //<input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw" pattern="[0-9]{6}" value="xxx" placeholder="xxx">
-                //     $handle .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" pattern="'.$pattern.'" value="'.$field_value.'" placeholder="'.$placeholder.'">';
-
-                // } else if (!empty($value['maxlength']) {
-                // $maxlength = $value['maxlength'];
-
-                //<input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc" maxlength="30" value="xxx" placeholder="xxx">
-                $handle .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" '.$format.' value="'.$field_value.'" placeholder="'.$placeholder.'">';
-                // }
-
-            } else {
-                $options = $value['options'];
-                //<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">
-                $handle .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
-                foreach ($options as $option) {
-                    if ($option['value'] == $field_value) {
-                        //<option value="p" selected="selected">Photo</option>
-                        $handle .= '<option value="'.$option['value'].'" selected="selected">'.$option['name'].'</option>';
-                    } else {
-                        //<option value="v">Video</option>
-                        $handle .= '<option value="'.$option['value'].'">'.$option['name'].'</option>';
-                    }
-                }
-                $handle .= '</select>';
-            }
-
-            if (!empty($help)) {
-                // $handle .= '<span class="help-block">'.$help.'</span>';
-            }
-            $handle .=      '</div>';
-            $handle .= '</div>';
+        $zz = $id.'_'.$field_name;
+        $title = ($title) ? : $array['title'];
+        if (isset($array['help'])) {
+            $help  = $array['help'];
         }
-        //$handle .= '<hr>';
-        return $handle;
+
+        if (!empty($array['type'])) {
+            $type = $array['type'];
+        } else {
+            $type = 'select';
+        }
+
+        if ($type == 'hhmm') {
+            $field_value = substr($camera[$field_name], 0, 5); /* 23:59:00 */
+        } else {
+            $field_value = $camera[$field_name];
+        }
+
+        /* Camera Mode:camera_mode=p */
+        // $txt .= '<div>'.$title.':'.$field_name.'='.$field_value.'</div>';
+
+        /*
+            <div class="form-group" id="field-wrapper-54-cameramode">
+                <label class="col-md-4 control-label" for="inputSmall">Camera Mode</label>
+                <div class="col-md-7">
+                    <select id="54_cameramode" class="bs-select form-control input-sm" name="54_cameramode">
+                        <option value="p" selected="selected">Photo</option>
+                        <option value="v">Video</option>
+                    </select>
+            ** OR **
+                    <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" maxlength="30" value="yyy" placeholder="zzz">
+            ** OR **
+                    <input type="text" class="form-control input-sm" id="54_xxx" name="54_xxx" pattern="[0-9]{6}" value="yyy" placeholder="zzz">
+
+                    <span class="help-block"> .....</span>
+                </div>
+            </div>
+        */
+        $txt = '';
+        //$txt .= '<div class="form-group hidden" id="field-wrapper-'.$id.'-'.$field_name.'">';
+        $txt .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
+        $txt .=      '<label class="col-md-4 control-label" for="inputSmall">'.$title.'</label>';
+        $txt .=      '<div class="col-md-7">';
+
+        if ($type == 'input') {
+            $format = $array['format'];
+            $placeholder = $array['placeholder'];
+            // if (!empty($array['pattern']) {
+            //     $pattern = $array['pattern'];
+            //     //<input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw" pattern="[0-9]{6}" value="xxx" placeholder="xxx">
+            //     $txt .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" pattern="'.$pattern.'" value="'.$field_value.'" placeholder="'.$placeholder.'">';
+
+            // } else if (!empty($array['maxlength']) {
+            // $maxlength = $array['maxlength'];
+
+            /*<input type="text" class="form-control input-sm" id="54_camera_desc" name="54_camera_desc" maxlength="30" value="xxx" placeholder="xxx">*/
+            $txt .= '<input type="text" class="form-control input-sm" id="'.$zz.'" name="'.$zz.'" '.$format.' value="'.$field_value.'" placeholder="'.$placeholder.'">';
+            // }
+
+        } else {
+            $options = $array['options'];
+            /*<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">*/
+            $txt .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
+            foreach ($options as $key => $value) {
+                /*<option value="p" selected="selected">Photo</option>*/
+                $selected = ($value == $field_value) ? 'selected="selected"' : '';
+                $txt .= '<option value="'.$value.'" '.$selected.'>'.$key.'</option>';
+            }
+            $txt .= '</select>';
+        }
+
+        if (!empty($help)) {
+            //$txt .= '<span class="help-block">'.$help.'</span>';
+        }
+        $txt .= '</div></div>';
+        return $txt;
     }
 
-    public function Settings_Region($region) {
+    public function stRegion($region) {
         $regions = array(
             'USA' => array(
                 'title' => 'United States',
                 'options' => array(
-                    array('name'=>'Eastern Time',                   'value'=>'America/New_York'),
-                    array('name'=>'Central Time',                   'value'=>'America/Chicago'),
-                    array('name'=>'Mountain Time',                  'value'=>'America/Denver'),
-                    array('name'=>'Mountain Time (no DST)',         'value'=>'America/Phoenix'),
-                    array('name'=>'Pacific Time',                   'value'=>'America/Los_Angeles'),
-                    array('name'=>'Alaska Time',                    'value'=>'America/Anchorage'),
-                    array('name'=>'Hawaii-Aleutian',                'value'=>'America/Adak'),
-                    array('name'=>'Hawaii-Aleutian Time (no DST)',  'value'=>'Pacific/Honolulu'),
+                    'Eastern Time'                     => 'America/New_York',
+                    'Central Time'                     => 'America/Chicago',
+                    'Mountain Time'                    => 'America/Denver',
+                    'Mountain Time (no DST)'           => 'America/Phoenix',
+                    'Pacific Time'                     => 'America/Los_Angeles',
+                    'Alaska Time'                      => 'America/Anchorage',
+                    'Hawaii-Aleutian'                  => 'America/Adak',
+                    'Hawaii-Aleutian Time (no DST)'    => 'Pacific/Honolulu',
                 ),
             ),
             'CA' => array(
                 'title' => 'Canada',
                 'options' => array(
-                    array('name'=>'Atlantic',       'value'=>'Canada/Atlantic'),
-                    array('name'=>'Central',        'value'=>'Canada/Central'),
-                    array('name'=>'Eastern',        'value'=>'Canada/Eastern'),
-                    array('name'=>'Mountain',       'value'=>'Canada/Mountain'),
-                    array('name'=>'Newfoundland',   'value'=>'Canada/Newfoundland'),
-                    array('name'=>'Pacific',        'value'=>'Canada/Pacific'),
-                    array('name'=>'Saskatchewan',   'value'=>'Canada/Saskatchewan'),
-                    array('name'=>'Yukon',          'value'=>'Canada/Yukon'),
+                    'Atlantic'     => 'Canada/Atlantic',
+                    'Central'      => 'Canada/Central',
+                    'Eastern'      => 'Canada/Eastern',
+                    'Mountain'     => 'Canada/Mountain',
+                    'Newfoundland' => 'Canada/Newfoundland',
+                    'Pacific'      => 'Canada/Pacific',
+                    'Saskatchewan' => 'Canada/Saskatchewan',
+                    'Yukon'        => 'Canada/Yukon',
 
                 ),
             ),
             'AU' => array(
                 'title' => 'Australia',
                 'options' => array(
-                    array('name'=>'Adelaide',       'value'=>'Australia/Adelaide'),
-                    array('name'=>'Brisbane',       'value'=>'Australia/Brisbane'),
-                    array('name'=>'Broken_Hill',    'value'=>'Australia/Broken_Hill'),
-                    array('name'=>'Currie',         'value'=>'Australia/Currie'),
-                    array('name'=>'Darwin',         'value'=>'Australia/Darwin'),
-                    array('name'=>'Eucla',          'value'=>'Australia/Eucla'),
-                    array('name'=>'Hobart',         'value'=>'Australia/Hobart'),
-                    array('name'=>'Lindeman',       'value'=>'Australia/Lindeman'),
-                    array('name'=>'Lord_Howe',      'value'=>'Australia/Lord_Howe'),
-                    array('name'=>'Melbourne',      'value'=>'Australia/Melbourne'),
-                    array('name'=>'Perth',          'value'=>'Australia/Perth'),
-                    array('name'=>'Sydney',         'value'=>'Australia/Sydney'),
+                    'Adelaide'     => 'Australia/Adelaide',
+                    'Brisbane'     => 'Australia/Brisbane',
+                    'Broken_Hill'  => 'Australia/Broken_Hill',
+                    'Currie'       => 'Australia/Currie',
+                    'Darwin'       => 'Australia/Darwin',
+                    'Eucla'        => 'Australia/Eucla',
+                    'Hobart'       => 'Australia/Hobart',
+                    'Lindeman'     => 'Australia/Lindeman',
+                    'Lord_Howe'    => 'Australia/Lord_Howe',
+                    'Melbourne'    => 'Australia/Melbourne',
+                    'Perth'        => 'Australia/Perth',
+                    'Sydney'       => 'Australia/Sydney',
                 ),
             ),
             'CN' => array(
                 'title' => 'China',
                 'options' => array(
-                    array('name'=>'Hong_Kong',       'value'=>'Asia/Hong_Kong'),
+                    'Hong_Kong' => 'Asia/Hong_Kong',
                 ),
             ),
             'EU' => array(
                 'title' => 'Europe',
                 'options' => array(
-                    array('name'=>'Amsterdam',      'value'=>'Europe/Amsterdam'),
-                    array('name'=>'Andorra',        'value'=>'Europe/Andorra'),
-                    array('name'=>'Astrakhan',      'value'=>'Europe/Astrakhan'),
-                    array('name'=>'Athens',         'value'=>'Europe/Athens'),
-                    array('name'=>'Belgrade',       'value'=>'Europe/Belgrade'),
-                    array('name'=>'Berlin',         'value'=>'Europe/Berlin'),
-                    array('name'=>'Bratislava',     'value'=>'Europe/Bratislava'),
-                    array('name'=>'Brussels',       'value'=>'Europe/Brussels'),
-                    array('name'=>'Bucharest',      'value'=>'Europe/Bucharest'),
-                    array('name'=>'Budapest',       'value'=>'Europe/Budapest'),
-                    array('name'=>'Busingen',       'value'=>'Europe/Busingen'),
-                    array('name'=>'Chisinau',       'value'=>'Europe/Chisinau'),
-                    array('name'=>'Copenhagen',     'value'=>'Europe/Copenhagen'),
-                    array('name'=>'Dublin',         'value'=>'Europe/Dublin'),
-                    array('name'=>'Gibraltar',      'value'=>'Europe/Gibraltar'),
-                    array('name'=>'Guernsey',       'value'=>'Europe/Guernsey'),
-                    array('name'=>'Helsinki',       'value'=>'Europe/Helsinki'),
-                    array('name'=>'Isle_of_Man',    'value'=>'Europe/Isle_of_Man'),
-                    array('name'=>'Istanbul',       'value'=>'Europe/Istanbul'),
-                    array('name'=>'Jersey',         'value'=>'Europe/Jersey'),
-                    array('name'=>'Kaliningrad',    'value'=>'Europe/Kaliningrad'),
-                    array('name'=>'Kiev',           'value'=>'Europe/Kiev'),
-                    array('name'=>'Kirov',          'value'=>'Europe/Kirov'),
-                    array('name'=>'Lisbon',         'value'=>'Europe/Lisbon'),
-                    array('name'=>'Ljubljana',      'value'=>'Europe/Ljubljana'),
-                    array('name'=>'London',         'value'=>'Europe/London'),
-                    array('name'=>'Luxembourg',     'value'=>'Europe/Luxembourg'),
-                    array('name'=>'Madrid',         'value'=>'Europe/Madrid'),
-                    array('name'=>'Malta',          'value'=>'Europe/Malta'),
-                    array('name'=>'Mariehamn',      'value'=>'Europe/xMariehamnxxx'),
-                    array('name'=>'Minsk',          'value'=>'Europe/Minsk'),
-                    array('name'=>'Monaco',         'value'=>'Europe/Monaco'),
-                    array('name'=>'Moscow',         'value'=>'Europe/Moscow'),
-                    array('name'=>'Oslo',           'value'=>'Europe/Oslo'),
-                    array('name'=>'Paris',          'value'=>'Europe/Paris'),
-                    array('name'=>'Podgorica',      'value'=>'Europe/Podgorica'),
-                    array('name'=>'Prague',         'value'=>'Europe/Prague'),
-                    array('name'=>'Riga',           'value'=>'Europe/Riga'),
-                    array('name'=>'Rome',           'value'=>'Europe/Rome'),
-                    array('name'=>'Samara',         'value'=>'Europe/Samara'),
-                    array('name'=>'San_Marino',     'value'=>'Europe/San_Marino'),
-                    array('name'=>'Sarajevo',       'value'=>'Europe/Sarajevo'),
-                    array('name'=>'Saratov',        'value'=>'Europe/Saratov'),
-                    array('name'=>'Simferopol',     'value'=>'Europe/Simferopol'),
-                    array('name'=>'Skopje',         'value'=>'Europe/Skopje'),
-                    array('name'=>'Sofia',          'value'=>'Europe/Sofia'),
-                    array('name'=>'Stockholm',      'value'=>'Europe/Stockholm'),
-                    array('name'=>'Tallinn',        'value'=>'Europe/Tallinn'),
-                    array('name'=>'Tirane',         'value'=>'Europe/Tirane'),
-                    array('name'=>'Ulyanovsk',      'value'=>'Europe/Ulyanovsk'),
-                    array('name'=>'Uzhgorod',       'value'=>'Europe/Uzhgorod'),
-                    array('name'=>'Vaduz',          'value'=>'Europe/Vaduz'),
-                    array('name'=>'Vatican',        'value'=>'Europe/Vatican'),
-                    array('name'=>'Vienna',         'value'=>'Europe/Vienna'),
-                    array('name'=>'Vilnius',        'value'=>'Europe/Vilnius'),
-                    array('name'=>'Volgograd',      'value'=>'Europe/Volgograd'),
-                    array('name'=>'Warsaw',         'value'=>'Europe/Warsaw'),
-                    array('name'=>'Zagreb',         'value'=>'Europe/Zagreb'),
-                    array('name'=>'Zaporozhye',     'value'=>'Europe/Zaporozhye'),
-                    array('name'=>'Zurich',         'value'=>'Europe/Zurich'),
+                    'Amsterdam'    => 'Europe/Amsterdam',
+                    'Andorra'      => 'Europe/Andorra',
+                    'Astrakhan'    => 'Europe/Astrakhan',
+                    'Athens'       => 'Europe/Athens',
+                    'Belgrade'     => 'Europe/Belgrade',
+                    'Berlin'       => 'Europe/Berlin',
+                    'Bratislava'   => 'Europe/Bratislava',
+                    'Brussels'     => 'Europe/Brussels',
+                    'Bucharest'    => 'Europe/Bucharest',
+                    'Budapest'     => 'Europe/Budapest',
+                    'Busingen'     => 'Europe/Busingen',
+                    'Chisinau'     => 'Europe/Chisinau',
+                    'Copenhagen'   => 'Europe/Copenhagen',
+                    'Dublin'       => 'Europe/Dublin',
+                    'Gibraltar'    => 'Europe/Gibraltar',
+                    'Guernsey'     => 'Europe/Guernsey',
+                    'Helsinki'     => 'Europe/Helsinki',
+                    'Isle_of_Man'  => 'Europe/Isle_of_Man',
+                    'Istanbul'     => 'Europe/Istanbul',
+                    'Jersey'       => 'Europe/Jersey',
+                    'Kaliningrad'  => 'Europe/Kaliningrad',
+                    'Kiev'         => 'Europe/Kiev',
+                    'Kirov'        => 'Europe/Kirov',
+                    'Lisbon'       => 'Europe/Lisbon',
+                    'Ljubljana'    => 'Europe/Ljubljana',
+                    'London'       => 'Europe/London',
+                    'Luxembourg'   => 'Europe/Luxembourg',
+                    'Madrid'       => 'Europe/Madrid',
+                    'Malta'        => 'Europe/Malta',
+                    'Mariehamn'    => 'Europe/xMariehamnxxx',
+                    'Minsk'        => 'Europe/Minsk',
+                    'Monaco'       => 'Europe/Monaco',
+                    'Moscow'       => 'Europe/Moscow',
+                    'Oslo'         => 'Europe/Oslo',
+                    'Paris'        => 'Europe/Paris',
+                    'Podgorica'    => 'Europe/Podgorica',
+                    'Prague'       => 'Europe/Prague',
+                    'Riga'         => 'Europe/Riga',
+                    'Rome'         => 'Europe/Rome',
+                    'Samara'       => 'Europe/Samara',
+                    'San_Marino'   => 'Europe/San_Marino',
+                    'Sarajevo'     => 'Europe/Sarajevo',
+                    'Saratov'      => 'Europe/Saratov',
+                    'Simferopol'   => 'Europe/Simferopol',
+                    'Skopje'       => 'Europe/Skopje',
+                    'Sofia'        => 'Europe/Sofia',
+                    'Stockholm'    => 'Europe/Stockholm',
+                    'Tallinn'      => 'Europe/Tallinn',
+                    'Tirane'       => 'Europe/Tirane',
+                    'Ulyanovsk'    => 'Europe/Ulyanovsk',
+                    'Uzhgorod'     => 'Europe/Uzhgorod',
+                    'Vaduz'        => 'Europe/Vaduz',
+                    'Vatican'      => 'Europe/Vatican',
+                    'Vienna'       => 'Europe/Vienna',
+                    'Vilnius'      => 'Europe/Vilnius',
+                    'Volgograd'    => 'Europe/Volgograd',
+                    'Warsaw'       => 'Europe/Warsaw',
+                    'Zagreb'       => 'Europe/Zagreb',
+                    'Zaporozhye'   => 'Europe/Zaporozhye',
+                    'Zurich'       => 'Europe/Zurich',
                 ),
             ),
         );
         return $regions[$region];
     }
 
-    public function Settings_Option($id, $label, $options, $field_name, $field_value) {
-        $zz = $id.'_'.$field_name;
-
-        $handle = '';
-        $handle .= '<div class="form-group" id="field-wrapper-'.$id.'-'.$field_name.'">';
-        $handle .=      '<label class="col-md-4 control-label" for="inputSmall">'.$label.'</label>';
-        $handle .=      '<div class="col-md-7">';
-//            $options = $value['options'];
-            $handle .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
-            foreach ($options as $option) {
-                if ($option['value'] == $field_value) {
-                    //<option value="p" selected="selected">Photo</option>
-                    $handle .= '<option value="'.$option['value'].'" selected="selected">'.$option['name'].'</option>';
-                } else {
-                    //<option value="v">Video</option>
-                    $handle .= '<option value="'.$option['value'].'">'.$option['name'].'</option>';
-                }
-            }
-            $handle .= '</select>';
-        $handle .=      '</div>';
-        $handle .= '</div>';
-        return $handle;
-    }
-
     public function Settings_Identification($camera) {
-        //return var_dump($this->Settings_Region('USA'));
-        $lists = array(
-            'description' => array(
-                'title'       => 'Camera Description',
-                'type'        => 'input',
-                'format'      => 'maxlength="30"',
-                'placeholder' => 'Input Camera Description',
-                'help'        => '',
-            ),
+        $id = $camera->id;
+        $txt = '';
+        $txt .= $this->stItemOption($id, $this->itemCameraDescription(), 'description');
+        $txt .= $this->stItemOption($id, $this->itemCameraLocation(), 'location');
+        $txt .= $this->stItemOption($id, $this->itemCameraRegion(), 'region');
 
-            'location'    => array(
-                'title'       => 'Camera Location',
-                'type'        => 'input',
-                'format'      => 'maxlength="30"',
-                'placeholder' => 'Input Camera Location',
-                'help'        => '',
-            ),
-
-            'region' => array(
-                'title' => 'Camera Region',
-                'options' => array(
-                    array('name'=>'United States',  'value'=>'USA'),
-                    array('name'=>'Canada',         'value'=>'CA'),
-                    array('name'=>'Australia',      'value'=>'AU'),
-                    array('name'=>'China',          'value'=>'CN'),
-                    array('name'=>'Europe',         'value'=>'EU'),
-                ),
-                'help'    => '',
-            ),
-        );
-
-        $handle = $this->Settings_Body($camera->id, $lists);
-
-        //$region = $this->Settings_Region('USA');
-        $region = $this->Settings_Region($camera['region']);
-
-        $label = 'Time Zone';
-        $options = $region['options'];
-        $field_name = 'timezone';
-        $field_value = $camera[$field_name];
-        $handle .= $this->Settings_Option($camera->id, $label, $options, $field_name, $field_value);
-
-        return $handle;
+        $region = $this->stRegion($camera['region']);
+        $txt .= $this->stItemOption($id, $region, 'timezone', 'Time Zone');
+        return $txt;
     }
 
     public function Settings_Basic($camera) {
-        $lists = array(
-            'camera_mode' => array(
-                'title' => 'Camera Mode',
-                'options' => array(
-                    array('name' => 'Photo', 'value' => 'p'),
-                    array('name' => 'Video', 'value' => 'v'),
-                ),
-                'help'    => '',
-            ),
+        $id = $camera->id;
+        $txt = '';
+        $txt .= $this->stItemOption($id, $this->itemCameraMode(), 'camera_mode');
+        $txt .= $this->stItemOption($id, $this->itemPhotoResolution(), 'photo_resolution');
+        $txt .= $this->stItemOption($id, $this->itemPhotoBurst(), 'photo_burst');
+        $txt .= $this->stItemOption($id, $this->itemBurstDelay(), 'burst_delay');
+        $txt .= $this->stItemOption($id, $this->itemUploadResolution(), 'upload_resolution');
+        $txt .= $this->stItemOption($id, $this->itemUploadQuality(), 'photo_quality');
 
-            /* photo */
-            'photo_resolution' => array(
-                'title' => 'Photo Resolution',
-                'options' => array(
-                    array('name' => '4MP 16:9', 'value' => '4'),
-                    array('name' => '6MP 16:9', 'value' => '6'),
-                    array('name' => '8MP 16:9', 'value' => '8'),
-                    array('name' => '12MP 16:9', 'value' => '12'),
-                ),
-                'help' => 'Use this setting to control the size of the Photo saved on the SD Card.',
-            ),
-            'photo_burst' => array(
-                'title' => 'Photo Burst',
-                'options' => array(
-                    array('name' => '1', 'value' => '1'),
-                    array('name' => '2', 'value' => '2'),
-                    array('name' => '3', 'value' => '3'),
-                ),
-                'help' => 'Photo Burst is used to set the number of photos captured per event in Photo Mode. It is not used for Video mode. If Cellular mode is ON, then the camera will upload each photo of the burst to the portal.',
-            ),
-            'burst_delay' => array(
-                'title' => 'Burst Delay',
-                'options' => array(
-                    array('name' => '250ms', 'value' => '250'),
-                    array('name' => '500ms', 'value' => '500'),
-                    array('name' => '1s', 'value' => '1000'),
-                    array('name' => '3s', 'value' => '3000'),
-                ),
-                'help' => 'The Burst Delay is the elapsed time between each burst photo.',
-            ),
-            'upload_resolution' => array(
-                'title' => 'Upload Resolution',
-                'options' => array(
-                    array('name' => 'Standard Low', 'value' => '1'),
-                    array('name' => 'Standard Medium', 'value' => '2'),
-                    array('name' => 'Standard High', 'value' => '3'),
-                    array('name' => 'High Def', 'value' => '4'),
-                ),
-                'help' => 'Use this setting to control the size of the uploaded thumbnail.',
-            ),
-            'photo_quality' => array(
-                'title' => 'Upload Quality',
-                'options' => array(
-                    array('name' => 'Standard', 'value' => '1'),
-                    array('name' => 'Medium', 'value' => '2'),
-                    array('name' => 'High', 'value' => '3'),
-                ),
-                'help' => 'Use this setting to control the image quality and size of the uploaded thumbnail. A higher quality means clearer images but larger file sizes when uploaded to the portal. Use a Photo quality that best meets your application and budget. [Standard] quality will reduce the size and cost to upload each photo to the portal and is generally good enough for most applications. Keep in mind that you can request a High-res Max or the Original file from the SD card when/if you need it for more detail on this particular photo event.',
-            ),
+        $txt .= $this->stItemOption($id, $this->itemVideoResolution(), 'video_resolution');
+        $txt .= $this->stItemOption($id, $this->itemFrameRate(), 'video_fps');
+        $txt .= $this->stItemOption($id, $this->itemQualityLevel(), 'video_bitrate');
+        $txt .= $this->stItemOption($id, $this->itemVideoLength(), 'video_length');
+        $txt .= $this->stItemOption($id, $this->itemVideoSound(), 'video_sound');
 
-            /* video */
-            'video_resolution' => array(
-                'title' => 'Video Resolution',
-                'options' => array(
-                    array('name' => 'Standard Low', 'value' => '8'),
-                    array('name' => 'Standard Medium', 'value' => '9'),
-                    array('name' => 'Standard High', 'value' => '10'),
-                    array('name' => 'High Def', 'value' => '11'),
-                ),
-                'help' => 'This determines the frame size of the video in pixels, or how wide it is when viewed on your computer monitor. A higher resolution means the video file saved to the SD card is larger and when uploaded uses more battery and costs more image points from your data plan, but it will have more detail on the other hand.',
-            ),
-            'video_fps' => array(
-                'title' => 'Frame Rate',
-                'options' => array(
-                    array('name' => '4fps', 'value' => '4'),
-                    array('name' => '6fps', 'value' => '6'),
-                    array('name' => '8fps', 'value' => '8'),
-                    array('name' => '10fps', 'value' => '10'),
-                    array('name' => '12fps', 'value' => '12'),
-                    array('name' => '15fps', 'value' => '15'),
-                    array('name' => '30fps', 'value' => '30'),
-                ),
-                'help' => 'Capture rate does not affect the size of the video file captured or reduce the points used to upload to the portal. A lower frame rate in low motion will improve the quality of each frame while motion blur may increase. A faster frame rate may reduce motion blur when there is higher motion and may reduce the image quality of each frame. Every environment is different. Please experiment to find the right value for your environment and needs.',
-            ),
-            'video_bitrate' => array(
-                'title' => 'Quality Level',
-                'options' => array(
-                    array('name' => '1 (default/smallest)', 'value' => '300'),
-                    array('name' => '2', 'value' => '400'),
-                    array('name' => '3', 'value' => '500'),
-                    array('name' => '4', 'value' => '600'),
-                    array('name' => '5', 'value' => '700'),
-                    array('name' => '6', 'value' => '800'),
-                    array('name' => '7', 'value' => '900'),
-                    array('name' => '8 (balanced)', 'value' => '1000'),
-                    array('name' => '9', 'value' => '1200'),
-                    array('name' => '10', 'value' => '1400'),
-                    array('name' => '11', 'value' => '1800'),
-                    array('name' => '12 (High)', 'value' => '2500'),
-                    array('name' => '13 (Maximum/LARGE!)', 'value' => '5000'),
-                ),
-                'help' => 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.',
-            ),
-            'video_length' => array(
-                'title' => 'Video Length',
-                'options' => array(
-                    array('name' => '2s', 'value' => '2'),
-                    array('name' => '3s', 'value' => '3'),
-                    array('name' => '4s', 'value' => '4'),
-                    array('name' => '5s', 'value' => '5'),
-                    array('name' => '6s', 'value' => '6'),
-                    array('name' => '7s', 'value' => '7'),
-                    array('name' => '8s', 'value' => '8'),
-                    array('name' => '9s', 'value' => '9'),
-                    array('name' => '10s', 'value' => '10'),
-                ),
-                'help' => 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.',
-            ),
-            'video_sound' => array(
-                'title' => 'Video Sound',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-
-            /* other */
-            'timestamp' => array(
-                'title' => 'Time Stamp',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'date_format' => array(
-                'title' => 'Date Format',
-                'options' => array(
-                    array('name' => 'mdY', 'value' => 'mdY'),
-                    array('name' => 'Ymd', 'value' => 'Ymd'),
-                    array('name' => 'dmY', 'value' => 'dmY'),
-                ),
-                'help' => '',
-            ),
-            'time_format' => array(
-                'title' => 'Time Format',
-                'options' => array(
-                    array('name' => '12 Hour', 'value' => '12'),
-                    array('name' => '24 Hour', 'value' => '24'),
-                ),
-                'help' => '',
-            ),
-            'temp_unit' => array(
-                'title' => 'Temperature',
-                'options' => array(
-                    array('name' => 'Fahrenheit', 'value' => 'f'),
-                    array('name' => 'Celsius', 'value' => 'c'),
-                ),
-                'help' => '',
-            ),
-        );
-
-        $handle = $this->Settings_Body($camera->id, $lists);
-        return $handle;
+        $txt .= $this->stItemOption($id, $this->itemTimeStamp(), 'timestamp');
+        $txt .= $this->stItemOption($id, $this->itemDateFormat(), 'date_format');
+        $txt .= $this->stItemOption($id, $this->itemTimeFormat(), 'time_format');
+        $txt .= $this->stItemOption($id, $this->itemTemperature(), 'temp_unit');
+        return $txt;
     }
 
     public function Settings_Trigger($camera) {
-        $lists = array(
-            'quiettime' => array(
-                'title' => 'Quiet Time',
-                'options' => array(
-                    array('name' => '0s', 'value' => '0s'),
-                    array('name' => '5s', 'value' => '5s'),
-                    array('name' => '10s', 'value' => '10s'),
-                    array('name' => '15s', 'value' => '15s'),
-                    array('name' => '20s', 'value' => '20s'),
-                    array('name' => '25s', 'value' => '25s'),
-                    array('name' => '30s', 'value' => '30s'),
-                    array('name' => '35s', 'value' => '35s'),
-                    array('name' => '40s', 'value' => '40s'),
-                    array('name' => '45s', 'value' => '45s'),
-                    array('name' => '50s', 'value' => '50s'),
-                    array('name' => '55s', 'value' => '55s'),
-                    array('name' => '1m', 'value' => '1m'),
-                    array('name' => '2m', 'value' => '2m'),
-                    array('name' => '3m', 'value' => '3m'),
-                    array('name' => '4m', 'value' => '4m'),
-                    array('name' => '5m', 'value' => '5m'),
-                    array('name' => '10m', 'value' => '10m'),
-                    array('name' => '15m', 'value' => '15m'),
-                    array('name' => '20m', 'value' => '20m'),
-                    array('name' => '25m', 'value' => '25m'),
-                    array('name' => '30m', 'value' => '30m'),
-                    array('name' => '35m', 'value' => '35m'),
-                    array('name' => '40m', 'value' => '40m'),
-                    array('name' => '45m', 'value' => '45m'),
-                    array('name' => '50m', 'value' => '50m'),
-                    array('name' => '55m', 'value' => '55m'),
-                    array('name' => '60m', 'value' => '60m'),
-                ),
-                'help' => 'Quiet Time is a delay after the current event is complete (photo or video). It can be used to reduce the number of PIR events in a given time. If your camera is taking too many photos or videos, then increase the quiet time to reduce the frequency of PIR (motion) activations. PIR or motion capture, as well as Time Lapse capture is disabled while sleeping in the quiet time period.',
-            ),
-
-        );
-
-        $handle = $this->Settings_Body($camera->id, $lists);
-        return $handle;
+        $txt = $this->stItemOption($camera->id, $this->itemQuietTime(), 'quiettime');
+        return $txt;
     }
 
     public function Settings_Timelapse($camera) {
-        $lists = array(
-            'tls_start' => array(
-                'title' => 'Timelapse Start Time',
-                'type' => 'hhmm',
-                'options' => array(
-                    array('name' => '00:00', 'value' => '00:00'),
-                    array('name' => '00:15', 'value' => '00:15'),
-                    array('name' => '00:30', 'value' => '00:30'),
-                    array('name' => '00:45', 'value' => '00:45'),
-                    array('name' => '01:00', 'value' => '01:00'),
-                    array('name' => '01:15', 'value' => '01:15'),
-                    array('name' => '01:30', 'value' => '01:30'),
-                    array('name' => '01:45', 'value' => '01:45'),
-                    array('name' => '02:00', 'value' => '02:00'),
-                    array('name' => '02:15', 'value' => '02:15'),
-                    array('name' => '02:30', 'value' => '02:30'),
-                    array('name' => '02:45', 'value' => '02:45'),
-                    array('name' => '03:00', 'value' => '03:00'),
-                    array('name' => '03:15', 'value' => '03:15'),
-                    array('name' => '03:30', 'value' => '03:30'),
-                    array('name' => '03:45', 'value' => '03:45'),
-                    array('name' => '04:00', 'value' => '04:00'),
-                    array('name' => '04:15', 'value' => '04:15'),
-                    array('name' => '04:30', 'value' => '04:30'),
-                    array('name' => '04:45', 'value' => '04:45'),
-                    array('name' => '05:00', 'value' => '05:00'),
-                    array('name' => '05:15', 'value' => '05:15'),
-                    array('name' => '05:30', 'value' => '05:30'),
-                    array('name' => '05:45', 'value' => '05:45'),
-                    array('name' => '06:00', 'value' => '06:00'),
-                    array('name' => '06:15', 'value' => '06:15'),
-                    array('name' => '06:30', 'value' => '06:30'),
-                    array('name' => '06:45', 'value' => '06:45'),
-                    array('name' => '07:00', 'value' => '07:00'),
-                    array('name' => '07:15', 'value' => '07:15'),
-                    array('name' => '07:30', 'value' => '07:30'),
-                    array('name' => '07:45', 'value' => '07:45'),
-                    array('name' => '08:00', 'value' => '08:00'),
-                    array('name' => '08:15', 'value' => '08:15'),
-                    array('name' => '08:30', 'value' => '08:30'),
-                    array('name' => '08:45', 'value' => '08:45'),
-                    array('name' => '09:00', 'value' => '09:00'),
-                    array('name' => '09:15', 'value' => '09:15'),
-                    array('name' => '09:30', 'value' => '09:30'),
-                    array('name' => '09:45', 'value' => '09:45'),
-                    array('name' => '10:00', 'value' => '10:00'),
-                    array('name' => '10:15', 'value' => '10:15'),
-                    array('name' => '10:30', 'value' => '10:30'),
-                    array('name' => '10:45', 'value' => '10:45'),
-                    array('name' => '11:00', 'value' => '11:00'),
-                    array('name' => '11:15', 'value' => '11:15'),
-                    array('name' => '11:30', 'value' => '11:30'),
-                    array('name' => '11:45', 'value' => '11:45'),
-                    array('name' => '12:00', 'value' => '12:00'),
-                    array('name' => '12:15', 'value' => '12:15'),
-                    array('name' => '12:30', 'value' => '12:30'),
-                    array('name' => '12:45', 'value' => '12:45'),
-                    array('name' => '13:00', 'value' => '13:00'),
-                    array('name' => '13:15', 'value' => '13:15'),
-                    array('name' => '13:30', 'value' => '13:30'),
-                    array('name' => '13:45', 'value' => '13:45'),
-                    array('name' => '14:00', 'value' => '14:00'),
-                    array('name' => '14:15', 'value' => '14:15'),
-                    array('name' => '14:30', 'value' => '14:30'),
-                    array('name' => '14:45', 'value' => '14:45'),
-                    array('name' => '15:00', 'value' => '15:00'),
-                    array('name' => '15:15', 'value' => '15:15'),
-                    array('name' => '15:30', 'value' => '15:30'),
-                    array('name' => '15:45', 'value' => '15:45'),
-                    array('name' => '16:00', 'value' => '16:00'),
-                    array('name' => '16:15', 'value' => '16:15'),
-                    array('name' => '16:30', 'value' => '16:30'),
-                    array('name' => '16:45', 'value' => '16:45'),
-                    array('name' => '17:00', 'value' => '17:00'),
-                    array('name' => '17:15', 'value' => '17:15'),
-                    array('name' => '17:30', 'value' => '17:30'),
-                    array('name' => '17:45', 'value' => '17:45'),
-                    array('name' => '18:00', 'value' => '18:00'),
-                    array('name' => '18:15', 'value' => '18:15'),
-                    array('name' => '18:30', 'value' => '18:30'),
-                    array('name' => '18:45', 'value' => '18:45'),
-                    array('name' => '19:00', 'value' => '19:00'),
-                    array('name' => '19:15', 'value' => '19:15'),
-                    array('name' => '19:30', 'value' => '19:30'),
-                    array('name' => '19:45', 'value' => '19:45'),
-                    array('name' => '20:00', 'value' => '20:00'),
-                    array('name' => '20:15', 'value' => '20:15'),
-                    array('name' => '20:30', 'value' => '20:30'),
-                    array('name' => '20:45', 'value' => '20:45'),
-                    array('name' => '21:00', 'value' => '21:00'),
-                    array('name' => '21:15', 'value' => '21:15'),
-                    array('name' => '21:30', 'value' => '21:30'),
-                    array('name' => '21:45', 'value' => '21:45'),
-                    array('name' => '22:00', 'value' => '22:00'),
-                    array('name' => '22:15', 'value' => '22:15'),
-                    array('name' => '22:30', 'value' => '22:30'),
-                    array('name' => '22:45', 'value' => '22:45'),
-                    array('name' => '23:00', 'value' => '23:00'),
-                    array('name' => '23:15', 'value' => '23:15'),
-                    array('name' => '23:30', 'value' => '23:30'),
-                    array('name' => '23:45', 'value' => '23:45'),
-                    // array('name' => '23:59', 'value' => '23:59'),
-                ),
-                'help' => '',
-            ),
-
-            'tls_stop' => array(
-                'title' => 'Timelapse Stop Time',
-                'type' => 'hhmm',
-                'options' => array(
-                    array('name' => '00:00', 'value' => '00:00'),
-                    array('name' => '00:15', 'value' => '00:15'),
-                    array('name' => '00:30', 'value' => '00:30'),
-                    array('name' => '00:45', 'value' => '00:45'),
-                    array('name' => '01:00', 'value' => '01:00'),
-                    array('name' => '01:15', 'value' => '01:15'),
-                    array('name' => '01:30', 'value' => '01:30'),
-                    array('name' => '01:45', 'value' => '01:45'),
-                    array('name' => '02:00', 'value' => '02:00'),
-                    array('name' => '02:15', 'value' => '02:15'),
-                    array('name' => '02:30', 'value' => '02:30'),
-                    array('name' => '02:45', 'value' => '02:45'),
-                    array('name' => '03:00', 'value' => '03:00'),
-                    array('name' => '03:15', 'value' => '03:15'),
-                    array('name' => '03:30', 'value' => '03:30'),
-                    array('name' => '03:45', 'value' => '03:45'),
-                    array('name' => '04:00', 'value' => '04:00'),
-                    array('name' => '04:15', 'value' => '04:15'),
-                    array('name' => '04:30', 'value' => '04:30'),
-                    array('name' => '04:45', 'value' => '04:45'),
-                    array('name' => '05:00', 'value' => '05:00'),
-                    array('name' => '05:15', 'value' => '05:15'),
-                    array('name' => '05:30', 'value' => '05:30'),
-                    array('name' => '05:45', 'value' => '05:45'),
-                    array('name' => '06:00', 'value' => '06:00'),
-                    array('name' => '06:15', 'value' => '06:15'),
-                    array('name' => '06:30', 'value' => '06:30'),
-                    array('name' => '06:45', 'value' => '06:45'),
-                    array('name' => '07:00', 'value' => '07:00'),
-                    array('name' => '07:15', 'value' => '07:15'),
-                    array('name' => '07:30', 'value' => '07:30'),
-                    array('name' => '07:45', 'value' => '07:45'),
-                    array('name' => '08:00', 'value' => '08:00'),
-                    array('name' => '08:15', 'value' => '08:15'),
-                    array('name' => '08:30', 'value' => '08:30'),
-                    array('name' => '08:45', 'value' => '08:45'),
-                    array('name' => '09:00', 'value' => '09:00'),
-                    array('name' => '09:15', 'value' => '09:15'),
-                    array('name' => '09:30', 'value' => '09:30'),
-                    array('name' => '09:45', 'value' => '09:45'),
-                    array('name' => '10:00', 'value' => '10:00'),
-                    array('name' => '10:15', 'value' => '10:15'),
-                    array('name' => '10:30', 'value' => '10:30'),
-                    array('name' => '10:45', 'value' => '10:45'),
-                    array('name' => '11:00', 'value' => '11:00'),
-                    array('name' => '11:15', 'value' => '11:15'),
-                    array('name' => '11:30', 'value' => '11:30'),
-                    array('name' => '11:45', 'value' => '11:45'),
-                    array('name' => '12:00', 'value' => '12:00'),
-                    array('name' => '12:15', 'value' => '12:15'),
-                    array('name' => '12:30', 'value' => '12:30'),
-                    array('name' => '12:45', 'value' => '12:45'),
-                    array('name' => '13:00', 'value' => '13:00'),
-                    array('name' => '13:15', 'value' => '13:15'),
-                    array('name' => '13:30', 'value' => '13:30'),
-                    array('name' => '13:45', 'value' => '13:45'),
-                    array('name' => '14:00', 'value' => '14:00'),
-                    array('name' => '14:15', 'value' => '14:15'),
-                    array('name' => '14:30', 'value' => '14:30'),
-                    array('name' => '14:45', 'value' => '14:45'),
-                    array('name' => '15:00', 'value' => '15:00'),
-                    array('name' => '15:15', 'value' => '15:15'),
-                    array('name' => '15:30', 'value' => '15:30'),
-                    array('name' => '15:45', 'value' => '15:45'),
-                    array('name' => '16:00', 'value' => '16:00'),
-                    array('name' => '16:15', 'value' => '16:15'),
-                    array('name' => '16:30', 'value' => '16:30'),
-                    array('name' => '16:45', 'value' => '16:45'),
-                    array('name' => '17:00', 'value' => '17:00'),
-                    array('name' => '17:15', 'value' => '17:15'),
-                    array('name' => '17:30', 'value' => '17:30'),
-                    array('name' => '17:45', 'value' => '17:45'),
-                    array('name' => '18:00', 'value' => '18:00'),
-                    array('name' => '18:15', 'value' => '18:15'),
-                    array('name' => '18:30', 'value' => '18:30'),
-                    array('name' => '18:45', 'value' => '18:45'),
-                    array('name' => '19:00', 'value' => '19:00'),
-                    array('name' => '19:15', 'value' => '19:15'),
-                    array('name' => '19:30', 'value' => '19:30'),
-                    array('name' => '19:45', 'value' => '19:45'),
-                    array('name' => '20:00', 'value' => '20:00'),
-                    array('name' => '20:15', 'value' => '20:15'),
-                    array('name' => '20:30', 'value' => '20:30'),
-                    array('name' => '20:45', 'value' => '20:45'),
-                    array('name' => '21:00', 'value' => '21:00'),
-                    array('name' => '21:15', 'value' => '21:15'),
-                    array('name' => '21:30', 'value' => '21:30'),
-                    array('name' => '21:45', 'value' => '21:45'),
-                    array('name' => '22:00', 'value' => '22:00'),
-                    array('name' => '22:15', 'value' => '22:15'),
-                    array('name' => '22:30', 'value' => '22:30'),
-                    array('name' => '22:45', 'value' => '22:45'),
-                    array('name' => '23:00', 'value' => '23:00'),
-                    array('name' => '23:15', 'value' => '23:15'),
-                    array('name' => '23:30', 'value' => '23:30'),
-                    array('name' => '23:45', 'value' => '23:45'),
-                    array('name' => '23:59', 'value' => '23:59'),
-                ),
-                'help' => '',
-            ),
-            'tls_interval' => array(
-                'title'   => 'Timelapse Interval',
-                'options' => array(
-                    array('name' => '5m', 'value' => '5m'),
-                    array('name' => '10m', 'value' => '10m'),
-                    array('name' => '15m', 'value' => '15m'),
-                    array('name' => '20m', 'value' => '20m'),
-                    array('name' => '25m', 'value' => '25m'),
-                    array('name' => '30m', 'value' => '30m'),
-                    array('name' => '35m', 'value' => '35m'),
-                    array('name' => '40m', 'value' => '40m'),
-                    array('name' => '45m', 'value' => '45m'),
-                    array('name' => '50m', 'value' => '50m'),
-                    array('name' => '55m', 'value' => '55m'),
-                    array('name' => '1h', 'value' => '1h'),
-                    array('name' => '2h', 'value' => '2h'),
-                    array('name' => '4h', 'value' => '4h'),
-                    array('name' => '6h', 'value' => '6h'),
-                    array('name' => '8h', 'value' => '8h'),
-                    array('name' => '10h', 'value' => '10h'),
-                    array('name' => '12h', 'value' => '12h'),
-                ),
-                'help' => '',
-            ),
-        );
-
-        $handle = $this->Settings_Body($camera->id, $lists);
-        return $handle;
+        $id = $camera->id;
+        $txt = '';
+        $txt .= $this->stItemOption($id, $this->itemTimelapseStartTime(), 'tls_start');
+        $txt .= $this->stItemOption($id, $this->itemTimelapseStopTime(), 'tls_stop');
+        $txt .= $this->stItemOption($id, $this->itemTimelapseInterval(), 'tls_interval');
+        return $txt;
     }
 
     public function Settings_Wireless_Mode($camera) {
-        $lists = array(
-            'wireless_mode'   => array(
-                'title'   => 'Wireless Mode',
-                'options' => array(
-                    array('name' => 'Instant', 'value' => 'instant'),
-                    array('name' => 'Schedule', 'value' => 'schedule'),
-                ),
-                'help'    => 'In [Instant] the camera will capture a photo or video then attach to the network and upload the file. In [Schedule] it will wake up either when the timer is up (Schedule Interval) or when the file limit is reached (File Limit)  and upload the pending files to the server.  Using [Schedule] will save battery because it reduces the handshaking that occurs each time the camera has to connect to the network (5 to 10 seconds per photo in Instant mode).  The mobile app will recieve a notification as each scheduled upload starts and completes.  The Action tab will show the scheduled event and the number of photos uploaded.',
-            ),
-
-            /* schedule */
-            'wm_schedule'     => array(
-                'title'   => 'Schedule Interval',
-                'options' => array(
-                    array('name' => 'Every Hour', 'value' => '1h'),
-                    array('name' => 'Every 2 Hours', 'value' => '2h'),
-                    array('name' => 'Every 4 Hours', 'value' => '4h'),
-                ),
-                'help'    => 'The camera will use a timer to wake up and determine if there are files to upload based on the interval you select. If there are pending files, they will be uploaded to the server at that time.',
-            ),
-            'wm_sclimit'      => array(
-                'title'   => 'Schedule File Limit',
-                'options' => array(
-                    array('name' => '20 Files', 'value' => '20'),
-                    array('name' => '30 Files', 'value' => '30'),
-                    array('name' => '40 Files', 'value' => '40'),
-                    array('name' => '50 Files', 'value' => '50'),
-                ),
-                'help'    => 'As the camera captures photos or videos, it will maintain a file count. If the file count reaches your selected File Limit, then the camera will attach to the network at that time (not the Scheduled Interval) and upload all pending files. A lower limit may increase network connections and use more battery, while a higher value may reduce network connections and battery usage. File Limit will be more important during periods of high activity. If the File Limit is not reached in a schedule interval period then it has no effect. File Limit is the only way to ensure that all media files captured will get uploaded to the pportal.',
-            ),
-
-            /* other */
-            'hb_interval' => array(
-                'title' => 'Heartbeat Interval',
-                'options' => array(
-                    array('name' => 'Every Hour', 'value' => '1h'),
-                    array('name' => 'Every 2 Hours', 'value' => '2h'),
-                    array('name' => 'Every 4 Hours', 'value' => '4h'),
-                    array('name' => 'Every 8 Hours', 'value' => '8h'),
-                    array('name' => 'Every 12 Hours', 'value' => '12h'),
-                ),
-                'help' => 'This timer will fire on the whole hour and will send a status to the server. The mobile app will recieve a notification when this occurs. This lets you know your camera is still functioning and its curent status. It will also process any pending Action items you have queued like High-Res Max, Video, Original, Settings.',
-            ),
-            'online_max_time' => array(
-                'title' => 'Max Online Time',
-                'options' => array(
-                    array('name' => '2m', 'value' => '2'),
-                    array('name' => '3m', 'value' => '3'),
-                    array('name' => '4m', 'value' => '4'),
-                    array('name' => '5m', 'value' => '5'),
-                    array('name' => '6m', 'value' => '6'),
-                    array('name' => '7m', 'value' => '7'),
-                    array('name' => '8m', 'value' => '8'),
-                    array('name' => '9m', 'value' => '9'),
-                    array('name' => '10m', 'value' => '10'),
-                ),
-                'help' => 'Use this setting to control the amount of time the camera will remain online, per event, processing queued action requests. A shorter time means the camera can return to PIR mode more quickly and continue capturing Photo and Video, otherwise the camera is busy and may miss PIR events due to queue processing. A longer time means your queued Action items should get completed sooner if the queue is large.',
-            ),
-            'cellularpw' => array(
-                'title' => 'Cellular Password',
-                'type' => 'input',
-                //'pattern' => '[0-9]{6}',
-                'format' => 'pattern="[0-9]{6}"',
-                'placeholder' => 'Input Cellular Password',
-                'help' => 'Input 6 digits. Blank for no password. If you input a password, it is required when you power the camera into Setup mode. This means if your camera is stolen, the thief is not able to set cellular mode to OFF, which means he can only use the camera in cellular mode.',
-            ),
-            //'remotecontrol' => array(
-            //    'title' => 'Remote Control',
-            //    'options' => array(
-            //        array('name' => 'Disabled', 'value' => 'off'),
-            //        array('name' => '24 Hour', 'value' => '24h'),
-            //    ),
-            //    'help' => 'This option will cause the camera to sleep in a high power state waiting on SMS commands from the network. It will use more battery power at rest in this mode. You will see additional buttons on the Actions tab, used to wake your camera up immediately. When clicked, those buttons [SNAP] and [WAKE] will send an SMS message to wake the camera up. [SNAP] will cause the camera to capture a photo or video and upload it to the portal. The camera will then process any Action items you have queued up.',
-            //),
-
-        );
-
-        $handle = $this->Settings_Body($camera->id, $lists);
-        return $handle;
+        $id = $camera->id;
+        $txt = '';
+        $txt .= $this->stItemOption($id, $this->itemWirelessMode(), 'wireless_mode');
+        $txt .= $this->stItemOption($id, $this->itemScheduleInterval(), 'wm_schedule');
+        $txt .= $this->stItemOption($id, $this->itemScheduleFileLimit(), 'wm_sclimit');
+        $txt .= $this->stItemOption($id, $this->itemHeartbeatInterval(), 'hb_interval');
+        $txt .= $this->stItemOption($id, $this->itemActionProcessTimeLimit(), 'online_max_time');
+        $txt .= $this->stItemOption($id, $this->itemCellularPassword(), 'cellularpw');
+        $txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
+        return $txt;
     }
 
     public function Settings_Block_Mode($camera) {
-        $lists = array(
-            'blockmode1' => array(
-                'title' => 'Block Mode 1',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode2' => array(
-                'title' => 'Block Mode 2',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode3' => array(
-                'title' => 'Block Mode 3',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode4' => array(
-                'title' => 'Block Mode 4',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode5' => array(
-                'title' => 'Block Mode 5',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-
-            'blockmode7' => array(
-                'title' => 'Block Mode 7',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode8' => array(
-                'title' => 'Block Mode 8',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode9' => array(
-                'title' => 'Block Mode 9',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode10' => array(
-                'title' => 'Block Mode 10',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
-            ),
-            'blockmode11' => array(
-                'title' => 'Block Mode 11',
-                'options' => array(
-                    array('name' => 'On', 'value' => 'on'),
-                    array('name' => 'Off', 'value' => 'off'),
-                ),
-                'help' => '',
+        $array = array(
+            'options' => array(
+                'On'=>'on', 'Off'=>'off',
             ),
         );
-
-        $handle = $this->Settings_Body($camera->id, $lists);
-        return $handle;
+        $id = $camera->id;
+        $txt = '';
+        $txt .= $this->stItemOption($id, $array, 'blockmode1', 'Block Mode 1');
+        $txt .= $this->stItemOption($id, $array, 'blockmode2', 'Block Mode 2');
+        $txt .= $this->stItemOption($id, $array, 'blockmode3', 'Block Mode 3');
+        $txt .= $this->stItemOption($id, $array, 'blockmode4', 'Block Mode 4');
+        $txt .= $this->stItemOption($id, $array, 'blockmode5', 'Block Mode 5');
+        //$txt .= $this->stItemOption($id, $array, 'blockmode6', 'Block Mode 6');
+        $txt .= $this->stItemOption($id, $array, 'blockmode7', 'Block Mode 7');
+        $txt .= $this->stItemOption($id, $array, 'blockmode8', 'Block Mode 8');
+        $txt .= $this->stItemOption($id, $array, 'blockmode9', 'Block Mode 9');
+        $txt .= $this->stItemOption($id, $array, 'blockmode10', 'Block Mode 10');
+        $txt .= $this->stItemOption($id, $array, 'blockmode11', 'Block Mode 11');
+        return $txt;
     }
 
     public function Settings_DutyTime($camera) {

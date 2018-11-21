@@ -118,6 +118,20 @@
             </div>
         </div>
 
+<!--
+        <div class="col-md-6">
+            <div class="panel panel-default panel-primary custom-settings-panel">
+                <div class="panel-heading">
+                    Block Mode Settings (Kevin Test)
+                </div>
+                <div class="panel-body">
+                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
+                    {!! $cc->Settings_Block_Mode($camera) !!}
+                </div>
+            </div>
+        </div>
+-->
+
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
@@ -262,6 +276,8 @@
             if (val == 'p') {
                 $('#field-wrapper-{{ $camera->id }}-photo_resolution').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-photo_resolution').show(250);
+                $('#field-wrapper-{{ $camera->id }}-flash').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-flash').show(250);
                 $('#field-wrapper-{{ $camera->id }}-upload_resolution').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-upload_resolution').show(250);
                 $('#field-wrapper-{{ $camera->id }}-photo_quality').removeClass('hidden');
@@ -270,22 +286,26 @@
                 $('#field-wrapper-{{ $camera->id }}-photo_burst').show(250);
                 $('#field-wrapper-{{ $camera->id }}-burst_delay').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-burst_delay').show(250);
+
                 $('#field-wrapper-{{ $camera->id }}-video_resolution').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-video_fps').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-video_bitrate').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-video_length').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-video_sound').hide(250);
+
             } else {
                 $('#field-wrapper-{{ $camera->id }}-photo_resolution').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-flash').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-upload_resolution').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-photo_quality').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-photo_burst').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-burst_delay').hide(250);
+
                 $('#field-wrapper-{{ $camera->id }}-video_resolution').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-video_resolution').show(250);
                 $('#field-wrapper-{{ $camera->id }}-video_fps').removeClass('hidden');
+                $('#field-wrapper-{{ $camera->id }}-video_fps').show(250);
                 $('#field-wrapper-{{ $camera->id }}-video_bitrate').removeClass('hidden');
-                //$('#field-wrapper-{{ $camera->id }}-video_rate').show(250);
                 $('#field-wrapper-{{ $camera->id }}-video_bitrate').show(250);
                 $('#field-wrapper-{{ $camera->id }}-video_length').removeClass('hidden');
                 $('#field-wrapper-{{ $camera->id }}-video_length').show(250);
