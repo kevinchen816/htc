@@ -6,11 +6,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 // use Illuminate\Auth\Authenticatable;
-// use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Auth\Passwords\CanResetPassword;
-// // use Illuminate\Foundation\Auth\Access\Authorizable;
+ // use Illuminate\Foundation\Auth\Access\Authorizable;
 // use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-// // use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+ // use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 // use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use Laravel\Cashier\Billable;
@@ -22,7 +22,7 @@ use App\Models\Plan;
 //class User extends Model
 class User extends Authenticatable
 {
-//    use Notifiable;
+    use Notifiable;
     // use Authenticatable, CanResetPassword, Billable;
     use Billable;
 
