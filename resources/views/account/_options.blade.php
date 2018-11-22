@@ -5,26 +5,17 @@
                 <h4 class="panel-title">Account Options</h4>
             </div>
             <div class="panel-body">
-                <form method="POST" action="https://portal.ridgetec.com/account/options" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emailchange-form">
+                <form method="POST" action="{{ route('account.options') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emailchange-form">
                     {{ csrf_field() }}
                     <input name="portal" type="hidden" value="{{ $portal }}">
                     <label class="col-md-4 control-label" for="inputSmall">Date Format</label>
                     <div class="col-md-8">
                         <select date_format class="bs-select form-control input-sm" name="date_format">
-                            <option value="m%2Fd%2FY+g%3Ai%3As+a" selected="selected">MM/DD/YYYY HH:MM:SS AM/PM (12 hours)</option>
-                            <option value="m%2Fd%2FY+H%3Ai%3As">MM/DD/YYYY HH:MM:SS (24 hours)</option>
-                            <option value="Y%2Fm%2Fd+g%3Ai%3As+a">YYYY/MM/DD HH:MM:SS AM/PM (12 hours)</option>
-                            <option value="Y%2Fm%2Fd+H%3Ai%3As">YYYY/MM/DD HH:MM:SS (24 hours)</option>
-                            <option value="d%2Fm%2FY+g%3Ai%3As+a">DD/MM/YYYY HH:MM:SS AM/PM (12 hours)</option>
-                            <option value="d%2Fm%2FY+H%3Ai%3As">DD/MM/YYYY HH:MM:SS (24 hours)</option>
+                            @inject('ac', 'App\Http\Controllers\AccountsController')
+                            {!! $ac->html_DateFormat() !!}
                         </select>
-
                         <button type="submit" class="btn btn-success btn-xs">Save</button>
                     </div>
-
-<!--                     <div class="pull-right">
-                        <button type="submit" class="btn btn-success btn-xs">Save</button>
-                    </div> -->
                 </form>
             </div>
         </div>
@@ -43,7 +34,7 @@
                         <label class="control-label pull-right" for="inputSmall">Password Reset</label>
                     </div>
                     <div class="col-md-7">
-                        <a href="/account/sendreset" class="btn btn-xs btn-success">Send Password Reset Email</a>
+                        <a href="{{ route('account.password-send-reset-email') }}" class="btn btn-xs btn-success">Send Password Reset Email</a>
                     </div>
 
                 </div>
@@ -55,8 +46,9 @@
                 </div>
 
                 <div class="row">
-                    <form method="POST" action="https://portal.ridgetec.com/account/email-change" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emailchange-form">
+                    <form method="POST" action="{{ route('account.email-change') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emailchange-form">
                         {{ csrf_field() }}
+                        <input name="portal" type="hidden" value="{{ $portal }}">
                         <input name="current-email" type="hidden" value="kevin@10ware.com">
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="email inputSmall">Change Email</label>

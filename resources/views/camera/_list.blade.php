@@ -27,7 +27,7 @@
                 <tbody>
                     @if ($camera)
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Camera_List($portal, $camera->id) !!}
+                    {!! $cc->html_CameraList($portal, $user, $camera->id) !!}
                     @endif
                 </tbody>
             </table>

@@ -33,7 +33,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'trial_ends_at', 'subscription_ends_at',
-        'portal', 'permission', 'sel_menu', 'sel_camera', 'sel_camera_tab', 'sel_account_tab'
+        'date_format', 'portal', 'permission',
+        'sel_menu', 'sel_camera', 'sel_camera_tab', 'sel_account_tab'
     ];
 
     /**

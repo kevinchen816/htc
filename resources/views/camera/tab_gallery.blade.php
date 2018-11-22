@@ -193,7 +193,7 @@
                             <!-- Begin Row -->
                             <div class="row no-gutters">
                                 @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                                {!! $cc->Camera_Gallery_Photo($camera, $photos) !!}
+                                {!! $cc->html_GalleryPhoto($user, $camera, $photos) !!}
 
                             </div>
                             <!-- End Row -->

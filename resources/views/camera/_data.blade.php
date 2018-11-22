@@ -50,7 +50,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                                        {!! $cc->Camera_Gallery_Select_Camera() !!}
+                                        {!! $cc->html_GallerySelectCamera() !!}
                                     </ul>
                                 </div>
 

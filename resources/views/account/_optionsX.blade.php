@@ -9,7 +9,14 @@
                     {{ csrf_field() }}
                     <label class="col-md-4 control-label" for="inputSmall">Date Format</label>
                     <div class="col-md-8">
-                        <select date_format class="bs-select form-control input-sm"   name="date_format"><option value="m%2Fd%2FY+g%3Ai%3As+a" selected="selected">MM/DD/YYYY HH:MM:SS AM/PM (12 hours)</option><option value="m%2Fd%2FY+H%3Ai%3As">MM/DD/YYYY HH:MM:SS (24 hours)</option><option value="Y%2Fm%2Fd+g%3Ai%3As+a">YYYY/MM/DD HH:MM:SS AM/PM (12 hours)</option><option value="Y%2Fm%2Fd+H%3Ai%3As">YYYY/MM/DD HH:MM:SS (24 hours)</option><option value="d%2Fm%2FY+g%3Ai%3As+a">DD/MM/YYYY HH:MM:SS AM/PM (12 hours)</option><option value="d%2Fm%2FY+H%3Ai%3As">DD/MM/YYYY HH:MM:SS (24 hours)</option></select>
+                        <select date_format class="bs-select form-control input-sm" name="date_format">
+                            <option value="m%2Fd%2FY+g%3Ai%3As+a" selected="selected">MM/DD/YYYY HH:MM:SS AM/PM (12 hours)</option>
+                            <option value="m%2Fd%2FY+H%3Ai%3As">MM/DD/YYYY HH:MM:SS (24 hours)</option>
+                            <option value="Y%2Fm%2Fd+g%3Ai%3As+a">YYYY/MM/DD HH:MM:SS AM/PM (12 hours)</option>
+                            <option value="Y%2Fm%2Fd+H%3Ai%3As">YYYY/MM/DD HH:MM:SS (24 hours)</option>
+                            <option value="d%2Fm%2FY+g%3Ai%3As+a">DD/MM/YYYY HH:MM:SS AM/PM (12 hours)</option>
+                            <option value="d%2Fm%2FY+H%3Ai%3As">DD/MM/YYYY HH:MM:SS (24 hours)</option>
+                        </select>
                     </div>
 
                     <label class="col-md-4 control-label" for="inputSmall">High-Res Gallery Thumbs</label>

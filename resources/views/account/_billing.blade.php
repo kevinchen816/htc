@@ -28,7 +28,7 @@
         <div id="form-errors" class="alert alert-danger hidden">
         </div>
 
-        <form method="POST" action="{{ route('account.profile-billing') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="payment-form">
+        <form method="POST" action="{{ route('account.billing') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="payment-form">
             {{ csrf_field() }}
             <input name="portal" type="hidden" value="{{ $portal }}">
 

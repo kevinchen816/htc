@@ -267,9 +267,17 @@ Route::get('/account/profile', 'AccountsController@profile')->name('account.prof
 Route::get('/10ware/account/profile', 'AccountsController@profile_10ware')->name('account.profile.10ware');
 
 Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
-Route::post('/account/profile-billing', 'AccountsController@billing')->name('account.profile-billing');
-Route::post('/account/profile-emails', 'AccountsController@emails_save')->name('account.profile-emails');
-//Route::get('/account/profile-emails', 'AccountsController@profile_emails')->name('account.profile-emails'); // TODO
+Route::post('/account/data-plans', 'AccountsController@plans')->name('account.plans');
+Route::post('/account/billing', 'AccountsController@billing')->name('account.billing');
+Route::post('/account/devices', 'AccountsController@devices')->name('account.devices');
+Route::post('/account/options', 'AccountsController@options')->name('account.options');
+Route::post('/account/emails', 'AccountsController@emails')->name('account.emails');
+Route::post('/account/email-change', 'AccountsController@email_change')->name('account.email-change');
+
+//Route::get('/account/password-reset', 'AccountsController@password_reset')->name('account.password-reset');
+Route::get('/account/password/send-reset-email', 'AccountsController@password_send_reset_email')->name('account.password-send-reset-email');
+
+//Route::get('/account/password/reset/{id}', 'AccountsController@password_reset')->name('account.password-reset');
 
 /* default.blade.php */
     // $('#show_cameras').click(function() { /* default.blade.php */

@@ -64,7 +64,7 @@ class AccountsController extends Controller
     }
 
     /*-----------------------------------------------------------*/
-    public function MyPlans() {
+    public function html_MyPlans() {
         //return 'Hello';
         $user = Auth::user();
         $user_id = $user->id;
@@ -129,7 +129,7 @@ class AccountsController extends Controller
         return $handle;
     }
 
-    public function MyPlansEx() {
+    public function html_MyPlansEx() {
         //return 'Hello';
         $user = Auth::user();
         $user_id = $user->id;
@@ -302,7 +302,44 @@ $handle .=                 '</tr>';
     }
 
     /*-----------------------------------------------------------*/
-    public function Emails() {
+    public function html_DateFormat() {
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        $sel_mdY_his_a = '';
+        $sel_mdY_His = '';
+        $sel_Ymd_his_a = '';
+        $sel_Ymd_His = '';
+        $sel_dmY_his_a = '';
+        $sel_dmY_His = '';
+        $selected = 'selected="selected"';
+
+        if ($user->date_format == 'm/d/Y h:i:s a') {
+            $sel_mdY_his_a = $selected;
+        } else if ($user->date_format == 'm/d/Y H:i:s') {
+            $sel_mdY_His = $selected;
+        } else if ($user->date_format == 'Y/m/d h:i:s a') {
+            $sel_Ymd_his_a = $selected;
+        } else if ($user->date_format == 'Y/m/d H:i:s') {
+            $sel_Ymd_His = $selected;
+        } else if ($user->date_format == 'd/m/Y h:i:s a') {
+            $sel_dmY_his_a = $selected;
+        } else if ($user->date_format == 'd/m/Y H:i:s') {
+            $sel_dmY_His = $selected;
+        }
+
+        $txt = '';
+        $txt .= '<option value="m%2Fd%2FY+h%3Ai%3As+a" '.$sel_mdY_his_a.'">MM/DD/YYYY HH:MM:SS AM/PM (12 hours)</option>';
+        $txt .= '<option value="m%2Fd%2FY+H%3Ai%3As" '.$sel_mdY_His.'>MM/DD/YYYY HH:MM:SS (24 hours)</option>';
+        $txt .= '<option value="Y%2Fm%2Fd+h%3Ai%3As+a" '.$sel_Ymd_his_a.'>YYYY/MM/DD HH:MM:SS AM/PM (12 hours)</option>';
+        $txt .= '<option value="Y%2Fm%2Fd+H%3Ai%3As" '.$sel_Ymd_His.'>YYYY/MM/DD HH:MM:SS (24 hours)</option>';
+        $txt .= '<option value="d%2Fm%2FY+h%3Ai%3As+a" '.$sel_dmY_his_a.'>DD/MM/YYYY HH:MM:SS AM/PM (12 hours)</option>';
+        $txt .= '<option value="d%2Fm%2FY+H%3Ai%3As" '.$sel_dmY_His.'>DD/MM/YYYY HH:MM:SS (24 hours)</option>';
+        return $txt;
+    }
+
+    /*-----------------------------------------------------------*/
+    public function html_EmailSetup() {
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -390,7 +427,96 @@ $handle .=                 '</tr>';
         return $handle;
     }
 
-    public function emails_save(Request $request) {
+    /*-----------------------------------------------------------*/
+    public function plans(Request $request) {
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        session()->flash('success', 'Success: Account Plans Saved.');
+        return redirect()->back();
+    }
+
+    /*
+    {
+        "_token":"NU81sCo2nwHyYvMQYugQzrZzMr0O5p8szCRNe5nl",
+        "portal":"0",
+        "cardholder-name":"Kevin",
+        "cardholder-phone":"18664933085",
+        "stripeToken":"tok_1DThUGG8UgnSL68Ub0C7FfEh"
+    }
+    */
+    public function billing(Request $request) {
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        $user = Auth::user();
+        $user_id = $user->id;
+
+//         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+//         $stripeToken = $_POST['stripeToken'];
+//         $ret = \Stripe\Customer::create([
+//             "email" => "kevin@10ware.com",
+//             "description" => $_POST['cardholder-name'],
+// //            "name" => $_POST['cardholder-name'],
+// //            "phone" => $_POST['cardholder-phone'],
+// //            "address" => 'ADDRESS.....',
+// //            "currency" =>  "usd"
+//             'source' => $stripeToken,
+//         ]);
+
+        $stripeToken = $_POST['stripeToken'];
+        $user->updateCard($stripeToken);
+        session()->flash('success', 'Success: Update Card Information.');
+        //session()->flash('success', 'Success: Account Billing Saved.');
+        return redirect()->back();
+    }
+
+    public function devices(Request $request) {
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        session()->flash('success', 'Success: Account Devices Saved.');
+        return redirect()->back();
+    }
+
+
+    /*
+        {"_token":"xxx","portal":"0","date_format":"m%2Fd%2FY+g%3Ai%3As+a"}
+    */
+    public function options(Request $request) {
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+        //$user = Auth::user();
+        //$user_id = $user->id;
+
+        $date_format = $request->date_format;
+        $date_format = str_replace('%2F', '/', $date_format);
+        $date_format = str_replace('%3A', ':', $date_format);
+        $date_format = str_replace('+', ' ', $date_format);
+        //return $date_format;
+
+        //$sel_account_tab = $_POST['tab'];
+        $data['date_format'] = $date_format;
+        Auth::user()->update($data);
+
+        session()->flash('success', 'Success: Account Options Saved.');
+        return redirect()->back();
+    }
+
+    public function emails(Request $request) {
         $portal = $request->portal;
         if (!Auth::check()) {
             return $this->back_to_login($portal);
@@ -424,6 +550,33 @@ $handle .=                 '</tr>';
 
         //session()->flash('success', 'Success: Account Emails Saved. Some new email recipients were sent system email verifications. Until verified these addresses will not get any email.');
         session()->flash('success', 'Success: Account Emails Saved.');
+        return redirect()->back();
+    }
+
+    public function email_change(Request $request) {
+        $portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        //session()->flash('warning', 'Error: This email address is already in use!');
+        session()->flash('success', 'Success: Send Email Change Request.');
+        return redirect()->back();
+    }
+
+    public function password_send_reset_email() {
+        //$portal = $request->portal;
+        if (!Auth::check()) {
+            return $this->back_to_login($portal);
+        }
+
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        session()->flash('success', 'Success: Send Password Reset Email.');
         return redirect()->back();
     }
 
@@ -618,41 +771,6 @@ return var_dump($ret);
             ],
         ]);
         return $ret;
-    }
-
-    /*-----------------------------------------------------------*/
-    /*
-    {
-        "_token":"NU81sCo2nwHyYvMQYugQzrZzMr0O5p8szCRNe5nl",
-        "portal":"0",
-        "cardholder-name":"Kevin",
-        "cardholder-phone":"18664933085",
-        "stripeToken":"tok_1DThUGG8UgnSL68Ub0C7FfEh"
-    }
-    */
-    public function billing(Request $request) {
-//         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-//         $stripeToken = $_POST['stripeToken'];
-//         $ret = \Stripe\Customer::create([
-//             "email" => "kevin@10ware.com",
-//             "description" => $_POST['cardholder-name'],
-// //            "name" => $_POST['cardholder-name'],
-// //            "phone" => $_POST['cardholder-phone'],
-// //            "address" => 'ADDRESS.....',
-// //            "currency" =>  "usd"
-//             'source' => $stripeToken,
-//         ]);
-
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-        $user = Auth::user();
-
-        $stripeToken = $_POST['stripeToken'];
-        $user->updateCard($stripeToken);
-        session()->flash('success', 'Success: Update Card Information.');
-        return redirect()->back();
     }
 
     /*-----------------------------------------------------------*/

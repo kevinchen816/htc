@@ -11,7 +11,7 @@
             </h4>
         </div>
         <div class="panel-body">
-            {!! $cc->OverviewStatus($camera) !!}
+            {!! $cc->html_OverviewStatus($camera) !!}
 
             <div class="panel-group">
                 <div class="panel panel-default panel-moreinfo">
@@ -22,7 +22,7 @@
                     </div>
                     <div id="identity" class="panel-collapse collapse">
                         <div class="panel-body">
-                        {!! $cc->OverviewStatus2($camera) !!}
+                        {!! $cc->html_OverviewStatus2($camera) !!}
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
 
         <div id="live" class="panel-collapse collapse">
             <div class="panel-body">
-                {!! $cc->OverviewSettings($camera) !!}
+                {!! $cc->html_OverviewSettings($user, $camera) !!}
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
             <h4 class="panel-title">Event Data</h4>
         </div>
         <div class="panel-body">
-            {!! $cc->OverviewEvent($camera) !!}
+            {!! $cc->html_OverviewEvent($user, $camera) !!}
         </div>
     </div>
 </div>

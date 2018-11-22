@@ -1,4 +1,4 @@
-    <form method="POST" action="https://portal.ridgetec.com/account/data-plans" accept-charset="UTF-8" class="form-horizontal" role="form" id="data-plans-form">
+    <form method="POST" action="{{ route('account.plans') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="data-plans-form">
         {{ csrf_field() }}
         <input name="portal" type="hidden" value="{{ $portal }}">
 
@@ -16,5 +16,5 @@
         </div>
 
         @inject('ac', 'App\Http\Controllers\AccountsController')
-        {!! $ac->MyPlans() !!}
+        {!! $ac->html_MyPlans() !!}
     </form>

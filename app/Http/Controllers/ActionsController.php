@@ -17,6 +17,14 @@ const ACTION_PENDING                = 5;
 
 class ActionsController extends Controller
 {
+
+    public function _user_dateformat($user, $datetime) {
+        //$dt = date_create('2013-03-15 23:40:00', timezone_open('Europe/Oslo'));
+        $dt = date_create($datetime);
+        $dt = date_format($dt, $user->date_format);
+        return $dt;
+    }
+
     //public function terms(Request $request) {
     //    if (Auth::check()) {
     //        $user = Auth::user();
@@ -53,8 +61,7 @@ class ActionsController extends Controller
             <td>49 photos uploaded.</td>
         </tr>
     */
-    //public function History($camera) {
-    public function History($portal, $camera) {
+    public function html_History($portal, $user, $camera) {
         if (!Auth::check()) {
             return $this->back_to_login($portal);
         }
@@ -77,7 +84,7 @@ class ActionsController extends Controller
             ->orderBy('requested', 'desc')
             ->get();
 
-        $handle = '';
+        $txt = '';
         foreach ($actions as $action) {
             $note = '';
             $action_id = $action->id;
@@ -143,26 +150,26 @@ class ActionsController extends Controller
             //    $status_txt = 'Abort';
             }
 
-            //$requested_time =  date_format($action->requested, "Y/m/d H:i:s");
-            //$completed_time =  date_format($action->completed, "Y/m/d H:i:s");
+            $requested_time = $this->_user_dateformat($user, $action->requested);
+            $completed_time = $this->_user_dateformat($user, $action->completed);
 
-            $handle .= '<tr>';
-            $handle .=     '<td>'.$action_txt.'</td>';
+            $txt .= '<tr>';
+            $txt .=     '<td>'.$action_txt.'</td>';
             if ($action->status == ACTION_REQUESTED) {
-                $handle .= '<td><a class="btn btn-xs btn-success action-cancel-'.$camera_id.'" data-param="'.$action_id.'">Cancel</a></td>';
+                $txt .= '<td><a class="btn btn-xs btn-success action-cancel-'.$camera_id.'" data-param="'.$action_id.'">Cancel</a></td>';
             } else {
-                $handle .= '<td>'.$status_txt.'</td>';
+                $txt .= '<td>'.$status_txt.'</td>';
             }
-            $handle .=     '<td>'.$action->requested.'</td>'; // $requested_time
-            $handle .=     '<td>'.$action->completed.'</td>'; // $completed_time
-            $handle .=     '<td>'.$note.'</td>';
-            $handle .= '</tr>';
+            $txt .=     '<td>'.$requested_time.'</td>';
+            $txt .=     '<td>'.$completed_time.'</td>';
+            $txt .=     '<td>'.$note.'</td>';
+            $txt .= '</tr>';
         }
-        return $handle;
+        return $txt;
     }
 
-    public function Commands($camera) {
-        $handle = '';
+    public function html_Commands($camera) {
+        $txt = '';
         $camera_id = $camera->id;
 
         $firmware = DB::table('firmwares')
@@ -172,22 +179,20 @@ class ActionsController extends Controller
             $version = $firmware->version;
             //$version = '20190101';
             if ($version > $camera->dsp_version) {
-                $handle .= '<tr>';
-                $handle .=     '<td>';
-                $handle .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Update Firmware to ('.$version.')</a>';
-                $handle .=     '</td>';
-                $handle .= '</tr>';
+                $txt .= '<tr>';
+                $txt .=     '<td>';
+                $txt .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Update Firmware to ('.$version.')</a>';
+                $txt .=     '</td>';
+                $txt .= '</tr>';
             }
         }
 
-        //$handle .= '<tr>';
-        //$handle .=     '<td>';
-        //$handle .=         '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a>';
-        //$handle .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a>';
-        //$handle .=     '</td>';
-        //$handle .= '</tr>';
-
-        return $handle;
+        //$txt .= '<tr>';
+        //$txt .=     '<td>';
+        //$txt .=         '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a>';
+        //$txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a>';
+        //$txt .=     '</td>';
+        //$txt .= '</tr>';
+        return $txt;
     }
-
 }

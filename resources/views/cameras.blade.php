@@ -118,11 +118,12 @@ console.log('#width='+width);
 //alert('.thumb-select');
         id = $(this).attr('data-id');
         url = '/cameras/getdetail/' + id;
-        //alert('thumb-select' + url);
+        //alert('url' + url);
         $.post("/cameras/activetab",
         {
             _token: '{{ csrf_token() }}',
-            tab: 'gallery'
+            tab: 'gallery',
+            portal: {{ $portal }},
         },
         function(data, status){
 //alert('#data='+data);

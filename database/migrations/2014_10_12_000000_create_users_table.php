@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('subscription_ends_at')->nullable(); // ?
 
+            $table->string('date_format')->default('Y/m/d H:i:s');
             $table->integer('portal')->default(0);
             $table->integer('permission')->default(0);
             $table->string('sel_menu')->default('plan');            // plan, camera, account, help, support, user
@@ -35,6 +36,7 @@ class CreateUsersTable extends Migration
             //$table->string('sel_account_tab')->default('planspermission');     // plans, billing, remote, security, email
             $table->string('sel_account_tab')->default('plans');     // plans, billing, remote, security, email
                                                                    // plan, billing, devices, options, email
+
             $table->rememberToken();
             $table->timestamps();
         });

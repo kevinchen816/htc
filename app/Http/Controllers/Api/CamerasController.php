@@ -57,6 +57,31 @@ class CamerasController extends Controller
 
     private $error;
 
+    /*
+        Y - 年份的四位数表示
+        m - 月份的数字表示（从 01 到 12）
+        d - 一个月中的第几天（从 01 到 31）
+        H - 24 小时制，带前导零（00 到 23）
+        i - 分，带前导零（00 到 59）
+        s - 秒，带前导零（00 到 59）
+
+        H - 24 小时制，带前导零（00 到 23）
+        G - 24 小时制，不带前导零（0 到 23）
+        h - 12 小时制，带前导零（01 到 12）
+        g - 12 小时制，不带前导零（1 到 12）
+        a - 小写形式表示：am 或 pm
+        A - 大写形式表示：AM 或 PM
+
+        m/d/Y+g:i:s+a   MM/DD/YYYY HH:MM:SS AM/PM (12 hours)
+        m/d/Y+H:i:s     MM/DD/YYYY HH:MM:SS (24 hours)
+        Y/m/d+g:i:s+a   YYYY/MM/DD HH:MM:SS AM/PM (12 hours)
+        Y/m/d+H:i:s     YYYY/MM/DD HH:MM:SS (24 hours)
+        d/m/Y+g:i:s+a   DD/MM/YYYY HH:MM:SS AM/PM (12 hours)
+        d/m/Y+H:i:s     DD/MM/YYYY HH:MM:SS (24 hours)
+
+        Y/m/d H:i:s
+        Y/m/d h:i:s a
+    */
     public function _datetime_get($camera) {
         //http://php.net/manual/zh/function.date-default-timezone-set.php
         //http://php.net/manual/zh/timezones.php
@@ -69,6 +94,13 @@ class CamerasController extends Controller
             $ret = date('Y-m-d H:i:s');
         }
         return $ret;
+    }
+
+    public function _user_dateformat($user, $datetime) {
+        //$dt = date_create('2013-03-15 23:40:00', timezone_open('Europe/Oslo'));
+        $dt = date_create($datetime);
+        $dt = date_format($dt, $user->date_format);
+        return $dt;
     }
 
     /* reference vendor/symfony/dom-crawler/Field/FileFormField.php */
@@ -3029,7 +3061,7 @@ if ($err == 0) { /* for test */
     /* TAB Function
     /*----------------------------------------------------------------------------------*/
     /* TAB Overview */
-    public function OverviewStatus($camera) {
+    public function html_OverviewStatus($camera) {
         $txt = '';
         $txt .= $this->ovItemShow('Description', $camera->description);
         $txt .= $this->ovItemShow('Location', $camera->location);
@@ -3072,7 +3104,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function OverviewStatus2($camera) {
+    public function html_OverviewStatus2($camera) {
         $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
         $card_size = number_format(intval($camera->card_size)/1024, 2).'GB';
         $card_free = number_format(intval($camera->card_space)/1024, 2).'GB';
@@ -3099,7 +3131,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function OverviewSettingsX($camera) {
+    public function html_OverviewSettingsX($camera) {
         $txt = '';
         $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
         $txt .= '<br/>';
@@ -3150,9 +3182,11 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function OverviewSettings($camera) {
+    public function html_OverviewSettings($user, $camera) {
+        $last_settings = $this->_user_dateformat($user, $camera->last_settings);
+
         $txt = '';
-        $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
+        $txt .= $this->ovItemShow('Last Downloaded', $last_settings);
         $txt .= '<br/>';
 
         $obj = json_decode($camera->settings);
@@ -3204,18 +3238,18 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function OverviewEvent($camera) {
+    public function html_OverviewEvent($user, $camera) {
         $txt = '';
-        $txt .= $this->ovItemShow('Last Contact', $camera->last_contact);
-        $txt .= $this->ovItemShow('Last Armed', $camera->last_armed);
+        $txt .= $this->ovItemShow('Last Contact', $this->_user_dateformat($user, $camera->last_contact));
+        $txt .= $this->ovItemShow('Last Armed', $this->_user_dateformat($user, $camera->last_armed));
         $txt .= $this->ovItemShow('Uploads since armed', $camera->arm_photos);
         $txt .= $this->ovItemShow('Points since armed', $camera->arm_points);
-        $txt .= $this->ovItemShow('Last Heartbeat', $camera->last_hb);
-        $txt .= $this->ovItemShow('Last Photo', $camera->last_photo);
-        $txt .= $this->ovItemShow('Last Video', $camera->last_video);
-        $txt .= $this->ovItemShow('Last Scheduled Upload', $camera->last_schedule); // 2018/10/06 03:03:12 | success
-        $txt .= $this->ovItemShow('Last Settings', $camera->last_settings);
-        //$txt .= $this->ovItemShow('Expected Contact', $camera->expected_contact, '[Unknown]');
+        $txt .= $this->ovItemShow('Last Heartbeat', $this->_user_dateformat($user, $camera->last_hb));
+        $txt .= $this->ovItemShow('Last Photo', $this->_user_dateformat($user, $camera->last_photo));
+        $txt .= $this->ovItemShow('Last Video', $this->_user_dateformat($user, $camera->last_video));
+        $txt .= $this->ovItemShow('Last Scheduled Upload', $this->_user_dateformat($user, $camera->last_schedule)); // 2018/10/06 03:03:12 | success
+        $txt .= $this->ovItemShow('Last Settings', $this->_user_dateformat($user, $camera->last_settings));
+        //$txt .= $this->ovItemShow('Expected Contact', $this->_user_dateformat($user, $camera->expected_contact, '[Unknown]'));
         return $txt;
     }
 
@@ -3232,12 +3266,10 @@ if ($err == 0) { /* for test */
 
     /*----------------------------------------------------------------------------------*/
     /* TAB Gallery */
-    public function Camera_Gallery_Select_Camera() {
-        // $handle = '';
-        // $handle .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
-        // $handle .= '<li><a href="/cameras/getdetail/50">Camera #2</a></li>';
-        // $handle .= '<li><a href="/cameras/getdetail/59">Camera #3</a></li>';
-        // $handle .= '<li><a href="/cameras/getdetail/54">Camera #4</a></li>';
+    public function html_GallerySelectCamera() {
+        // $txt = '';
+        // $txt .= '<li><a href="/cameras/getdetail/15">Camera #1</a></li>';
+        // $txt .= '<li><a href="/cameras/getdetail/50">Camera #2</a></li>';
 
         $user    = Auth::user();
         $user_id = $user->id;
@@ -3247,17 +3279,17 @@ if ($err == 0) { /* for test */
             ->get();
 
         $style  = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
-        $handle = '';
+        $txt = '';
         foreach ($cameras as $camera) {
             $camera_id   = $camera->id;
             $description = $camera->description;
-            $handle .= '<li><a href="/cameras/getdetail/' . $camera_id . '">' . $description . '</a></li>';
+            $txt .= '<li><a href="/cameras/getdetail/' . $camera_id . '">' . $description . '</a></li>';
         }
-        return $handle;
+        return $txt;
     }
 
-    public function Camera_Gallery_Photo($camera, $photos) {
-        $handle = '';
+    public function html_GalleryPhoto($user, $camera, $photos) {
+        $txt = '';
         $camera_id = $camera->id;
         $column = 1;
         $col = 12/$camera->columns;
@@ -3267,72 +3299,73 @@ if ($err == 0) { /* for test */
             $source = $this->TXT_Source($photo->source);
             $resolution = $this->TXT_UploadResolution($photo->resolution);
             $quality = $this->TXT_UploadQuality($photo->photo_quality);
+            $photo_datetime = $this->_user_dateformat($user, $photo->datetime);
 
             if ($photo->filetype == 2) {
                 // PICT0004.MP4 | 10/16/2018 9:13:31 am | Time Lapse | Standard Low | Points: 2.00 (Video Cost: 0 pts)
-                $caption = sprintf('%s | %s | %s | %s | Points: %.2f', $photo->filename, $photo->datetime, $source, $resolution, $photo->points);
+                $caption = sprintf('%s | %s | %s | %s | Points: %.2f', $photo->filename, $photo_datetime, $source, $resolution, $photo->points);
             } else {
                 // PICT0055.JPG | 10/15/2018 6:14:02 am | Menu       | Standard Low (Q=Standard) | Points: 1.00
-                $caption = sprintf('%s | %s | %s | %s (Q=%s) | Points: %.2f', $photo->filename, $photo->datetime, $source, $resolution, $quality, $photo->points);
+                $caption = sprintf('%s | %s | %s | %s (Q=%s) | Points: %.2f', $photo->filename, $photo_datetime, $source, $resolution, $quality, $photo->points);
             }
             $title = sprintf('%s (%d)', $photo->filename, $photo->id); // PICT0001.JPG (1)
 //            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
             $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
             $download = sprintf('/cameras/download/%d/%d', $camera_id, $photo_id);
 
-            $handle .= '<div class="col-xs-'.$col.' custom-thumbnail-grid-column column-number-'.$column.'">';
-            $handle .=     '<div class="image-checkbox">';
-            $handle .=         '<label style="font-size: 1.5em" class="check-label hidden">';
-            $handle .=             '<input type="checkbox" class="image-check" value="'.$photo_id.'" id="check_'.$photo_id.'" />';
-            $handle .=             '<span class="cr span-cr"></span>';
-            $handle .=         '</label>';
-            $handle .=     '</div>';
+            $txt .= '<div class="col-xs-'.$col.' custom-thumbnail-grid-column column-number-'.$column.'">';
+            $txt .=     '<div class="image-checkbox">';
+            $txt .=         '<label style="font-size: 1.5em" class="check-label hidden">';
+            $txt .=             '<input type="checkbox" class="image-check" value="'.$photo_id.'" id="check_'.$photo_id.'" />';
+            $txt .=             '<span class="cr span-cr"></span>';
+            $txt .=         '</label>';
+            $txt .=     '</div>';
 
             /* pending request */
             $hidden = ($photo->action) ? '' : 'hidden';
-            $handle .=     '<div class="image-highdef pull-right" '.$hidden.' id="pending-'.$photo_id.'">';
-            $handle .=         '<label style="font-size: 1.0em; margin-right: 4px;">';
-            $handle .=             '<span class="cr"><i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i></span>';
-            $handle .=         '</label>';
-            $handle .=     '</div>';
+            $txt .=     '<div class="image-highdef pull-right" '.$hidden.' id="pending-'.$photo_id.'">';
+            $txt .=         '<label style="font-size: 1.0em; margin-right: 4px;">';
+            $txt .=             '<span class="cr"><i class="cr-icon fa fa-hourglass" style="color:#ffd352;"></i></span>';
+            $txt .=         '</label>';
+            $txt .=     '</div>';
 
             if (!$photo->action) {
                 // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
                 if ($photo->uploadtype == 2) {
-                    $handle .= '<div class="image-highdef pull-right">';
-                    $handle .= '    <label style="font-size: 1.5em; margin-right: 4px;">';
-                    $handle .= '        <span class="cr"><i class="cr-icon fa fa-camera" style="color:lime;"></i></span>';
-                    $handle .= '    </label>';
-                    $handle .= '</div>';
+                    $txt .= '<div class="image-highdef pull-right">';
+                    $txt .= '    <label style="font-size: 1.5em; margin-right: 4px;">';
+                    $txt .= '        <span class="cr"><i class="cr-icon fa fa-camera" style="color:lime;"></i></span>';
+                    $txt .= '    </label>';
+                    $txt .= '</div>';
                 } else if ($photo->uploadtype == 3) {
-                    $handle .=     '<div class="image-highdef pull-right">';
-                    $handle .=         '<label style="font-size: 1.5em; margin-right: 4px;">';
-                    $handle .=             '<span class="cr"><i class="cr-icon fa fa-play-circle" style="color:lime;"></i></span>';
-                    $handle .=         '</label>';
-                    $handle .=     '</div>';
+                    $txt .=     '<div class="image-highdef pull-right">';
+                    $txt .=         '<label style="font-size: 1.5em; margin-right: 4px;">';
+                    $txt .=             '<span class="cr"><i class="cr-icon fa fa-play-circle" style="color:lime;"></i></span>';
+                    $txt .=         '</label>';
+                    $txt .=     '</div>';
                 }
             }
 
             if ($photo->uploadtype == 4) { /* original video */
                 $videopath = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
 
-                $handle .= '<div class="thumb-anchor">';
-                $handle .=     '<img src="'.$filepath.'"';
-                $handle .= '        class="img-responsive custom-thumb"';
-                $handle .=         'title="'.$title.'" ';
-                $handle .=         'alt="'.$photo->filename.'" ';
-                $handle .=         'data-description="'.$photo->filename.'">';
-                $handle .= '</div>';
+                $txt .= '<div class="thumb-anchor">';
+                $txt .=     '<img src="'.$filepath.'"';
+                $txt .= '        class="img-responsive custom-thumb"';
+                $txt .=         'title="'.$title.'" ';
+                $txt .=         'alt="'.$photo->filename.'" ';
+                $txt .=         'data-description="'.$photo->filename.'">';
+                $txt .= '</div>';
 
-                $handle .= '<div class="popup-video" video-url="'.$videopath.'"';
-                //$handle .=     'data-caption="PICT0003.MP4 | 10/26/2018 12:26:44 am | Motion | Standard Low | Points: 24.00" ';
-                $handle .=     'data-caption="'. $caption.'"';
-                $handle .=     'data-camera="'.$camera_id.'" ';
-                $handle .=     'data-id="'.$photo_id.'" ';
-                $handle .=     'data-poster="" ';
-                $handle .=     'data-width="640" ';
-                $handle .=     'data-height="360" controls>';
-                $handle .= '</div>';
+                $txt .= '<div class="popup-video" video-url="'.$videopath.'"';
+                //$txt .=     'data-caption="PICT0003.MP4 | 10/26/2018 12:26:44 am | Motion | Standard Low | Points: 24.00" ';
+                $txt .=     'data-caption="'. $caption.'"';
+                $txt .=     'data-camera="'.$camera_id.'" ';
+                $txt .=     'data-id="'.$photo_id.'" ';
+                $txt .=     'data-poster="" ';
+                $txt .=     'data-width="640" ';
+                $txt .=     'data-height="360" controls>';
+                $txt .= '</div>';
 
             } else {
                 if ($photo->uploadtype == 2) {
@@ -3341,28 +3374,28 @@ if ($err == 0) { /* for test */
                     $photo_path = $filepath;
                 }
 
-                $handle .= '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
-                //$handle .=     'href="'.$filepath.'" ';
-                $handle .=     'href="'.$photo_path.'" ';
-                $handle .=     'data-caption="'. $caption.'"';
-                $handle .=     'data-camera="'.$camera_id.'" ';
-                $handle .=     'data-id="'.$photo_id.'" ';
-                $handle .=     'data-highres="0" ';
-                $handle .=     'data-pending="0">';
+                $txt .= '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
+                //$txt .=     'href="'.$filepath.'" ';
+                $txt .=     'href="'.$photo_path.'" ';
+                $txt .=     'data-caption="'. $caption.'"';
+                $txt .=     'data-camera="'.$camera_id.'" ';
+                $txt .=     'data-id="'.$photo_id.'" ';
+                $txt .=     'data-highres="0" ';
+                $txt .=     'data-pending="0">';
 
-                $handle .=     '<img src="'.$filepath.'"';
-                $handle .=         'class="img-responsive custom-thumb"';
-                $handle .=         'title="'.$title.'" ';
-                $handle .=         'alt="'.$photo->filename.'" ';
-                $handle .=         'data-description="'.$photo->filename.'">';
-                $handle .= '</a>';
+                $txt .=     '<img src="'.$filepath.'"';
+                $txt .=         'class="img-responsive custom-thumb"';
+                $txt .=         'title="'.$title.'" ';
+                $txt .=         'alt="'.$photo->filename.'" ';
+                $txt .=         'data-description="'.$photo->filename.'">';
+                $txt .= '</a>';
             }
 
-            $handle .=     '<p class="thumbnail-timestamp pull-right" style="font-size: .70em">';
-            $handle .=         '<a href="'.$download.'"><i class="fa fa-download"></i></a> ';
-            $handle .=         $photo->datetime;
-            $handle .=     '</p>';
-            $handle .= '</div>';
+            $txt .=     '<p class="thumbnail-timestamp pull-right" style="font-size: .70em">';
+            $txt .=         '<a href="'.$download.'"><i class="fa fa-download"></i></a> ';
+            $txt .=          $photo_datetime;
+            $txt .=     '</p>';
+            $txt .= '</div>';
 
             if ($column == $camera->columns) {
                 $column = 1;
@@ -3370,7 +3403,7 @@ if ($err == 0) { /* for test */
                 $column++;
             }
         }
-        return $handle;
+        return $txt;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -3475,7 +3508,7 @@ if ($err == 0) { /* for test */
 
         $id = $camera->id;
 
-        $handle = '';
+        $txt = '';
         for ($week=0; $week<7; $week++) {
             $tabs_id = 'tabs'.$id.'-'.($week+1); // tabs54-1
             $control_group = 'controlgroup'.$id.'-'.($week+1); // controlgroup54-1
@@ -3483,13 +3516,13 @@ if ($err == 0) { /* for test */
             $value = hexdec($camera[$dt_week[$week]]);
             $bit = 0x800000;
 
-            $handle .= '<div id="'.$tabs_id.'">';
-            $handle .=    '<div id="'.$control_group.'" class="mobile-dutytime-div">';
-            $handle .=        '<table>';
+            $txt .= '<div id="'.$tabs_id.'">';
+            $txt .=    '<div id="'.$control_group.'" class="mobile-dutytime-div">';
+            $txt .=        '<table>';
             for ($h=0; $h<24; $h++) {
                 $zz = $id.'_hour_'.($week+1).'_'.($h+1); //54_hour_1_1
                 if (($h%6) == 0) {
-                    $handle .= '<tr>';
+                    $txt .= '<tr>';
                 }
 
                 /*
@@ -3500,28 +3533,28 @@ if ($err == 0) { /* for test */
                     </span>
                     </td>
                 */
-                $handle .= '<td class="custom-time-toggle-td">';
-                $handle .= '<span class="button-checkbox" style="font-size: .80em;">';
-                $handle .=     '<button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">'.$hour[$h].'</button>';
-                //$handle .=     '<input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked />';
+                $txt .= '<td class="custom-time-toggle-td">';
+                $txt .= '<span class="button-checkbox" style="font-size: .80em;">';
+                $txt .=     '<button type="button" class="btn btn-default btn-md" style="padding-left:2px;padding-right:2px;" data-color="info">'.$hour[$h].'</button>';
+                //$txt .=     '<input type="checkbox" class="hidden custom-time-button" name="54_hour_1_1" id="54_hour_1_1"  checked />';
                 if ($value & $bit) {
-                    $handle .=   '<input type="checkbox" class="hidden custom-time-button" name="'.$zz.'" id="'.$zz.'" checked />';
+                    $txt .=   '<input type="checkbox" class="hidden custom-time-button" name="'.$zz.'" id="'.$zz.'" checked />';
                 } else {
-                    $handle .=   '<input type="checkbox" class="hidden custom-time-button" name="'.$zz.'" id="'.$zz.'" />';
+                    $txt .=   '<input type="checkbox" class="hidden custom-time-button" name="'.$zz.'" id="'.$zz.'" />';
                 }
-                $handle .= '</span>';
-                $handle .= '</td>';
+                $txt .= '</span>';
+                $txt .= '</td>';
                 if (($h+1)%6 == 0) {
-                    $handle .= '</tr>';
+                    $txt .= '</tr>';
                 }
 
                 $bit >>= 1;
             }
-            $handle .=        '</table>';
-            $handle .=    '</div>';
-            $handle .= '</div>';
+            $txt .=        '</table>';
+            $txt .=    '</div>';
+            $txt .= '</div>';
         }
-        return $handle;
+        return $txt;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -3548,10 +3581,11 @@ if ($err == 0) { /* for test */
         </td>
     </tr>
     */
-    public function Camera_List($portal, $active_camera_id) {
+    //public function html_CameraList($portal, $active_camera_id) {
+    public function html_CameraList($portal, $user, $active_camera_id) {
         //return $active_camera_id;
 
-        $user    = Auth::user();
+        //$user    = Auth::user();
         $user_id = $user->id;
         $cameras = DB::table('cameras')
             //->select('id', 'description', 'battery', 'last_contact', 'last_filename', 'last_savename')
@@ -3564,7 +3598,7 @@ if ($err == 0) { /* for test */
             $camera_id    = $camera->id;
             $description  = $camera->description;
             $battery = $this->itemBattery($camera->battery);
-            $last_contact = $camera->last_contact;
+            $last_contact = $this->_user_dateformat($user, $camera->last_contact);
 
             if (!empty($camera->last_savename)) {
                 //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;

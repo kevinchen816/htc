@@ -43,7 +43,7 @@
                         </tr>
 
                         @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
-                        {!! $actions_ctrl->Commands($camera) !!}
+                        {!! $actions_ctrl->html_Commands($camera) !!}
 
                         <tr>
                             <td>
@@ -79,7 +79,7 @@
                     </thead>
                     <tbody>
                         @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
-                        {!! $actions_ctrl->History($portal, $camera) !!}
+                        {!! $actions_ctrl->html_History($portal, $user, $camera) !!}
 
                         <!--<tr>
                             <td>Scheduled Update</td>
