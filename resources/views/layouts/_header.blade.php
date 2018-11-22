@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>KMCam Portal</h2>
+                <h2>KMCam Pro</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">

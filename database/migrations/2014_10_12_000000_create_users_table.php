@@ -36,6 +36,7 @@ class CreateUsersTable extends Migration
             //$table->string('sel_account_tab')->default('planspermission');     // plans, billing, remote, security, email
             $table->string('sel_account_tab')->default('plans');     // plans, billing, remote, security, email
                                                                    // plan, billing, devices, options, email
+            //$table->integer('notification_count')->unsigned()->default(0);
 
             $table->rememberToken();
             $table->timestamps();
