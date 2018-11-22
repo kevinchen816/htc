@@ -15,14 +15,14 @@ class CheckIfEmailConfirm
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->user()->email_verified) {
-
-            /* return JSON when request by AJAX */
-            if ($request->expectsJson()) {
-                return response()->json(['msg' => 'Please verify email address'], 400);
-            }
-            return redirect(route('email_confirm.notice'));
-        }
+        //if (!$request->user()->email_verified) {
+        //
+        //    /* return JSON when request by AJAX */
+        //    if ($request->expectsJson()) {
+        //        return response()->json(['msg' => 'Please verify email address'], 400);
+        //    }
+        //    return redirect(route('email_confirm.notice'));
+        //}
         return $next($request);
     }
 }

@@ -46,12 +46,22 @@ class EmailConfirmNotification extends Notification
         $token = Str::random(16);
         Cache::set('email_confirm_'.$notifiable->email, $token, 30); // 30min
 
+        //https://portal.ridgetec.com/register/verify/M2FH0abL9p
         $url = route('email_confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
 
+        //return (new MailMessage)
+        //            ->line('The introduction to the notification.')
+        //            ->action('Notification Action', $url)
+        //            ->line('Thank you for using our application!');
+
+//->line('You are receiving this email because we received a password reset request for your account.')
+
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', $url)
-                    ->line('Thank you for using our application!');
+                    ->greeting('Hello '.$notifiable->name.',')
+                    ->subject('Email Verification')
+                    ->line('Click on the below button to verify your email address and confirm your account registration.')
+                    ->action('Verify', $url)
+                    ->line('Thank you');
     }
 
     /**
@@ -71,6 +81,8 @@ class EmailConfirmNotification extends Notification
 /*
 .env
 
+http://sample.test:8025/
+
 MAIL_DRIVER=smtp
 MAIL_HOST=smtp.exmail.qq.com
 MAIL_PORT=465
@@ -88,4 +100,12 @@ MAIL_PORT=1025
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_ENCRYPTION=null
+*/
+
+/*
+Success: You are now registered, but your account is not yet confirmed.
+Please look in your inbox for a confirmation email and click the Verify link.
+
+
+
 */
