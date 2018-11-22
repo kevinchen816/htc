@@ -969,7 +969,7 @@ class CamerasController extends Controller
     }
 
     public function LogApi_List($log_apis) {
-        $handle = '';
+        $txt = '';
         foreach ($log_apis as $log_api) {
             $show = 0;
             $result = null;
@@ -1288,36 +1288,24 @@ class CamerasController extends Controller
                     $link_response = '';
                 }
 
-                $handle .= '<tr>';
-                $handle .=    '<td>'.$log_api->id.'</td>';
-                $handle .=    '<td>'.$api.'</td>';
-                $handle .=    '<td>'.$result.'</td>';
-                $handle .=    '<td>'.$link_request.'</td>';
-                $handle .=    '<td>'.$link_response.'</td>';
-                $handle .=    '<td>'.$datetime.'</td>';
-                $handle .= '</tr>';
+                $txt .= '<tr>';
+                $txt .=    '<td>'.$log_api->id.'</td>';
+                $txt .=    '<td>'.$api.'</td>';
+                $txt .=    '<td>'.$result.'</td>';
+                $txt .=    '<td>'.$link_request.'</td>';
+                $txt .=    '<td>'.$link_response.'</td>';
+                $txt .=    '<td>'.$datetime.'</td>';
+                $txt .= '</tr>';
             }
        }
-       return $handle;
+       return $txt;
     }
 
     public function apilog($camera_id) {
-        //return $camera_id;
-        //return view('camera.apilog', compact('user', 'camera', 'photos'));
-        //return view('camera.apilog', compact('user', 'camera'));
-
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
-        $user_id = $user->id;
-
         $camera = Camera::find($camera_id);
-
         $log_apis = DB::table('log_apis')
-            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+            //->where(['user_id' => $user->id, 'camera_id' => $camera_id])
             ->where(['camera_id' => $camera_id])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -3253,7 +3241,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function OverviewStatisics($camera) {
+    public function html_OverviewStatisics($camera) {
         $txt = '';
         //$txt .= $this->ovItemShow('Time Lapse Last Hour', $camera->xx);
         ////Activity Suppression:
@@ -3408,7 +3396,7 @@ if ($err == 0) { /* for test */
 
     /*----------------------------------------------------------------------------------*/
     /* TAB Settings */
-    public function Settings_Identification($camera) {
+    public function html_Settings_Identification($camera) {
         $id = $camera->id;
         $txt = '';
         $txt .= $this->stItemOption($id, $this->itemCameraDescription(), 'description');
@@ -3420,7 +3408,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function Settings_Basic($camera) {
+    public function html_Settings_Basic($camera) {
         $id = $camera->id;
         $txt = '';
         $txt .= $this->stItemOption($id, $this->itemCameraMode(), 'camera_mode');
@@ -3445,12 +3433,12 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function Settings_Trigger($camera) {
+    public function html_Settings_Trigger($camera) {
         $txt = $this->stItemOption($camera->id, $this->itemQuietTime(), 'quiettime');
         return $txt;
     }
 
-    public function Settings_Timelapse($camera) {
+    public function html_Settings_Timelapse($camera) {
         $id = $camera->id;
         $txt = '';
         $txt .= $this->stItemOption($id, $this->itemTimelapseStartTime(), 'tls_start');
@@ -3459,7 +3447,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function Settings_Wireless_Mode($camera) {
+    public function html_Settings_Wireless_Mode($camera) {
         $id = $camera->id;
         $txt = '';
         $txt .= $this->stItemOption($id, $this->itemWirelessMode(), 'wireless_mode');
@@ -3472,7 +3460,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function Settings_Block_Mode($camera) {
+    public function html_Settings_Block_Mode($camera) {
         $array = array(
             'options' => array(
                 'On'=>'on', 'Off'=>'off',
@@ -3494,7 +3482,7 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function Settings_DutyTime($camera) {
+    public function html_Settings_DutyTime($camera) {
         $hour = array(
             '12 AM', '01 AM', '02 AM', '03 AM', '04 AM', '05 AM',
             '06 AM', '07 AM', '08 AM', '09 AM', '10 AM', '11 AM',
@@ -3593,7 +3581,7 @@ if ($err == 0) { /* for test */
             ->get();
 
         $style  = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
-        $handle = '';
+        $txt = '';
         foreach ($cameras as $camera) {
             $camera_id    = $camera->id;
             $description  = $camera->description;
@@ -3610,60 +3598,60 @@ if ($err == 0) { /* for test */
             }
             //$url = 'http://sample.test/uploads/images/1537233425_2YDReN47PS.JPG';
 
-            $handle .= '<tr>';
+            $txt .= '<tr>';
 
-            $handle .= '    <td class="col-sm-1">';
+            $txt .=     '<td class="col-sm-1">';
             if ($camera_id == $active_camera_id) {
-                $handle .= '<i class="fa fa-camera"> </i>';
+                $txt .= '<i class="fa fa-camera"> </i>';
             }
-            $handle .= '    </td>';
+            $txt .=     '</td>';
 
             if ($camera_id == $active_camera_id) {
-                $handle .= '    <td class="col-sm-5 active">';
+                $txt .=     '<td class="col-sm-5 active">';
             } else {
-                $handle .= '    <td class="col-sm-5">';
+                $txt .=     '<td class="col-sm-5">';
             }
 
-            //$handle .= '        <a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
+            //$txt .=         '<a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             if ($portal == 10) {
-                $handle .= '        <a href="/10ware/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
+                $txt .=         '<a href="/10ware/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             } else if ($portal == 11) {
-                $handle .= '        <a href="/de/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
+                $txt .=         '<a href="/de/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             } else {
-                $handle .= '        <a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
+                $txt .=         '<a href="/cameras/getdetail/'.$camera_id.'">'.$description.'</a><br/>';
             }
 
-            // $handle .= '        <i class="fa fa-battery-full" style="color: lime;"> </i>'.$battery.'<br />';
-            $handle .= $battery.'<br/>';
-            $handle .= '        <span style="font-size: .95em">'.$last_contact.'</span>';
-            $handle .= '    </td>';
+            //$txt .= '        <i class="fa fa-battery-full" style="color: lime;"> </i>'.$battery.'<br />';
+            $txt .= $battery.'<br/>';
+            $txt .=         '<span style="font-size: .95em">'.$last_contact.'</span>';
+            $txt .=     '</td>';
 
-            $handle .= '    <td class="col-sm-6">';
+            $txt .=     '<td class="col-sm-6">';
             if (!empty($url)) {
-                // $handle .= '        <a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
-                $handle .= '        <a class="btn thumb-select" data-id="'.$camera_id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
+                //$txt .=         '<a class="btn thumb-select" data-id="15" style="padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;"><img src="'.$url.'" class="img-responsive"/></a>';
+                $txt .=         '<a class="btn thumb-select" data-id="'.$camera_id.'" style="'.$style.'"><img src="'.$url.'" class="img-responsive"/></a>';
             }
-            $handle .= '    </td>';
-            $handle .= '</tr>';
+            $txt .=     '</td>';
+            $txt .= '</tr>';
         }
-        return $handle;
+        return $txt;
     }
 
     /*----------------------------------------------------------------------------------*/
     /* Web Function */
-    public function back_to_login($portal) {
-        //if (!Auth::check()) {
-            //session()->flash('warning', 'Please Login first');
-            //return redirect()->route('login');
-            if ($portal == 10) {
-                return redirect()->route('login.10ware');
-            } else if ($portal == 11) {
-                return redirect()->route('login.de');
-            } else {
-                return redirect()->route('login');
-            }
-        //}
-    }
+    //public function back_to_login($portal) {
+    //    //if (!Auth::check()) {
+    //        //session()->flash('warning', 'Please Login first');
+    //        //return redirect()->route('login');
+    //        if ($portal == 10) {
+    //            return redirect()->route('login.10ware');
+    //        } else if ($portal == 11) {
+    //            return redirect()->route('login.de');
+    //        } else {
+    //            return redirect()->route('login');
+    //        }
+    //    //}
+    //}
 
     //public function back_to_logout($portal) {
     //    //if (!Auth::check()) {
@@ -3702,11 +3690,6 @@ if ($err == 0) { /* for test */
     }
 
     public function activetab() {
-        $portal = $_POST['portal'];
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
         $sel_camera_tab = $_POST['tab'];
         $data['sel_camera_tab'] = $sel_camera_tab;
         Auth::user()->update($data);
@@ -3715,79 +3698,28 @@ if ($err == 0) { /* for test */
     }
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812
-    //public function cameras() {
-    //    if (!Auth::check()) {
-    //        //session()->flash('warning', 'Please Login first');
-    //        return redirect()->route('login');
-    //    }
-    //
-    //    $user = Auth::user();
-    //    $user_id = $user->id;
-    //    $camera_id = $user->sel_camera;
-    //    $portal = $user->portal;
-    //
-    //    $data['sel_menu'] = 'camera';
-    //    $user->update($data);
-    //
-    //    //$camera = DB::table('cameras')
-    //    //    ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
-    //    //    ->where('user_id', $user_id)
-    //    //    ->first();
-    //
-    //    $cameras = DB::table('cameras')
-    //        ->where('user_id', $user_id);
-    //
-    //    if ($cameras->count() > 0) {
-    //        //$camera = Camera::findOrFail($camera_id);
-    //        $camera = Camera::find($camera_id);
-    //        if (!$camera) {
-    //            $camera = Camera::first();
-    //        }
-    //
-    //        $photos = $camera->photos()
-    //            ->orderBy('created_at', 'desc')
-    //            ->paginate($camera->thumbs);
-    //        //return view('cameras', compact('user', 'camera', 'photos'));
-    //        //return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
-    //        return view('cameras', compact('portal', 'user', 'cameras', 'camera', 'photos'));
-    //    } else {
-    //        return view('cameras_empty', compact('portal', 'user'));
-    //    }
-    //}
-
     public function cameras_portal($portal, $portal_name) {
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
         $user = Auth::user();
         $user_portal = $user->portal;
         if ($portal != $user_portal) {
-            if ($user_portal == 10) {
-                session()->flash('warning', 'Please use 10ware portal.');
-            } else if ($user_portal == 11) {
-                session()->flash('warning', 'Please use German portal.');
-            } else {
-                session()->flash('warning', 'Please use TEST portal.');
-            }
-
+            //if ($user_portal == 10) {
+            //    session()->flash('warning', 'Please use 10ware portal.');
+            //} else if ($user_portal == 11) {
+            //    session()->flash('warning', 'Please use German portal.');
+            //} else {
+            //    session()->flash('warning', 'Please use KMCam portal.');
+            //}
+            //Auth::logout();
+            //return $this->back_to_login($portal);
+            ////return $this->back_to_logout($portal); // NG
             Auth::logout();
-            return $this->back_to_login($portal);
-            //return $this->back_to_logout($portal); // NG
+            return redirect()->route('login');
         }
 
-        //$portal = $user->portal;
         $user_id = $user->id;
-        $camera_id = $user->sel_camera;
-
-        //$camera = DB::table('cameras')
-        //    ->select('id', 'description', 'battery', 'last_contact', 'last_filename')
-        //    ->where('user_id', $user_id)
-        //    ->first();
-        $cameras = DB::table('cameras')
-            ->where('user_id', $user_id);
-
+        $cameras = DB::table('cameras')->where('user_id', $user_id);
         if ($cameras->count() > 0) {
+            $camera_id = $user->sel_camera;
             if (!$camera_id) {
                 $camera = $cameras->first();
                 $camera_id = $camera->id;
@@ -3811,6 +3743,7 @@ if ($err == 0) { /* for test */
         } else {
             if ($user->sel_menu != 'camera') {
                 $data['sel_menu'] = 'camera';
+                $data['sel_camera'] = 0;
                 $user->update($data);
             }
             return view('cameras_empty', compact('portal', 'portal_name', 'user'));
@@ -3831,17 +3764,6 @@ if ($err == 0) { /* for test */
 
     public function delete(Request $request) {
         $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-        //if (!Auth::check()) {
-        //    session()->flash('warning', 'Please Login first');
-        //    return redirect()->route('login');
-        //}
-
-        //{"_token":"Gx4z780KFvDst56qycsDMh4gSx3bF2vkBtsLUmmR","id":"1","password":"kevin816"}
-        //return $request;
-
         //if (Auth::attempt(['password' => $request->password])) {
         //    return 'OK';
         //} else {
@@ -3855,9 +3777,12 @@ if ($err == 0) { /* for test */
             $camera->photos()->delete();
             $camera->actions()->delete();
             $camera->log_apis()->delete();
+
+            $user = Auth::user();
+            $data['sel_camera'] = 0; // IMPORTANT !!
+            $user->update($data);
         }
         return $this->route_to_cameras($portal);
-        //return redirect()->route('cameras');
     }
 
     public function download($camera_id, $photo_id) {
@@ -3877,33 +3802,16 @@ if ($err == 0) { /* for test */
     }
 
     /* /cameras/getdetail/{camera_id} */
-    //public function getdetail($camera_id) {
-    //    if (!Auth::check()) {
-    //        session()->flash('warning', 'Please Login first');
-    //        return redirect()->route('login');
-    //    }
-    //
-    //    $user = Auth::user();
-    //    $data['sel_camera'] = $camera_id;
-    //    $user->update($data);
-    //    return redirect()->route('cameras');
-    //}
-
     public function getdetail_portal($portal, $camera_id) {
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
         $user = Auth::user();
         $data['sel_camera'] = $camera_id;
         $user->update($data);
-
         return $this->route_to_cameras($portal);
     }
 
     public function getdetail($camera_id) {
         $portal = 0;
-        return $this->getdetail_portal($portal, $camera_id);
+        return $this->getdetail_portal(0, $camera_id);
     }
 
     public function getdetail_10ware($camera_id) {
@@ -3993,7 +3901,6 @@ if ($err == 0) { /* for test */
             }
         }
         return $this->route_to_cameras($portal);
-        //return redirect()->route('cameras');
     }
 
     public function gallerylayout($camera_id, $number) {
@@ -4002,7 +3909,6 @@ if ($err == 0) { /* for test */
         $cameras->update(['columns' => $number]);
         $portal = 0;
         return $this->route_to_cameras($portal);
-        //return redirect()->route('cameras');
     }
 
     public function gallerythumbs($camera_id, $number) {
@@ -4011,7 +3917,6 @@ if ($err == 0) { /* for test */
         $cameras->update(['thumbs' => $number]);
         $portal = 0;
         return $this->route_to_cameras($portal);
-        //return redirect()->route('cameras');
     }
 
     //public function activetab(Request $request) {
@@ -4019,15 +3924,9 @@ if ($err == 0) { /* for test */
     //}
 
     public function overview($cameras_id) {
-        //return '/cameras/overview/'.$cameras_id;
         $camera = Camera::findOrFail($cameras_id);
         return view('camera.tab_overview', compact('camera'));
     }
-
-    //public function actions($cameras_id) {
-    //    $ret = '/cameras/actions/' . $cameras_id;
-    //    return $ret;
-    //}
 
     public function actions($cameras_id) {
         $portal = 0;
@@ -4158,7 +4057,6 @@ if ($err == 0) { /* for test */
         //return view('camera.tab_settings', compact('camera'));
 
         return $this->route_to_cameras($portal);
-        //return redirect()->route('cameras');
     }
 
     /* Action */
@@ -4173,13 +4071,11 @@ if ($err == 0) { /* for test */
         }
     }
 
-    /* for FW, LD, LE, LU */
+    /*
+        /cameras/actionqueue/2/LD (for FW, LD, LE, LU)
+    */
     //public function actionqueue($camera_id, $action_code) {
     public function actionqueue($portal, $camera_id, $action_code) {
-        /* /cameras/actionqueue/2/LD */
-        //$ret = '/cameras/actionqueue/'.$camera_id.'/'.$action_code;
-        //return $ret;
-
         $camera = Camera::find($camera_id);
         if ($camera) {
             $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
@@ -4191,13 +4087,11 @@ if ($err == 0) { /* for test */
                 );
                 $this->Action_Add($param);
             }
-            //return view('camera.tab_actions', compact('camera'));
-            return view('camera.tab_actions', compact('portal', 'camera'));
-
+            $user = Auth::user();
+            return view('camera.tab_actions', compact('portal', 'user', 'camera'));
         } else {
             session()->flash('warning', 'camera not found');
             return $this->route_to_cameras($portal);
-            //return redirect()->route('cameras');
         }
     }
 
@@ -4211,11 +4105,8 @@ if ($err == 0) { /* for test */
                 "password":"12345"
             }
         */
-        //return $request;
-
         $camera_id = $request->id;
         $action_code = $request->action;
-
         $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
         if ($ret == 0) {
             $param = array(
@@ -4225,9 +4116,6 @@ if ($err == 0) { /* for test */
             );
             $this->Action_Add($param);
         }
-
-        //$camera = Camera::find($camera_id);
-        //return view('camera.tab_actions', compact('camera'));
         return redirect()->back();
     }
 
@@ -4252,8 +4140,8 @@ if ($err == 0) { /* for test */
         }
         $camera = Camera::findOrFail($camera_id);
 
-        //return view('camera.tab_actions', compact('camera'));
-        return view('camera.tab_actions', compact('portal', 'camera'));
+        $user = Auth::user();
+        return view('camera.tab_actions', compact('portal', 'user', 'camera'));
     }
 
     //public function clearmissing($cameras_id) {
@@ -4266,8 +4154,8 @@ if ($err == 0) { /* for test */
     //public function requestmissing($cameras_id, $missing_id) {
     public function requestmissing($portal, $cameras_id, $missing_id) {
         $camera = Camera::findOrFail($camera_id);
-        //return view('camera.tab_actions', compact('camera'));
-        return view('camera.tab_actions', compact('portal', 'camera'));
+        $user = Auth::user();
+        return view('camera.tab_actions', compact('portal', 'user', 'camera'));
     }
 
     //public function emailpolicy() {
@@ -4277,56 +4165,27 @@ if ($err == 0) { /* for test */
     //    $photos = $camera->photos()
     //        ->orderBy('created_at', 'desc')
     //        ->paginate(10);
-    //
     //    return view('support.emailpolicy', compact('user', 'camera', 'photos'));
-    //}
-
-    //public function account_profile() {
-    //    if (!Auth::check()) {
-    //        session()->flash('warning', 'Please Login first');
-    //        return redirect()->route('login');
-    //    }
-    //
-    //    $user = Auth::user();
-    //    $data['sel_menu'] = 'account';
-    //    $user->update($data);
-    //    return view('account.profile', compact('user'));
     //}
 
     /*----------------------------------------------------------------------------------*/
     public function admin() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         return view('admin.dashboard', compact('user'));
     }
 
     public function admin_users() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $users = DB::table('users')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
             //->where(['camera_id' => $camera_id])
             //->orderBy('created_at', 'desc')
             ->paginate(20);
-
         //return view('admin.users', compact('user', 'users'));
         return view('admin.user', compact('users'));
     }
 
     public function admin_email() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $emails = DB::table('emails')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
@@ -4337,11 +4196,6 @@ if ($err == 0) { /* for test */
     }
 
     public function admin_cameras() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $cameras = DB::table('cameras')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
@@ -4352,11 +4206,6 @@ if ($err == 0) { /* for test */
     }
 
     public function admin_plans() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $plans = DB::table('plans')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
@@ -4367,22 +4216,12 @@ if ($err == 0) { /* for test */
     }
 
     public function admin_firmware() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $firmwares = DB::table('firmwares')->get();
         return view('admin.firmware', compact('user', 'firmwares'));
     }
 
     public function admin_sims() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $sims = DB::table('sims')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
@@ -4393,31 +4232,16 @@ if ($err == 0) { /* for test */
     }
 
     public function admin_rmas() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         return view('admin.rma', compact('user'));
     }
 
     public function admin_siteactivity() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         return view('admin.siteactivity', compact('user'));
     }
 
     public function admin_apilog() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $log_apis = DB::table('log_apis')
             //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
@@ -4428,11 +4252,6 @@ if ($err == 0) { /* for test */
     }
 
     public function admin_viewlog() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         return view('admin.viewlog', compact('user'));
     }
@@ -4473,42 +4292,41 @@ if ($err == 0) { /* for test */
         return 'admin_clear_search_apilog';
     }
 
-
     /*----------------------------------------------------------------------------------*/
-    public function test() {
-        $id     = 1;
-        $camera = Camera::findOrFail($id);
-        //dd($camera);
-        return $camera;
-
-        //return $camera->module_id;
-        //return $camera['module_id'];
-        $field = 'module_id';
-        return $camera[$field];
-
-        $columns = Schema::getColumnListing('cameras');
-        print_r($columns);
-        return $columns;
-
-        $tables = DB::select('show tables');
-        //print_r($tables);
-        //return $tables;
-
-        $tables  = array_column($tables, 'Tables_in_htc');
-        $columns = ['email', 'user_name', 'nick_name', 'first_name', 'last_name'];
-        foreach ($tables as $key => $value) {
-            // foreach ($columns as $k => $v) {
-            //     if (Schema::hasColumn($value, $v)) {
-            //         $table[] = $value;
-            //     };
-            // }
-            // $columns[] = Schema::getColumnListing('users');
-            //print_r($key);
-            print_r($value);
-        }
-        print_r($tables);
-        return $tables;
-    }
+    //public function test() {
+    //    $id     = 1;
+    //    $camera = Camera::findOrFail($id);
+    //    //dd($camera);
+    //    return $camera;
+    //
+    //    //return $camera->module_id;
+    //    //return $camera['module_id'];
+    //    $field = 'module_id';
+    //    return $camera[$field];
+    //
+    //    $columns = Schema::getColumnListing('cameras');
+    //    print_r($columns);
+    //    return $columns;
+    //
+    //    $tables = DB::select('show tables');
+    //    //print_r($tables);
+    //    //return $tables;
+    //
+    //    $tables  = array_column($tables, 'Tables_in_htc');
+    //    $columns = ['email', 'user_name', 'nick_name', 'first_name', 'last_name'];
+    //    foreach ($tables as $key => $value) {
+    //        // foreach ($columns as $k => $v) {
+    //        //     if (Schema::hasColumn($value, $v)) {
+    //        //         $table[] = $value;
+    //        //     };
+    //        // }
+    //        // $columns[] = Schema::getColumnListing('users');
+    //        //print_r($key);
+    //        print_r($value);
+    //    }
+    //    print_r($tables);
+    //    return $tables;
+    //}
 }
 
 /*

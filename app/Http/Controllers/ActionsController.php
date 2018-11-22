@@ -37,19 +37,19 @@ class ActionsController extends Controller
     //}
 
     /*-----------------------------------------------------------*/
-    public function back_to_login($portal) {
-        //if (!Auth::check()) {
-            //session()->flash('warning', 'Please Login first');
-            //return redirect()->route('login');
-            if ($portal == 10) {
-                return redirect()->route('login.10ware');
-            } else if ($portal == 11) {
-                return redirect()->route('login.de');
-            } else {
-                return redirect()->route('login');
-            }
-        //}
-    }
+    //public function back_to_login($portal) {
+    //    //if (!Auth::check()) {
+    //        //session()->flash('warning', 'Please Login first');
+    //        //return redirect()->route('login');
+    //        if ($portal == 10) {
+    //            return redirect()->route('login.10ware');
+    //        } else if ($portal == 11) {
+    //            return redirect()->route('login.de');
+    //        } else {
+    //            return redirect()->route('login');
+    //        }
+    //    //}
+    //}
 
     /*-----------------------------------------------------------*/
     /*
@@ -62,9 +62,9 @@ class ActionsController extends Controller
         </tr>
     */
     public function html_History($portal, $user, $camera) {
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
 
         //$action_txt = array (
         //    'DS' => 'Request Settings Download',
@@ -187,12 +187,16 @@ class ActionsController extends Controller
             }
         }
 
-        //$txt .= '<tr>';
-        //$txt .=     '<td>';
-        //$txt .=         '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a>';
-        //$txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a>';
-        //$txt .=     '</td>';
-        //$txt .= '</tr>';
+        $txt .= '<tr>';
+        $txt .=     '<td>';
+        if ($camera->log == 1) {
+            $txt .=     '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a> ';
+        } else {
+            $txt .=     '<a data-param="LE" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Enable</a> ';
+        }
+        $txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a> ';
+        $txt .=     '</td>';
+        $txt .= '</tr>';
         return $txt;
     }
 }

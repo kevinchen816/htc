@@ -20,7 +20,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Settings_Identification($camera) !!}
+                    {!! $cc->html_Settings_Identification($camera) !!}
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Settings_Basic($camera) !!}
+                    {!! $cc->html_Settings_Basic($camera) !!}
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Settings_Trigger($camera) !!}
+                    {!! $cc->html_Settings_Trigger($camera) !!}
 
                     <div class="panel panel-default panel-success custom-settings-panel">
                         <div class="panel-heading">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="panel-body" id="panel-{{ $camera->id }}-timelapse">
                             @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                            {!! $cc->Settings_Timelapse($camera) !!}
+                            {!! $cc->html_Settings_Timelapse($camera) !!}
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Settings_Wireless_Mode($camera) !!}
+                    {!! $cc->html_Settings_Wireless_Mode($camera) !!}
                 </div>
             </div>
         </div>
@@ -130,7 +130,7 @@
                 </div>
                 <div class="panel-body">
                     @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                    {!! $cc->Settings_Block_Mode($camera) !!}
+                    {!! $cc->html_Settings_Block_Mode($camera) !!}
                 </div>
             </div>
         </div>
@@ -167,7 +167,7 @@
                         </ul>
 
                         @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-                        {!! $cc->Settings_DutyTime($camera) !!}
+                        {!! $cc->html_Settings_DutyTime($camera) !!}
 
                     </div>
                 </div>

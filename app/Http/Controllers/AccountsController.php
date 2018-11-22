@@ -12,26 +12,26 @@ use App\Models\Email;
 
 class AccountsController extends Controller
 {
-    public function back_to_login($portal) {
-        //if (!Auth::check()) {
-            //session()->flash('warning', 'Please Login first');
-            //return redirect()->route('login');
-            if ($portal == 10) {
-                return redirect()->route('login.10ware');
-            } else if ($portal == 11) {
-                return redirect()->route('login.de');
-            } else {
-                return redirect()->route('login');
-            }
-        //}
-    }
+    //public function back_to_login($portal) {
+    //    //if (!Auth::check()) {
+    //        //session()->flash('warning', 'Please Login first');
+    //        //return redirect()->route('login');
+    //        if ($portal == 10) {
+    //            return redirect()->route('login.10ware');
+    //        } else if ($portal == 11) {
+    //            return redirect()->route('login.de');
+    //        } else {
+    //            return redirect()->route('login');
+    //        }
+    //    //}
+    //}
 
     /*-----------------------------------------------------------*/
     public function activetab(Request $request) {
-        $portal = $_POST['portal'];
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //$portal = $_POST['portal'];
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
 
         // plan, billing, devices, options, email
         // plans, billing, remote, security, email
@@ -43,9 +43,9 @@ class AccountsController extends Controller
 
     /*-----------------------------------------------------------*/
     public function _profile($portal) {
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
 
         $user = Auth::user();
         $data['sel_menu'] = 'account';
@@ -57,10 +57,6 @@ class AccountsController extends Controller
 
     public function profile() {
         return $this->_profile(0);
-    }
-
-    public function profile_10ware() {
-        return $this->_profile(10);
     }
 
     /*-----------------------------------------------------------*/
@@ -429,11 +425,7 @@ $handle .=                 '</tr>';
 
     /*-----------------------------------------------------------*/
     public function plans(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
+        //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -451,10 +443,7 @@ $handle .=                 '</tr>';
     }
     */
     public function billing(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -478,11 +467,7 @@ $handle .=                 '</tr>';
     }
 
     public function devices(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
+        //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -490,18 +475,10 @@ $handle .=                 '</tr>';
         return redirect()->back();
     }
 
-
     /*
         {"_token":"xxx","portal":"0","date_format":"m%2Fd%2FY+g%3Ai%3As+a"}
     */
     public function options(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-        //$user = Auth::user();
-        //$user_id = $user->id;
-
         $date_format = $request->date_format;
         $date_format = str_replace('%2F', '/', $date_format);
         $date_format = str_replace('%3A', ':', $date_format);
@@ -517,11 +494,7 @@ $handle .=                 '</tr>';
     }
 
     public function emails(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
+        //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -554,11 +527,7 @@ $handle .=                 '</tr>';
     }
 
     public function email_change(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
+        //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -569,10 +538,6 @@ $handle .=                 '</tr>';
 
     public function password_send_reset_email() {
         //$portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -756,8 +721,6 @@ return var_dump($ret);
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         $subscription = \Stripe\Subscription::retrieve('sub_DxCpW25xCDyLlx');
-// return var_dump($subscription);
-// return $subscription;
 
         $ret = \Stripe\Subscription::update('sub_DxCpW25xCDyLlx', [
             'cancel_at_period_end' => false,
@@ -774,30 +737,30 @@ return var_dump($ret);
     }
 
     /*-----------------------------------------------------------*/
-    public function charge_test(Request $request) {
-        $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
-
-        $user = Auth::user();
-        $user_id = $user->id;
-
-        // Set your secret key: remember to change this to your live secret key in production
-        // See your keys here: https://dashboard.stripe.com/account/apikeys
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
-        // Token is created using Checkout or Elements!
-        // Get the payment token ID submitted by the form:
-        $stripeToken = $_POST['stripeToken'];
-        $charge = \Stripe\Charge::create([
-            'amount' => 1000,
-            'currency' => 'usd',
-            'description' => 'Example charge',
-            'source' => $stripeToken,
-        ]);
-        return $charge;
-    }
+    //public function charge_test(Request $request) {
+    //    $portal = $request->portal;
+    //    if (!Auth::check()) {
+    //        return $this->back_to_login($portal);
+    //    }
+    //
+    //    $user = Auth::user();
+    //    $user_id = $user->id;
+    //
+    //    // Set your secret key: remember to change this to your live secret key in production
+    //    // See your keys here: https://dashboard.stripe.com/account/apikeys
+    //    \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+    //
+    //    // Token is created using Checkout or Elements!
+    //    // Get the payment token ID submitted by the form:
+    //    $stripeToken = $_POST['stripeToken'];
+    //    $charge = \Stripe\Charge::create([
+    //        'amount' => 1000,
+    //        'currency' => 'usd',
+    //        'description' => 'Example charge',
+    //        'source' => $stripeToken,
+    //    ]);
+    //    return $charge;
+    //}
 
 /*
     public function billing2(Request $request) {

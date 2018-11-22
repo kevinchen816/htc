@@ -17,25 +17,25 @@ use DB;
 
 class PlansController extends Controller
 {
-    public function back_to_login($portal) {
-        //if (!Auth::check()) {
-            //session()->flash('warning', 'Please Login first');
-            //return redirect()->route('login');
-            if ($portal == 10) {
-                return redirect()->route('login.10ware');
-            } else if ($portal == 11) {
-                return redirect()->route('login.de');
-            } else {
-                return redirect()->route('login');
-            }
-        //}
-    }
+    //public function back_to_login($portal) {
+    //    //if (!Auth::check()) {
+    //        //session()->flash('warning', 'Please Login first');
+    //        //return redirect()->route('login');
+    //        if ($portal == 10) {
+    //            return redirect()->route('login.10ware');
+    //        } else if ($portal == 11) {
+    //            return redirect()->route('login.de');
+    //        } else {
+    //            return redirect()->route('login');
+    //        }
+    //    //}
+    //}
 
     /*-----------------------------------------------------------*/
     public function _view($portal) {
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
 
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
@@ -119,12 +119,12 @@ class PlansController extends Controller
     public function add(Request $request) {
         //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"submit-new-plan":"update"}
         //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
-        // return $request;
+        //return $request;
 
         $portal = $request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+//        if (!Auth::check()) {
+//            return $this->back_to_login($portal);
+//        }
         $user = Auth::user();
 
         /* check ICCID */
@@ -143,9 +143,7 @@ class PlansController extends Controller
         //    return redirect()->back();
         //}
 
-        $plan = DB::table('plans')
-            ->where('iccid', $iccid)
-            ->first();
+        $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
             //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
             session()->flash('danger', 'ICCID had used.');
@@ -286,11 +284,9 @@ class PlansController extends Controller
 
     /*-----------------------------------------------------------*/
     public function _my_plans2($portal) {
-        if (!Auth::check()) {
-            //session()->flash('warning', 'Please Login first');
-            //return redirect()->route('login');
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
 
         $user = Auth::user();
         $data['sel_menu'] = 'my_plans';
@@ -470,9 +466,9 @@ class PlansController extends Controller
     /*----------------------------------------------------------------------------------*/
     public function pause(Plan $plan) {
         $portal = 0; //$request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
         $user = Auth::user();
 
         // $plan->delete();
@@ -493,9 +489,9 @@ class PlansController extends Controller
 
     public function active(Plan $plan) {
         $portal = 0; //$request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
         $user = Auth::user();
 
         $subscription_name = $plan->iccid;
@@ -508,9 +504,9 @@ class PlansController extends Controller
 
     public function change(Plan $plan) {
         $portal = 0; //$request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
         $user = Auth::user();
 
         // $user->subscription('main')->swap('provider-plan-id');
@@ -525,22 +521,21 @@ class PlansController extends Controller
 
     public function cancel(Plan $plan) {
         $portal = 0; //$request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
         $user = Auth::user();
 
         session()->flash('success', 'Cancel Success');
         return redirect()->back();
     }
 
+    /*----------------------------------------------------------------------------------*/
     public function renew(Plan $plan) {
-//return $plan;
-
         $portal = 0; //$request->portal;
-        if (!Auth::check()) {
-            return $this->back_to_login($portal);
-        }
+        //if (!Auth::check()) {
+        //    return $this->back_to_login($portal);
+        //}
         $user = Auth::user();
 //        $data['sel_menu'] = 'my_plans';
 //        $user->update($data);

@@ -32,7 +32,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'trial_ends_at', 'subscription_ends_at',
+        'name', 'email', 'password', 'email_verified',
+        'trial_ends_at', 'subscription_ends_at',
         'date_format', 'portal', 'permission',
         'sel_menu', 'sel_camera', 'sel_camera_tab', 'sel_account_tab'
     ];
@@ -44,6 +45,11 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    /* https://laravel-china.org/courses/laravel-shop/5.5/verifying-mailbox/1546 */
+    protected $casts = [
+        'email_verified' => 'boolean',
     ];
 
     public function cameras() {

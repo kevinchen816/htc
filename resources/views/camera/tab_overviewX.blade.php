@@ -37,7 +37,7 @@
             <h4 class="panel-title">Statistical Data</h4>
         </div>
         <div class="panel-body">
-            {!! $cc->OverviewStatisics($camera) !!}
+            {!! $cc->html_OverviewStatisics($camera) !!}
 
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">

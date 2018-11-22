@@ -39,6 +39,8 @@ class CreateUsersTable extends Migration
             //$table->integer('notification_count')->unsigned()->default(0);
 
             $table->rememberToken();
+            //$table->boolean('email_verified')->default(false)->after('remember_token');
+            $table->boolean('email_verified')->default(false);
             $table->timestamps();
         });
 
