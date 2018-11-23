@@ -58,19 +58,19 @@ class CamerasController extends Controller
     private $error;
 
     /*
-        Y - ��ݵ���λ����ʾ
-        m - �·ݵ����ֱ�ʾ���� 01 �� 12��
-        d - һ�����еĵڼ��죨�� 01 �� 31��
-        H - 24 Сʱ�ƣ���ǰ���㣨00 �� 23��
-        i - �֣���ǰ���㣨00 �� 59��
-        s - �룬��ǰ���㣨00 �� 59��
+        Y - Äê·ÝµÄËÄÎ»Êý±íÊ¾
+        m - ÔÂ·ÝµÄÊý×Ö±íÊ¾£¨´Ó 01 µ½ 12£©
+        d - Ò»¸öÔÂÖÐµÄµÚ¼¸Ìì£¨´Ó 01 µ½ 31£©
+        H - 24 Ð¡Ê±ÖÆ£¬´øÇ°µ¼Áã£¨00 µ½ 23£©
+        i - ·Ö£¬´øÇ°µ¼Áã£¨00 µ½ 59£©
+        s - Ãë£¬´øÇ°µ¼Áã£¨00 µ½ 59£©
 
-        H - 24 Сʱ�ƣ���ǰ���㣨00 �� 23��
-        G - 24 Сʱ�ƣ�����ǰ���㣨0 �� 23��
-        h - 12 Сʱ�ƣ���ǰ���㣨01 �� 12��
-        g - 12 Сʱ�ƣ�����ǰ���㣨1 �� 12��
-        a - Сд��ʽ��ʾ��am �� pm
-        A - ��д��ʽ��ʾ��AM �� PM
+        H - 24 Ð¡Ê±ÖÆ£¬´øÇ°µ¼Áã£¨00 µ½ 23£©
+        G - 24 Ð¡Ê±ÖÆ£¬²»´øÇ°µ¼Áã£¨0 µ½ 23£©
+        h - 12 Ð¡Ê±ÖÆ£¬´øÇ°µ¼Áã£¨01 µ½ 12£©
+        g - 12 Ð¡Ê±ÖÆ£¬²»´øÇ°µ¼Áã£¨1 µ½ 12£©
+        a - Ð¡Ð´ÐÎÊ½±íÊ¾£ºam »ò pm
+        A - ´óÐ´ÐÎÊ½±íÊ¾£ºAM »ò PM
 
         m/d/Y+g:i:s+a   MM/DD/YYYY HH:MM:SS AM/PM (12 hours)
         m/d/Y+H:i:s     MM/DD/YYYY HH:MM:SS (24 hours)
@@ -98,8 +98,12 @@ class CamerasController extends Controller
 
     public function _user_dateformat($user, $datetime) {
         //$dt = date_create('2013-03-15 23:40:00', timezone_open('Europe/Oslo'));
-        $dt = date_create($datetime);
-        $dt = date_format($dt, $user->date_format);
+        if ($datetime) {
+            $dt = date_create($datetime);
+            $dt = date_format($dt, $user->date_format);
+        } else {
+            $dt = '';
+        }
         return $dt;
     }
 
@@ -1667,7 +1671,6 @@ class CamerasController extends Controller
             $camera = $this->Camera_Find($param->module_id);
             if ($camera) {
                 if ($camera->user_id == $user_id) {
-                    //$this->Camera_Status_Update($param);
                     $err = 0;
                 } else {
                     $err = ERR_NOT_CAMERA_OWNER;
@@ -1709,7 +1712,6 @@ class CamerasController extends Controller
         return 0;
     }
 
-    //public function Camera_Status_Update($param, $api_type = null) {
     public function Camera_Status_Update($param, $api_type = null, $upload_original = 0) {
         $module_id = $param->module_id;
         $cameras = DB::table('cameras')->where('module_id', $module_id);
@@ -1725,7 +1727,7 @@ class CamerasController extends Controller
                 $data['log'] = 0;
             }
 
-        } else if ($api_type == 'upload') {
+        } else if (($api_type == 'upload_photo')||($api_type == 'upload_video')) {
             $data['battery']      = $param->Battery;
             $data['signal_value'] = $param->SignalValue;
             $data['card_space']   = $param->Cardspace;
@@ -1760,18 +1762,29 @@ class CamerasController extends Controller
             }
         }
 
-        $datetime = date('Y-m-d H:i:s');
+        //$datetime = date('Y-m-d H:i:s');
+        $datetime = $this->_datetime_get($camera);
         $data['last_contact'] = $datetime;
-        if ($api_type == 'arm') {
-            $data['last_armed'] = $datetime;    // status with Arm='Y'
+        if ($api_type == 'arm') {                       // status with Arm='Y'
+            $data['last_armed'] = $datetime;
         } else if ($api_type == 'report') {
-            $data['last_hb'] = $datetime;       // report
-        } else if ($api_type == 'upload') {
-            $data['last_photo'] = $datetime;    // upload_xxx
-        } else if ($api_type == 'schedule') {
-            $data['last_schedule'] = $datetime; // schedule
-        } else if ($api_type == 'settings') {
-            $data['last_settings'] = $datetime; // downloadsettings
+            $data['last_hb'] = $datetime;
+        } else if ($api_type == 'upload_photo') {       // uploadthumb, uploadoriginal
+            $data['last_photo'] = $datetime;
+        } else if ($api_type == 'upload_video') {       // upload_video
+            $data['last_video'] = $datetime;
+        } else if ($api_type == 'schedule_start') {
+            $data['last_schedule'] = $datetime;
+            $data['last_schedule_status'] = 'start';
+        } else if ($api_type == 'schedule_finish') {
+            $data['last_schedule'] = $datetime;
+            $data['last_schedule_status'] = 'finish';
+        } else if ($api_type == 'schedule_abort') {
+            $data['last_schedule'] = $datetime;
+            $data['last_schedule_status'] = 'abort';
+        } else if ($api_type == 'settings') {           // downloadsettings
+            $data['last_settings'] = $datetime;
+        //} else if ($api_type == 'log') {              // uploadlog
         }
         //$data['expected_contact'] = ; // TODO
 
@@ -1865,18 +1878,7 @@ class CamerasController extends Controller
         }
 
         $response = $this->Response_Result($err, $camera);
-//return gettype($response); // array
-//return gettype(json_encode($response)); // string
-//return gettype(json_decode(json_encode($response))); // object
-//return gettype(json_decode(json_encode($response), true)); // array
         if ($user_id && $camera) {
-            //$param = array(
-            //    'api' => 'report',
-            //    'user_id' => $user_id,
-            //    'camera' => $camera,
-            //    'request' => $request,
-            //    'response' => $response,
-            //);
             $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -1895,8 +1897,6 @@ class CamerasController extends Controller
         }
 
         if ($err == 0) {
-            $this->Camera_Status_Update($request, 'arm');
-
             if ($request->Arm == 'Y') {
                 $this->Action_CancellAll($camera->id);
 
@@ -1909,16 +1909,20 @@ class CamerasController extends Controller
 
                 $param['action_code'] = 'PS';
                 $this->Action_Add($param);
+
+                $this->Camera_Status_Update($request, 'arm');
+            } else {
+                $this->Camera_Status_Update($request);
             }
 
-            if ($request->RequestID) {
-                $param = array(
-                    'request_id'  => $request->RequestID,
-                    'camera_id'   => $camera->id,
-                    'action_code' => 'SR',
-                );
-                $this->Action_Completed($param);
-            }
+            //if ($request->RequestID) {
+            //    $param = array(
+            //        'request_id'  => $request->RequestID,
+            //        'camera_id'   => $camera->id,
+            //        'action_code' => 'SR',
+            //    );
+            //    $this->Action_Completed($param);
+            //}
         }
 
         $response = $this->Response_Result($err, $camera);
@@ -2195,7 +2199,7 @@ class CamerasController extends Controller
                 $param['filesize'] = $ret['filesize'];
 
                 $points = $this->Plan_Update($param);
-                //$param['points'] = $points;
+                $param['points'] = $points;
 
                 $photo = new Photo;
                 $photo->camera_id           = $camera_id;
@@ -2220,6 +2224,7 @@ class CamerasController extends Controller
                     $photo->video_bitrate       = $param->video_bitrate;
                     $photo->save();
 
+                    $this->Camera_Status_Update($param, 'upload_video');
                 } else {
                     $photo->filetype   = 1;
                     $photo->uploadtype = 1;
@@ -2228,8 +2233,9 @@ class CamerasController extends Controller
                     $photo->photo_quality       = $param->photo_quality;
                     $photo->photo_compression   = $param->photo_compression;
                     $photo->save();
+
+                    $this->Camera_Status_Update($param, 'upload_photo');
                 }
-                $this->Camera_Status_Update($param, 'upload');
 
                 if ($request->RequestID) {
                     $request_id = $request->RequestID;
@@ -2422,7 +2428,7 @@ class CamerasController extends Controller
                 $photos->update($data);
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'upload', 1);
+                $this->Camera_Status_Update($param, 'upload_photo', 1);
 
                 /* update Action */
                 $data = [];
@@ -2558,7 +2564,7 @@ class CamerasController extends Controller
                 $photos->update($data);
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'upload', 1);
+                $this->Camera_Status_Update($param, 'upload_video', 1);
 
                 /* update Action */
                 $data = [];
@@ -2839,20 +2845,15 @@ class CamerasController extends Controller
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request, 'schedule');
-
             $param = array(
                 'camera_id'   => $camera->id,
                 'action_code' => 'SC',
             );
 
-            //if ($request->RequestID) {
-            //    $param['request_id'] = $request->RequestID;
-            //}
-
             if ($request->status == 'start') {
-                $this->Action_CancellSchedulePending($camera->id);
+                $api_type = 'schedule_start';
 
+                $this->Action_CancellSchedulePending($camera->id);
                 $param['first_number'] = $request->first_number;
                 $param['last_number'] = $request->last_number;
                 $param['status'] = ACTION_PENDING;
@@ -2865,38 +2866,31 @@ class CamerasController extends Controller
                     $response['RequestID'] = (string) $action->id;
                 }
 
-                if ($user_id && $camera) {
-                    $this->LogApi_Add('schedule_start', 1, $user_id, $camera->id, $request, $response);
-                }
-
             } else if ($request->status == 'finish') {
+                $api_type = 'schedule_finish';
                 if ($request->RequestID) {
                     $param['request_id'] = $request->RequestID;
-                    //$param['photo_id'] = ;
-                    //$param['photo_cnt'] = ;
                     $this->Action_Completed($param);
                 }
-
                 $response = $this->Response_Result($err, $camera);
-                if ($user_id && $camera) {
-                    $this->LogApi_Add('schedule_finish', 1, $user_id, $camera->id, $request, $response);
-                }
 
             } else if ($request->status == 'abort') {
+                $api_type = 'schedule_abort';
                 if ($request->RequestID) {
                     $param['request_id'] = $request->RequestID;
                     $this->Action_Failed($param);
                     //$this->Action_Aborted($param);
                 }
                 $response = $this->Response_Result($err, $camera);
-                if ($user_id && $camera) {
-                    $this->LogApi_Add('schedule_abort', 1, $user_id, $camera->id, $request, $response);
-                }
+            }
+
+            $this->Camera_Status_Update($request, $api_type);
+            if ($user_id && $camera) {
+                $this->LogApi_Add($api_type, 1, $user_id, $camera->id, $request, $response);
             }
         }
         return $response;
     }
-
 
     /*----------------------------------------------------------------------------------*/
     //{"iccid":"89860117851014783507","module_id":"861107030190590","model_id":"lookout-na","status":"enable","RequestID":"3"}
@@ -3235,7 +3229,17 @@ if ($err == 0) { /* for test */
         $txt .= $this->ovItemShow('Last Heartbeat', $this->_user_dateformat($user, $camera->last_hb));
         $txt .= $this->ovItemShow('Last Photo', $this->_user_dateformat($user, $camera->last_photo));
         $txt .= $this->ovItemShow('Last Video', $this->_user_dateformat($user, $camera->last_video));
-        $txt .= $this->ovItemShow('Last Scheduled Upload', $this->_user_dateformat($user, $camera->last_schedule)); // 2018/10/06 03:03:12 | success
+
+        $datetime_schedule = $this->_user_dateformat($user, $camera->last_schedule);
+        if ($camera->last_schedule_status == 'start') {
+            $datetime_schedule .= ' - start';
+        } else if ($camera->last_schedule_status == 'finish') {
+            $datetime_schedule .= ' - success';
+        } else if ($camera->last_schedule_status == 'abort') {
+            $datetime_schedule .= ' - abort';
+        }
+        $txt .= $this->ovItemShow('Last Scheduled Upload', $datetime_schedule);
+
         $txt .= $this->ovItemShow('Last Settings', $this->_user_dateformat($user, $camera->last_settings));
         //$txt .= $this->ovItemShow('Expected Contact', $this->_user_dateformat($user, $camera->expected_contact, '[Unknown]'));
         return $txt;
@@ -4333,7 +4337,7 @@ if ($err == 0) { /* for test */
 // https://laravelacademy.org/post/6140.html
 $users = DB::table('users')->select('name', 'email as user_email')->get();
 
-// å¼ºåˆ¶æŸ¥è¯¢è¿”å›žä¸é‡å¤çš„ç»“æžœé›?$users = DB::table('users')->distinct()->get();
+// Ã¥Â¼ÂºÃ¥Ë†Â¶Ã¦Å¸Â¥Ã¨Â¯Â¢Ã¨Â¿â€Ã¥â€ºÅ¾Ã¤Â¸ÂÃ©â€¡ÂÃ¥Â¤ÂÃ§Å¡â€žÃ§Â»â€œÃ¦Å¾Å“Ã©â€º?$users = DB::table('users')->distinct()->get();
 
 $query = DB::table('users')->select('name');
 $users = $query->addSelect('age')->get();
@@ -4355,7 +4359,7 @@ $users = DB::table('users')
 ->whereDate('created_at', '2016-10-10')
 ->get();
 
-// åŽŸç”Ÿè¡¨è¾¾å¼?$users = DB::table('users')
+// Ã¥Å½Å¸Ã§â€Å¸Ã¨Â¡Â¨Ã¨Â¾Â¾Ã¥Â¼?$users = DB::table('users')
 ->select(DB::raw('count(*) as user_count, status'))
 ->where('status', '<>', 1)
 ->groupBy('status')

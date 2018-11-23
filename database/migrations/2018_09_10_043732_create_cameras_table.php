@@ -127,8 +127,10 @@ class CreateCamerasTable extends Migration
             $table->dateTime('last_hb')->nullable();
             $table->dateTime('last_photo')->nullable();
             $table->dateTime('last_video')->nullable();
-            $table->dateTime('last_schedule')->nullable();
             $table->dateTime('last_settings')->nullable();      // Last Downloaded
+            $table->dateTime('last_schedule')->nullable();
+            $table->string('last_schedule_status')->nullable();
+
             $table->json('settings')->nullable();
 
             $table->integer('columns')->default(4);
