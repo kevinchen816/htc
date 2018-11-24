@@ -64,7 +64,7 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
     app/Http/Middleware/RedirectIfAuthenticated.php
     --> modify redirect('/home') to redirect('/')
 */
-//Auth::routes();
+Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 //Route::resource('/plans', 'PlansController');
@@ -213,8 +213,7 @@ Route::post('/support/contact', function() {return '/support/contact';})->name('
 Route::get('/email/optin', function() { return '/email/optin'; })->name('email.optin');
 Route::get('/email/optout', function() { return '/email/optout'; })->name('email.optout');
 
-Route::get('/email/send', 'MailController@send')->name('email.test');
-//Route::get('/email/send', 'MailController@email_hello')->name('email.test');
+Route::get('/email/test', 'MailController@test')->name('email.test');
 
 /*-----------------------------------------------------------*/
 

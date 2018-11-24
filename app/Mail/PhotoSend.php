@@ -35,8 +35,39 @@ class PhotoSend extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        //return $this->from('kevin@10ware.com')
-        //            ->view('emails.photo');
+        //$subject = $this->$camera_name;
         return $this->view('emails.photo');
+        //return $this->from('kevin@10ware.com')
+        //            ->subject($subject)
+        //            ->view('emails.photo');
     }
 }
+
+
+/*
+http://sample.test:8025/
+
+.env
+MAIL_DRIVER=smtp
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+*/
+
+/*
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.exmail.qq.com
+MAIL_PORT=465
+MAIL_USERNAME=kevin@10ware.com
+MAIL_PASSWORD=cct5816
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=kevin@10ware.com
+MAIL_FROM_NAME=no-reply
+*/
+
+/*
+Success: You are now registered, but your account is not yet confirmed.
+Please look in your inbox for a confirmation email and click the Verify link.
+*/

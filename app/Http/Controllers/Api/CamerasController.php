@@ -2212,12 +2212,16 @@ class CamerasController extends Controller
             }
 
             if ($err == 0) {
+                $filesize = $ret['filesize'];
+                $savename = $ret['savename'];
+
                 $param = $request;
                 //$param['camera_id'] = $camera_id;
                 //$param['filename'] = $request->FileName;
                 //$param['imagename'] = $ret['imagename'];
-                $param['savename'] = $ret['savename'];
-                $param['filesize'] = $ret['filesize'];
+                $param['savename'] = $savename; //$ret['savename'];
+                $param['filesize'] = $filesize; //$ret['filesize'];
+
 
                 $points = $this->Plan_Update($param);
                 $param['points'] = $points;
@@ -2226,8 +2230,8 @@ class CamerasController extends Controller
                 $photo->camera_id           = $camera_id;
                 $photo->filename            = $request->FileName;
                 $photo->imagename           = $ret['imagename'];
-                $photo->thumb_name          = $ret['savename'];
-                $photo->filesize            = $ret['filesize'];
+                $photo->thumb_name          = $savename; //$ret['savename'];
+                $photo->filesize            = $filesize; //$ret['filesize'];
                 $photo->points              = $points;
                 $photo->resolution          = $request->upload_resolution;
                 $photo->source              = $request->Source;
@@ -2283,13 +2287,7 @@ class CamerasController extends Controller
                     }
                 }
 
-                $user = DB::table('users')->where('id', $user_id)->first();
-                if ($user) {
-                    //$this->email_photo_send($user, $camera, $photo->thumb_name);
-                    $mail = new MailController;
-                    //$mail->email_photo_send($user, $camera, $photo->thumb_name);
-                    $mail->email_photo_queue($user, $camera, $photo->thumb_name);
-                }
+                $this->email_Photo_Send($user_id, $camera, $savename);
             }
         }
 
@@ -2425,12 +2423,13 @@ class CamerasController extends Controller
 
             if ($err == 0) {
                 $filesize = $ret['filesize'];
+                $savename = $ret['savename'];
 
                 $param = $request;
                 $param['camera_id'] = $camera_id;
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
-                $param['savename'] = $ret['savename'];
+                $param['savename'] = $savename; //$ret['savename'];
                 $param['filesize'] = $filesize;
 
                 /* update Plan */
@@ -2444,7 +2443,7 @@ class CamerasController extends Controller
                 $data['resolution'] = $request->upload_resolution;
                 $data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $ret['imagename'];
-                $data['original_name'] = $ret['savename'];
+                $data['original_name'] = $savename; //$ret['savename'];
                 $data['filesize'] = $filesize;
                 $data['points'] = $points;
                 $photos->update($data);
@@ -2458,6 +2457,8 @@ class CamerasController extends Controller
                 $data['completed'] = date('Y-m-d H:i:s');
                 $data['photo_cnt'] = 1;
                 $actions->update($data);
+
+                $this->email_Photo_Send($user_id, $camera, $savename);
             }
         }
 
@@ -2497,9 +2498,6 @@ class CamerasController extends Controller
         "Image": {}
     */
     public function uploadvideothumb(Request $request) {
-//$file = $request->Image;
-//return $file->getClientOriginalName();
-
         $ret = $this->uploadfile($request, 'video_thumb');
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
@@ -2560,13 +2558,14 @@ class CamerasController extends Controller
 
             if ($err == 0) {
                 $filesize = $ret['filesize'];
+                $savename = $ret['savename'];
 
                 $param = $request;
                 $param['camera_id'] = $camera_id;
                 $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
                 //$param['extension'] = $ret['extension'];
-                $param['filesize'] = $ret['filesize'];
+                $param['filesize'] = $filesize; //$ret['filesize'];
 
                 /* update Plan */
                 $points = $this->Plan_Update($param, 1);
@@ -2579,8 +2578,8 @@ class CamerasController extends Controller
                 $data['resolution'] = $request->upload_resolution;
                 //$data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $ret['imagename'];
-//                $data['savename'] = $ret['savename'];
-                $data['original_name'] = $ret['savename'];
+//                $data['savename'] = $savename; //$ret['savename'];
+                $data['original_name'] = $savename; //$ret['savename'];
                 $data['filesize'] = $filesize;
                 $data['points'] = $points;
                 $photos->update($data);
@@ -2594,6 +2593,8 @@ class CamerasController extends Controller
                 $data['completed'] = date('Y-m-d H:i:s');
                 $data['photo_cnt'] = 1;
                 $actions->update($data);
+
+                $this->email_Photo_Send($user_id, $camera, $savename);
             }
         }
 
@@ -4375,20 +4376,30 @@ if ($err == 0) { /* for test */
 
 
     /*----------------------------------------------------------------------------------*/
-    public function email_photo_send($user, $camera, $filename) {
-        $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
-
-        $to = $user->email;
-        $subject = $camera->description;
-        $param = array(
-            'user_name'=>$user->name,
-            'camera_name'=>$camera->description,
-            'imgPath'=>$imgPath,
-        );
-        $flag = Mail::send('emails.photo', $param, function($message) use($to, $subject) {
-            $message ->to($to)->subject($subject);
-        });
+    public function email_Photo_Send($user_id, $camera, $filename) {
+        $user = DB::table('users')->where('id', $user_id)->first();
+        if ($user) {
+            $to = $user->email;
+            $subject = $camera->description;
+            $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+            $param = array(
+                'user_name'=>$user->name,
+                'camera_name'=>$camera->description,
+                'imgPath'=>$imgPath,
+            );
+            Mail::send('emails.photo', $param, function($message) use($to, $subject) {
+                $message ->to($to)->subject($subject);
+            });
+        }
     }
+
+    //public function email_Photo_Send($user_id, $camera, $filename) {
+    //    $user = DB::table('users')->where('id', $user_id)->first();
+    //    if ($user) {
+    //        $email = new MailController;
+    //        $email->photo_Send($user, $camera, $filename);
+    //    }
+    //}
 
 }
 
