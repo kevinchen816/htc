@@ -64,7 +64,7 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
     app/Http/Middleware/RedirectIfAuthenticated.php
     --> modify redirect('/home') to redirect('/')
 */
-//Auth::routes();
+Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 //Route::resource('/plans', 'PlansController');
