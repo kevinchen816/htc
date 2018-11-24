@@ -197,7 +197,6 @@
                             <div class="row no-gutters">
                                 @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                                 {!! $cc->html_GalleryPhoto($user, $camera, $photos) !!}
-
                             </div>
                             <!-- End Row -->
                         </div> <!-- thumbnail-gallery -->

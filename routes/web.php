@@ -194,6 +194,9 @@ Route::group(['middleware' => 'auth'], function() {
 
 });
 
+/*-----------------------------------------------------------*/
+Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
+
 Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
 Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
 Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick-start');
@@ -210,8 +213,11 @@ Route::post('/support/contact', function() {return '/support/contact';})->name('
 Route::get('/email/optin', function() { return '/email/optin'; })->name('email.optin');
 Route::get('/email/optout', function() { return '/email/optout'; })->name('email.optout');
 
+Route::get('/email/send', 'MailController@send')->name('email.test');
+//Route::get('/email/send', 'MailController@email_hello')->name('email.test');
+
 /*-----------------------------------------------------------*/
-Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
+
 
 /* for stripe test */
 Route::get('/stripe', 'AccountsController@stripe');

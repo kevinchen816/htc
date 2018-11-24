@@ -79,10 +79,18 @@ class EmailConfirmNotification extends Notification
 }
 
 /*
-.env
-
 http://sample.test:8025/
 
+.env
+MAIL_DRIVER=smtp
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+*/
+
+/*
 MAIL_DRIVER=smtp
 MAIL_HOST=smtp.exmail.qq.com
 MAIL_PORT=465
@@ -91,15 +99,6 @@ MAIL_PASSWORD=cct5816
 MAIL_ENCRYPTION=ssl
 MAIL_FROM_ADDRESS=kevin@10ware.com
 MAIL_FROM_NAME=KMCam
-*/
-
-/*
-MAIL_DRIVER=smtp
-MAIL_HOST=127.0.0.1
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
 */
 
 /*

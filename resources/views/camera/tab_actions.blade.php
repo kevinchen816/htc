@@ -1,15 +1,20 @@
+@inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
 <div class="row">
     <div class="col-md-3">
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
                 <div class="panel-title">
                     <span style="font-size: .70em;" >Request Actions</span>
+                    <a class="btn btn-xs btn-primary pull-right" id="action-show">
+                        <i class="fa fa-angle-up"></i>
+                        Commands
+                    </a>
                 </div>
             </div>
             <div class="panel-body  " id="commandhistory-{{ $camera->id }}">
                 <table class="table" id="action-table">
                     <tbody>
-@if ($camera->remotecurrent == '24')
+@if ($camera->remotecurrent == '24h')
                         <tr>
                             <td>
                                 <div class="well well-sm">
@@ -25,7 +30,6 @@
                             <td>
                                 <form class="form-horizontal" role="form" method="POST" action="{{ route('camera.actionqueue_post') }}" id="action-formatsd-form-{{ $camera->id }}">
                                     {{ csrf_field() }}
-
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
                                     <input name="action" type="hidden" value="FC">
                                     <div class="form-group">
@@ -41,8 +45,6 @@
                                 </form>
                             </td>
                         </tr>
-
-                        @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
                         {!! $actions_ctrl->html_Commands($camera) !!}
                     </tbody>
                 </table>
@@ -67,58 +69,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @inject('actions_ctrl', 'App\Http\Controllers\ActionsController')
                         {!! $actions_ctrl->html_History($portal, $user, $camera) !!}
-
-                        <!--<tr>
-                            <td>Scheduled Update</td>
-                            <td>Completed</td>
-                            <td>09/10/2018 1:31:14 pm</td>
-                            <td>09/10/2018 1:34:53 pm</td>
-                            <td>49 photos uploaded.</td>
-                        </tr>-->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
-<!--<div class="row">
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-9">
-        <div class="panel panel-default panel-primary custom-settings-panel">
-            <div class="panel-heading">
-                <h4 class="panel-title">Missing Images
-                    <span class="pull-right"><a class="btn btn-xs btn-primary" id="clear-missing">Clear Missing</a></span>
-                </h4>
-            </div>
-            <div class="panel-body" style="padding-left: 1px; padding-right: 1px;">
-                <table class="table table-striped table-condensed" style="font-size: .80em; margin-left: 0px;">
-                    <thead>
-                        <tr>
-                            <th>File Name</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="col-sm-1">
-                                PICT4912.JPG
-                            </td>
-                            <td class="col-sm-1">
-                                <a class="btn btn-xs btn-info missing-request" missing-id="949">Request</a>
-                            </td>
-                            <td class="col-sm-1">09/08/2018 7:35:55 pm</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>-->
 
 <script type="text/javascript">
 $(document).ready(function () {
@@ -157,5 +114,20 @@ $(document).ready(function () {
         $('#action-{{ $camera->id }}').load(url);
 
     });
+    $('#action-show').click(function() {
+        val = $("#commandhistory-{{ $camera->id }}").hasClass('hidden');
+        //console.log('action show click ' + val);
+
+        if (val) {
+            $("#commandhistory-{{ $camera->id }}").show(250);
+            $("#commandhistory-{{ $camera->id }}").removeClass('hidden');
+            $('#action-show').html('<i class="fa fa-angle-up"></i> Commands');
+        }
+        else {
+            $("#commandhistory-{{ $camera->id }}").hide(250);
+            $("#commandhistory-{{ $camera->id }}").addClass('hidden');
+            $('#action-show').html('<i class="fa fa-angle-down"></i> Commands');
+        };
+    })
 });
 </script>

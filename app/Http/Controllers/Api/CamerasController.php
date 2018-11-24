@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Schema;
 //use Storage;
+use App\Http\Controllers\MailController;
+
+use Mail;
 
 /*
 ICCID:
@@ -746,6 +749,24 @@ class CamerasController extends Controller
             $txt .= '<span class="help-block-hidden hidden">'.$help.'</span>';
         }
         $txt .= '</div></div>';
+        return $txt;
+    }
+
+    public function stItemCheckbox($name, $id=null, $value=null, $checked, $title) {
+        $txt  = '<div class="row">';
+        $txt .=     '<div class="col-md-12">';
+        $txt .=         '<span class="button-checkbox">';
+        $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">'.$title.'</button>';
+        if ($value) {
+                           //<input type="checkbox" class="hidden" name="54_email[]" value="test1@gmail.com" checked />
+            $txt .=         '<input type="checkbox" class="hidden" name="'.$name.'" value="'.$value.'" '.$checked.' />';
+        } else {
+                           //<input type="checkbox" class="hidden" name="54_email_owner" id="54_email_owner" checked />
+            $txt .=         '<input type="checkbox" class="hidden" name="'.$name.'" id="'.$id.'" '.$checked.' />';
+        }
+        $txt .=         '</span>';
+        $txt .=     '</div>';
+        $txt .= '</div>';
         return $txt;
     }
 
@@ -2261,6 +2282,14 @@ class CamerasController extends Controller
                         }
                     }
                 }
+
+                $user = DB::table('users')->where('id', $user_id)->first();
+                if ($user) {
+                    //$this->email_photo_send($user, $camera, $photo->thumb_name);
+                    $mail = new MailController;
+                    //$mail->email_photo_send($user, $camera, $photo->thumb_name);
+                    $mail->email_photo_queue($user, $camera, $photo->thumb_name);
+                }
             }
         }
 
@@ -2279,19 +2308,12 @@ class CamerasController extends Controller
         return $ret;
     }
 
-//  $msg = "test webhook";
-//  mail($customer_email, "Test suscrip", $msg);
-
     public function uploadthumb(Request $request) {
-//$file = $request->Image;
-//return $file->getClientOriginalName();
-
         $ret = $this->uploadfile($request, 'photo_thumb');
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         $response = $ret['response'];
         if ($user_id && $camera) {
-            //$this->LogApi_Add('uploadthumb', 1, $ret['user_id'], $ret['camera_id'], $request, $response);
             $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -2900,7 +2922,7 @@ class CamerasController extends Controller
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($request, 'log');
 
             if ($request->RequestID) {
 
@@ -3001,7 +3023,7 @@ class CamerasController extends Controller
                 $param['filesize'] = $ret['filesize'];
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'log');
+                $this->Camera_Status_Update($param);
 
                 /* update Action */
                 if ($request->RequestID) {
@@ -3044,8 +3066,7 @@ if ($err == 0) { /* for test */
     /*----------------------------------------------------------------------------------*/
     /* TAB Overview */
     public function html_OverviewStatus($camera) {
-        $txt = '';
-        $txt .= $this->ovItemShow('Description', $camera->description);
+        $txt  = $this->ovItemShow('Description', $camera->description);
         $txt .= $this->ovItemShow('Location', $camera->location);
 
         $percent_signal = round(($camera->signal_value/32)*100, 2);
@@ -3099,8 +3120,7 @@ if ($err == 0) { /* for test */
             $points_used = $plan->points_used;
         }
 
-        $txt = '';
-        $txt .= $this->ovItemShow('Module ID', $camera->module_id);
+        $txt  = $this->ovItemShow('Module ID', $camera->module_id);
         $txt .= $this->ovItemShow('SIM ICCID', $camera->iccid);
         $txt .= $this->ovItemShow('Model', $camera->model_id); // Lookout North America
         $txt .= $this->ovItemShow('Card Free (Size)', $card_info);
@@ -3113,62 +3133,60 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
-    public function html_OverviewSettingsX($camera) {
-        $txt = '';
-        $txt .= $this->ovItemShow('Last Downloaded', $camera->last_settings);
-        $txt .= '<br/>';
-
-        $txt .= $this->ovItemShowEx($this->itemCameraMode(), $camera->camera_mode);
-        if ($camera->camera_mode == 'p') {
-            $txt .= $this->ovItemShowEx($this->itemPhotoResolution(), $camera->photo_resolution);
-            $txt .= $this->ovItemShowEx($this->itemPhotoFlash(), $camera->photo_flash);
-            $txt .= $this->ovItemShowEx($this->itemPhotoBurst(), $camera->photo_burst);
-            $txt .= $this->ovItemShowEx($this->itemBurstDelay(), $camera->burst_delay);
-            $txt .= $this->ovItemShowEx($this->itemUploadResolution(), $camera->upload_resolution);
-            $txt .= $this->ovItemShowEx($this->itemUploadQuality(), $camera->photo_quality);
-        } else {
-            $txt .= $this->ovItemShowEx($this->itemVideoResolution(), $camera->video_resolution);
-            $txt .= $this->ovItemShowEx($this->itemFrameRate(), $camera->video_fps);
-            $txt .= $this->ovItemShowEx($this->itemQualityLevel(), $camera->video_bitrate);
-            $txt .= $this->ovItemShowEx($this->itemVideoLength(), $camera->video_length);
-            $txt .= $this->ovItemShowEx($this->itemVideoSound(), $camera->video_sound);
-        }
-        $txt .= '<br/>';
-
-        $txt .= $this->ovItemShowEx($this->itemTimeStamp(), $camera->timestamp);
-        $txt .= $this->ovItemShowEx($this->itemDateFormat(), $camera->date_format);
-        $txt .= $this->ovItemShowEx($this->itemTimeFormat(), $camera->time_format);
-        $txt .= $this->ovItemShowEx($this->itemTemperature(), $camera->temp_unit);
-        $txt .= '<br/>';
-
-        $txt .= $this->ovItemShowEx($this->itemQuietTime(), $camera->quiettime);
-        $txt .= '<br/>';
-
-        $txt .= $this->ovItemShowEx($this->itemTimeLapse(), $camera->timelapse);
-        if ($camera->timelapse == 'on') {
-            $txt .= $this->ovItemShowEx($this->itemTimelapseStartTime(), $camera->tls_start);
-            $txt .= $this->ovItemShowEx($this->itemTimelapseStopTime(), $camera->tls_stop);
-            $txt .= $this->ovItemShowEx($this->itemTimelapseInterval(), $camera->tls_interval);
-        }
-        $txt .= '<br/>';
-
-        $txt .= $this->ovItemShowEx($this->itemWirelessMode(), $camera->wireless_mode);
-        if ($camera->wireless_mode == 'schedule') {
-            $txt .= $this->ovItemShowEx($this->itemScheduleInterval(), $camera->wm_schedule);
-            $txt .= $this->ovItemShowEx($this->itemScheduleFileLimit(), $camera->wm_sclimit);
-        }
-        $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $camera->hb_interval);
-        $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $camera->online_max_time);
-        $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $camera->remotecontrol);
-        $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $camera->cellularpw);
-        return $txt;
-    }
+    //public function html_OverviewSettingsX($camera) {
+    //    $txt  = $this->ovItemShow('Last Downloaded', $camera->last_settings);
+    //    $txt .= '<br/>';
+    //
+    //    $txt .= $this->ovItemShowEx($this->itemCameraMode(), $camera->camera_mode);
+    //    if ($camera->camera_mode == 'p') {
+    //        $txt .= $this->ovItemShowEx($this->itemPhotoResolution(), $camera->photo_resolution);
+    //        $txt .= $this->ovItemShowEx($this->itemPhotoFlash(), $camera->photo_flash);
+    //        $txt .= $this->ovItemShowEx($this->itemPhotoBurst(), $camera->photo_burst);
+    //        $txt .= $this->ovItemShowEx($this->itemBurstDelay(), $camera->burst_delay);
+    //        $txt .= $this->ovItemShowEx($this->itemUploadResolution(), $camera->upload_resolution);
+    //        $txt .= $this->ovItemShowEx($this->itemUploadQuality(), $camera->photo_quality);
+    //    } else {
+    //        $txt .= $this->ovItemShowEx($this->itemVideoResolution(), $camera->video_resolution);
+    //        $txt .= $this->ovItemShowEx($this->itemFrameRate(), $camera->video_fps);
+    //        $txt .= $this->ovItemShowEx($this->itemQualityLevel(), $camera->video_bitrate);
+    //        $txt .= $this->ovItemShowEx($this->itemVideoLength(), $camera->video_length);
+    //        $txt .= $this->ovItemShowEx($this->itemVideoSound(), $camera->video_sound);
+    //    }
+    //    $txt .= '<br/>';
+    //
+    //    $txt .= $this->ovItemShowEx($this->itemTimeStamp(), $camera->timestamp);
+    //    $txt .= $this->ovItemShowEx($this->itemDateFormat(), $camera->date_format);
+    //    $txt .= $this->ovItemShowEx($this->itemTimeFormat(), $camera->time_format);
+    //    $txt .= $this->ovItemShowEx($this->itemTemperature(), $camera->temp_unit);
+    //    $txt .= '<br/>';
+    //
+    //    $txt .= $this->ovItemShowEx($this->itemQuietTime(), $camera->quiettime);
+    //    $txt .= '<br/>';
+    //
+    //    $txt .= $this->ovItemShowEx($this->itemTimeLapse(), $camera->timelapse);
+    //    if ($camera->timelapse == 'on') {
+    //        $txt .= $this->ovItemShowEx($this->itemTimelapseStartTime(), $camera->tls_start);
+    //        $txt .= $this->ovItemShowEx($this->itemTimelapseStopTime(), $camera->tls_stop);
+    //        $txt .= $this->ovItemShowEx($this->itemTimelapseInterval(), $camera->tls_interval);
+    //    }
+    //    $txt .= '<br/>';
+    //
+    //    $txt .= $this->ovItemShowEx($this->itemWirelessMode(), $camera->wireless_mode);
+    //    if ($camera->wireless_mode == 'schedule') {
+    //        $txt .= $this->ovItemShowEx($this->itemScheduleInterval(), $camera->wm_schedule);
+    //        $txt .= $this->ovItemShowEx($this->itemScheduleFileLimit(), $camera->wm_sclimit);
+    //    }
+    //    $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $camera->hb_interval);
+    //    $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $camera->online_max_time);
+    //    //$txt .= $this->ovItemShowEx($this->itemRemoteControl(), $camera->remotecontrol);
+    //    $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $camera->cellularpw);
+    //    return $txt;
+    //}
 
     public function html_OverviewSettings($user, $camera) {
         $last_settings = $this->_user_dateformat($user, $camera->last_settings);
 
-        $txt = '';
-        $txt .= $this->ovItemShow('Last Downloaded', $last_settings);
+        $txt  = $this->ovItemShow('Last Downloaded', $last_settings);
         $txt .= '<br/>';
 
         $obj = json_decode($camera->settings);
@@ -3215,14 +3233,13 @@ if ($err == 0) { /* for test */
         }
         $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $obj->hb_interval);
         $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $obj->online_max_time);
-        $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $obj->remotecontrol);
+        //$txt .= $this->ovItemShowEx($this->itemRemoteControl(), $obj->remotecontrol);
         $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $obj->cellularpw);
         return $txt;
     }
 
     public function html_OverviewEvent($user, $camera) {
-        $txt = '';
-        $txt .= $this->ovItemShow('Last Contact', $this->_user_dateformat($user, $camera->last_contact));
+        $txt  = $this->ovItemShow('Last Contact', $this->_user_dateformat($user, $camera->last_contact));
         $txt .= $this->ovItemShow('Last Armed', $this->_user_dateformat($user, $camera->last_armed));
         $txt .= $this->ovItemShow('Uploads since armed', $camera->arm_photos);
         $txt .= $this->ovItemShow('Points since armed', $camera->arm_points);
@@ -3402,8 +3419,7 @@ if ($err == 0) { /* for test */
     /* TAB Settings */
     public function html_Settings_Identification($camera) {
         $id = $camera->id;
-        $txt = '';
-        $txt .= $this->stItemOption($id, $this->itemCameraDescription(), 'description');
+        $txt  = $this->stItemOption($id, $this->itemCameraDescription(), 'description');
         $txt .= $this->stItemOption($id, $this->itemCameraLocation(), 'location');
         $txt .= $this->stItemOption($id, $this->itemCameraRegion(), 'region');
 
@@ -3412,10 +3428,32 @@ if ($err == 0) { /* for test */
         return $txt;
     }
 
+    public function stItemMobilePush($camera) {
+        $name = $id = 'noti_mobile';
+        $value = null;
+        $checked = ($camera[$name] == 'on') ? 'checked' : '';
+        return $this->stItemCheckbox($name, $id, $value, $checked, 'Send Mobile Push Notifications');
+    }
+
+    public function stItemEmailOwner($camera) {
+        $name = $id = 'noti_email';
+        $value = null;
+        $checked = ($camera[$name] == 'on') ? 'checked' : '';
+        return $this->stItemCheckbox($name, $id, $value, $checked, 'kevin@10ware.com');
+    }
+
+    public function html_Settings_Notifications($camera) {
+        $txt = '';
+        //$txt .= $this->stItemMobilePush($camera);
+        //$txt .= $this->stItemEmailOwner($camera);
+        //$txt .= $this->stItemCheckbox('54_email[]', null, 'test1@gmail.com', 'checked', 'test1@gmail.com');
+        //$txt .= $this->stItemCheckbox('54_email[]', null, 'test2@gmail.com', 'checked', 'test2@gmail.com');
+        return $txt;
+    }
+
     public function html_Settings_Basic($camera) {
         $id = $camera->id;
-        $txt = '';
-        $txt .= $this->stItemOption($id, $this->itemCameraMode(), 'camera_mode');
+        $txt  = $this->stItemOption($id, $this->itemCameraMode(), 'camera_mode');
         $txt .= $this->stItemOption($id, $this->itemPhotoResolution(), 'photo_resolution');
         $txt .= $this->stItemOption($id, $this->itemPhotoFlash(), 'photo_flash');
         $txt .= $this->stItemOption($id, $this->itemPhotoBurst(), 'photo_burst');
@@ -3444,8 +3482,7 @@ if ($err == 0) { /* for test */
 
     public function html_Settings_Timelapse($camera) {
         $id = $camera->id;
-        $txt = '';
-        $txt .= $this->stItemOption($id, $this->itemTimelapseStartTime(), 'tls_start');
+        $txt  = $this->stItemOption($id, $this->itemTimelapseStartTime(), 'tls_start');
         $txt .= $this->stItemOption($id, $this->itemTimelapseStopTime(), 'tls_stop');
         $txt .= $this->stItemOption($id, $this->itemTimelapseInterval(), 'tls_interval');
         return $txt;
@@ -3453,13 +3490,12 @@ if ($err == 0) { /* for test */
 
     public function html_Settings_Wireless_Mode($camera) {
         $id = $camera->id;
-        $txt = '';
-        $txt .= $this->stItemOption($id, $this->itemWirelessMode(), 'wireless_mode');
+        $txt  = $this->stItemOption($id, $this->itemWirelessMode(), 'wireless_mode');
         $txt .= $this->stItemOption($id, $this->itemScheduleInterval(), 'wm_schedule');
         $txt .= $this->stItemOption($id, $this->itemScheduleFileLimit(), 'wm_sclimit');
         $txt .= $this->stItemOption($id, $this->itemHeartbeatInterval(), 'hb_interval');
         $txt .= $this->stItemOption($id, $this->itemActionProcessTimeLimit(), 'online_max_time');
-        $txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
+        //$txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
         $txt .= $this->stItemOption($id, $this->itemCellularPassword(), 'cellularpw');
         return $txt;
     }
@@ -3471,8 +3507,7 @@ if ($err == 0) { /* for test */
             ),
         );
         $id = $camera->id;
-        $txt = '';
-        $txt .= $this->stItemOption($id, $array, 'blockmode1', 'Block Mode 1');
+        $txt  = $this->stItemOption($id, $array, 'blockmode1', 'Block Mode 1');
         $txt .= $this->stItemOption($id, $array, 'blockmode2', 'Block Mode 2');
         $txt .= $this->stItemOption($id, $array, 'blockmode3', 'Block Mode 3');
         $txt .= $this->stItemOption($id, $array, 'blockmode4', 'Block Mode 4');
@@ -3982,6 +4017,10 @@ if ($err == 0) { /* for test */
             "remotecontrol",
         );
 
+        $Notification_Settings = array(
+            "timelapse","tls_start","tls_stop","tls_interval",
+        );
+
         $Timelapse_Settings = array(
             "timelapse","tls_start","tls_stop","tls_interval",
         );
@@ -4020,6 +4059,11 @@ if ($err == 0) { /* for test */
             }
         }
 
+        $data['noti_mobile'] = isset($request['noti_mobile']) ? 'on' : 'off';
+        $data['noti_email'] = isset($request['noti_email']) ? 'on' : 'off';
+        //54_email[]: test1@gmail.com
+        //54_email[]: test2@gmail.com
+
         if (isset($request[$camera_id.'_timelapse'])) {
             foreach ($Timelapse_Settings as $key) {
                 $data[$key] = $request[$camera_id.'_'.$key];
@@ -4030,9 +4074,6 @@ if ($err == 0) { /* for test */
 
         if (isset($request[$camera_id.'_dutytime'])) {
             $data['dutytime'] = 'on';
-            //foreach ($Timelapse_Settings as $key) {
-            //    $data[$key] = $request[$camera_id.'_'.$key];
-            //}
         } else {
             $data['dutytime'] = 'off';
         }
@@ -4331,6 +4372,24 @@ if ($err == 0) { /* for test */
     //    print_r($tables);
     //    return $tables;
     //}
+
+
+    /*----------------------------------------------------------------------------------*/
+    public function email_photo_send($user, $camera, $filename) {
+        $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+
+        $to = $user->email;
+        $subject = $camera->description;
+        $param = array(
+            'user_name'=>$user->name,
+            'camera_name'=>$camera->description,
+            'imgPath'=>$imgPath,
+        );
+        $flag = Mail::send('emails.photo', $param, function($message) use($to, $subject) {
+            $message ->to($to)->subject($subject);
+        });
+    }
+
 }
 
 /*

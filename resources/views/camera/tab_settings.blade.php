@@ -1,3 +1,4 @@
+@inject('cc', 'App\Http\Controllers\Api\CamerasController')
 <form method="POST" action="{{ route('camera.settings') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="camerasettings-form{{ $camera->id }}">
     {{ csrf_field() }}
     <!-- <input name="_token" type="hidden" value="ZHGGTc2HCZReCSAdIoHRuojsPSm3kcKIDrByxGYl"> -->
@@ -19,7 +20,6 @@
                     Camera Identification
                 </div>
                 <div class="panel-body">
-                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->html_Settings_Identification($camera) !!}
                 </div>
             </div>
@@ -35,7 +35,7 @@
                         <div class="col-md-12">
                             <span class="button-checkbox">
                                 <button type="button" class="btn btn-default btn-xs" data-color="info">Send Mobile Push Notifications</button>
-                                <input type="checkbox" class="hidden" name="push_notifications" id="push_notifications" checked />
+                                <input type="checkbox" class="hidden" name="noti_mobile" id="noti_mobile" {{ ($camera->noti_mobile == 'on') ? "checked" : "" }} />
                             </span>
                         </div>
                     </div>
@@ -44,10 +44,12 @@
                         <div class="col-md-12">
                             <span class="button-checkbox">
                                 <button type="button" class="btn btn-default btn-xs" data-color="info">kevin@10ware.com</button>
-                                <input type="checkbox" class="hidden" name="54_email_owner" id="54_email_owner" checked />
+                                <input type="checkbox" class="hidden" name="noti_email" id="noti_email" {{ ($camera->noti_email == 'on') ? "checked" : "" }} />
                             </span>
                         </div>
                     </div>
+
+                    {!! $cc->html_Settings_Notifications($camera) !!}
                 </div>
             </div>
 
@@ -69,7 +71,6 @@
                     <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
-                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->html_Settings_Basic($camera) !!}
                 </div>
             </div>
@@ -82,7 +83,6 @@
                     <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
-                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->html_Settings_Trigger($camera) !!}
 
                     <div class="panel panel-default panel-success custom-settings-panel">
@@ -98,7 +98,6 @@
                             Time Lapse
                         </div>
                         <div class="panel-body" id="panel-{{ $camera->id }}-timelapse">
-                            @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                             {!! $cc->html_Settings_Timelapse($camera) !!}
                         </div>
                     </div>
@@ -115,7 +114,6 @@
                     <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
-                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->html_Settings_Wireless_Mode($camera) !!}
                 </div>
             </div>
@@ -129,7 +127,6 @@
                     <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
                 </div>
                 <div class="panel-body">
-                    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                     {!! $cc->html_Settings_Block_Mode($camera) !!}
                 </div>
             </div>
@@ -165,10 +162,7 @@
                             <li><a href="#tabs{{ $camera->id }}-6">Friday</a></li>
                             <li><a href="#tabs{{ $camera->id }}-7">Saturday</a></li>
                         </ul>
-
-                        @inject('cc', 'App\Http\Controllers\Api\CamerasController')
                         {!! $cc->html_Settings_DutyTime($camera) !!}
-
                     </div>
                 </div>
             </div>
