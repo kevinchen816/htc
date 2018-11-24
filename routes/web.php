@@ -64,17 +64,22 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
     app/Http/Middleware/RedirectIfAuthenticated.php
     --> modify redirect('/home') to redirect('/')
 */
-//Auth::routes();
+Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 //Route::resource('/plans', 'PlansController');
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/email_confirm/notice', 'EmailConfirmController@notice')->name('email_confirm.notice');
-    Route::get('/email_confirm/verify', 'EmailConfirmController@verify')->name('email_confirm.verify');
-    Route::get('/email_confirm/send', 'EmailConfirmController@send')->name('email_confirm.send');
+    //Route::get('/email_confirm/notice', 'EmailConfirmController@notice')->name('email_confirm.notice');
+    //Route::get('/email_confirm/verify', 'EmailConfirmController@verify')->name('email_confirm.verify');
+    //Route::get('/email_confirm/send', 'EmailConfirmController@send')->name('email_confirm.send');
 
-    //Route::group(['middleware' => 'email_confirm'], function() {
+    Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
+    Route::get('/confirm/verify', 'EmailConfirmController@verify')->name('confirm.verify');
+    Route::get('/confirm/send', 'EmailConfirmController@send')->name('confirm.send');
+
+
+    Route::group(['middleware' => 'email_confirm'], function() {
 
         /*-----------------------------------------------------------*/
         /* Add Plan */
@@ -188,7 +193,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/admin/clear-search/sims', 'Api\CamerasController@admin_clear_search_sims')->name('admin.clear-search.sims');
         Route::get('/admin/clear-search/apilog', 'Api\CamerasController@admin_clear_search_apilog')->name('admin.clear-search.apilog');
 
-    //});
+    });
 
 });
 

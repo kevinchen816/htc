@@ -60,10 +60,10 @@ MAIL_ENCRYPTION=null
 MAIL_DRIVER=smtp
 MAIL_HOST=smtp.exmail.qq.com
 MAIL_PORT=465
-MAIL_USERNAME=kevin@10ware.com
-MAIL_PASSWORD=cct5816
+MAIL_USERNAME=no-reply@10ware.com
+MAIL_PASSWORD=Caperplus7002
 MAIL_ENCRYPTION=ssl
-MAIL_FROM_ADDRESS=kevin@10ware.com
+MAIL_FROM_ADDRESS=no-reply@10ware.com
 MAIL_FROM_NAME=no-reply
 */
 

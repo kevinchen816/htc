@@ -47,14 +47,12 @@ class EmailConfirmNotification extends Notification
         Cache::set('email_confirm_'.$notifiable->email, $token, 30); // 30min
 
         //https://portal.ridgetec.com/register/verify/M2FH0abL9p
-        $url = route('email_confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
+        $url = route('confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
 
         //return (new MailMessage)
         //            ->line('The introduction to the notification.')
         //            ->action('Notification Action', $url)
         //            ->line('Thank you for using our application!');
-
-//->line('You are receiving this email because we received a password reset request for your account.')
 
         return (new MailMessage)
                     ->greeting('Hello '.$notifiable->name.',')

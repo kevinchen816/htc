@@ -60,3 +60,8 @@ class EmailConfirmController extends Controller
         return view('auth.email_confirm_notice');
     }
 }
+
+/*
+Success: You are now registered, but your account is not yet confirmed.
+Please look in your inbox for a confirmation email and click the Verify link.
+*/
