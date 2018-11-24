@@ -4377,19 +4377,21 @@ if ($err == 0) { /* for test */
 
     /*----------------------------------------------------------------------------------*/
     public function email_Photo_Send($user_id, $camera, $filename) {
-        $user = DB::table('users')->where('id', $user_id)->first();
-        if ($user) {
-            $to = $user->email;
-            $subject = $camera->description;
-            $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
-            $param = array(
-                'user_name'=>$user->name,
-                'camera_name'=>$camera->description,
-                'imgPath'=>$imgPath,
-            );
-            Mail::send('emails.photo', $param, function($message) use($to, $subject) {
-                $message ->to($to)->subject($subject);
-            });
+        if ($camera->noti_email == 'on') {
+            $user = DB::table('users')->where('id', $user_id)->first();
+            if ($user) {
+                $to = $user->email;
+                $subject = $camera->description;
+                $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+                $param = array(
+                    'user_name'=>$user->name,
+                    'camera_name'=>$camera->description,
+                    'imgPath'=>$imgPath,
+                );
+                Mail::send('emails.photo', $param, function($message) use($to, $subject) {
+                    $message ->to($to)->subject($subject);
+                });
+            }
         }
     }
 

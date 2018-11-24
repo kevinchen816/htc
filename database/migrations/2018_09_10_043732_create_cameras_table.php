@@ -103,8 +103,8 @@ class CreateCamerasTable extends Migration
             $table->string('dt_fri')->default('ffffff');        // ffffff
             $table->string('dt_sat')->default('ffffff');        // ffffff
 
-            $table->string('noti_mobile')->default('on');       // off, on
-            $table->string('noti_email')->default('on');        // off, on
+            $table->string('noti_mobile')->default('off');       // off, on
+            $table->string('noti_email')->default('off');        // off, on
 
             $table->string('use_crc32')->default('n');          // n, y
 

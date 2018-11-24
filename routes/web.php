@@ -64,7 +64,7 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
     app/Http/Middleware/RedirectIfAuthenticated.php
     --> modify redirect('/home') to redirect('/')
 */
-Auth::routes();
+//Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 //Route::resource('/plans', 'PlansController');
@@ -74,12 +74,12 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/email_confirm/verify', 'EmailConfirmController@verify')->name('email_confirm.verify');
     Route::get('/email_confirm/send', 'EmailConfirmController@send')->name('email_confirm.send');
 
-    Route::group(['middleware' => 'email_confirm'], function() {
+    //Route::group(['middleware' => 'email_confirm'], function() {
 
         /*-----------------------------------------------------------*/
         /* Add Plan */
         Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
-        //Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
+        Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
         Route::get('/10ware/plans/add-plan','PlansController@view_10ware')->name('add.plan.10ware');
         Route::get('/de/plans/add-plan','PlansController@view_germany')->name('add.plan.de');
 
@@ -188,9 +188,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/admin/clear-search/sims', 'Api\CamerasController@admin_clear_search_sims')->name('admin.clear-search.sims');
         Route::get('/admin/clear-search/apilog', 'Api\CamerasController@admin_clear_search_apilog')->name('admin.clear-search.apilog');
 
-        /*-----------------------------------------------------------*/
-        //Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
-    });
+    //});
 
 });
 
