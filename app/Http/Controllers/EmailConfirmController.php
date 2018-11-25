@@ -54,7 +54,8 @@ class EmailConfirmController extends Controller
         $user->notify(new EmailConfirmNotification());
 
         session()->flash('success', 'Send confirmation email success.');
-        return redirect(route('login'));
+        // return redirect(route('login'));
+        return redirect()->back();
         // return view('auth.email_confirm_success', ['msg' => 'Email sent successfully']);
     }
 
