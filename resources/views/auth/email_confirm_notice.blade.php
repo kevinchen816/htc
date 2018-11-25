@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Hint</div>
+                <!-- <div class="panel-heading">Confirmation Email</div> -->
 
                 <div class="panel-body text-center">
                     <h1>Please verify the email address first.</h1>

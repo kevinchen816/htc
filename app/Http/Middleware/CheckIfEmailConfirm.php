@@ -20,11 +20,18 @@ class CheckIfEmailConfirm
 
             /* return JSON when request by AJAX */
             if ($request->expectsJson()) {
-               return response()->json(['msg' => 'Please verify email address'], 400);
+               return response()->json(['msg' => 'Please verify email address first.'], 400);
             }
 
-            //Auth::logout();
-            return redirect(route('confirm.notice'));
+            // session()->flash('warning', 'Please verify email address first.');
+            // session()->flash('success', 'Success: You are now registered, but your account is not yet confirmed.
+            // Please look in your inbox for a confirmation email and click the Verify link.');
+            session()->flash('success', 'You are now registered, but your account is not yet confirmed.
+            Please look in your inbox for a confirmation email and click the Verify link.');
+
+            Auth::logout();
+            return redirect(route('login'));
+            // return redirect(route('confirm.notice'));
         }
         return $next($request);
     }

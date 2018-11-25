@@ -71,6 +71,12 @@
             </div>
         </nav>
 
+        <div class="fixed-navbar-container">
+            <div class="container">
+                @include('shared._messages')
+            </div>
+        </div>
+
         @yield('content')
     </div>
 

@@ -33,8 +33,8 @@ class CreateUsersTable extends Migration
             $table->string('sel_menu')->default('plan');            // plan, camera, account, help, support, user
             $table->integer('sel_camera')->nullable();              // camera_id
             $table->string('sel_camera_tab')->default('overview');  // overview, gallery, settings, actions, options
-            //$table->string('sel_account_tab')->default('planspermission');     // plans, billing, remote, security, email
             $table->string('sel_account_tab')->default('plans');     // plans, billing, remote, security, email
+            //$table->string('sel_account_tab')->default('planspermission');     // plans, billing, remote, security, email
                                                                    // plan, billing, devices, options, email
             //$table->integer('notification_count')->unsigned()->default(0);
 

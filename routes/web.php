@@ -29,6 +29,7 @@ Route::resource('/users', 'UsersController');
 // Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
 /*-----------------------------------------------------------*/
+/*
 //Route::get('/register', 'UsersController@register')->name('register');
 Route::get('/signup', 'UsersController@create')->name('signup');
 Route::get('/10ware/signup', 'UsersController@create_10ware')->name('signup.10ware');
@@ -49,6 +50,8 @@ Route::delete('/de/logout', 'SessionsController@destroy_germany')->name('logout.
 Route::post('/logout', 'SessionsController@destroy')->name('logout');
 Route::post('/10ware/logout', 'SessionsController@destroy_10ware')->name('logout.10ware');
 Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de');
+*/
+
 
 /*-----------------------------------------------------------*/
 /*
@@ -69,13 +72,15 @@ Auth::routes();
 
 //Route::resource('/plans', 'PlansController');
 
+Route::get('/confirm/verify', 'EmailConfirmController@verify')->name('confirm.verify');
+
 Route::group(['middleware' => 'auth'], function() {
     //Route::get('/email_confirm/notice', 'EmailConfirmController@notice')->name('email_confirm.notice');
     //Route::get('/email_confirm/verify', 'EmailConfirmController@verify')->name('email_confirm.verify');
     //Route::get('/email_confirm/send', 'EmailConfirmController@send')->name('email_confirm.send');
 
     Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
-    Route::get('/confirm/verify', 'EmailConfirmController@verify')->name('confirm.verify');
+    // Route::get('/confirm/verify', 'EmailConfirmController@verify')->name('confirm.verify');
     Route::get('/confirm/send', 'EmailConfirmController@send')->name('confirm.send');
 
 
