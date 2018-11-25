@@ -293,7 +293,7 @@
 
             } else {
                 $('#field-wrapper-{{ $camera->id }}-photo_resolution').hide(250);
-                $('#field-wrapper-{{ $camera->id }}-flash').hide(250);
+                $('#field-wrapper-{{ $camera->id }}-photo_flash').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-upload_resolution').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-photo_quality').hide(250);
                 $('#field-wrapper-{{ $camera->id }}-photo_burst').hide(250);
@@ -399,6 +399,7 @@
         val = $("#{{ $camera->id }}_camera_mode").val();
         if (val == 'p') {
             $('#field-wrapper-{{ $camera->id }}-photo_resolution').show(0);
+            $('#field-wrapper-{{ $camera->id }}-photo_flash').show(0);
             $('#field-wrapper-{{ $camera->id }}-photo_burst').show(0);
             $('#field-wrapper-{{ $camera->id }}-burst_delay').show(0);
             $('#field-wrapper-{{ $camera->id }}-upload_resolution').show(0);
@@ -412,6 +413,7 @@
         }
         else {
             $('#field-wrapper-{{ $camera->id }}-photo_resolution').hide(0);
+            $('#field-wrapper-{{ $camera->id }}-photo_flash').hide(0);
             $('#field-wrapper-{{ $camera->id }}-photo_burst').hide(0);
             $('#field-wrapper-{{ $camera->id }}-burst_delay').hide(0);
             $('#field-wrapper-{{ $camera->id }}-upload_resolution').hide(0);
