@@ -84,8 +84,8 @@ class AccountsController extends Controller
             $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
             $handle .=             '<div class="row">';
             $handle .=                 '<div class="col-md-5">';
-            $handle .=                     '<i class="fa fa-dot-circle"></i>';
-            $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
+            // $handle .=                     '<i class="fa fa-dot-circle"></i>';
+            // $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
             $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
             $handle .=                     '<p></p>';
             $handle .=                 '</div>';
@@ -542,6 +542,7 @@ $handle .=                 '</tr>';
         $user_id = $user->id;
 
         session()->flash('success', 'Success: Send Password Reset Email.');
+        // return redirect()->route('password.email'); // NG (post)
         return redirect()->back();
     }
 

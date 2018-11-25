@@ -52,9 +52,9 @@
                             <a href="#security" data-toggle="tab" data-tab="security" aria-expanded="false"><span class="glyphicon glyphicon-paperclip"> </span> Options</a>
                         </li>
 
-                        <li class={{ ($user->sel_account_tab == 'email') ? "active" : "" }}>
+<!--                         <li class={{ ($user->sel_account_tab == 'email') ? "active" : "" }}>
                             <a href="#email-setup" data-toggle="tab" data-tab="email" aria-expanded="true"><span class="glyphicon glyphicon-list-alt"> </span> Email Setup</a>
-                        </li>
+                        </li> -->
 
                         <!--<li !! $tabs['addplan'] ? 'class="active"' : ' ' !!><a href="#add-prepaid-plan" data-toggle="tab" data-tab="addplan" aria-expanded="true"><span class="glyphicon glyphicon-plus-sign"> </span> Add Prepaid Plans</a></li>-->
                     </ul>
@@ -81,9 +81,7 @@
                         </div>
 
                         <!-- TAB - Email Setup  -->
-                        <div class="tab-pane fade {{ ($user->sel_account_tab == 'email') ? 'active in' : '' }}" id="email-setup">
-                        @include('account._emails')
-                        </div>
+
                     </div>
                 </div>
 

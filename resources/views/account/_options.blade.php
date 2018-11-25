@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+<!--     <div class="col-md-6">
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
                 <h4 class="panel-title">Security Options
@@ -61,5 +61,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 <!--</div>-->

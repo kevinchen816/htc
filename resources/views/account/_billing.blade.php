@@ -32,20 +32,20 @@
             {{ csrf_field() }}
             <input name="portal" type="hidden" value="{{ $portal }}">
 
-<!--             <div class="form-group">
+            <div class="form-group">
                 <label class="col-md-3 control-label">Cardholder Name</label>
                 <div class="col-md-6">
                   <input name="cardholder-name" id="cardholder-name" class="field form-control input-sm" placeholder="Name on Card" value="" />
                 </div>
             </div>
 
-             <div class="form-group">
+<!--              <div class="form-group">
                 <label class="col-md-3 control-label">Cardholder Phone</label>
                 <div class="col-md-6">
                   <input name="cardholder-phone" id="cardholder-phone" class="field form-control input-sm" type="tel" placeholder="(123) 456-7890"  value="" />
                 </div>
-            </div> -->
-
+            </div>
+ -->
              <div class="form-group">
                 <label class="col-md-3 control-label">Card Number</label>
                 <div class="col-md-6">
