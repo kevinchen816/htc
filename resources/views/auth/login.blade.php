@@ -65,7 +65,7 @@
 
                     <p>
                         You already have an account and need to
-                        <a href="{{ route('confirm.send') }}">Resend Confirmation Email</a>
+                        <a href="{{ route('confirm.send') }}">Resend Confirmation Email.</a>
                     </p>
 
                 </div>
