@@ -16,6 +16,7 @@ class CheckIfEmailConfirm
      */
     public function handle($request, Closure $next)
     {
+// return var_dump($request);
         if (!$request->user()->email_verified) {
 
             /* return JSON when request by AJAX */
@@ -24,14 +25,14 @@ class CheckIfEmailConfirm
             }
 
             // session()->flash('warning', 'Please verify email address first.');
-            // session()->flash('success', 'Success: You are now registered, but your account is not yet confirmed.
-            // Please look in your inbox for a confirmation email and click the Verify link.');
+            // return redirect(route('confirm.notice'));
+
             session()->flash('success', 'You are now registered, but your account is not yet confirmed.
             Please look in your inbox for a confirmation email and click the Verify link.');
 
             Auth::logout();
             return redirect(route('login'));
-            // return redirect(route('confirm.notice'));
+            // return redirect(route('confirm.send'));
         }
         return $next($request);
     }

@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Auth\Events\Registered;
 use App\Notifications\EmailConfirmNotification;
 
+use Auth;
+
 class RegisteredListener
 {
     /**

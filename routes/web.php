@@ -72,17 +72,21 @@ Auth::routes();
 
 //Route::resource('/plans', 'PlansController');
 
-Route::get('/confirm/verify', 'EmailConfirmController@verify')->name('confirm.verify');
+// Route::get('/confirm/email', 'EmailConfirmController@getEmail')->name('confirm.email');
+Route::get('/confirm/send', 'EmailConfirmController@getSend')->name('confirm.send');
+Route::post('/confirm/send', 'EmailConfirmController@postSend')->name('confirm.send');
+Route::get('/confirm/verify', 'EmailConfirmController@getVerify')->name('confirm.verify'); // IMPORTANT !!
+// Route::get('/confirm/success', 'EmailConfirmController@getSuccess')->name('confirm.success'); // IMPORTANT !!
+
+// Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
+
+    // Route::get('/confirm/notice', function() {
+    //     return 'notice';
+    // })->name('confirm.notice');;
 
 Route::group(['middleware' => 'auth'], function() {
-    //Route::get('/email_confirm/notice', 'EmailConfirmController@notice')->name('email_confirm.notice');
-    //Route::get('/email_confirm/verify', 'EmailConfirmController@verify')->name('email_confirm.verify');
-    //Route::get('/email_confirm/send', 'EmailConfirmController@send')->name('email_confirm.send');
-
-    Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
-    // Route::get('/confirm/verify', 'EmailConfirmController@verify')->name('confirm.verify');
-    Route::get('/confirm/send', 'EmailConfirmController@send')->name('confirm.send');
-
+    // Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
+    // Route::get('/confirm/send', 'EmailConfirmController@send')->name('confirm.send');
 
     Route::group(['middleware' => 'email_confirm'], function() {
 

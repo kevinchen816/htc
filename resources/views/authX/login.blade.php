@@ -55,31 +55,19 @@
                                     Login
                                 </button>
 
-<!--                                 <a class="btn btn-link" href="{{ route('password.request') }}">
+                                <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Forgot Your Password?
+                                </a>
+
+
+<!--                                 <a class="btn btn-link" href="{{ route('confirm.notice') }}">
+                                    Resend Confirmation Email
                                 </a> -->
+
                             </div>
                         </div>
                     </form>
-
-                    <div class="panel-footer">
-                        <p>
-                            Don't you have an account yet ?
-                            <!--<a href="?action=password_reset">Forgot password?</a>-->
-                            <a href="{{ route('register') }}">Create New Account</a>
-                        </p>
-                        <p>
-                            Did you <a href="{{ route('password.request') }}">Forget Your Password ?</a>
-                        </p>
-
-                        <p>
-                            You already have an account.
-                            <a href="{{ route('confirm.send') }}">Resend Confirmation Email</a>
-                        </p>
-                    </div>
-
                 </div>
-
             </div>
         </div>
     </div>
