@@ -80,10 +80,6 @@ Route::get('/confirm/verify', 'EmailConfirmController@getVerify')->name('confirm
 
 // Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
 
-    // Route::get('/confirm/notice', function() {
-    //     return 'notice';
-    // })->name('confirm.notice');;
-
 Route::group(['middleware' => 'auth'], function() {
     // Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
     // Route::get('/confirm/send', 'EmailConfirmController@send')->name('confirm.send');

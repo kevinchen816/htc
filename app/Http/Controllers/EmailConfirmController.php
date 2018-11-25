@@ -46,8 +46,8 @@ class EmailConfirmController extends Controller
         if ($user->email_verified) {
             // throw new Exception('You have verified your email address.');
             session()->flash('warning', 'You have confirmed your email address.');
-            return redirect(route('login'));
-            // return redirect()->back();
+            // return redirect(route('login'));
+            return redirect()->back();
         }
 
         // 调用 notify() 方法用来发送我们定义好的通知类
@@ -89,7 +89,7 @@ class EmailConfirmController extends Controller
         $user->update(['email_verified' => true]);
 
         // session()->flash('success', 'Account Registration Email Verifecation.');
-        session()->flash('success', 'Account registration email confirmation.');
+        session()->flash('success', 'Account registration email confirmation. You can login now.');
         return redirect(route('login'));
         // return redirect(route('home'));
         // return view('auth.email_confirm_success', ['msg' => 'Account Registration Email Verifecation.']);
