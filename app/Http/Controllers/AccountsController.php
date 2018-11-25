@@ -445,22 +445,33 @@ $handle .=                 '</tr>';
     public function billing(Request $request) {
         //$portal = $request->portal;
         $user = Auth::user();
-        $user_id = $user->id;
+        // $user_id = $user->id;
 
-//         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-//         $stripeToken = $_POST['stripeToken'];
-//         $ret = \Stripe\Customer::create([
-//             "email" => "kevin@10ware.com",
-//             "description" => $_POST['cardholder-name'],
-// //            "name" => $_POST['cardholder-name'],
-// //            "phone" => $_POST['cardholder-phone'],
-// //            "address" => 'ADDRESS.....',
-// //            "currency" =>  "usd"
-//             'source' => $stripeToken,
-//         ]);
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // $stripeToken = $_POST['stripeToken'];
+        // $ret = \Stripe\Customer::create([
+        //     "email" => $user->email,
+        //     "description" => $_POST['cardholder-name'],
+        //     // "name" => $_POST['cardholder-name'],
+        //     // "phone" => $_POST['cardholder-phone'],
+        //     // "address" => 'ADDRESS.....',
+        //     // "currency" =>  "usd"
+        //     'source' => $stripeToken,
+        // ]);
 
-        $stripeToken = $_POST['stripeToken'];
-        $user->updateCard($stripeToken);
+        /* Stripe - create customer id */
+        // if ($request->mode == 'new') {
+           $stripeToken = $_POST['stripeToken'];
+           // if (!$user->stripe_id) {
+               // $ret = $user->createAsStripeCustomer($stripeToken);
+               $ret = $user->createAsStripeCustomer($stripeToken, [
+                   // 'currency' => 'usd',
+               ]);
+           // }
+        // }
+
+        // $stripeToken = $_POST['stripeToken'];
+        // $user->updateCard($stripeToken);
         session()->flash('success', 'Success: Update Card Information.');
         //session()->flash('success', 'Success: Account Billing Saved.');
         return redirect()->back();
