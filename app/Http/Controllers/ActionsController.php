@@ -20,8 +20,11 @@ class ActionsController extends Controller
 
     public function _user_dateformat($user, $datetime) {
         //$dt = date_create('2013-03-15 23:40:00', timezone_open('Europe/Oslo'));
-        $dt = date_create($datetime);
-        $dt = date_format($dt, $user->date_format);
+        $dt = '';
+        if ($datetime) {
+            $dt = date_create($datetime);
+            $dt = date_format($dt, $user->date_format);
+        }
         return $dt;
     }
 

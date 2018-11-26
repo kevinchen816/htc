@@ -101,11 +101,10 @@ class CamerasController extends Controller
 
     public function _user_dateformat($user, $datetime) {
         //$dt = date_create('2013-03-15 23:40:00', timezone_open('Europe/Oslo'));
+        $dt = '';
         if ($datetime) {
             $dt = date_create($datetime);
             $dt = date_format($dt, $user->date_format);
-        } else {
-            $dt = '';
         }
         return $dt;
     }
