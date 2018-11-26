@@ -1714,6 +1714,7 @@ class CamerasController extends Controller
         $camera->module_id = $request->module_id;
         $camera->iccid     = $request->iccid;
         $camera->model_id  = $request->model_id;
+        $camera->cellular  = $request->cellular;
 
         $datalist             = $request->DataList;
         $camera->battery      = $datalist['Battery'];
@@ -1723,7 +1724,7 @@ class CamerasController extends Controller
         $camera->temperature  = $datalist['Temperature'];
         $camera->dsp_version  = $datalist['FirmwareVersion'];
         $camera->mcu_version  = $datalist['mcu'];
-        $camera->cellular     = $datalist['cellular'];
+        //$camera->cellular     = $datalist['cellular'];
 
         $datetime             = date('Y-m-d H:i:s');
         $camera->last_contact = $datetime;
@@ -1740,6 +1741,7 @@ class CamerasController extends Controller
 
         $data['iccid'] = $param->iccid;
         $data['model_id'] = $param->model_id;
+        $data['cellular'] = $param->cellular;
 
         if ($api_type == 'log') {
             if ($param->status == 'enable') {
@@ -1756,7 +1758,7 @@ class CamerasController extends Controller
             $data['temperature']  = $param->Temperature;
             $data['dsp_version']  = $param->FirmwareVersion;
             $data['mcu_version']  = $param->mcu;
-            $data['cellular']     = $param->cellular;
+            //$data['cellular']     = $param->cellular;
 
             $data['last_filename'] = $param->filename;
 
@@ -1779,7 +1781,7 @@ class CamerasController extends Controller
                 $data['temperature']  = $datalist['Temperature'];
                 $data['dsp_version']  = $datalist['FirmwareVersion'];
                 $data['mcu_version']  = $datalist['mcu'];
-                $data['cellular']     = $datalist['cellular'];
+                //$data['cellular']     = $datalist['cellular'];
             }
         }
 
