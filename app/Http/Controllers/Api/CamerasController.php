@@ -237,10 +237,10 @@ class CamerasController extends Controller
         //);
         $array['title'] = 'Photo Resolution';
         $array['options'] = array(
-            '4MP 16:9'  => '4',
-            '6MP 16:9'  => '6',
-            '8MP 16:9'  => '8',
-            '12MP 16:9' => '12',
+            '4MP'  => '4',
+            '6MP'  => '6',
+            '8MP'  => '8',
+            '12MP' => '12',
         );
         $array['help'] = 'Use this setting to control the size of the Photo saved on the SD Card.';
         return $array;
@@ -272,8 +272,8 @@ class CamerasController extends Controller
     public function itemBurstDelay() {
         $array['title'] = 'Burst Delay';
         $array['options'] = array(
-            '250ms' => '250',
-            '500ms' => '500',
+            '0.25s' => '250',
+            '0.5s' => '500',
             '1s'    => '1000',
             '3s'    => '3000',
         );
@@ -287,7 +287,7 @@ class CamerasController extends Controller
             'Standard Low'      => '1',
             'Standard Medium'   => '2',
             'Standard High'     => '3',
-            'High Def (1280x)'  => '4',
+            //'High Def (1280x)'  => '4',
         );
         $array['help'] = 'Use this setting to control the size of the uploaded thumbnail.';
         return $array;
