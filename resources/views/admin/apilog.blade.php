@@ -95,10 +95,12 @@
                             <td>api.{{ $log_api->api }}</td>
                             <td>0</td>
                             <td>
-                                <a class="btn btn-xs btn-primary view-request" data-request="{&quot;iccid&quot;:&quot;89860117851014783481&quot;,&quot;module_id&quot;:&quot;861107032685597&quot;,&quot;model_id&quot;:&quot;lookout-na&quot;,&quot;cellular&quot;:&quot;4G LTE&quot;,&quot;DataList&quot;:{&quot;Battery&quot;:&quot;f&quot;,&quot;SignalValue&quot;:&quot;23&quot;,&quot;Cardspace&quot;:&quot;29475MB&quot;,&quot;Cardsize&quot;:&quot;30432MB&quot;,&quot;Temperature&quot;:&quot;24C&quot;,&quot;mcu&quot;:&quot;4.36&quot;,&quot;FirmwareVersion&quot;:&quot;20181001&quot;,&quot;cellular&quot;:&quot;4G LTE&quot;}}">View</a>
+                                <!-- <a class="btn btn-xs btn-primary view-request" data-request="{&quot;iccid&quot;:&quot;89860117851014783481&quot;,&quot;module_id&quot;:&quot;861107032685597&quot;,&quot;model_id&quot;:&quot;lookout-na&quot;,&quot;cellular&quot;:&quot;4G LTE&quot;,&quot;DataList&quot;:{&quot;Battery&quot;:&quot;f&quot;,&quot;SignalValue&quot;:&quot;23&quot;,&quot;Cardspace&quot;:&quot;29475MB&quot;,&quot;Cardsize&quot;:&quot;30432MB&quot;,&quot;Temperature&quot;:&quot;24C&quot;,&quot;mcu&quot;:&quot;4.36&quot;,&quot;FirmwareVersion&quot;:&quot;20181001&quot;,&quot;cellular&quot;:&quot;4G LTE&quot;}}">View</a> -->
+                                <a class="btn btn-xs btn-primary view-request" data-request="{{ $log_api->request }}">View</a>
                             </td>
                             <td>
-                                <a class="btn btn-xs btn-primary view-response" data-response="{&quot;ResultCode&quot;:0,&quot;DateTimeStamp&quot;:&quot;2018-10-17 12:00:17&quot;}">View</a>
+                                <!-- <a class="btn btn-xs btn-primary view-response" data-response="{&quot;ResultCode&quot;:0,&quot;DateTimeStamp&quot;:&quot;2018-10-17 12:00:17&quot;}">View</a> -->
+                                <a class="btn btn-xs btn-primary view-response" data-response="{{ $log_api->response}}">View</a>
                             </td>
                             <td>{{ $log_api->created_at }}</td>
                         </tr>

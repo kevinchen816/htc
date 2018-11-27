@@ -70,7 +70,7 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
 Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
-//Route::resource('/plans', 'PlansController');
+Route::resource('/plans', 'PlansController');
 
 // Route::get('/confirm/email', 'EmailConfirmController@getEmail')->name('confirm.email');
 Route::get('/confirm/send', 'EmailConfirmController@getSend')->name('confirm.send');
