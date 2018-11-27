@@ -25,7 +25,7 @@
 
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search by Module ID" name="moduleid" value="">
+                            <input type="text" class="form-control" placeholder="Search by Module ID" name="moduleid" value="{{ $module_id }}">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                             </div>
@@ -34,7 +34,7 @@
 
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search by ICCID" name="iccid" value="">
+                            <input type="text" class="form-control" placeholder="Search by ICCID" name="iccid" value="{{ $iccid }}">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                             </div>
@@ -44,7 +44,7 @@
                 </form>
 
                 <div class="col-md-3">
-                    <a href="{{ route('admin.clear-search.users') }}" class="btn btn-sm btn-primary">Clear Search</a>
+                    <a href="{{ route('admin.clear-search.cameras') }}" class="btn btn-sm btn-primary">Clear Search</a>
                 </div>
             </div>
         </div>

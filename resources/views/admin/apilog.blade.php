@@ -25,7 +25,8 @@
 
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search by Module ID" name="moduleid" value="">
+                            <!-- <input type="text" class="form-control" placeholder="Search by Module ID" name="moduleid" value="861107033618282"> -->
+                            <input type="text" class="form-control" placeholder="Search by Module ID" name="moduleid" value="{{ $imei }}">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                             </div>
@@ -34,7 +35,7 @@
 
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search by ICCID" name="iccid" value="">
+                            <input type="text" class="form-control" placeholder="Search by ICCID" name="iccid" value="{{ $iccid }}">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                             </div>
@@ -85,7 +86,7 @@
                             <td></td>
 
                             <td>
-                                <a href="/admin/users/detail/{{ $log_api->user_id }}">Kevin (kevin@10ware.com)</a>
+                                <a href="/admin/users/detail/{{ $log_api->user_id }}">{{ $user->name }} ( {{$user->email}} )</a>
                             </td>
                             <td>
                                 <a href="/admin/cameras/detail/{{ $log_api->camera_id }}">{{ $log_api->imei }}</a>

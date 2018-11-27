@@ -190,14 +190,14 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/admin/user-search', 'Api\CamerasController@admin_user_search')->name('admin.user-search');
         Route::post('/admin/email-search', 'Api\CamerasController@admin_email_search')->name('admin.email-search');
         Route::post('/admin/camera-search', 'Api\CamerasController@admin_camera_search')->name('admin.camera-search');
-        Route::post('/admin/api-search', 'Api\CamerasController@admin_camera_search')->name('admin.api-search');
+        Route::post('/admin/api-search', 'Api\CamerasController@admin_api_search')->name('admin.api-search');
+
 
         Route::get('/admin/clear-search/users', 'Api\CamerasController@admin_clear_search_users')->name('admin.clear-search.users');
-        Route::get('/admin/clear-search/emails', 'Api\CamerasController@admin_clear_search_users')->name('admin.clear-search.emails');
+        Route::get('/admin/clear-search/emails', 'Api\CamerasController@admin_clear_search_emails')->name('admin.clear-search.emails');
         Route::get('/admin/clear-search/cameras', 'Api\CamerasController@admin_clear_search_cameras')->name('admin.clear-search.cameras');
-        Route::get('/admin/clear-search/sims', 'Api\CamerasController@admin_clear_search_sims')->name('admin.clear-search.sims');
         Route::get('/admin/clear-search/apilog', 'Api\CamerasController@admin_clear_search_apilog')->name('admin.clear-search.apilog');
-
+        Route::get('/admin/clear-search/sims', 'Api\CamerasController@admin_clear_search_sims')->name('admin.clear-search.sims');
     });
 
 });

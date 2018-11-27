@@ -4221,17 +4221,47 @@ if ($err == 0) { /* for test */
         return view('admin.dashboard', compact('user'));
     }
 
-    public function admin_users() {
+    /* Users */
+    public function admin_filter_users($email, $name) {
         $user = Auth::user();
-        $users = DB::table('users')
-            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-            //->where(['camera_id' => $camera_id])
-            //->orderBy('created_at', 'desc')
-            ->paginate(20);
-        //return view('admin.users', compact('user', 'users'));
-        return view('admin.user', compact('users'));
+        if ($email && $name) {
+            $users = DB::table('users')
+                ->where(['email' => $email, 'name' => $name])
+                ->orderBy('name', 'asc')
+                ->paginate(20);
+        } else if ($email) {
+            $users = DB::table('users')
+                ->where(['email' => $email])
+                ->orderBy('name', 'asc')
+                ->paginate(20);
+        } else if ($name) {
+            $users = DB::table('users')
+                ->where(['name' => $name])
+                ->orderBy('name', 'asc')
+                ->paginate(20);
+        } else {
+            $users = DB::table('users')
+                ->orderBy('name', 'asc')
+                ->paginate(20);
+        }
+        return view('admin.user', compact('users', 'email', 'name'));
     }
 
+    public function admin_users() {
+        return $this->admin_filter_users('', '');
+    }
+
+    public function admin_user_search(Request $request) {
+        //return 'admin_user_search';
+        //{"_token":"J6pv3ftu1s5fbRGolbBgMIPd9kG0KQuuQKEGbxOB","email":null,"username":null}
+        return $this->admin_filter_users($request->email, $request->username);
+    }
+
+    public function admin_clear_search_users() {
+        return $this->admin_filter_users('', '');
+    }
+
+    /* Email */
     public function admin_email() {
         $user = Auth::user();
         $emails = DB::table('emails')
@@ -4242,16 +4272,56 @@ if ($err == 0) { /* for test */
         return view('admin.email', compact('user', 'emails'));
     }
 
-    public function admin_cameras() {
-        $user = Auth::user();
-        $cameras = DB::table('cameras')
-            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-            //->where(['camera_id' => $camera_id])
-            //->orderBy('created_at', 'desc')
-            ->paginate(20);
-        return view('admin.camera', compact('user', 'cameras'));
+    public function admin_email_search(Request $request) {
+        return $request;
     }
 
+    /* Cameras */
+    public function admin_filter_cameras($module_id, $iccid) {
+        $user = Auth::user();
+        if ($module_id && $iccid) {
+            $cameras = DB::table('cameras')
+                ->where(['module_id' => $module_id, 'iccid' => $iccid])
+                //->orderBy('created_at', 'desc')
+                //->orderBy('created_at', 'asc')
+                ->paginate(20);
+        } else if ($module_id) {
+            $cameras = DB::table('cameras')
+                ->where(['module_id' => $module_id])
+                ->paginate(20);
+        } else if ($iccid) {
+            $cameras = DB::table('cameras')
+                ->where(['iccid' => $iccid])
+                ->paginate(20);
+        } else {
+            $cameras = DB::table('cameras')
+                ->paginate(20);
+        }
+        return view('admin.camera', compact('user', 'cameras', 'module_id', 'iccid'));
+
+        // $cameras = DB::table('cameras')
+        //     //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
+        //     //->where(['camera_id' => $camera_id])
+        //     //->orderBy('created_at', 'desc')
+        //     ->paginate(20);
+        // return view('admin.camera', compact('user', 'cameras'));
+    }
+
+    public function admin_cameras() {
+        return $this->admin_filter_cameras('', '');
+    }
+
+    public function admin_camera_search(Request $request) {
+        //{"_token":"inQgWyUI4oezCh8Mi1z9du16JF4U8PAbFWUnjAbS","moduleid":null,"iccid":null}
+        return $this->admin_filter_cameras($request->moduleid, $request->iccid);
+    }
+
+    public function admin_clear_search_cameras() {
+        //return 'admin_clear_search_cameras';
+        return $this->admin_filter_cameras('', '');
+    }
+
+    /* Dat Plans */
     public function admin_plans() {
         $user = Auth::user();
         $plans = DB::table('plans')
@@ -4262,12 +4332,14 @@ if ($err == 0) { /* for test */
         return view('admin.plan', compact('user', 'plans'));
     }
 
+    /* Firmware */
     public function admin_firmware() {
         $user = Auth::user();
         $firmwares = DB::table('firmwares')->get();
         return view('admin.firmware', compact('user', 'firmwares'));
     }
 
+    /* SIMs */
     public function admin_sims() {
         $user = Auth::user();
         $sims = DB::table('sims')
@@ -4278,65 +4350,66 @@ if ($err == 0) { /* for test */
         return view('admin.sim', compact('user', 'sims'));
     }
 
+    public function admin_clear_search_sims() {
+        return 'admin_clear_search_sims';
+    }
+
+    /* RMA */
     public function admin_rmas() {
         $user = Auth::user();
         return view('admin.rma', compact('user'));
     }
 
+    /* Activity Monitor */
     public function admin_siteactivity() {
         $user = Auth::user();
         return view('admin.siteactivity', compact('user'));
     }
 
+    /* API Log */
+    public function admin_filter_api($imei, $iccid) {
+        $user = Auth::user();
+        if ($imei && $iccid) {
+            $log_apis = DB::table('log_apis')
+                ->where(['imei' => $imei, 'iccid' => $iccid])
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+        } else if ($imei) {
+            $log_apis = DB::table('log_apis')
+                ->where(['imei' => $imei])
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+        } else if ($iccid) {
+            $log_apis = DB::table('log_apis')
+                ->where(['iccid' => $iccid])
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+        } else {
+            $log_apis = DB::table('log_apis')
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+        }
+        return view('admin.apilog', compact('user', 'log_apis', 'imei', 'iccid'));
+    }
+
     public function admin_apilog() {
-        $user = Auth::user();
-        $log_apis = DB::table('log_apis')
-            //->where(['user_id' => $user_id, 'camera_id' => $camera_id])
-            //->where(['camera_id' => $camera_id])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
-        return view('admin.apilog', compact('user', 'log_apis'));
-    }
-
-    public function admin_viewlog() {
-        $user = Auth::user();
-        return view('admin.viewlog', compact('user'));
-    }
-
-    /* search */
-    public function admin_user_search(Request $request) {
-        //return 'admin_user_search';
-        //{"_token":"J6pv3ftu1s5fbRGolbBgMIPd9kG0KQuuQKEGbxOB","email":null,"username":null}
-        return $request;
-    }
-
-    public function admin_email_search(Request $request) {
-        return $request;
-    }
-
-    public function admin_camera_search(Request $request) {
-        return $request;
+        return $this->admin_filter_api('', '');
     }
 
     public function admin_api_search(Request $request) {
-        return $request;
-    }
-
-    /* clear search */
-    public function admin_clear_search_users() {
-        return 'admin_clear_search_users';
-    }
-
-    public function admin_clear_search_cameras() {
-        return 'admin_clear_search_cameras';
-    }
-
-    public function admin_clear_search_sims() {
-        return 'admin_clear_search_sims';
+        //{"_token":"inQgWyUI4oezCh8Mi1z9du16JF4U8PAbFWUnjAbS","moduleid":null,"iccid":null}
+        //{"_token":"inQgWyUI4oezCh8Mi1z9du16JF4U8PAbFWUnjAbS","moduleid":"861107032685599","iccid":"89860117851014783481"}
+        return $this->admin_filter_api($request->moduleid, $request->iccid);
     }
 
     public function admin_clear_search_apilog() {
-        return 'admin_clear_search_apilog';
+        return $this->admin_filter_api('', '');
+    }
+
+    /* Application Log */
+    public function admin_viewlog() {
+        $user = Auth::user();
+        return view('admin.viewlog', compact('user'));
     }
 
     /*----------------------------------------------------------------------------------*/

@@ -127,10 +127,6 @@
                     </li>
 
                     <li class="">
-                        <a href="{{ route('admin.viewlog') }}"><i class="fa fa-fw fa-list"></i> Application Log</a>
-                    </li>
-
-                    <li class="">
                         <a href="{{ route('users.show', Auth::user()->id) }}"><i class="fa fa-fw fa-list"></i> User List</a>
                     </li>
 

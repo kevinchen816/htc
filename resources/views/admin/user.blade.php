@@ -25,7 +25,7 @@
 
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search by Email" name="email" value="">
+                            <input type="text" class="form-control" placeholder="Search by Email" name="email" value="{{ $email }}">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                             </div>
@@ -34,7 +34,7 @@
 
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search by Name" name="username" value="">
+                            <input type="text" class="form-control" placeholder="Search by Name" name="username" value="{{ $name }}">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                             </div>
