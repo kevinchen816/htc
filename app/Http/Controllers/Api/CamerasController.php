@@ -4317,8 +4317,12 @@ if ($err == 0) { /* for test */
     }
 
     public function admin_clear_search_cameras() {
-        //return 'admin_clear_search_cameras';
         return $this->admin_filter_cameras('', '');
+    }
+
+    public function admin_cameras_operation(Request $request) {
+        //{"_token":"...","settings":"settings","firmware":"firmware","delete":"delete","select":["1"]}
+return $request;
     }
 
     /* Dat Plans */

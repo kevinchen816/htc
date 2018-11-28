@@ -83,7 +83,7 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at }}</td>
                             <td>
-                                Yes
+                                {{ $user->email_verified ? 'Yes' : 'No' }}
                             </td>
                             <td>
                                 1

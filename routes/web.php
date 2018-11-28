@@ -70,8 +70,6 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
 Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
-//Route::resource('/plans', 'PlansController');
-
 // Route::get('/confirm/email', 'EmailConfirmController@getEmail')->name('confirm.email');
 Route::get('/confirm/send', 'EmailConfirmController@getSend')->name('confirm.send');
 Route::post('/confirm/send', 'EmailConfirmController@postSend')->name('confirm.send');
@@ -92,6 +90,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
         Route::get('/10ware/plans/add-plan','PlansController@view_10ware')->name('add.plan.10ware');
         Route::get('/de/plans/add-plan','PlansController@view_germany')->name('add.plan.de');
+
+        Route::resource('/plans', 'PlansController');
 
         /*-----------------------------------------------------------*/
         /* My Cameras */
@@ -187,11 +187,13 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/admin/apilog', 'Api\CamerasController@admin_apilog')->name('admin.apilog');
         Route::get('/admin/viewlog', 'Api\CamerasController@admin_viewlog')->name('admin.viewlog');
 
+        Route::post('/admin/cameras/operation', 'Api\CamerasController@admin_cameras_operation')->name('admin.cameras.operation');
+
+
         Route::post('/admin/user-search', 'Api\CamerasController@admin_user_search')->name('admin.user-search');
         Route::post('/admin/email-search', 'Api\CamerasController@admin_email_search')->name('admin.email-search');
         Route::post('/admin/camera-search', 'Api\CamerasController@admin_camera_search')->name('admin.camera-search');
         Route::post('/admin/api-search', 'Api\CamerasController@admin_api_search')->name('admin.api-search');
-
 
         Route::get('/admin/clear-search/users', 'Api\CamerasController@admin_clear_search_users')->name('admin.clear-search.users');
         Route::get('/admin/clear-search/emails', 'Api\CamerasController@admin_clear_search_emails')->name('admin.clear-search.emails');

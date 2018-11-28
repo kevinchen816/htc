@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<form method="POST" action="http://www.ridgetec.us/admin/cameras/operation" accept-charset="UTF-8" class="form-horizontal" role="form" id="cameras-operation-form">
+<form method="POST" action="{{ route('admin.cameras.operation') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="cameras-operation-form">
     {{ csrf_field() }}
 
 <div class="row">

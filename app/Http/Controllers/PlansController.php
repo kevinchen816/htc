@@ -384,10 +384,10 @@ class PlansController extends Controller
     /*----------------------------------------------------------------------------------*/
     /* All - GET /xxx */
     public function index() {
-        if (!Auth::check()) {
-            session()->flash('warning', 'Please Login first');
-            return redirect()->route('login');
-        }
+        // if (!Auth::check()) {
+        //     session()->flash('warning', 'Please Login first');
+        //     return redirect()->route('login');
+        // }
 
         $user = Auth::user();
         $data['sel_menu'] = 'user';
