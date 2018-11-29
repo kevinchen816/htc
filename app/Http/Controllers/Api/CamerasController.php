@@ -3758,7 +3758,14 @@ if ($err == 0) { /* for test */
         }
 
         $user_id = $user->id;
-        $cameras = DB::table('cameras')->where('user_id', $user_id);
+
+        // $cameras = DB::table('cameras')->where('user_id', $user_id);
+        if ($user->permission == 1) {
+            $cameras = DB::table('cameras');
+        } else {
+            $cameras = DB::table('cameras')->where('user_id', $user_id);
+        }
+
         if ($cameras->count() > 0) {
             $camera_id = $user->sel_camera;
             if (!$camera_id) {
@@ -4492,7 +4499,15 @@ return $request;
         Mail::send('emails.photo', $param, function($message) use($to, $subject) {
             $message ->to($to)->subject($subject);
         });
+
+        if (count(Mail::failures()) < 1) {
+            echo '发送邮件成功';
+        } else {
+            echo '发送邮件失败';
+        }
+    }
 }
+
 
 /*
 // https://laravelacademy.org/post/6140.html
