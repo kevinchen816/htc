@@ -4325,7 +4325,7 @@ if ($err == 0) { /* for test */
 return $request;
     }
 
-    /* Dat Plans */
+    /* Data Plans */
     public function admin_plans() {
         $user = Auth::user();
         $plans = DB::table('plans')
@@ -4452,7 +4452,6 @@ return $request;
     //    return $tables;
     //}
 
-
     /*----------------------------------------------------------------------------------*/
     public function email_Photo_Send($user_id, $camera, $filename) {
         if ($camera->noti_email == 'on') {
@@ -4481,6 +4480,18 @@ return $request;
     //    }
     //}
 
+    public function email_test() {
+        $to = 'kevin2@10ware.com'; //$user->email;
+        $subject = 'test'; //$camera->description;
+        $imgPath = public_path(); //.'/uploads/'.$camera->id.'/'.$filename;
+        $param = array(
+            'user_name'=>'Kevin', //$user->name,
+            'camera_name'=>'New Camera_Find', //$camera->description,
+            'imgPath'=>$imgPath,
+        );
+        Mail::send('emails.photo', $param, function($message) use($to, $subject) {
+            $message ->to($to)->subject($subject);
+        });
 }
 
 /*
