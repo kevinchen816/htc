@@ -3616,10 +3616,15 @@ if ($err == 0) { /* for test */
 
         //$user    = Auth::user();
         $user_id = $user->id;
-        $cameras = DB::table('cameras')
-            //->select('id', 'description', 'battery', 'last_contact', 'last_filename', 'last_savename')
-            ->where('user_id', $user_id)
-            ->get();
+
+        if ($user->permission == 1) {
+            $cameras = DB::table('cameras')->get();
+        } else {
+            $cameras = DB::table('cameras')
+                //->select('id', 'description', 'battery', 'last_contact', 'last_filename', 'last_savename')
+                ->where('user_id', $user_id)
+                ->get();
+        }
 
         $style  = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
         $txt = '';
