@@ -175,7 +175,8 @@ Route::group(['middleware' => 'auth'], function() {
         /*-----------------------------------------------------------*/
         /* Admin */
         //Route::get('/admin', function() {return view('/admin/home');})->name('admin');
-        Route::get('/admin', 'Api\CamerasController@admin')->name('admin');
+        // Route::get('/admin', 'Api\CamerasController@admin')->name('admin');
+        Route::get('/adminx', 'Api\CamerasController@admin')->name('admin');
         Route::get('/admin/users', 'Api\CamerasController@admin_users')->name('admin.users');
         Route::get('/admin/email', 'Api\CamerasController@admin_email')->name('admin.email');
         Route::get('/admin/cameras', 'Api\CamerasController@admin_cameras')->name('admin.cameras');

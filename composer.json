@@ -7,7 +7,7 @@
     "require": {
         "php": ">=7.0.0",
         "dingo/api": "2.0.0-alpha2",
-        "encore/laravel-admin": "1.5.*",
+        "encore/laravel-admin": "1.6.0",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/cashier": "^8.0",
