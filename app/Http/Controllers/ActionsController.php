@@ -190,16 +190,19 @@ class ActionsController extends Controller
             }
         }
 
-        $txt .= '<tr>';
-        $txt .=     '<td>';
-        if ($camera->log == 1) {
-            $txt .=     '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a> ';
-        } else {
-            $txt .=     '<a data-param="LE" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Enable</a> ';
+        $user = Auth::user();
+        if ($user->permission == 1) {
+            $txt .= '<tr>';
+            $txt .=     '<td>';
+            if ($camera->log == 1) {
+                $txt .=     '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a> ';
+            } else {
+                $txt .=     '<a data-param="LE" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Enable</a> ';
+            }
+            $txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a> ';
+            $txt .=     '</td>';
+            $txt .= '</tr>';
         }
-        $txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a> ';
-        $txt .=     '</td>';
-        $txt .= '</tr>';
         return $txt;
     }
 }
