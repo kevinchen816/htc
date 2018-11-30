@@ -1369,7 +1369,15 @@ class CamerasController extends Controller
         $action->camera_id = $param['camera_id'];
         $action->action = $param['action_code'];
         $action->status = $param['status']; // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
-        $action->requested = date('Y-m-d H:i:s');
+
+        // $action->requested = date('Y-m-d H:i:s');
+        $camera = Camera::find($action->camera_id);
+        if ($camera) {
+            $action->requested = $this->_datetime_get($camera);
+        } else {
+            $action->requested = date('Y-m-d H:i:s');
+        }
+
 
         if (isset($param['photo_id'])) {
             $action->photo_id = $param['photo_id'];
@@ -1402,7 +1410,13 @@ class CamerasController extends Controller
                 ($action->action == $param['action_code'])) {
                 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
                 $data['status'] = $param['status'];
-                $data['completed'] = date('Y-m-d H:i:s');
+
+                $camera = Camera::find($action->camera_id);
+                if ($camera) {
+                    $data['completed'] = $this->_datetime_get($camera);
+                } else {
+                    $data['completed'] = date('Y-m-d H:i:s');
+                }
 
                 if (isset($param['filename'])) { // isset, empty, is_null
                     $data['filename'] = $param['filename'];
@@ -1725,7 +1739,8 @@ class CamerasController extends Controller
         $camera->mcu_version  = $datalist['mcu'];
         //$camera->cellular     = $datalist['cellular'];
 
-        $datetime             = date('Y-m-d H:i:s');
+        // $datetime             = date('Y-m-d H:i:s');
+        $datetime             = $this->_datetime_get($camera);
         $camera->last_contact = $datetime;
         $camera->last_hb      = $datetime;
 
@@ -2282,7 +2297,8 @@ class CamerasController extends Controller
                                     $data['photo_cnt'] = $action->photo_cnt + 1;
                                 }
                             }
-                            $data['completed'] = date('Y-m-d H:i:s');
+                            // $data['completed'] = date('Y-m-d H:i:s');
+                            $data['completed'] = $this->_datetime_get($camera);
                             $actions->update($data);
                         }
                     }
@@ -2455,7 +2471,8 @@ class CamerasController extends Controller
                 /* update Action */
                 $data = [];
                 $data['status'] = ACTION_COMPLETED;
-                $data['completed'] = date('Y-m-d H:i:s');
+                // $data['completed'] = date('Y-m-d H:i:s');
+                $data['completed'] = $this->_datetime_get($camera);
                 $data['photo_cnt'] = 1;
                 $actions->update($data);
 
@@ -2591,7 +2608,9 @@ class CamerasController extends Controller
                 /* update Action */
                 $data = [];
                 $data['status'] = ACTION_COMPLETED;
-                $data['completed'] = date('Y-m-d H:i:s');
+                // $data['completed'] = date('Y-m-d H:i:s');
+                $data['completed'] = $this->_datetime_get($camera);
+
                 $data['photo_cnt'] = 1;
                 $actions->update($data);
 
@@ -4185,7 +4204,15 @@ if ($err == 0) { /* for test */
         if ($action) {
             $camera_id = $action->camera_id;
             $data['status'] = ACTION_CANCELLED;
-            $data['completed'] = date('Y-m-d H:i:s');
+
+            // $data['completed'] = date('Y-m-d H:i:s');
+            $camera = Camera::find($action->camera_id);
+            if ($camera) {
+                $data['completed'] = $this->_datetime_get($camera);
+            } else {
+                $data['completed'] = date('Y-m-d H:i:s');
+            }
+
             $actions->update($data);
 
             $photo_id = $action->photo_id;
