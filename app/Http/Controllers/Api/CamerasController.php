@@ -3090,7 +3090,11 @@ if ($err == 0) { /* for test */
         $txt  = $this->ovItemShow('Description', $camera->description);
         $txt .= $this->ovItemShow('Location', $camera->location);
 
-        $percent_signal = round(($camera->signal_value/32)*100, 2);
+        if ($camera->signal_value <= 32) {
+            $percent_signal = round(($camera->signal_value/32)*100, 2);
+        } else {
+            $percent_signal = 0;
+        }
         $txt .= $this->ovItemShow('Signal', $percent_signal.' %');
 
         $battery = $this->itemBattery($camera->battery);
