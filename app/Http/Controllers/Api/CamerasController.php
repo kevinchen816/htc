@@ -3091,11 +3091,14 @@ if ($err == 0) { /* for test */
         $txt .= $this->ovItemShow('Location', $camera->location);
 
         if ($camera->signal_value <= 32) {
-            $percent_signal = round(($camera->signal_value/32)*100, 2);
+            $signal = round(($camera->signal_value/32)*100, 2). '%';
+        } else if ($camera->signal_value == 99) {
+            $signal = 'unknown';
         } else {
-            $percent_signal = 0;
+            $signal = 'unknown ('.$camera->signal_value.')';
         }
-        $txt .= $this->ovItemShow('Signal', $percent_signal.' %');
+        // $txt .= $this->ovItemShow('Signal', $percent_signal.' %');
+        $txt .= $this->ovItemShow('Signal', $signal);
 
         $battery = $this->itemBattery($camera->battery);
         $txt .= $this->ovItemShow('Battery', $battery);
