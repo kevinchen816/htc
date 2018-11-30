@@ -3867,7 +3867,13 @@ if ($err == 0) { /* for test */
         $photo  = $photos->first();
 
         /* /uploads/camera_id/1539695099_2Q7NJJh7ur.ZIP */
-        $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->thumb_name;
+        // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+        // if (($photo->uploadtype == 2)||($photo->uploadtype == 4)) {
+        if ($photo->original_name) {
+            $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->original_name;
+        } else {
+            $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->thumb_name;
+        }
 
         // TODO: check file exist
         return response()->download($pathToFile, $photo->imagename);
