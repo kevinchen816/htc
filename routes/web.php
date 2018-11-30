@@ -205,6 +205,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 });
 
+Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
+
 /*-----------------------------------------------------------*/
 Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
 

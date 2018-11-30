@@ -4461,6 +4461,12 @@ return $request;
         return view('admin.viewlog', compact('user'));
     }
 
+    public function download_log($camera_id, $filename) {
+        /* /uploads/logs/camera_id/yyyymmdd_hhmm_LOG.TXT */
+        $pathToFile = public_path().'/uploads/logs/'.$camera_id.'/'.$filename;
+        return response()->download($pathToFile, $filename);
+    }
+
     /*----------------------------------------------------------------------------------*/
     //public function test() {
     //    $id     = 1;
