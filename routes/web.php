@@ -195,6 +195,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/admin/email-search', 'Api\CamerasController@admin_email_search')->name('admin.email-search');
         Route::post('/admin/camera-search', 'Api\CamerasController@admin_camera_search')->name('admin.camera-search');
         Route::post('/admin/api-search', 'Api\CamerasController@admin_api_search')->name('admin.api-search');
+        // Route::get('/admin/api-search', 'Api\CamerasController@admin_api_search')->name('admin.api-search');
 
         Route::get('/admin/clear-search/users', 'Api\CamerasController@admin_clear_search_users')->name('admin.clear-search.users');
         Route::get('/admin/clear-search/emails', 'Api\CamerasController@admin_clear_search_emails')->name('admin.clear-search.emails');

@@ -4537,26 +4537,6 @@ return $request;
     //        $email->photo_Send($user, $camera, $filename);
     //    }
     //}
-
-    public function email_test() {
-        $to = 'kevin2@10ware.com'; //$user->email;
-        $subject = 'test'; //$camera->description;
-        $imgPath = public_path(); //.'/uploads/'.$camera->id.'/'.$filename;
-        $param = array(
-            'user_name'=>'Kevin', //$user->name,
-            'camera_name'=>'New Camera_Find', //$camera->description,
-            'imgPath'=>$imgPath,
-        );
-        Mail::send('emails.photo', $param, function($message) use($to, $subject) {
-            $message ->to($to)->subject($subject);
-        });
-
-        if (count(Mail::failures()) < 1) {
-            echo '发送邮件成功';
-        } else {
-            echo '发送邮件失败';
-        }
-    }
 }
 
 

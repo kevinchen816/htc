@@ -12,24 +12,24 @@ use App\Mail\PhotoSend;
 class MailController extends Controller
 {
     public function test() {
-        // $to = 'kevin@10ware.com';
-        //$to = 'kevin2@10ware.com';
-        $to = 'xx18664933089zzkhkhjk@gmail.com';
+        $to = 'kevin@10ware.com';
+        // $to = 'kevin2@10ware.com';
+        // $to = 'xx18664933089zzkhkhjk@gmail.com';
         $subject = '测试邮件';
 
-        //Mail::raw('Hello World !!', function ($message) use($to, $subject) {
-        //    $message ->to($to)->subject($subject);
-        //});
-
-        $name = 'Hello';
-        $imgPath = public_path().'/uploads/1/1541262076_Z1udRRMbPW.JPG';
-        Mail::send('emails.test', ['name'=>$name, 'imgPath'=>$imgPath], function($message) use($to, $subject) {
-            $message ->to($to)->subject($subject);
-
-            //$attachment = storage_path('test.jpg');
-            //$message->attach($attachment, ['as'=>'photo.jpg']);
-            ////$message->attach($attachment,['as'=>"=?UTF-8?B?".base64_encode('照片')."?=.jpg"]);
+        Mail::raw('Hello World !!', function ($message) use($to, $subject) {
+           $message ->to($to)->subject($subject);
         });
+
+        // $name = 'Hello';
+        // $imgPath = public_path().'/uploads/1/1543584581_UG1RNPj2TS.JPG';
+        // Mail::send('emails.test', ['name'=>$name, 'imgPath'=>$imgPath], function($message) use($to, $subject) {
+        //     $message ->to($to)->subject($subject);
+
+        //     //$attachment = storage_path('test.jpg');
+        //     //$message->attach($attachment, ['as'=>'photo.jpg']);
+        //     ////$message->attach($attachment,['as'=>"=?UTF-8?B?".base64_encode('照片')."?=.jpg"]);
+        // });
 
         //$imgPath = public_path().'/uploads/1/1543048626_2fqndZFZnT.MP4';
         //Mail::send('emails.video', ['name'=>$name, 'imgPath'=>$imgPath], function($message) use($to, $subject) {
