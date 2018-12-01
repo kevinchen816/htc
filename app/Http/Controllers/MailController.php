@@ -13,9 +13,11 @@ class MailController extends Controller
 {
     public function test() {
         $to = 'kevin@10ware.com';
+        // $to = '18664933085@163.com';
         // $to = 'kevin2@10ware.com';
         // $to = 'xx18664933089zzkhkhjk@gmail.com';
-        $subject = '测试邮件';
+        // $subject = '测试邮件';
+        $subject = 'New Camera';
 
         Mail::raw('Hello World !!', function ($message) use($to, $subject) {
            $message ->to($to)->subject($subject);
