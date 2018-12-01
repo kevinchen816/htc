@@ -2950,7 +2950,7 @@ class CamerasController extends Controller
                 if ($request->status == 'enable') {
                     $action_code = 'LE';
                 } else {
-                    $action_code = 'LU';
+                    $action_code = 'LD';
                 }
 
                 $param = array(
@@ -3069,15 +3069,15 @@ class CamerasController extends Controller
             $this->LogApi_Add('uploadlog', 1, $user_id, $camera->id, $request, $response);
         }
 
-if ($err == 0) { /* for test */
-    $response['camera_id'] = $camera_id;
-    //$response['filename'] = $request->FileName;
-    $response['imagename'] = $ret['imagename'];
-    $response['savename'] = $ret['savename'];
-    $response['savepath'] = $ret['savepath'];
-    //$response['extension'] = $ret['extension'];
-    $response['filesize'] = $ret['filesize'];
-}
+// if ($err == 0) { /* for test */
+//     $response['camera_id'] = $camera_id;
+//     //$response['filename'] = $request->FileName;
+//     $response['imagename'] = $ret['imagename'];
+//     $response['savename'] = $ret['savename'];
+//     $response['savepath'] = $ret['savepath'];
+//     //$response['extension'] = $ret['extension'];
+//     $response['filesize'] = $ret['filesize'];
+// }
 
         return $response;
     }

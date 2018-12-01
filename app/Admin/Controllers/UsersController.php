@@ -84,22 +84,27 @@ class UsersController extends Controller
         $grid->id('Id');
         $grid->name('Name');
         $grid->email('Email');
-        $grid->password('Password');
-        $grid->confirmed('Confirmed');
+        // $grid->password('Password');
+        // $grid->confirmed('Confirmed');
         // $grid->stripe_id('Stripe id');
         // $grid->card_brand('Card brand');
         // $grid->card_last_four('Card last four');
         // $grid->trial_ends_at('Trial ends at');
         // $grid->subscription_ends_at('Subscription ends at');
         $grid->date_format('Date format');
-        $grid->portal('Portal');
+        // $grid->portal('Portal');
         $grid->permission('Permission');
-        $grid->sel_menu('Sel menu');
-        $grid->sel_camera('Sel camera');
-        $grid->sel_camera_tab('Sel camera tab');
-        $grid->sel_account_tab('Sel account tab');
-        $grid->remember_token('Remember token');
-        $grid->email_verified('Email verified');
+        // $grid->sel_menu('Sel menu');
+        // $grid->sel_camera('Sel camera');
+        // $grid->sel_camera_tab('Sel camera tab');
+        // $grid->sel_account_tab('Sel account tab');
+
+        // $grid->remember_token('Remember token');
+        // $grid->email_verified('Email verified');
+        $grid->email_verified('Email confirm')->display(function ($value) {
+            return $value ? 'Yes' : 'No';
+        });
+
         $grid->created_at('Created at');
         $grid->updated_at('Updated at');
 
@@ -111,7 +116,6 @@ class UsersController extends Controller
         });
 
         $grid->tools(function ($tools) {
-
             // 禁用批量删除按钮
             $tools->batch(function ($batch) {
                 $batch->disableDelete();
