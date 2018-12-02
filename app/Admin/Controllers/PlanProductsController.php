@@ -186,16 +186,39 @@ class PlanProductsController extends Controller
     }
 
     public function build() {
-        DB::table('plan_products')->insert([
-            ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10],
-            ['region'=>'au', 'title'=>'GOLD', 'description'=>'10000 Points per Month', 'price'=>20],
-            ['region'=>'au', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
+        // DB::table('plan_products')->insert([
+        //     ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10],
+        //     ['region'=>'au', 'title'=>'GOLD', 'description'=>'10000 Points per Month', 'price'=>20],
+        //     ['region'=>'au', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
 
-            ['region'=>'us', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10],
-            ['region'=>'us', 'title'=>'GOLD', 'description'=>'10000 Points per Month', 'price'=>20],
-            ['region'=>'us', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
+        //     ['region'=>'us', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10],
+        //     ['region'=>'us', 'title'=>'GOLD', 'description'=>'10000 Points per Month', 'price'=>20],
+        //     ['region'=>'us', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
+        // ]);
+
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'title'=>'12.95 per Month [cpp: 0.00259]', 'price'=>12.95],
+            ['plan_product_id'=>$id, 'title'=>'36.95 for 3 Months [cpp: 0.00246]', 'price'=>36.95],
         ]);
 
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'GOLD', 'description'=>'5000 Points per Month', 'price'=>10]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'title'=>'19.95 per Month [cpp: 0.00200]', 'price'=>19.95],
+            ['plan_product_id'=>$id, 'title'=>'57.95 for 3 Months [cpp: 0.00193]', 'price'=>57.95],
+        ]);
+
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'PLATINUM PRO', 'description'=>'5000 Points per Month', 'price'=>10]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'title'=>'26.95 per Month [cpp: 0.00135]', 'price'=>26.95],
+            ['plan_product_id'=>$id, 'title'=>'77.95 for 3 Months [cpp: 0.00130]', 'price'=>77.95],
+        ]);
         return 'build...OK';
     }
 
@@ -243,17 +266,17 @@ class PlanProductsController extends Controller
 
         /* 查询 */
         // $db=DB::table("plan_products")->findOrFail(1); // NG (for Eloquent ORM)
-        $db=DB::table("plan_products")->find(1);
-        dd($db);
-
-        // $db=DB::table("plan_products")
-        //     // ->select('region','title', 'price')
-        //     // ->where('price', '>=', 20) // 一个条件
-        //     // ->whereRaw('price >= ? and region = ?', [20, 'au']) // 多个条件
-        //     // ->orderBy('price','asc') // asc, desc
-        //     ->get(); // 返回多条数据
-        //     // ->first(); // 返回1条数据
+        // $db=DB::table("plan_products")->find(1);
         // dd($db);
+
+        $db=DB::table("plan_products")
+            // ->select('region','title', 'price')
+            // ->where('price', '>=', 20) // 一个条件
+            // ->whereRaw('price >= ? and region = ?', [20, 'au']) // 多个条件
+            // ->orderBy('price','asc') // asc, desc
+            ->get(); // 返回多条数据
+            // ->first(); // 返回1条数据
+        dd($db);
 
         /* 新增 */
         // $bool=DB::table("plan_products")->insert([
