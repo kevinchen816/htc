@@ -25,4 +25,9 @@ Route::group([
     $router->get('plan/products/{id}/edit', 'PlanProductsController@edit');
     $router->put('plan/products/{id}', 'PlanProductsController@update');
 
+    $router->get('plan/products/build', 'PlanProductsController@build');
+    $router->get('plan/products/test1', 'PlanProductsController@test1');
+    $router->get('plan/products/test2', 'PlanProductsController@test2');
+    $router->get('plan/products/test3', 'PlanProductsController@test3');
+
 });
