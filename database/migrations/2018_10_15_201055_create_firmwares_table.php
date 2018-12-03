@@ -23,7 +23,7 @@ class CreateFirmwaresTable extends Migration
             $table->integer('active')->default(0);
             //$table->string('path')->nullable();
             $table->string('carrier')->nullable(); // truphone ??
-            $table->string('type')->nullable(); // ZIP, BIN (File Extension)
+            $table->string('type')->nullable(); // 0:BIN, 1:ZIP (File Extension)
 
             $table->timestamps();
         });

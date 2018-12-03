@@ -3644,11 +3644,14 @@ class CamerasController extends Controller
         $user_id = $user->id;
 
         if ($user->permission == 1) {
-            $cameras = DB::table('cameras')->get();
+            $cameras = DB::table('cameras')
+                ->orderBy('description', 'asc')
+                ->get();
         } else {
             $cameras = DB::table('cameras')
                 //->select('id', 'description', 'battery', 'last_contact', 'last_filename', 'last_savename')
                 ->where('user_id', $user_id)
+                ->orderBy('description', 'asc')
                 ->get();
         }
 
