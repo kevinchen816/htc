@@ -563,6 +563,11 @@ class CamerasController extends Controller
     public function itemHeartbeatInterval() {
         $array['title'] = 'Heartbeat Interval';
         $array['options'] = array(
+            'Every 5 Minutes'   => '5m',
+            'Every 10 Minutes'  => '10m',
+            'Every 15 Minutes'  => '15m',
+            'Every 20 Minutes'  => '20m',
+            'Every 30 Minutes'  => '30m',
             'Every Hour'    => '1h',
             'Every 2 Hours' => '2h',
             'Every 4 Hours' => '4h',
@@ -1729,9 +1734,6 @@ class CamerasController extends Controller
         $camera->model_id  = $request->model_id;
         $camera->cellular  = $request->cellular;
 
-        $camera->region    = 'AU';
-        $camera->timezone  = 'Australia/Sydney';
-
         $datalist             = $request->DataList;
         $camera->battery      = $datalist['Battery'];
         $camera->signal_value = $datalist['SignalValue'];
@@ -1741,12 +1743,6 @@ class CamerasController extends Controller
         $camera->dsp_version  = $datalist['FirmwareVersion'];
         $camera->mcu_version  = $datalist['mcu'];
         //$camera->cellular     = $datalist['cellular'];
-
-        // $datetime             = date('Y-m-d H:i:s');
-        $datetime             = $this->_datetime_get($camera);
-        $camera->last_contact = $datetime;
-        $camera->last_hb      = $datetime;
-
         $camera->save();
         return 0;
     }
@@ -2746,7 +2742,8 @@ class CamerasController extends Controller
             /* /firmware/lookout-na/20180816/IMAGE.ZIP */
             $version = $firmware->version;
             $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
-            $pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+            //$pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+            $pathToFile = public_path().'/firmware/kmcam/'.$version.'/'.$filename;
 
             // TODO: check file exist
             return response()->download($pathToFile, $filename);
@@ -3795,9 +3792,11 @@ class CamerasController extends Controller
 
         // $cameras = DB::table('cameras')->where('user_id', $user_id);
         if ($user->permission == 1) {
-            $cameras = DB::table('cameras');
+            // $cameras = DB::table('cameras');
+            $cameras = Camera::get();
         } else {
-            $cameras = DB::table('cameras')->where('user_id', $user_id);
+            // $cameras = DB::table('cameras')->where('user_id', $user_id);
+            $cameras = Camera::where('user_id', $user_id)->get();
         }
 
         if ($cameras->count() > 0) {
@@ -3805,8 +3804,14 @@ class CamerasController extends Controller
             if (!$camera_id) {
                 $camera = $cameras->first();
                 $camera_id = $camera->id;
+            } else {
+                $camera = Camera::find($camera_id);
+                if (!$camera) {
+                    $camera = $cameras->first();
+                    $camera_id = $camera->id;
+                }
             }
-            $camera = Camera::findOrFail($camera_id);
+            //$camera = Camera::findOrFail($camera_id);
 
             //$photos = DB::table('photos')->where('camera_id', $camera_id)
             $photos = $camera->photos()

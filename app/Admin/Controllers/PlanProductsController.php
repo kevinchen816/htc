@@ -345,8 +345,8 @@ class PlanProductsController extends Controller
         // dd($db);
 
         // $db = PlanProduct::find(14);
-        $db = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
-        dd($db);
+        // $db = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
+        // dd($db);
 
         //查询构造器的使用,省略了指定表名
         // $db=PlanProduct::get();
@@ -361,8 +361,9 @@ class PlanProductsController extends Controller
         // $bool=$db->save();
         // dd($bool);
 
+// ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10]
         $db = PlanProduct::create(
-            ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10]
+            ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month']
         );
         dd($db);
 
