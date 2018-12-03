@@ -25,7 +25,7 @@ class PlanProductsController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('商品列表') // Index
+            ->header('Plan Product') // Index
             ->description('description')
             ->body($this->grid());
     }
@@ -69,7 +69,7 @@ class PlanProductsController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('创建商品') // Create
+            ->header('Plan Product - Create') // Create
             ->description('description')
             ->body($this->form());
     }
@@ -88,19 +88,19 @@ class PlanProductsController extends Controller
     {
         $grid = new Grid(new PlanProduct);
 
-        $grid->id('Id');
+        $grid->id('ID');
         $grid->region('Region');
-        $grid->title('商品名称');   // Title
+        $grid->title('Plan');   // Title
         $grid->description('Description');
-        $grid->image('Image');
+        // $grid->image('Image');
         // $grid->on_sale('On sale');
-        $grid->on_sale('已上架')->display(function ($value) {
-            return $value ? '是' : '否';
+        $grid->on_sale('Active')->display(function ($value) {
+            return $value ? 'Yes' : 'No';
         });
 
-        $grid->rating('评分'); // Rating
-        $grid->sold_count('销量'); // Sold count
-        $grid->price('价格'); // Price
+        // $grid->rating('Rating');
+        // $grid->sold_count('Sold Count');
+        $grid->price('Price'); // Price
         $grid->created_at('Created at');
         $grid->updated_at('Updated at');
 
@@ -129,14 +129,14 @@ class PlanProductsController extends Controller
     {
         $show = new Show(PlanProduct::findOrFail($id));
 
-        $show->id('Id');
+        $show->id('ID');
         $show->region('Region');
         $show->title('Title');
         $show->description('Description');
-        $show->image('Image');
-        $show->on_sale('On sale');
-        $show->rating('Rating');
-        $show->sold_count('Sold count');
+        // $show->image('Image');
+        $show->on_sale('Active');
+        // $show->rating('Rating');
+        // $show->sold_count('Sold Count');
         $show->price('Price');
         $show->created_at('Created at');
         $show->updated_at('Updated at');
@@ -159,7 +159,7 @@ class PlanProductsController extends Controller
         // $form->image('image', 'Image'); // $ php artisan storage:link
 
         // $form->switch('on_sale', 'On sale')->default(1);
-        $form->radio('on_sale', 'On Sale')
+        $form->radio('on_sale', 'Active')
              ->options(['1' => 'Yes', '0'=> 'No'])
              ->default('0');
 
@@ -167,12 +167,12 @@ class PlanProductsController extends Controller
         // $form->number('sold_count', 'Sold count');
         // $form->decimal('price', 'Price');
 
-        $form->hasMany('skus', 'SKU 列表', function (Form\NestedForm $form) {
-            $form->text('title', 'SKU 名称')->rules('required');
-            $form->text('description', 'SKU 描述'); //->rules('required');
-            $form->text('price', '单价')->rules('required|numeric|min:0.01');
+        $form->hasMany('skus', 'SKU List', function (Form\NestedForm $form) {
+            $form->text('title', 'SKU Name')->rules('required');
+            $form->text('description', 'SKU Description'); //->rules('required');
+            $form->text('price', 'Price')->rules('required|numeric|min:0.01');
             // $form->text('stock', '剩余库存')->rules('required|integer|min:0');
-            $form->radio('on_sale', 'On Sale')
+            $form->radio('on_sale', 'Active')
                  ->options(['1' => 'Yes', '0'=> 'No'])
                  ->default('0');
         });
