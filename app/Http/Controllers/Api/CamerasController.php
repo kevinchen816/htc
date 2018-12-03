@@ -1729,6 +1729,9 @@ class CamerasController extends Controller
         $camera->model_id  = $request->model_id;
         $camera->cellular  = $request->cellular;
 
+        $camera->region    = 'AU';
+        $camera->timezone  = 'Australia/Sydney';
+
         $datalist             = $request->DataList;
         $camera->battery      = $datalist['Battery'];
         $camera->signal_value = $datalist['SignalValue'];
