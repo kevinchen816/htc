@@ -86,14 +86,31 @@ Route::group(['middleware' => 'auth'], function() {
 
         /*-----------------------------------------------------------*/
         /* Add Plan */
-        Route::post('/plans/add-plan','PlansController@add')->name('add.plan');
-        Route::get('/plans/add-plan','PlansController@view')->name('add.plan');
-        Route::get('/10ware/plans/add-plan','PlansController@view_10ware')->name('add.plan.10ware');
-        Route::get('/de/plans/add-plan','PlansController@view_germany')->name('add.plan.de');
+        /*
+            /plans/add-plan                 -> /plan/add
+            /plans/setup-plan               -> /plan/setup
+            /plans/setup-renewal/{plan}     -> /plan/renew/{plan}
+        */
+        Route::get('/plans/add','PlansController@getAddPlan')->name('plan.add');
+        Route::post('/plans/add','PlansController@postAddPlan')->name('plan.add');
+
+        // Route::get('/plans/setup/{plan}','PlansController@getSetupPlan')->name('plan.setup');
+        // Route::get('/plans/setup','PlansController@getSetupPlan')->name('plan.setup');
+        Route::post('/plans/setup','PlansController@setup')->name('plan.setup');
+
+        // Route::get('/plans/renew/{plan}', 'PlansController@renew')->name('plans.renew');
+        Route::get('/plans/setup-renewal/{plan}', 'PlansController@renew')->name('plans.renew');
+
+
 
         Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
+        //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
-        // Route::resource('/plans', 'PlansController');
+        // for test
+        // Route::get('/plan/pause/{plan}', 'PlansController@pause')->name('plan.pause');
+        // Route::get('/plan/active/{plan}', 'PlansController@active')->name('plan.active');
+        // Route::get('/plan/change/{plan}', 'PlansController@change')->name('plan.change');
+        // Route::get('/plan/cancel/{plan}', 'PlansController@cancel')->name('plan.cancel');
 
         /*-----------------------------------------------------------*/
         /* My Cameras */
@@ -105,7 +122,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/10ware/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_10ware')->name('camera.getdetail.10ware');
         Route::get('/de/cameras/getdetail/{camera_id}', 'Api\CamerasController@getdetail_germany')->name('camera.getdetail.de');
 
-        Route::post('/cameras/activetab', 'Api\CamerasController@activetab')->name('camera.activetab');
+        Route::post('/cameras/activetab', 'Api\CamerasController@postActiveTab')->name('camera.activetab');
 
         /* My Cameras - Overview */
         Route::get('/cameras/overview/{camera_id}', 'Api\CamerasController@overview')->name('camera.overview');
@@ -117,7 +134,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/cameras/download/{camera_id}/{photo_id}', 'Api\CamerasController@download')->name('camera.download');
 
         /* My Cameras - Settings */
-        Route::post('/camera/settings', 'Api\CamerasController@settings')->name('camera.settings');
+        Route::post('/camera/settings', 'Api\CamerasController@postSettings')->name('camera.settings');
 
         /* My Cameras - Actions */
         Route::get('/cameras/actions/{camera_id}', 'Api\CamerasController@actions')->name('camera.actions');;
@@ -126,23 +143,20 @@ Route::group(['middleware' => 'auth'], function() {
 
         Route::get('/cameras/sendsms/{camera_id}/{sms}', 'Api\CamerasController@sendsms')->name('camera.sendsms');
 
-        //Route::get('/cameras/actionqueue/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');
-        Route::get('/cameras/actionqueue/{portal}/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');
-        Route::post('/cameras/actionqueue/', 'Api\CamerasController@actionqueue_post')->name('camera.actionqueue_post');
-
-        //Route::get('/cameras/actioncancel/{action_id}', 'Api\CamerasController@actioncancel')->name('camera.actioncancel');
-        Route::get('/cameras/actioncancel/{portal}/{action_id}', 'Api\CamerasController@actioncancel')->name('camera.actioncancel');
-
-        //Route::get('/cameras/clearmissing/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
-        Route::get('/cameras/clearmissing/{portal}/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
-
-        //Route::get('/cameras/requestmissing/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
-        Route::get('/cameras/requestmissing/{portal}/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
+        // Route::get('/cameras/actionqueue/{portal}/{camera_id}/{action}', 'Api\CamerasController@actionqueue')->name('camera.actionqueue');
+        // Route::get('/cameras/actioncancel/{portal}/{action_id}', 'Api\CamerasController@actioncancel')->name('camera.actioncancel');
+        // Route::get('/cameras/clearmissing/{portal}/{camera_id}', 'Api\CamerasController@clearmissing')->name('camera.clearmissing');
+        // Route::get('/cameras/requestmissing/{portal}/{camera_id}/{missingid}', 'Api\CamerasController@requestmissing')->name('camera.requestmissing');
+        Route::get('/cameras/actionqueue/{camera_id}/{action}', 'Api\CamerasController@getActionQueue')->name('camera.actionqueue');
+        Route::post('/cameras/actionqueue/', 'Api\CamerasController@postActionQueue')->name('camera.actionqueue_post');
+        Route::get('/cameras/actioncancel/{action_id}', 'Api\CamerasController@getActionCancel')->name('camera.actioncancel');
+        Route::get('/cameras/clearmissing/{camera_id}', 'Api\CamerasController@getClearMissing')->name('camera.clearmissing');
+        Route::get('/cameras/requestmissing/{camera_id}/{missingid}', 'Api\CamerasController@getRequestMissing')->name('camera.requestmissing');
 
         /*-----------------------------------------------------------*/
         /* My Cameras - Options */
-        Route::post('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete');
-        Route::get('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete'); // IMPORTANT !!
+        Route::post('/cameras/delete', 'Api\CamerasController@postDelete')->name('camera.delete');
+        // Route::get('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete'); // IMPORTANT !!
         Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@apilog')->name('camera.apilog');
 
         /*-----------------------------------------------------------*/
@@ -158,21 +172,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/account/email-change', 'AccountsController@email_change')->name('account.email-change');
         Route::get('/account/password/send-reset-email', 'AccountsController@password_send_reset_email')->name('account.password-send-reset-email');
         //Route::get('/account/password/reset/{id}', 'AccountsController@password_reset')->name('account.password-reset');
-
-        // for test
-        // Route::get('/plan/pause/{plan}', 'PlansController@pause')->name('plan.pause');
-        // Route::get('/plan/active/{plan}', 'PlansController@active')->name('plan.active');
-        // Route::get('/plan/change/{plan}', 'PlansController@change')->name('plan.change');
-        // Route::get('/plan/cancel/{plan}', 'PlansController@cancel')->name('plan.cancel');
-
-        Route::get('/plans/setup-renewal/{plan}', 'PlansController@renew')->name('plans.renew');
-        Route::post('/plans/setup-plan','PlansController@setup')->name('plans-setup');
-        //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
-
-        //Route::get('/myplans','PlansController@my_plans')->name('my.plans');
-        Route::get('/myplans','PlansController@my_plans2')->name('my.plans');
-        Route::get('/10ware/myplans','PlansController@my_plans2_10ware')->name('my.plans.10ware');
-        Route::get('/de/myplans','PlansController@my_plans2_germany')->name('my.plans.de');
 
         /*-----------------------------------------------------------*/
         /* Cart */

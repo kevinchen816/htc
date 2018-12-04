@@ -75,7 +75,11 @@
                 }
         }
 
-    </style>
+       .progress-points {
+          margin-bottom: 2px!important;
+          height: 20px;
+          background-color: #777;
+       }                                   </style>
 <link rel="stylesheet" href="/css/thumbnail-gallery.css" media="screen">
 <link rel="stylesheet" href="/css/gallery.css" media="screen">
 <style>
@@ -179,8 +183,14 @@
 </head>
 <body>
     <div id="app">
-        @include('layouts._header')
 
+@if (isset($portal) && $portal == 10)
+        @include('layouts.10ware._header')
+@elseif (isset($portal) && $portal == 11)
+        @include('layouts.germany._header')
+@else
+        @include('layouts._header')
+@endif
         <div class="fixed-navbar-container">
             <div class="container">
                 @include('shared._messages')
@@ -202,7 +212,13 @@
         </div>
     </div>
 
+@if (isset($portal) && $portal == 10)
+    @include('layouts.10ware._footer')
+@elseif (isset($portal) && $portal == 11)
+    @include('layouts.germany._footer')
+@else
     @include('layouts._footer')
+@endif
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

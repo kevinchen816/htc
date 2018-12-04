@@ -32,7 +32,7 @@
                         <div id="form-errors" class="alert alert-danger hidden">
                         </div>
 @if ($user->stripe_id)
-                        <form method="POST" action="{{ route('add.plan') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        <form method="POST" action="{{ route('plan.add') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                             {{ csrf_field() }}
                             <input name="portal" type="hidden" value="{{ $portal }}">
                             <input name="mode" type="hidden" value="add">
@@ -82,7 +82,7 @@
                             </div>
                         </form>
 @else
-                        <form method="POST" action="{{ route('add.plan') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="addplan-form">
+                        <form method="POST" action="{{ route('plan.add') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="addplan-form">
                             {{ csrf_field() }}
                             <input name="portal" type="hidden" value="{{ $portal }}">
                             <input name="mode" type="hidden" value="new">

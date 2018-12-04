@@ -13,7 +13,7 @@
             <div class="panel-body  " id="commandhistory-{{ $camera->id }}">
                 <table class="table" id="action-table">
                     <tbody>
-@if ($camera->remotecurrent == '24')
+@if ($camera->remotecurrent == '24h')
                         <tr>
                             <td>
                                 <div class="well well-sm">
@@ -159,26 +159,21 @@ $(document).ready(function () {
         //alert('action queue');
         action = $(this).attr('data-param');
         id = $(this).attr('camera-id');
-        url = '/cameras/actionqueue/' + id + '/' + action;
-        //alert(url);
-
+        var url = '/cameras/actionqueue/' + id + '/' + action;
         $('#action-' + id).load(url);
-        //alert(url);
     });
 
     $( ".action-cancel-{{ $camera->id }}" ).click(function(event) {
-        event.preventDefault();
         //alert('actioncancel');
+        event.preventDefault();
+
         actionid = $(this).attr('data-param');
-        url='/cameras/actioncancel/' + actionid;
-        //alert(url);
+        var url='/cameras/actioncancel/' + actionid;
         $('#action-{{ $camera->id }}').load(url);
     });
 
     $('#clear-missing').click(function(event) {
         var url = '/cameras/clearmissing/{{ $camera->id }}';
-        //alert(url);
-        //console.log('url = ' + url);
         $('#action-{{ $camera->id }}').load(url);
     });
 

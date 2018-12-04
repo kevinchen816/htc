@@ -30,11 +30,7 @@
 
 @if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
-                        <a href="{{ route('add.plan.10ware') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
-                    </li>
-
-                    <li class={{ ($user->sel_menu == 'my_plans') ? "active" : "" }}>
-                        <a href="{{ route('my.plans.10ware') }}"><i class="fa fa-gear"></i> My Plans</a>
+                        <a href="{{ route('plan.add.10ware') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>

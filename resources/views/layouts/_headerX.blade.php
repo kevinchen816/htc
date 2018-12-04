@@ -33,8 +33,15 @@
 
 @if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
-                        <a href="{{ route('add.plan') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                        <a href="{{ route('plan.add') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
+
+                    <!--<li class={{ ($user->sel_menu == 'cart') ? "active" : "" }}>
+                        <a href="http://www.ridgetec.us/shop/cart">
+                            <span class="glyphicon glyphicon-shopping-cart"> </span>
+                            <div class="badge">1</div>
+                        </a>
+                    </li>-->
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
@@ -49,7 +56,6 @@
                     </li>
 @else
                     <!--<li class=""><a href="https://portal.ridgetec.com/tour/start">DEMO</a></li>-->
-   
                     <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
 @endif
 
@@ -71,14 +77,10 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <!--<li><a href="{{ route('users.show', Auth::user()->id) }}">User Show</a></li>-->
-                            <li><a href="{{ route('users.edit', Auth::user()->id) }}">User</a></li>
-                            <li><a href="{{ route('plans.index') }}">Plans</a></li>
                             <li>
-                                <a href="{{ route('admin') }}"><i class="fa fa-btn fa-unlock"> </i> Admin Panel</a>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
+                                             document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>
 

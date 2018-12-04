@@ -81,7 +81,7 @@ class UsersController extends Controller
     {
         $grid = new Grid(new User);
 
-        $grid->id('Id');
+        $grid->id('ID');
         $grid->name('Name');
         $grid->email('Email');
         // $grid->password('Password');
@@ -91,7 +91,7 @@ class UsersController extends Controller
         // $grid->card_last_four('Card last four');
         // $grid->trial_ends_at('Trial ends at');
         // $grid->subscription_ends_at('Subscription ends at');
-        $grid->date_format('Date format');
+        $grid->date_format('Date Format');
         // $grid->portal('Portal');
         $grid->permission('Permission');
         // $grid->sel_menu('Sel menu');
@@ -101,7 +101,7 @@ class UsersController extends Controller
 
         // $grid->remember_token('Remember token');
         // $grid->email_verified('Email verified');
-        $grid->email_verified('Email confirm')->display(function ($value) {
+        $grid->email_verified('Email Confirm')->display(function ($value) {
             return $value ? 'Yes' : 'No';
         });
 

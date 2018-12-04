@@ -72,6 +72,7 @@
                             {{ $user->name }}  <span class="caret"></span>
                         </a>
 
+
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ route('logout') }}"
@@ -82,13 +83,35 @@
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
-
                                 </form>
                             </li>
                         </ul>
+
+
+<!--                         <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                </form>
+                            </li>
+                        </ul> -->
+
                     </li>
 @else
+                @if (isset($portal) && $portal == 10)
+                    <li class=""><a href="{{ route('login.10ware') }}">Log in1</a></li>
+                @elseif (isset($portal) && $portal == 11)
+                    <li class=""><a href="{{ route('login.de') }}">Log in2</a></li>
+                @else
                     <li class=""><a href="{{ route('login') }}">Log in</a></li>
+                @endif
 @endif
                 </ul>
             </div>

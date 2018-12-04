@@ -5,7 +5,7 @@ return [
     /*
      * Laravel-admin name.
      */
-    'name' => 'KMCam Pro-admin',
+    'name' => 'KMCam Pro',
 
     /*
      * Logo in admin panel header.

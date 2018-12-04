@@ -69,7 +69,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {!! $actions_ctrl->html_History($user, $camera) !!}
+                        {!! $actions_ctrl->html_History($portal, $user, $camera) !!}
                     </tbody>
                 </table>
             </div>
@@ -83,28 +83,33 @@ $(document).ready(function () {
         //alert('action queue');
         action = $(this).attr('data-param');
         id = $(this).attr('camera-id');
-        var url = '/cameras/actionqueue/' + id + '/' + action;
+        //url = '/cameras/actionqueue/' + id + '/' + action;
+        var url = '/cameras/actionqueue/{{ $portal }}/' + id + '/' + action;
         $('#action-' + id).load(url);
     });
 
     $( ".action-cancel-{{ $camera->id }}" ).click(function(event) {
-        //alert('actioncancel');
+        //alert('action cancel');
         event.preventDefault();
-
         actionid = $(this).attr('data-param');
-        var url='/cameras/actioncancel/' + actionid;
+        //url='/cameras/actioncancel/' + actionid;
+        //url='/cameras/actioncancel/'+'{{ $portal}}'+'/' + actionid;
+        var url='/cameras/actioncancel/{{ $portal }}/' + actionid;
         $('#action-{{ $camera->id }}').load(url);
     });
 
     $('#clear-missing').click(function(event) {
-        var url = '/cameras/clearmissing/{{ $camera->id }}';
+        //var url = '/cameras/clearmissing/{{ $camera->id }}';
+        //var url='/cameras/clearmissing/'+'{{ $portal}}'+'/' + actionid;
+        var url='/cameras/clearmissing/{{ $portal }}/' + actionid;
         $('#action-{{ $camera->id }}').load(url);
     });
 
     $('.missing-request').click(function(event) {
         missingid = $(this).attr('missing-id');
         //console.log('.missingid ' + missingid);
-        var url = '/cameras/requestmissing/{{ $camera->id }}/' + missingid;
+        //var url = '/cameras/requestmissing/{{ $camera->id }}/' + missingid;
+        var url = '/cameras/requestmissing/{{ $portal }}/{{ $camera->id }}/' + missingid;
         //console.log('url = ' + url);
         $('#action-{{ $camera->id }}').load(url);
 

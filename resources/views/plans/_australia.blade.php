@@ -20,7 +20,7 @@
                 <div class="panel-body">
 
                     <div class="col-md-6">
-                        <form method="POST" action="{{ route('plans-setup') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        <form method="POST" action="{{ route('plan.setup') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                             {{ csrf_field() }}
                             <input name="mode" type="hidden" value="setup">
                             <input name="planid" type="hidden" value="6">

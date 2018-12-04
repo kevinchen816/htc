@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Plan extends Model
 {
     protected $fillable = [
-        'iccid', 'user_id', 'status', 'points',
+        'iccid', 'user_id', 'status', 'points', 'points_used'
     ];
 
     public function user() {

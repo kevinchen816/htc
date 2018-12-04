@@ -17,6 +17,7 @@
                             <div class="panel-body">
                                 <form class="form-horizontal" role="form" method="POST" action="{{ route('camera.delete') }}" id="delete-camera-form-{{ $camera->id }}">
                                     {{ csrf_field() }}
+                                    <input name="portal" type="hidden" value="{{ $portal }}">
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
 
                                     <div class="form-group">
