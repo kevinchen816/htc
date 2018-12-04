@@ -60,7 +60,7 @@ class AccountsController extends Controller
     }
 
     /*-----------------------------------------------------------*/
-    public function html_MyPlans() {
+    public function html_MyPlansX() {
         //return 'Hello';
         $user = Auth::user();
         $user_id = $user->id;
@@ -104,10 +104,10 @@ class AccountsController extends Controller
             $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
             $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
             $handle .=                 '</tr>';
-//            //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
-//            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
-//            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
-//            $handle .=                 '</tr>';
+            //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
+            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
+            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
+            $handle .=                 '</tr>';
             $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
             $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
             $handle .=                 '</tr>';
@@ -125,7 +125,7 @@ class AccountsController extends Controller
         return $handle;
     }
 
-    public function html_MyPlansEx() {
+    public function html_MyPlans() {
         //return 'Hello';
         $user = Auth::user();
         $user_id = $user->id;
@@ -144,6 +144,8 @@ class AccountsController extends Controller
                 }
             }
 
+            $status = ucwords($plan->status);
+
             $handle .= '<div class="row">';
             $handle .=     '<div class="col-md-12">';
             $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
@@ -152,37 +154,36 @@ class AccountsController extends Controller
             /* Silver 1 Month */
             $handle .=                 '<div class="col-md-5">';
             $handle .=                     '<i class="fa fa-dot-circle"></i>';
+if ($plan->status == 'active') {
             $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
-            $handle .=                     ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+            // $handle .=                     ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
             $handle .=                     ' <img src="/images/cad.png" width="30" style="margin-bottom:10px;"/>';
-//            $handle .=                     ' <span class="label label-success" style="font-size:0.9em;">Active</span>';
-            $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">Active</span>';
+}
+            $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$status.'</span>';
 
             /* Auto-Reserve */
-            $handle .=                     '<p style="margin-top:4px;">';
-            $handle .=                          '<span class="button-checkbox" style="margin-left:20px;">';
-            $handle .=                              '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Reserve (<i class="fa fa-dollar-sign"></i>10)</button>';
-            $handle .=                              '<input type="checkbox" class="hidden camera-select" name="autoreserve[]" value="8"   />';
-            $handle .=                          '</span>';
-            $handle .=                     '</p>';
+            // $handle .=                     '<p style="margin-top:4px;">';
+            // $handle .=                          '<span class="button-checkbox" style="margin-left:20px;">';
+            // $handle .=                              '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Reserve (<i class="fa fa-dollar-sign"></i>10)</button>';
+            // $handle .=                              '<input type="checkbox" class="hidden camera-select" name="autoreserve[]" value="8"   />';
+            // $handle .=                          '</span>';
+            // $handle .=                     '</p>';
             /* Auto-Bill */
-            $handle .=                     '<p>';
-            $handle .=                         '<span class="button-checkbox" style="margin-left:20px;">';
-            $handle .=                             '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Bill (renews after 19/12/2018 8:00:00 am)</button>';
-            $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
-            $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
-
-            $handle .=                         '</span>';
-            $handle .=                     '</p>';
+//            $handle .=                     '<p>';
+//            $handle .=                         '<span class="button-checkbox" style="margin-left:20px;">';
+//            $handle .=                             '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Bill (renews after 19/12/2018 8:00:00 am)</button>';
+//            $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
+//            $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
+//            $handle .=                         '</span>';
+//            $handle .=                     '</p>';
             /* */
             $handle .=                     '<p></p>';
             $handle .=                 '</div>';
 
             /* Configure Plan Renewal */
             $handle .=                 '<div class="col-md-5">';
-            //$handle .=                     '<a href="/plans/setup-renewal/8"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
-$handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
-//$handle .=                     '<a href="/plans/add-plan"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+if ($plan->status == 'active') {
+            $handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
             $handle .=                         '<i class="glyphicon glyphicon-refresh"> </i> Configure Plan Renewal';
             $handle .=                     '</a>';
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
@@ -192,17 +193,16 @@ $handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-
             $handle .=                                  ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
             $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
             $handle .=                             '</strong>';
-
-//<strong>
-//    <span class="label label-info" style="font-size: 1.00em;">Silver - 1 Month</span>
-//    <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>
-//</strong>
-
             $handle .=                         '</p>';
             $handle .=                         '<p>';
-            $handle .=                             'Renew Auto-Reserve:';
+            $handle .=                             'Renew Auto-Reserve: ';
             $handle .=                             '<strong>No</strong>';
             $handle .=                         '</p>';
+} else {
+            $handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+            $handle .=                         '<i class="glyphicon glyphicon glyphicon-shopping-cart"> </i> Buy Data Plan';
+            $handle .=                     '</a>';
+}
             $handle .=                     '</div>';
 
             $handle .=                 '</div>'; // <!-- end col -->
@@ -230,21 +230,22 @@ $handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-
             $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
             $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
-            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
-            $handle .=                 '</tr>';
+            // $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
+            // $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
+            // $handle .=                 '</tr>';
 
-            $handle .=                 '<tr>';
-            $handle .=                     '<td class="pull-right">Reserve:</td>';
-            $handle .=                     '<td>';
-            //$handle .=                         '(No Reserve)';
-            $handle .=                         '<strong><i class="fa fa-dollar-sign"></i>10.00 (6666.66 points) </strong>';
-            $handle .=                         '<br />';
-            $handle .=                         '<a href="/plans/buy-reserve/8" class="btn btn-xs btn-primary">';
-            $handle .=                             '<i class="glyphicon glyphicon-shopping-cart"></i> Buy Points Reserve (<i class="fa fa-dollar-sign"></i>10)';
-            $handle .=                         '</a>';
-            $handle .=                     '</td>';
-            $handle .=                 '</tr>';
+            /* Reserve */
+            // $handle .=                 '<tr>';
+            // $handle .=                     '<td class="pull-right">Reserve:</td>';
+            // $handle .=                     '<td>';
+            // //$handle .=                         '(No Reserve)';
+            // $handle .=                         '<strong><i class="fa fa-dollar-sign"></i>10.00 (6666.66 points) </strong>';
+            // $handle .=                         '<br />';
+            // $handle .=                         '<a href="/plans/buy-reserve/8" class="btn btn-xs btn-primary">';
+            // $handle .=                             '<i class="glyphicon glyphicon-shopping-cart"></i> Buy Points Reserve (<i class="fa fa-dollar-sign"></i>10)';
+            // $handle .=                         '</a>';
+            // $handle .=                     '</td>';
+            // $handle .=                 '</tr>';
 /*
 $handle .=                 '<tr>';
             $handle .= '<td>';

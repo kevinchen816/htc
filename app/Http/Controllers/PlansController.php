@@ -541,10 +541,10 @@ class PlansController extends Controller
 //        $user->update($data);
 
         $user_id = $user->id;
-        $plans = DB::table('plans')
-            ->where('user_id', $user_id)
-            //->orderBy('created_at', 'desc')
-            ->paginate(10);
+        // $plans = DB::table('plans')
+        //     ->where('user_id', $user_id)
+        //     //->orderBy('created_at', 'desc')
+        //     ->paginate(10);
 
 //        $portal = $user->portal;
         //return view('plans._usa', compact('portal', 'user', 'plans'));

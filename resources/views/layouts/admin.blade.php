@@ -134,9 +134,9 @@
                         <a href="{{ route('users.edit', Auth::user()->id) }}"><i class="fa fa-fw fa-list"></i> User</a>
                     </li> -->
 
-                    <li class="">
+<!--                     <li class="">
                         <a href="{{ route('plans.index') }}"><i class="fa fa-fw fa-list"></i> Plans</a>
-                    </li>
+                    </li> -->
 
                 </ul>
             </div>

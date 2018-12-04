@@ -64,4 +64,7 @@ class User extends Authenticatable
         return $this->hasMany(Plan::class);
     }
 
+    public function cartItems() {
+        return $this->hasMany(CartItem::class);
+    }
 }

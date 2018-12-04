@@ -91,7 +91,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/10ware/plans/add-plan','PlansController@view_10ware')->name('add.plan.10ware');
         Route::get('/de/plans/add-plan','PlansController@view_germany')->name('add.plan.de');
 
-        Route::resource('/plans', 'PlansController');
+        Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
+
+        // Route::resource('/plans', 'PlansController');
 
         /*-----------------------------------------------------------*/
         /* My Cameras */
@@ -158,10 +160,10 @@ Route::group(['middleware' => 'auth'], function() {
         //Route::get('/account/password/reset/{id}', 'AccountsController@password_reset')->name('account.password-reset');
 
         // for test
-        Route::get('/plan/pause/{plan}', 'PlansController@pause')->name('plan.pause');
-        Route::get('/plan/active/{plan}', 'PlansController@active')->name('plan.active');
-        Route::get('/plan/change/{plan}', 'PlansController@change')->name('plan.change');
-        Route::get('/plan/cancel/{plan}', 'PlansController@cancel')->name('plan.cancel');
+        // Route::get('/plan/pause/{plan}', 'PlansController@pause')->name('plan.pause');
+        // Route::get('/plan/active/{plan}', 'PlansController@active')->name('plan.active');
+        // Route::get('/plan/change/{plan}', 'PlansController@change')->name('plan.change');
+        // Route::get('/plan/cancel/{plan}', 'PlansController@cancel')->name('plan.cancel');
 
         Route::get('/plans/setup-renewal/{plan}', 'PlansController@renew')->name('plans.renew');
         Route::post('/plans/setup-plan','PlansController@setup')->name('plans-setup');
@@ -171,6 +173,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/myplans','PlansController@my_plans2')->name('my.plans');
         Route::get('/10ware/myplans','PlansController@my_plans2_10ware')->name('my.plans.10ware');
         Route::get('/de/myplans','PlansController@my_plans2_germany')->name('my.plans.de');
+
+        /*-----------------------------------------------------------*/
+        /* Cart */
+        Route::post('cart', 'CartController@add')->name('cart.add');
 
         /*-----------------------------------------------------------*/
         /* Admin */
@@ -209,7 +215,6 @@ Route::group(['middleware' => 'auth'], function() {
 Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
 
 /*-----------------------------------------------------------*/
-Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
 
 Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
 Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
