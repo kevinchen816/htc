@@ -91,11 +91,16 @@ class PlanProductsController extends Controller
         $grid->id('ID');
         $grid->region('Region');
         $grid->title('Plan');   // Title
-        $grid->description('Description');
+        // $grid->description('Description');
+        $grid->points('Points');
         // $grid->image('Image');
+
         // $grid->on_sale('On sale');
-        $grid->on_sale('Active')->display(function ($value) {
-            return $value ? 'Yes' : 'No';
+        // $grid->on_sale('Active')->display(function ($value) {
+        //     return $value ? 'Yes' : 'No';
+        // });
+        $grid->active('Active')->display(function ($value) {
+            return ($value == 1) ? 'Yes' : 'No';
         });
 
         // $grid->rating('Rating');
@@ -132,9 +137,11 @@ class PlanProductsController extends Controller
         $show->id('ID');
         $show->region('Region');
         $show->title('Title');
-        $show->description('Description');
+        // $show->description('Description');
+        $show->points('Points');
         // $show->image('Image');
-        $show->on_sale('Active');
+        // $show->on_sale('Active');
+        $show->active('Active');
         // $show->rating('Rating');
         // $show->sold_count('Sold Count');
         $show->price('Price');
@@ -155,11 +162,15 @@ class PlanProductsController extends Controller
 
         $form->text('region', 'Region');
         $form->text('title', 'Title');
-        $form->text('description', 'Description');
+        // $form->text('description', 'Description');
+        $form->text('points', 'Points');
         // $form->image('image', 'Image'); // $ php artisan storage:link
 
         // $form->switch('on_sale', 'On sale')->default(1);
-        $form->radio('on_sale', 'Active')
+        // $form->radio('on_sale', 'Active')
+        //      ->options(['1' => 'Yes', '0'=> 'No'])
+        //      ->default('0');
+        $form->radio('active', 'Active')
              ->options(['1' => 'Yes', '0'=> 'No'])
              ->default('0');
 
@@ -168,11 +179,16 @@ class PlanProductsController extends Controller
         // $form->decimal('price', 'Price');
 
         $form->hasMany('skus', 'SKU List', function (Form\NestedForm $form) {
-            $form->text('title', 'SKU Name')->rules('required');
-            $form->text('description', 'SKU Description'); //->rules('required');
+            // $form->text('title', 'SKU Name')->rules('required');
+            // $form->text('description', 'SKU Description'); //->rules('required');
+            $form->text('month', 'Month')->rules('required');
             $form->text('price', 'Price')->rules('required|numeric|min:0.01');
             // $form->text('stock', '剩余库存')->rules('required|integer|min:0');
-            $form->radio('on_sale', 'Active')
+
+            // $form->radio('on_sale', 'Active')
+            //      ->options(['1' => 'Yes', '0'=> 'No'])
+            //      ->default('0');
+            $form->radio('active', 'Active')
                  ->options(['1' => 'Yes', '0'=> 'No'])
                  ->default('0');
         });
@@ -196,29 +212,90 @@ class PlanProductsController extends Controller
         //     ['region'=>'us', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
         // ]);
 
+        /* us, ca, eu, au, cn, tw */
+        /* eu */
         $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10]
+            ['region'=>'eu', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
         );
         DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'title'=>'12.95 per Month [cpp: 0.00259]', 'price'=>12.95],
-            ['plan_product_id'=>$id, 'title'=>'36.95 for 3 Months [cpp: 0.00246]', 'price'=>36.95],
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>8.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>24.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>48.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>96.95],
         ]);
 
         $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'GOLD', 'description'=>'5000 Points per Month', 'price'=>10]
+            ['region'=>'eu', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
         );
         DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'title'=>'19.95 per Month [cpp: 0.00200]', 'price'=>19.95],
-            ['plan_product_id'=>$id, 'title'=>'57.95 for 3 Months [cpp: 0.00193]', 'price'=>57.95],
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>12.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>36.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>72.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>144.95],
         ]);
 
         $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'PLATINUM PRO', 'description'=>'5000 Points per Month', 'price'=>10]
+            ['region'=>'eu', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
         );
         DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'title'=>'26.95 per Month [cpp: 0.00135]', 'price'=>26.95],
-            ['plan_product_id'=>$id, 'title'=>'77.95 for 3 Months [cpp: 0.00130]', 'price'=>77.95],
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>19.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>57.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>114.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>228.95],
         ]);
+
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'eu', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>26.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>77.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>155.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>310.95],
+        ]);
+
+        /* au */
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>8.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>24.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>48.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>96.95],
+        ]);
+
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>12.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>36.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>72.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>144.95],
+        ]);
+
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>19.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>57.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>114.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>228.95],
+        ]);
+
+        $id = DB::table("plan_products")->insertGetId(
+            ['region'=>'au', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
+        );
+        DB::table('plan_product_skus')->insert([
+            ['plan_product_id'=>$id, 'month'=>1, 'active'=>1, 'price'=>26.95],
+            ['plan_product_id'=>$id, 'month'=>3, 'active'=>1, 'price'=>77.95],
+            ['plan_product_id'=>$id, 'month'=>6, 'active'=>1, 'price'=>155.95],
+            ['plan_product_id'=>$id, 'month'=>12, 'active'=>0, 'price'=>310.95],
+        ]);
+
+
         return 'build...OK';
     }
 

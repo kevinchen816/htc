@@ -20,12 +20,14 @@ class CreatePlanProductsTable extends Migration
             $table->string('region');       // us, ca, eu, au, cn, tw
             $table->string('title');        // BRONZE, SILVER, GOLD, PLATINUM PRO
             $table->string('description');  // 5000 Points per Month // $table->text
+            $table->integer('points')->default(0);
             $table->string('image');
-            $table->boolean('on_sale')->default(true);
+            // $table->boolean('on_sale')->default(true);
+            $table->integer('active')->default(0);
             $table->float('rating')->default(5);
             $table->unsignedInteger('sold_count')->default(0);
             // $table->unsignedInteger('review_count')->default(0);
-            $table->decimal('price', 10, 2)->default(12);
+            $table->decimal('price', 10, 2)->default(0);
 
             $table->timestamps();
         });

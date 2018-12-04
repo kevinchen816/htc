@@ -8,7 +8,7 @@ class PlanProduct extends Model
 {
     protected $fillable = [
         'region',
-        'title', 'description', 'image', 'on_sale',
+        'title', 'description', 'image', 'active',
         'rating', 'sold_count', 'price'
     ];
 

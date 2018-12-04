@@ -19,8 +19,9 @@ class CreatePlansTable extends Migration
             $table->integer('user_id')->index();
             $table->integer('camera_id')->nullable();
 
-            $table->string('style')->nullable(); // Prepaid, Pay as you go
-            $table->string('status')->nullable(); // active, preactive, suspend
+            $table->string('region');               // us, ca, eu, au, cn, tw
+            $table->string('style')->nullable();    // Prepaid, Pay as you go
+            $table->string('status')->nullable();   // active, preactive, suspend
 
             $table->integer('bill_points')->default(0); // 5000, 10000, 20000
             $table->integer('bill_month')->default(1); // 1, 3

@@ -18,9 +18,10 @@ class CreatePlanProductSkusTable extends Migration
 
             $table->string('title');
             $table->string('description')->nullable();;
-            $table->boolean('on_sale')->default(true);
+            $table->integer('active')->default(0); // $table->boolean('on_sale')->default(true);
             $table->float('rating')->default(5);
             $table->unsignedInteger('sold_count')->default(0);
+            $table->integer('month')->default(1);
             $table->decimal('price', 10, 2);
             // $table->unsignedInteger('stock');
 

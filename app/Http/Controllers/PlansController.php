@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Plan;
+use App\Models\PlanProduct;
+use App\Models\PlanProductSku;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 
@@ -57,14 +59,13 @@ class PlansController extends Controller
         return $ret;
     }
 
-    /*-----------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------*/
     public function getAddPlan() {
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
         $user->update($data);
-
-        $portal = 0; // $portal = $user->portal;
-        return view('plans.add-plan', compact('portal', 'user'));
+        // return view('plans.add-plan', compact('user'));
+        return view('plans.add', compact('user'));
     }
 
     /*
@@ -74,12 +75,10 @@ class PlansController extends Controller
         Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
     */
     public function postAddPlan(Request $request) {
-        //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"submit-new-plan":"update"}
-        //{"_token":"fK8teZaHgyy7v5kFgxE0kdNdpWygTSWIqylVOZEP","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
-        //return $request;
-
-        $portal = 0; //$request->portal;
+        //{"_token":"xxxx","mode":"new","iccid":null,"submit-new-plan":"update"}
+        //{"_token":"xxxx","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
         $user = Auth::user();
+        $user_id = $user->id;
 
         /* check ICCID */
         // $result = $this->validate($request, [
@@ -97,11 +96,33 @@ class PlansController extends Controller
         //    return redirect()->back();
         //}
 
+        /* search Plan */
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
             //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
             session()->flash('danger', 'ICCID had used.');
             return redirect()->back();
+        }
+
+        /* search SIM */
+        // $sim = DB::table('sims')->where('iccid', $iccid)->first();
+        // if (!$sim) {
+        //     session()->flash('danger', 'Invalid ICCID.');
+        //     return redirect()->back();
+        // }
+        // $region = $sim->region; // us, ca, eu, au, cn, tw
+        // $style = $sim->style; // demo
+
+$region = 'au'; // for test
+$style = 'demo'; // for test
+        if ($style == 'demo') {
+            $status = 'active';
+            $points = 50000;
+        } else {
+            // $status = 'suspend';
+            // $points = 0;
+            $status = 'active';
+            $points = 50000;
         }
 
         /* Stripe - create customer id */
@@ -127,12 +148,13 @@ class PlansController extends Controller
 //        // $user->subscription($subscription_name)->cancel();
 
         /* create Plan */
-        //$user = Auth::user();
         $plan = Plan::create([
-            'iccid' => $request->iccid,
-            'status' => 'active',
-            'points' => 50000, //$request->points, // for test
-            'user_id' => Auth::user()->id,
+            'iccid' => $iccid,
+            'user_id' => $user_id,
+            'region' => $region,
+            'style' => $style,
+            'status' => $status,
+            'points' => $points,
         ]);
 
         $data['sel_account_tab'] = 'plans';
@@ -142,67 +164,152 @@ class PlansController extends Controller
 ////$ret = $this->m2m_iccid_deactive('89610185002185155463');
 //$ret = $this->m2m_iccid_active($iccid);
 
+        $mode = 'setup';
+        return view('plans.setup', compact('user', 'plan', 'mode'));
+        // return view('plans._australia', compact('user'));
+
         //session()->flash('success', 'Create Success');
         // return redirect()->route('account.profile');
-
-// return redirect()->route('plan.setup', compact('plan'));
-$portal = 0; //$request->portal;
-$user = Auth::user();
-return view('plans._australia', compact('portal', 'user'));
-
     }
 
+    public function html_SetupPlan($plan) {
+        $region = $plan->region; // us, ca, eu, au, cn, tw
 
-    // public function getSetupPlan(Plan $plan) {
-    public function getSetupPlan() {
-        $portal = 0; //$request->portal;
-        $user = Auth::user();
-return view('plans._australia', compact('portal', 'user'));
-// return $plan;
-        $portal = 0; //$request->portal;
-        $user = Auth::user();
-//        $data['sel_menu'] = 'my_plans';
-//        $user->update($data);
+        // $product = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
+        // $product = PlanProduct::find(14);
+        $products = DB::table("plan_products")
+            // ->where('region', $region)
+            ->whereRaw('region = ? and active = ?', [$region, 1])
+            ->orderBy('points','asc') // asc, desc
+            ->get();
 
-        $user_id = $user->id;
-        // $plans = DB::table('plans')
-        //     ->where('user_id', $user_id)
-        //     //->orderBy('created_at', 'desc')
-        //     ->paginate(10);
+        $txt = '';
+        $checked = 'checked';
+        foreach ($products as $product) {
+            $product_id = $product->id;
+            $points = $product->points;
+            $description = $points.' Points per Month';
 
-//        $portal = $user->portal;
-        //return view('plans._usa', compact('portal', 'user', 'plans'));
-//        return view('plans._usa', compact('portal', 'user'));
-        return view('plans._australia', compact('portal', 'user'));
+            $skus = DB::table("plan_product_skus")
+                // ->where('plan_product_id', $product_id)
+                ->whereRaw('plan_product_id = ? and active = ?', [$product_id, 1])
+                ->orderBy('price','asc') // asc, desc
+                ->get();
+
+            $txt .= '<div class="alert alert-default alert-ratetier">';
+            $txt .=     '<div class="row">';
+            $txt .=         '<div class="col-md-5">';
+            $txt .=             '<div class="label-tier">'.$product->title.'</div>';
+            $txt .=             '<p class="tier-desc">'.$description.'</p>';
+            $txt .=         '</div>';
+            $txt .=         '<div class="col-md-7">';
+            foreach ($skus as $sku) {
+                $sku_id = $sku->id;
+                $month = $sku->month;
+                $price = $sku->price;
+                $cpp = '[cpp: '.($price/$points).']'; //'[cpp: 0.00259]';
+
+                if ($month == 1) {
+                    $sku_month = 'per Month';
+                } else {
+                    $sku_month = 'for '.$month.' Month';
+                }
+
+                // $txt .=             '<div class="radio">';
+                // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
+                // $txt .=             '</div>';
+                $txt .=             '<div class="radio">';
+                $txt .=                 '<label><input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" ><span style="color:white;">'.$price.'</span> <span style="color:lime;"> '.$sku_month.'</span> <span style="color:red;"> '.$cpp.'</span></label>';
+                $txt .=             '</div>';
+                $checked = '';
+            }
+            $txt .=         '</div>';
+            $txt .=     '</div>';
+            $txt .= '</div>';
+        }
+        return $txt;
+    }
+
+    public function html_SetupPlanX($plan) {
+        $txt = '';
+        $txt .= '<div class="alert alert-default alert-ratetier">';
+        $txt .=     '<div class="row">';
+        $txt .=         '<div class="col-md-5">';
+        $txt .=             '<div class="label-tier">SILVER</div>';
+        $txt .=             '<p class="tier-desc">5000 Points per Month</p>';
+        $txt .=         '</div>';
+        $txt .=         '<div class="col-md-7">';
+        $txt .=             '<div class="radio">';
+        $txt .=                 '<label><input type="radio" name="tier"  checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
+        $txt .=             '</div>';
+        $txt .=             '<div class="radio">';
+        $txt .=                 '<label><input type="radio" name="tier"  value="22" ><span style="color:white;">36.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00246]</span></label>';
+        $txt .=             '</div>';
+        $txt .=         '</div>';
+        $txt .=     '</div>';
+        $txt .= '</div>';
+
+        $txt .= '<div class="alert alert-default alert-ratetier">';
+        $txt .=     '<div class="row">';
+        $txt .=         '<div class="col-md-5">';
+        $txt .=             '<div class="label-tier">GOLD</div>';
+        $txt .=             '<p class="tier-desc">10000 Points per Month</p>';
+        $txt .=         '</div>';
+        $txt .=         '<div class="col-md-7">';
+        $txt .=             '<div class="radio">';
+        $txt .=                 '<label><input type="radio" name="tier"  value="24" ><span style="color:white;">19.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00200]</span></label>';
+        $txt .=             '</div>';
+        $txt .=             '<div class="radio">';
+        $txt .=                 '<label><input type="radio" name="tier"  value="26" ><span style="color:white;">57.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00193]</span></label>';
+        $txt .=             '</div>';
+        $txt .=         '</div>';
+        $txt .=     '</div>';
+        $txt .= '</div>';
+
+        $txt .= '<div class="alert alert-default alert-ratetier">';
+        $txt .=     '<div class="row">';
+        $txt .=         '<div class="col-md-5">';
+        $txt .=             '<div class="label-tier">PLATINUM PRO</div>';
+        $txt .=             '<p class="tier-desc">20000 Points per Month</p>';
+        $txt .=         '</div>';
+        $txt .=         '<div class="col-md-7">';
+        $txt .=             '<div class="radio">';
+        $txt .=                 '<label><input type="radio" name="tier"  value="28" ><span style="color:white;">26.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00135]</span></label>';
+        $txt .=             '</div>';
+        $txt .=             '<div class="radio">';
+        $txt .=                 '<label><input type="radio" name="tier"  value="30" ><span style="color:white;">77.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00130]</span></label>';
+        $txt .=             '</div>';
+        $txt .=         '</div>';
+        $txt .=     '</div>';
+        $txt .= '</div>';
+        return $txt;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function renew(Plan $plan) {
-        $portal = 0; //$request->portal;
-        $user = Auth::user();
-//        $data['sel_menu'] = 'my_plans';
-//        $user->update($data);
-
-        $user_id = $user->id;
-        // $plans = DB::table('plans')
-        //     ->where('user_id', $user_id)
-        //     //->orderBy('created_at', 'desc')
-        //     ->paginate(10);
-
-//        $portal = $user->portal;
-        //return view('plans._usa', compact('portal', 'user', 'plans'));
-//        return view('plans._usa', compact('portal', 'user'));
-        return view('plans._australia', compact('portal', 'user'));
-    }
-
-    public function setup(Request $request) {
+    public function postSetupPlan(Request $request) {
+        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 return $request;
 
     }
 
+    public function getRenewPlan(Plan $plan) {
+        $user = Auth::user();
+//        $data['sel_menu'] = 'my_plans';
+//        $user->update($data);
+
+        $user_id = $user->id;
+        // $plans = DB::table('plans')
+        //     ->where('user_id', $user_id)
+        //     //->orderBy('created_at', 'desc')
+        //     ->paginate(10);
+
+        //return view('plans._usa', compact('user', 'plans'));
+//        return view('plans._usa', compact('user'));
+        return view('plans._australia', compact('user'));
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function pause(Plan $plan) {
-        $portal = 0; //$request->portal;
         $user = Auth::user();
 
         // $plan->delete();
@@ -222,7 +329,6 @@ return $request;
     }
 
     public function active(Plan $plan) {
-        //$portal = 0; //$request->portal;
         $user = Auth::user();
 
         $subscription_name = $plan->iccid;
@@ -234,7 +340,6 @@ return $request;
 
 
     public function change(Plan $plan) {
-        //$portal = 0; //$request->portal;
         $user = Auth::user();
 
         // $user->subscription('main')->swap('provider-plan-id');
@@ -247,7 +352,6 @@ return $request;
     }
 
     public function cancel(Plan $plan) {
-        //$portal = 0; //$request->portal;
         //$user = Auth::user();
         session()->flash('success', 'Cancel Success');
         return redirect()->back();

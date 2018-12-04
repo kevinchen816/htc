@@ -83,6 +83,7 @@ class PlansController extends Controller
 
         $grid->id('ID');
         $grid->iccid('ICCID');
+        $grid->region('Region');
         $grid->user_id('User ID');
         $grid->camera_id('Camera ID');
         $grid->style('Style');
@@ -134,6 +135,7 @@ class PlansController extends Controller
 
         $show->id('ID');
         $show->iccid('ICCID');
+        $show->region('Region');
         $show->user_id('User ID');
         $show->camera_id('Camera ID');
         $show->style('Style');
@@ -167,6 +169,7 @@ class PlansController extends Controller
         $form = new Form(new Plan);
 
         $form->text('iccid', 'ICCID');
+        $form->text('Region');
         $form->number('user_id', 'User ID');
         $form->number('camera_id', 'Camera ID');
         $form->text('style', 'Style');

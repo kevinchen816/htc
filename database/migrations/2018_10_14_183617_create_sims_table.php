@@ -17,8 +17,9 @@ class CreateSimsTable extends Migration
             $table->increments('id');
 
             $table->string('iccid')->unique();
-            $table->string('style')->nullable(); // Prepaid, Pay as you go, Development
-            $table->string('status')->nullable(); // active, preactive, suspend
+            $table->string('region');               // us, ca, eu, au, cn, tw
+            $table->string('style')->nullable();    // Prepaid, Pay as you go, Development (test)
+            $table->string('status')->nullable();   // active, preactive, suspend
             $table->string('note')->nullable();
 
             $table->timestamps();

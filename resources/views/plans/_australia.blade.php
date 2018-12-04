@@ -88,7 +88,6 @@
                                     </div>
 
                                     @include('plans._help')
-
                                 </div>
                             </div>
 

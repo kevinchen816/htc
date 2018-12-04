@@ -94,14 +94,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/plans/add','PlansController@getAddPlan')->name('plan.add');
         Route::post('/plans/add','PlansController@postAddPlan')->name('plan.add');
 
-        // Route::get('/plans/setup/{plan}','PlansController@getSetupPlan')->name('plan.setup');
-        // Route::get('/plans/setup','PlansController@getSetupPlan')->name('plan.setup');
-        Route::post('/plans/setup','PlansController@setup')->name('plan.setup');
+        Route::post('/plans/setup','PlansController@postSetupPlan')->name('plan.setup');
 
         // Route::get('/plans/renew/{plan}', 'PlansController@renew')->name('plans.renew');
-        Route::get('/plans/setup-renewal/{plan}', 'PlansController@renew')->name('plans.renew');
-
-
+        Route::get('/plans/setup-renewal/{plan}', 'PlansController@getRenewPlan')->name('plans.renew');
 
         Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
         //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
