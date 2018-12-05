@@ -58,7 +58,8 @@
                                 <div class="col-md-3">
                                 </div>
                                 <div class="col-md-7">
-                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-saved"></i> Save Setup</button>
+                                    <!-- <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-saved"></i> Save Setup</button> -->
+                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-shopping-cart"></i> Add Cart</button>
                                     <a href="/plans/cancel" class="btn btn-sm btn-warning">Cancel</a>
                                 </div>
                             </div>

@@ -42,7 +42,7 @@ class AccountsController extends Controller
     }
 
     /*-----------------------------------------------------------*/
-    public function _profile($portal) {
+    public function _profile($portal = 0) {
         //if (!Auth::check()) {
         //    return $this->back_to_login($portal);
         //}

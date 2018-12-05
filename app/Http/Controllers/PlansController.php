@@ -289,6 +289,7 @@ $style = 'demo'; // for test
     public function postSetupPlan(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 return $request;
+        $sku_id = $request->tier;
 
     }
 

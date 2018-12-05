@@ -94,7 +94,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/plans/add','PlansController@getAddPlan')->name('plan.add');
         Route::post('/plans/add','PlansController@postAddPlan')->name('plan.add');
 
-        Route::post('/plans/setup','PlansController@postSetupPlan')->name('plan.setup');
+        // Route::post('/plans/setup','PlansController@postSetupPlan')->name('plan.setup');
+        Route::post('/cart/add', 'CartController@postAddCart')->name('plan.setup');
+
+// Route::post('/cart/add', 'CartController@postAddCart')->name('cart.add');
+// Route::post('cart', 'CartController@postAddCart')->name('cart.add');
 
         // Route::get('/plans/renew/{plan}', 'PlansController@renew')->name('plans.renew');
         Route::get('/plans/setup-renewal/{plan}', 'PlansController@getRenewPlan')->name('plans.renew');
@@ -170,8 +174,8 @@ Route::group(['middleware' => 'auth'], function() {
         //Route::get('/account/password/reset/{id}', 'AccountsController@password_reset')->name('account.password-reset');
 
         /*-----------------------------------------------------------*/
-        /* Cart */
-        Route::post('cart', 'CartController@add')->name('cart.add');
+        /* Shop */
+        // Route::get('/shop/cart', 'CartController@postAddCart')->name('shop.cart');
 
         /*-----------------------------------------------------------*/
         /* Admin */
