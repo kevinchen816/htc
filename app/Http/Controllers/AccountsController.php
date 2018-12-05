@@ -27,7 +27,7 @@ class AccountsController extends Controller
     //}
 
     /*-----------------------------------------------------------*/
-    public function activetab(Request $request) {
+    public function postActiveTab(Request $request) {
         //$portal = $_POST['portal'];
         //if (!Auth::check()) {
         //    return $this->back_to_login($portal);
@@ -55,7 +55,7 @@ class AccountsController extends Controller
         return view('account.profile', compact('portal', 'user'));
     }
 
-    public function profile() {
+    public function getProfile() {
         return $this->_profile(0);
     }
 
@@ -425,7 +425,7 @@ $handle .=                 '</tr>';
     }
 
     /*-----------------------------------------------------------*/
-    public function plans(Request $request) {
+    public function postPlans(Request $request) {
         //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
@@ -443,7 +443,7 @@ $handle .=                 '</tr>';
         "stripeToken":"tok_1DThUGG8UgnSL68Ub0C7FfEh"
     }
     */
-    public function billing(Request $request) {
+    public function postBilling(Request $request) {
         //$portal = $request->portal;
         $user = Auth::user();
         // $user_id = $user->id;
@@ -473,12 +473,18 @@ $handle .=                 '</tr>';
 
         // $stripeToken = $_POST['stripeToken'];
         // $user->updateCard($stripeToken);
-        session()->flash('success', 'Success: Update Card Information.');
-        //session()->flash('success', 'Success: Account Billing Saved.');
-        return redirect()->back();
+        session()->flash('success', 'Success: Update Credit Card Information.');
+        // //session()->flash('success', 'Success: Account Billing Saved.');
+        if ($user->sel_menu == 'cart') {
+            // session()->flash('success', 'Success: Your Credit card was updated and attached to your account.');
+            return redirect()->route('shop.cart');
+        } else {
+            // session()->flash('success', 'Success: Update Card Information.');
+            return redirect()->back();
+        }
     }
 
-    public function devices(Request $request) {
+    public function postDevices(Request $request) {
         //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
@@ -490,7 +496,7 @@ $handle .=                 '</tr>';
     /*
         {"_token":"xxx","portal":"0","date_format":"m%2Fd%2FY+g%3Ai%3As+a"}
     */
-    public function options(Request $request) {
+    public function postOptions(Request $request) {
         $date_format = $request->date_format;
         $date_format = str_replace('%2F', '/', $date_format);
         $date_format = str_replace('%3A', ':', $date_format);
@@ -505,7 +511,7 @@ $handle .=                 '</tr>';
         return redirect()->back();
     }
 
-    public function emails(Request $request) {
+    public function postEmails(Request $request) {
         //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
@@ -538,7 +544,7 @@ $handle .=                 '</tr>';
         return redirect()->back();
     }
 
-    public function email_change(Request $request) {
+    public function postEmailChange(Request $request) {
         //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;
@@ -548,7 +554,7 @@ $handle .=                 '</tr>';
         return redirect()->back();
     }
 
-    public function password_send_reset_email() {
+    public function getPasswordSendResetEmail() {
         //$portal = $request->portal;
         $user = Auth::user();
         $user_id = $user->id;

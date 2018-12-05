@@ -1,4 +1,4 @@
-@extends('layouts.default2')
+@extends('layouts.default')
 
 @section('header')
 <br/>
@@ -6,6 +6,6 @@
 
 @section('content')
 <div class="container">
-@include('account._billing')
+    @include('account._billing')
 </div>
 @stop

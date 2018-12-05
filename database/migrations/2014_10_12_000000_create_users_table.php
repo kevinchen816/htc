@@ -24,6 +24,12 @@ class CreateUsersTable extends Migration
             $table->string('stripe_id')->nullable();
             $table->string('card_brand')->nullable();
             $table->string('card_last_four')->nullable();
+
+            $table->string('card_expiry')->nullable();
+            $table->string('card_name')->nullable();
+            $table->string('card_phone')->nullable();
+            $table->string('currency')->nullable()->default('usd');
+
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('subscription_ends_at')->nullable(); // ?
 

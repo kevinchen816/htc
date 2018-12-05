@@ -163,20 +163,20 @@ Route::group(['middleware' => 'auth'], function() {
         /* My Cameras - Options */
         Route::post('/cameras/delete', 'Api\CamerasController@postDelete')->name('camera.delete');
         // Route::get('/cameras/delete', 'Api\CamerasController@delete')->name('camera.delete'); // IMPORTANT !!
-        Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@apilog')->name('camera.apilog');
+        Route::get('/cameras/apilog/{camera_id}', 'Api\CamerasController@getApiLog')->name('camera.apilog');
 
         /*-----------------------------------------------------------*/
         /* My Account */
-        Route::get('/account/profile', 'AccountsController@profile')->name('account.profile');
+        Route::get('/account/profile', 'AccountsController@getProfile')->name('account.profile');
 
-        Route::post('/account/activetab', 'AccountsController@activetab')->name('account.activetab');
-        Route::post('/account/plans', 'AccountsController@plans')->name('account.plans');
-        Route::post('/account/billing', 'AccountsController@billing')->name('account.billing');
-        Route::post('/account/devices', 'AccountsController@devices')->name('account.devices');
-        Route::post('/account/options', 'AccountsController@options')->name('account.options');
-        Route::post('/account/emails', 'AccountsController@emails')->name('account.emails');
-        Route::post('/account/email-change', 'AccountsController@email_change')->name('account.email-change');
-        Route::get('/account/password/send-reset-email', 'AccountsController@password_send_reset_email')->name('account.password-send-reset-email');
+        Route::post('/account/activetab', 'AccountsController@postActiveTab')->name('account.activetab');
+        Route::post('/account/plans', 'AccountsController@postPlans')->name('account.plans');
+        Route::post('/account/billing', 'AccountsController@postBilling')->name('account.billing');
+        Route::post('/account/devices', 'AccountsController@postDevices')->name('account.devices');
+        Route::post('/account/options', 'AccountsController@postOptions')->name('account.options');
+        Route::post('/account/emails', 'AccountsController@postEmails')->name('account.emails');
+        Route::post('/account/email-change', 'AccountsController@postEmailChange')->name('account.email-change');
+        Route::get('/account/password/send-reset-email', 'AccountsController@getPasswordSendResetEmail')->name('account.password-send-reset-email');
         //Route::get('/account/password/reset/{id}', 'AccountsController@password_reset')->name('account.password-reset');
 
         /*-----------------------------------------------------------*/
@@ -187,11 +187,16 @@ Route::group(['middleware' => 'auth'], function() {
         // Route::get('/shop/cart', 'CartController@postAddCart')->name('shop.cart');
 
         Route::get('/shop/cart', 'CartController@getShopCart')->name('shop.cart');
-        Route::get('/shop/cart-remove', 'CartController@getShopCartRemove')->name('shop.cart-remove');
+        Route::get('/shop/cart-remove/{id}', 'CartController@getShopCartRemove')->name('shop.cart-remove');
         Route::get('/shop/cart-clear', 'CartController@getShopCartClear')->name('shop.cart-clear');
         Route::get('/shop/editcard', 'CartController@getShopEditCard')->name('shop.editcard');
 
         Route::post('/shop/pay', 'CartController@postShopPay')->name('shop.pay');
+
+        Route::get('/currency/us', 'CartController@getCurrencyUS')->name('currency.us');
+        Route::get('/currency/ca', 'CartController@getCurrencyCA')->name('currency.ca');
+        Route::get('/currency/au', 'CartController@getCurrencyAU')->name('currency.au');
+        Route::get('/currency/eu', 'CartController@getCurrencyEU')->name('currency.eu');
 
         /*-----------------------------------------------------------*/
         /* Admin */

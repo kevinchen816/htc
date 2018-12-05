@@ -1330,7 +1330,7 @@ class CamerasController extends Controller
        return $txt;
     }
 
-    public function apilog($camera_id) {
+    public function getApiLog($camera_id) {
         $user = Auth::user();
         $camera = Camera::find($camera_id);
         $log_apis = DB::table('log_apis')

@@ -9,18 +9,30 @@
 <div class="container">
     <div class="row" style="margin-top: 20px;">
         <div class="well">
-            <a href="/currency/usd" class="change-currency"><img src="/images/usd.png" width="50" style="margin-right:30px;"/></a>
-            <a href="/currency/cad" class="change-currency"><img src="/images/cad.png" width="50" style="margin-right:30px;"/></a>
-            <a href="/currency/aud" class="change-currency"><img src="/images/aud.png" width="50" style="margin-right:30px;"/></a>
-            <a href="/currency/eur" class="change-currency"><img src="/images/eur.png" width="50" style="margin-right:30px;"/></a>
+            <a href="{{ route('currency.us') }}" class="change-currency"><img src="/images/usd.png" width="50" style="margin-right:30px;"/></a>
+            <a href="{{ route('currency.ca') }}" class="change-currency"><img src="/images/cad.png" width="50" style="margin-right:30px;"/></a>
+            <a href="{{ route('currency.au') }}" class="change-currency"><img src="/images/aud.png" width="50" style="margin-right:30px;"/></a>
+            <a href="{{ route('currency.eu') }}" class="change-currency"><img src="/images/eur.png" width="50" style="margin-right:30px;"/></a>
         </div>
     </div>
 
     <div class="row" style="bottom-margin: 8px;">
         <div class="col-sm-12">
             <h2 class="bold text-uppercase"><strong>Cart</strong>
-                <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/>
+
+                @if ($user->currency == 'usd')
+                    <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/>
+                @elseif ($user->currency == 'cad')
+                    <img src="/images/cad.png" width="40" style="margin-bottom:10px;"/>
+                @elseif ($user->currency == 'aud')
+                    <img src="/images/aud.png" width="40" style="margin-bottom:10px;"/>
+                @elseif ($user->currency == 'eur')
+                    <img src="/images/eur.png" width="40" style="margin-bottom:10px;"/>
+                @endif
+
+@if (count($user->cartItems()->get()) > 0)
                 <a href="{{ route('shop.cart-clear') }}" class="btn btn-xs btn-info pull-right" id="clear-cart"><i class="fa fa-trash"></i> Clear Cart</a>
+@endif
             </h2>
         </div>
     </div>
@@ -63,9 +75,12 @@
                     <i class="fa fa-credit-card"> </i>
                     Input Credit Card Details
                 </a>
+@if (($user->stripe_id) && (count($user->cartItems()->get()) > 0))
                 <a class="btn btn-xs btn-success pull-right" id="btn-paynow">
-                    <i class="fa fa-bolt"></i> Pay Now [Visa ****4242,  Expiry 1/2019]
+                    <!-- <i class="fa fa-bolt"></i> Pay Now [Visa ****4242,  Expiry 1/2019] -->
+                    <i class="fa fa-bolt"></i> Pay Now [{{ $user->card_brand }} ****{{ $user->card_last_four }}]
                 </a>
+@endif
             </div>
         </div>
     </form>

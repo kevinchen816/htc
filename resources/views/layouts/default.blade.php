@@ -35,7 +35,9 @@
         window.Laravel = {"csrfToken":"{{ csrf_token() }}"};
     </script>
     <!-- <script src="https://use.fontawesome.com/9712be8772.js"></script> -->
-    <script src="/js/9712be8772.js"></script> <!-- kevin -->
+    <!--<script src="https://use.fontawesome.com/f473850af3.js"></script>-->
+    <!--<script src="/js/9712be8772.js"></script>--> <!-- kevin -->
+    <script src="/js/f473850af3..js"></script> <!-- kevin -->
 
     <style>
         @media (max-width: 1100px) {
@@ -79,7 +81,7 @@
           margin-bottom: 2px!important;
           height: 20px;
           background-color: #777;
-       }                                   
+       }
     </style>
 <link rel="stylesheet" href="/css/thumbnail-gallery.css" media="screen">
 <link rel="stylesheet" href="/css/gallery.css" media="screen">
