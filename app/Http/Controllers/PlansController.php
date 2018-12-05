@@ -164,12 +164,12 @@ $style = 'demo'; // for test
 ////$ret = $this->m2m_iccid_deactive('89610185002185155463');
 //$ret = $this->m2m_iccid_active($iccid);
 
-        $mode = 'setup';
-        return view('plans.setup', compact('user', 'plan', 'mode'));
-        // return view('plans._australia', compact('user'));
+        // $mode = 'setup';
+        // return view('plans.setup', compact('user', 'plan', 'mode'));
+        // // return view('plans._australia', compact('user'));
 
         //session()->flash('success', 'Create Success');
-        // return redirect()->route('account.profile');
+        return redirect()->route('account.profile');
     }
 
     public function html_SetupPlan($plan) {
@@ -290,6 +290,9 @@ $style = 'demo'; // for test
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 return $request;
         $sku_id = $request->tier;
+
+
+
 
     }
 
