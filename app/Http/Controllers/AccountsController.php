@@ -461,15 +461,16 @@ $handle .=                 '</tr>';
         // ]);
 
         /* Stripe - create customer id */
+        $stripeToken = $_POST['stripeToken'];
         // if ($request->mode == 'new') {
-           $stripeToken = $_POST['stripeToken'];
-           // if (!$user->stripe_id) {
-               // $ret = $user->createAsStripeCustomer($stripeToken);
-               $ret = $user->createAsStripeCustomer($stripeToken, [
-                   // 'currency' => 'usd',
-               ]);
-           // }
-        // }
+        if ($user->stripe_id) {
+            $user->updateCard($stripeToken);
+        } else {
+           // $ret = $user->createAsStripeCustomer($stripeToken);
+           $ret = $user->createAsStripeCustomer($stripeToken, [
+               // 'currency' => 'usd',
+           ]);
+        }
 
         // $stripeToken = $_POST['stripeToken'];
         // $user->updateCard($stripeToken);

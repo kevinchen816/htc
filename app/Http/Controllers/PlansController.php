@@ -397,7 +397,6 @@ $style = 'demo'; // for test
         return redirect()->back();
     }
 
-
     public function change(Plan $plan) {
         $user = Auth::user();
 

@@ -10,6 +10,7 @@ use App\Models\CartItem;
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
 
+use Laravel\Cashier\Cashier;
 use Auth;
 
 class CartController extends Controller
@@ -223,6 +224,7 @@ class CartController extends Controller
             $sku = $cart->planProductSku()->get()[0];
             $month = $sku->month;
             $price = $sku->price;
+            $sub_id = $sku->sub_id;
 
             /* Plan Product */
             $product_id = $sku->plan_product_id;
@@ -243,41 +245,142 @@ class CartController extends Controller
         // echo '<br/>';
 // return;
 
-        // // $user->subscription('main')->swap('provider-plan-id');
-        // $subscription_name = $plan->iccid;
-        // $new_plan = 'plan_5000_3m_us';
-        // $user->subscription($subscription_name)->swap($new_plan);
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // $charge = \Stripe\Charge::create([
+        //     'amount' => $total*100, //10000,
+        //     'currency' => $currency, //'usd',
+        //     'description' => 'Example charge',
+        //     'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
+        // ]);
 
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // Cashier::useCurrency('eur', '€');
+        Cashier::useCurrency($currency);
+        // $charge = $user->charge($total*100);
 
-//        $ret = \Stripe\Token::create([
-//          "card" => [
-//            "number" => "4242424242424242",
-//            "exp_month" => 11,
-//            "exp_year" => 2019,
-//            "cvc" => "314"
-//          ]
-//        ]);
-//return $ret;
-
-        //$stripeToken = ;
-        //$charge = \Stripe\Charge::create([
-        //    'amount' => 1000,
-        //    'currency' => 'usd',
-        //    'description' => 'Example charge',
-        //    'source' => $stripeToken,
-        //]);
-
-$total = $total*100;
-        $charge = \Stripe\Charge::create([
-            'amount' => $total, //10000,
-            'currency' => $currency, //'usd',
-            'description' => 'Example charge',
-            'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
+        // ch_1De8vuG8UgnSL68UVaYHBGl7
+        $charge = $user->charge($total*100, [
+            // 'name' => 'Kevin Chen', //$user->card_name, // NG
+            // 'source' => $token,
+            'receipt_email' => $user->email,
+            // 'custom_option' => $value,
         ]);
-        return dd($charge);
+
+        if (!$charge) {
+
+        }
+return dd($charge);
+
+        // try {
+        //     $response = $user->charge(100);
+        // } catch (Exception $e) {
+        //     //
+        // }
+
+// in_1De8vxG8UgnSL68Ubd5vOvh1
+        // Payment for invoice ED0214E-0001 – ch_1De8vyG8UgnSL68UhmxYH7h2
+        // $invoice = $user->invoiceFor('One Time Fee', $total*100);
+        // $user->invoiceFor('One Time Fee', 500, [
+        //     'custom-option' => $value,
+        // ]);
+// return dd($invoice);
+
+        echo $charge->id.'<br/>';
+        echo $charge->amount.'<br/>';
+        echo $charge->status.'<br/>';
+        return; // $charge->id;
+
+        // // $user->subscription('main')->swap('provider-plan-id');
+        // $subscription_name = $iccid;
+        // $new_plan = 'au_5000_1m';
+        // $user->subscription($subscription_name)->swap($new_plan);
 
         // session()->flash('success', 'Charge Success');
         // return redirect()->back();
+
+// $user->trial_ends_at = Carbon::now()->addDays(14);
+// $user->save();
+
+// $user->subscription('monthly')->resume($creditCardToken);
+// if ($user->onTrial()) {}
+
     }
+
+    // https://docs.golaravel.com/docs/5.0/billing/#invoices
+    public function getShopTest() {
+        $user = Auth::user();
+        // $ret = $user->onTrial(); // 确认用户是否还在试用期间：
+        // $ret = $user->cancelled(); // 确认用户是否曾经订购但是已经取消了服务 // NG
+        // $ret = $user->onGracePeriod(); // 确认用户是否已经取消订单，但是服务还没有到期 // NG
+        // $ret = $user->everSubscribed(); // 确认用户是否订购过应用程序里的方案 // NG
+        $ret = $user->onPlan('monthly'); // 用方案 ID 来确认用户是否订购某方案 // OK
+        // $ret = $user->onTrial();
+return dd($ret);
+    }
+
+
+    /*----------------------------------------------------------------------------------*/
+    /* for test */ /* https://laravelacademy.org/post/1432.html */
+    public function getInvoice() {
+        $user = Auth::user();
+        $invoices = $user->invoices();
+        // $invoices = $user->invoicesIncludingPending(); // Include pending invoices in the results...
+        // return dd($invoices);
+// return count($invoices);
+
+        /*
+            <table>
+                @foreach ($invoices as $invoice)
+                    <tr>
+                        <td>{{ $invoice->date()->toFormattedDateString() }}</td>
+                        <td>{{ $invoice->total() }}</td>
+                        <td><a href="/user/invoice/{{ $invoice->id }}">Download</a></td>
+                    </tr>
+                @endforeach
+            </table>
+
+            {{ $invoice->id }}
+            {{ $invoice->dateString() }}
+            {{ $invoice->dollars() }}
+        */
+        $txt = '';
+        $txt .= '<table>';
+        foreach ($invoices as $invoice) {
+            $txt .= '<tr>';
+                $txt .= '<td>'.$invoice->date()->toFormattedDateString().'</td>';
+                $txt .= '<td>'.$invoice->total().'</td>';
+                $txt .= '<td><a href="/invoice/'.$invoice->id.'">Download</a></td>';
+                $txt .= '<td>'.$invoice->id.'</td>';
+                // $txt .= '<td>'.$invoice->dateString().'</td>'; // NG
+                // $txt .= '<td>'.$invoice->dollars().'</td>';
+            $txt .= '</tr>';
+        }
+        $txt .= '</table>';
+return $txt;
+
+
+        // if ($user->subscribed()) {
+        if ($user->subscribed()) {
+            return 'Subscribed';
+        } else {
+            return 'No Subscribed';
+        }
+    }
+
+    public function getInvoiceDownload($invoiceId) {
+        // Gold Member_12_2018.pdf
+        return Auth::user()->downloadInvoice($invoiceId, [
+            'vendor'  => 'KMCam Pro',
+            'product' => 'Gold Member',
+        ]);
+    }
+
+    public function getInvoiceTest() {
+        // Gold Member_12_2018.pdf
+        $invoiceId = 'in_1De8LCG8UgnSL68UgRJeFTZw';
+        return Auth::user()->downloadInvoice($invoiceId, [
+            'vendor'  => 'KMCam Pro',
+            'product' => 'Gold Member',
+        ]);
+    }
+
 }

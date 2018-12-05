@@ -192,11 +192,17 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/shop/editcard', 'CartController@getShopEditCard')->name('shop.editcard');
 
         Route::post('/shop/pay', 'CartController@postShopPay')->name('shop.pay');
+Route::get('/shop/test', 'CartController@getShopTest')->name('shop.test');
 
         Route::get('/currency/us', 'CartController@getCurrencyUS')->name('currency.us');
         Route::get('/currency/ca', 'CartController@getCurrencyCA')->name('currency.ca');
         Route::get('/currency/au', 'CartController@getCurrencyAU')->name('currency.au');
         Route::get('/currency/eu', 'CartController@getCurrencyEU')->name('currency.eu');
+
+        /* for test */
+        Route::get('/invoice', 'CartController@getInvoice')->name('invoice');
+        Route::get('/invoice/{id}', 'CartController@getInvoiceDownload')->name('invoice.download');
+        Route::get('/invoice/test', 'CartController@getInvoiceTest')->name('invoice.test');
 
         /*-----------------------------------------------------------*/
         /* Admin */
