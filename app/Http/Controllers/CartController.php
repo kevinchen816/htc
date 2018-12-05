@@ -77,11 +77,11 @@ class CartController extends Controller
             $title = $product->title;
             $points = $product->points;
 
-// $product = $cart->planProductSku()->get()->product()->get(); // NG
-// $product = $cart->planProductSku()->get()->product(); // NG
-// $product = $cart->planProductSku()->product(); // NG
-// echo dd($product);
-// $title = $product->title();
+                // $product = $cart->planProductSku()->get()->product()->get(); // NG
+                // $product = $cart->planProductSku()->get()->product(); // NG
+                // $product = $cart->planProductSku()->product(); // NG
+                // echo dd($product);
+                // $title = $product->title();
 
             // $title = 'Points Reserve';
             // $title = $product->title.' ('.$points.' Points per Month) - for '.$month.' month(s)';
@@ -121,5 +121,40 @@ class CartController extends Controller
             $txt .= '</tr>';
         }
         return $txt;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function getShopEditCard() {
+// return 'getShopEditCard';
+        $user = Auth::user();
+        // $data['sel_menu'] = 'cart';
+        // $user->update($data);
+        return view('shop.editcard', compact('user'));
+    }
+
+    public function getShopCartRemove() {
+return 'getShopCartRemove';
+    }
+
+    public function getShopCartClear() {
+return 'getShopCartClear';
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    /*
+        {
+            "_token":"xxxx",
+            "rowId":[
+                "db9eb667c48190b1dcccad1fec678ed40",
+                "db9eb667c48190b1dcccad1fec678ed40",
+                "db9eb667c48190b1dcccad1fec678ed40",
+                "b9eb667c48190b1dcccad1fec678ed40",
+                "aca3ae0c296c8ce863a7d51d0dbb221c"
+            ]
+        }
+    */
+    public function postShopPay(Request $request) {
+
+return $request;
     }
 }

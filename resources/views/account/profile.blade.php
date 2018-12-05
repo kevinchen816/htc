@@ -169,7 +169,6 @@
             {
                 _token: '{{ csrf_token() }}',
                 tab: tabname,
-                portal: {{ $portal }},
             },
             function (data, status) {
                 //alert("Data: " + data + "\nStatus: " + status);

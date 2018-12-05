@@ -181,9 +181,17 @@ Route::group(['middleware' => 'auth'], function() {
 
         /*-----------------------------------------------------------*/
         /* Shop */
+        /*
+            /shop/collectpayment    -> /shop/pay
+        */
         // Route::get('/shop/cart', 'CartController@postAddCart')->name('shop.cart');
 
         Route::get('/shop/cart', 'CartController@getShopCart')->name('shop.cart');
+        Route::get('/shop/cart-remove', 'CartController@getShopCartRemove')->name('shop.cart-remove');
+        Route::get('/shop/cart-clear', 'CartController@getShopCartClear')->name('shop.cart-clear');
+        Route::get('/shop/editcard', 'CartController@getShopEditCard')->name('shop.editcard');
+
+        Route::post('/shop/pay', 'CartController@postShopPay')->name('shop.pay');
 
         /*-----------------------------------------------------------*/
         /* Admin */

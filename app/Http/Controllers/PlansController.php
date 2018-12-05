@@ -168,13 +168,13 @@ $style = 'demo'; // for test
         Auth::user()->update($data);
         //+
         // // session()->flash('success', 'Create Success');
-        // return redirect()->route('account.profile');
+        return redirect()->route('account.profile');
 
 // new (TODO)
         // $mode = 'setup';
         // return view('plans.setup', compact('user', 'plan', 'mode'));
-        $mode = 'create';
-        return view('plans.create', compact('user', 'plan', 'mode'));
+        // $mode = 'create';
+        // return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
     /*----------------------------------------------------------------------------------*/
