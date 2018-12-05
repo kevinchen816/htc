@@ -46,6 +46,51 @@
                     </thead>
                     <tbody>
                         {!! $cart->html_ShopCart($user) !!}
+
+                        <input name="rowId[]" type="hidden" value="b9eb667c48190b1dcccad1fec678ed40">
+                        <tr>
+                            <td class="col-sm-4" >
+                                Points Reserve<br />IccID: 8944503540145562672
+                            </td>
+                            <td class="col-sm-1">
+                                <!--<input type="text" name="qty[]" value="1" maxlength="03" class="form-control input-sm">-->
+                                1
+                            </td>
+                            <td  class="col-sm-2" style="text-align:right">$10.00</td>
+                            <td class="col-sm-1"></td>
+                            <td class="col-sm-1" style="text-align:right">$10.00</td>
+                            <td class="col-sm-1">
+                                <a href="/shop/cart-remove/b9eb667c48190b1dcccad1fec678ed40" class="btn btn-xs btn-warning remove-item" title="Remove Item">
+                                    <i class="fa fa-times" ></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <input name="rowId[]" type="hidden" value="aca3ae0c296c8ce863a7d51d0dbb221c">
+                        <tr>
+                            <td class="col-sm-4" >
+                                Points Reserve<br />IccID: 89860117851014783481                        </td>
+                            <td class="col-sm-1">
+                                <!--<input type="text" name="qty[]" value="1" maxlength="03" class="form-control input-sm">-->
+                                1
+                            </td>
+                            <td  class="col-sm-2" style="text-align:right">$10.00</td>
+                            <td class="col-sm-1"></td>
+                            <td class="col-sm-1" style="text-align:right">$10.00</td>
+                            <td class="col-sm-1">
+                                <a href="/shop/cart-remove/aca3ae0c296c8ce863a7d51d0dbb221c" class="btn btn-xs btn-warning remove-item" title="Remove Item"><i class="fa fa-times" ></i></a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="col-sm-1" style="text-align:right"><strong>Total:</strong></td>
+                            <td class="col-sm-1" style="text-align:right"><strong>$20.00</strong></td>
+                            <td></td>
+                        </tr>
+
                     </tbody>
                 </table>
 
