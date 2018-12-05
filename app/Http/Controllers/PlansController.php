@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Plan;
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
+use App\Models\CartItem;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 
@@ -157,22 +158,99 @@ $style = 'demo'; // for test
             'points' => $points,
         ]);
 
-        $data['sel_account_tab'] = 'plans';
-        Auth::user()->update($data);
-
 ////$ret = $this->m2m_iccid_active('89610185002185155463');
 ////$ret = $this->m2m_iccid_deactive('89610185002185155463');
 //$ret = $this->m2m_iccid_active($iccid);
 
+// old
+        // TODO
+        $data['sel_account_tab'] = 'plans';
+        Auth::user()->update($data);
+        //+
+        // // session()->flash('success', 'Create Success');
+        // return redirect()->route('account.profile');
+
+// new (TODO)
         // $mode = 'setup';
         // return view('plans.setup', compact('user', 'plan', 'mode'));
-        // // return view('plans._australia', compact('user'));
-
-        //session()->flash('success', 'Create Success');
-        return redirect()->route('account.profile');
+        $mode = 'create';
+        return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
-    public function html_SetupPlan($plan) {
+    /*----------------------------------------------------------------------------------*/
+    public function postBuyPlan(Request $request) {
+        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
+// return $request;
+
+        /* search Plan */
+        // $plan = DB::table('plans')->where('id', $request->planid)->first();
+        $plan = Plan::findOrFail($request->planid);
+        if (!$plan) {
+            session()->flash('danger', 'Add Cart Fail.');
+            return redirect()->back();
+        }
+        $iccid = $plan->iccid;
+
+        $sku_id = $request->tier;
+        $quantity = 1;
+
+        // // 从数据库中查询该商品是否已经在购物车中
+        // if ($cart = $user->cartItems()->where('plan_product_sku_id', $skuId)->first()) {
+
+        //     // 如果存在则直接叠加商品数量
+        //     $cart->update([
+        //         'quantity' => $cart->quantity + $quantity,
+        //     ]);
+        // } else {
+
+        //     // 否则创建一个新的购物车记录
+        //     $cart = new CartItem(['quantity' => $quantity]);
+        //     $cart->user()->associate($user);
+        //     $cart->planProductSku()->associate($skuId);
+        //     $cart->save();
+        // }
+
+        $user = Auth::user();
+
+        // 创建一个新的购物车记录
+        $cart = new CartItem(['quantity' => $quantity, 'iccid' => $iccid]);
+        $cart->user()->associate($user);
+        $cart->planProductSku()->associate($sku_id);
+        $cart->save();
+
+        // return [];
+        // return redirect()->route('account.profile');
+
+// Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
+        // return view('shop.cart', compact('user'));
+        return redirect()->route('shop.cart');
+    }
+
+    /*----------------------------------------------------------------------------------*/
+//     public function postSetupPlan(Request $request) {
+//         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
+// return $request;
+//         $sku_id = $request->tier;
+//     }
+
+//     public function getRenewPlan(Plan $plan) {
+//         $user = Auth::user();
+// //        $data['sel_menu'] = 'my_plans';
+// //        $user->update($data);
+
+//         $user_id = $user->id;
+//         // $plans = DB::table('plans')
+//         //     ->where('user_id', $user_id)
+//         //     //->orderBy('created_at', 'desc')
+//         //     ->paginate(10);
+
+//         //return view('plans._usa', compact('user', 'plans'));
+// //        return view('plans._usa', compact('user'));
+//         return view('plans._australia', compact('user'));
+//     }
+
+    /*----------------------------------------------------------------------------------*/
+    public function html_CreatePlan($plan) {
         $region = $plan->region; // us, ca, eu, au, cn, tw
 
         // $product = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
@@ -230,87 +308,64 @@ $style = 'demo'; // for test
         return $txt;
     }
 
-    public function html_SetupPlanX($plan) {
-        $txt = '';
-        $txt .= '<div class="alert alert-default alert-ratetier">';
-        $txt .=     '<div class="row">';
-        $txt .=         '<div class="col-md-5">';
-        $txt .=             '<div class="label-tier">SILVER</div>';
-        $txt .=             '<p class="tier-desc">5000 Points per Month</p>';
-        $txt .=         '</div>';
-        $txt .=         '<div class="col-md-7">';
-        $txt .=             '<div class="radio">';
-        $txt .=                 '<label><input type="radio" name="tier"  checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
-        $txt .=             '</div>';
-        $txt .=             '<div class="radio">';
-        $txt .=                 '<label><input type="radio" name="tier"  value="22" ><span style="color:white;">36.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00246]</span></label>';
-        $txt .=             '</div>';
-        $txt .=         '</div>';
-        $txt .=     '</div>';
-        $txt .= '</div>';
-
-        $txt .= '<div class="alert alert-default alert-ratetier">';
-        $txt .=     '<div class="row">';
-        $txt .=         '<div class="col-md-5">';
-        $txt .=             '<div class="label-tier">GOLD</div>';
-        $txt .=             '<p class="tier-desc">10000 Points per Month</p>';
-        $txt .=         '</div>';
-        $txt .=         '<div class="col-md-7">';
-        $txt .=             '<div class="radio">';
-        $txt .=                 '<label><input type="radio" name="tier"  value="24" ><span style="color:white;">19.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00200]</span></label>';
-        $txt .=             '</div>';
-        $txt .=             '<div class="radio">';
-        $txt .=                 '<label><input type="radio" name="tier"  value="26" ><span style="color:white;">57.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00193]</span></label>';
-        $txt .=             '</div>';
-        $txt .=         '</div>';
-        $txt .=     '</div>';
-        $txt .= '</div>';
-
-        $txt .= '<div class="alert alert-default alert-ratetier">';
-        $txt .=     '<div class="row">';
-        $txt .=         '<div class="col-md-5">';
-        $txt .=             '<div class="label-tier">PLATINUM PRO</div>';
-        $txt .=             '<p class="tier-desc">20000 Points per Month</p>';
-        $txt .=         '</div>';
-        $txt .=         '<div class="col-md-7">';
-        $txt .=             '<div class="radio">';
-        $txt .=                 '<label><input type="radio" name="tier"  value="28" ><span style="color:white;">26.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00135]</span></label>';
-        $txt .=             '</div>';
-        $txt .=             '<div class="radio">';
-        $txt .=                 '<label><input type="radio" name="tier"  value="30" ><span style="color:white;">77.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00130]</span></label>';
-        $txt .=             '</div>';
-        $txt .=         '</div>';
-        $txt .=     '</div>';
-        $txt .= '</div>';
-        return $txt;
+    public function html_SetupPlan($plan) {
+        return 'html_SetupPlan';
     }
 
-    /*----------------------------------------------------------------------------------*/
-    public function postSetupPlan(Request $request) {
-        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-return $request;
-        $sku_id = $request->tier;
+    // public function html_SetupPlanX($plan) {
+    //     $txt = '';
+    //     $txt .= '<div class="alert alert-default alert-ratetier">';
+    //     $txt .=     '<div class="row">';
+    //     $txt .=         '<div class="col-md-5">';
+    //     $txt .=             '<div class="label-tier">SILVER</div>';
+    //     $txt .=             '<p class="tier-desc">5000 Points per Month</p>';
+    //     $txt .=         '</div>';
+    //     $txt .=         '<div class="col-md-7">';
+    //     $txt .=             '<div class="radio">';
+    //     $txt .=                 '<label><input type="radio" name="tier"  checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
+    //     $txt .=             '</div>';
+    //     $txt .=             '<div class="radio">';
+    //     $txt .=                 '<label><input type="radio" name="tier"  value="22" ><span style="color:white;">36.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00246]</span></label>';
+    //     $txt .=             '</div>';
+    //     $txt .=         '</div>';
+    //     $txt .=     '</div>';
+    //     $txt .= '</div>';
 
+    //     $txt .= '<div class="alert alert-default alert-ratetier">';
+    //     $txt .=     '<div class="row">';
+    //     $txt .=         '<div class="col-md-5">';
+    //     $txt .=             '<div class="label-tier">GOLD</div>';
+    //     $txt .=             '<p class="tier-desc">10000 Points per Month</p>';
+    //     $txt .=         '</div>';
+    //     $txt .=         '<div class="col-md-7">';
+    //     $txt .=             '<div class="radio">';
+    //     $txt .=                 '<label><input type="radio" name="tier"  value="24" ><span style="color:white;">19.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00200]</span></label>';
+    //     $txt .=             '</div>';
+    //     $txt .=             '<div class="radio">';
+    //     $txt .=                 '<label><input type="radio" name="tier"  value="26" ><span style="color:white;">57.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00193]</span></label>';
+    //     $txt .=             '</div>';
+    //     $txt .=         '</div>';
+    //     $txt .=     '</div>';
+    //     $txt .= '</div>';
 
-
-
-    }
-
-    public function getRenewPlan(Plan $plan) {
-        $user = Auth::user();
-//        $data['sel_menu'] = 'my_plans';
-//        $user->update($data);
-
-        $user_id = $user->id;
-        // $plans = DB::table('plans')
-        //     ->where('user_id', $user_id)
-        //     //->orderBy('created_at', 'desc')
-        //     ->paginate(10);
-
-        //return view('plans._usa', compact('user', 'plans'));
-//        return view('plans._usa', compact('user'));
-        return view('plans._australia', compact('user'));
-    }
+    //     $txt .= '<div class="alert alert-default alert-ratetier">';
+    //     $txt .=     '<div class="row">';
+    //     $txt .=         '<div class="col-md-5">';
+    //     $txt .=             '<div class="label-tier">PLATINUM PRO</div>';
+    //     $txt .=             '<p class="tier-desc">20000 Points per Month</p>';
+    //     $txt .=         '</div>';
+    //     $txt .=         '<div class="col-md-7">';
+    //     $txt .=             '<div class="radio">';
+    //     $txt .=                 '<label><input type="radio" name="tier"  value="28" ><span style="color:white;">26.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00135]</span></label>';
+    //     $txt .=             '</div>';
+    //     $txt .=             '<div class="radio">';
+    //     $txt .=                 '<label><input type="radio" name="tier"  value="30" ><span style="color:white;">77.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00130]</span></label>';
+    //     $txt .=             '</div>';
+    //     $txt .=         '</div>';
+    //     $txt .=     '</div>';
+    //     $txt .= '</div>';
+    //     return $txt;
+    // }
 
     /*----------------------------------------------------------------------------------*/
     public function pause(Plan $plan) {

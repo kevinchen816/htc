@@ -20,6 +20,7 @@ use Laravel\Cashier\Contracts\Billable as BillableContract;
 
 use App\Models\Camera;
 use App\Models\Plan;
+use App\Models\CartItem;
 
 use App\Notifications\EmailConfirmNotification;
 

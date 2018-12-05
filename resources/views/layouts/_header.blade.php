@@ -33,12 +33,14 @@
                         <a href="{{ route('plan.add') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
                     </li>
 
-                    <!--<li class={{ ($user->sel_menu == 'cart') ? "active" : "" }}>
-                        <a href="http://www.ridgetec.us/shop/cart">
+                    @if (count($user->cartItems()->get()) > 0)
+                    <li class={{ ($user->sel_menu == 'cart') ? "active" : "" }}>
+                        <a href="{{ route('shop.cart') }}">
                             <span class="glyphicon glyphicon-shopping-cart"> </span>
-                            <div class="badge">1</div>
+                            <div class="badge">{{ count($user->cartItems()->get()) }}</div>
                         </a>
-                    </li>-->
+                    </li>
+                    @endif
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>

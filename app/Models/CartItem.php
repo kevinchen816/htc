@@ -8,7 +8,7 @@ use App\User;
 
 class CartItem extends Model
 {
-    protected $fillable = ['quantity'];
+    protected $fillable = ['quantity', 'iccid'];
 
     public $timestamps = false;
 

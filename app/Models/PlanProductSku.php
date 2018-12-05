@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\PlanProduct;
+
 class PlanProductSku extends Model
 {
     protected $fillable = [

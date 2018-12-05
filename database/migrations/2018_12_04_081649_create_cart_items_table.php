@@ -23,7 +23,9 @@ class CreateCartItemsTable extends Migration
             $table->foreign('plan_product_sku_id')->references('id')->on('plan_product_skus')->onDelete('cascade');
             $table->unsignedInteger('quantity');
 
-            $table->timestamps();
+            $table->string('iccid')->default('');
+
+            // $table->timestamps();
         });
     }
 
