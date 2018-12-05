@@ -3105,8 +3105,13 @@ class CamerasController extends Controller
 
         $card_size = intval($camera->card_size);
         $card_free = intval($camera->card_space);
-        $percent_card_avail = round(($card_free/$card_size)*100, 2);
-        $txt .= $this->ovItemShow('SD Card', $percent_card_avail.' % available');
+        if ($card_size > 0) {
+            $percent_card_avail = round(($card_free/$card_size)*100, 2);
+            $txt .= $this->ovItemShow('SD Card', $percent_card_avail.' % available');
+        } else {
+            $txt .= $this->ovItemShow('SD Card', 'unknown');
+        }
+
 
         $txt .= $this->ovItemShow('Temperature', $camera->temperature);
         //$txt .= $this->ovItemShow('Temperature', '&#176;C');
