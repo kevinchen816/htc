@@ -9,6 +9,7 @@ use App\Models\CartItem;
 
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
+use App\Models\Order;
 
 use Laravel\Cashier\Cashier;
 use Auth;
@@ -206,9 +207,27 @@ class CartController extends Controller
     public function postShopPay(Request $request) {
         // {"_token":"xxxx","rowId":["5","6"]}
 // return $request;
+ // return dd($request);
+ // return dd($request->user());
+ // return $request->user()->email;
+
         $user = Auth::user();
         $stripe_id = $user->stripe_id;
         $currency = $user->currency;
+
+        /* Create Order */
+        $order   = new Order([
+            // 'address'      => [ // 将地址信息放入订单中
+            //     'address'       => $address->full_address,
+            //     'zip'           => $address->zip,
+            //     'contact_name'  => $address->contact_name,
+            //     'contact_phone' => $address->contact_phone,
+            // ],
+            // 'remark'       => $request->input('remark'),
+            'total_amount' => 0,
+        ]);
+        $order->user()->associate($user); // 订单关联到当前用户
+        $order->save();
 
         $total = 0;
         $rows = $request->rowId;
@@ -235,15 +254,20 @@ class CartController extends Controller
             $subtotal = $quantity * $price;
             $total += $subtotal;
 
-            // echo $row_id;
-            // echo $sub_id;
-            // echo $subtotal;
-            // echo '<br/>';
+            /* Create Order Item */
+            $item = $order->items()->make([
+                'quantity' => $quantity,
+                'price'  => $price,
+            ]);
+            // $item->product()->associate($sku->plan_product_id); // NG
+            // $item->productSku()->associate($sku); // NG
+            $item->planProduct()->associate($sku->plan_product_id);
+            $item->planProductSku()->associate($sku);
+            $item->save();
         }
 
-        // echo $total;
-        // echo '<br/>';
-// return;
+        $order->update(['total_amount' => $total]);
+return 'OK';
 
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
         // $charge = \Stripe\Charge::create([
@@ -255,9 +279,9 @@ class CartController extends Controller
 
         // Cashier::useCurrency('eur', '€');
         Cashier::useCurrency($currency);
-        // $charge = $user->charge($total*100);
 
         // ch_1De8vuG8UgnSL68UVaYHBGl7
+        // $charge = $user->charge($total*100);
         $charge = $user->charge($total*100, [
             // 'name' => 'Kevin Chen', //$user->card_name, // NG
             // 'source' => $token,
