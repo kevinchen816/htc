@@ -99,6 +99,7 @@ Route::group(['middleware' => 'auth'], function() {
         // Route::get('/plans/buy','PlansController@getBuyPlan')->name('plan.buy');
         // Route::post('/plans/buy','PlansController@postBuyPlan')->name('plan.buy');
 
+        Route::get('/plans/buy/{plan}', 'PlansController@getBuyPlan')->name('plan.buy');
         Route::post('/plans/buy', 'PlansController@postBuyPlan')->name('plan.buy');
         // Route::post('/plans/setup','PlansController@postSetupPlan')->name('plan.setup');
 
@@ -109,7 +110,7 @@ Route::group(['middleware' => 'auth'], function() {
         // Route::get('/plans/renew/{plan}', 'PlansController@renew')->name('plans.renew');
         Route::get('/plans/setup-renewal/{plan}', 'PlansController@getRenewPlan')->name('plans.renew');
 
-        Route::get('/plans/cancel', 'AccountsController@profile')->name('plans.cancel');
+        Route::get('/plans/cancel', 'AccountsController@getProfile')->name('plans.cancel');
         //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
         // for test

@@ -1,0 +1,415 @@
+$user->updateCard($stripeToken);
+
+[ customer.source.created ]
+{
+    "id": "evt_1Dg58LG8UgnSL68Uh57ikJmx",
+    "data": {
+        "object": {
+            "id": "card_1Dg58HG8UgnSL68UtHIfaQ7c",
+            "name": null,
+            "brand": "Visa",
+            "last4": "4242",
+            "object": "card",
+            "country": "US",
+            "funding": "credit",
+            "customer": "cus_E6LbckdxbBs2xX",
+            "exp_year": 2019,
+            "metadata": [],
+            "cvc_check": "pass",
+            "exp_month": 2,
+            "address_zip": null,
+            "fingerprint": "e1uOCX2OaLtiKe7m",
+            "address_city": null,
+            "address_line1": null,
+            "address_line2": null,
+            "address_state": null,
+            "dynamic_last4": null,
+            "address_country": null,
+            "address_zip_check": null,
+            "address_line1_check": null,
+            "tokenization_method": null
+        }
+    },
+    "type": "customer.source.created",
+    "object": "event",
+    "created": 1544511261,
+    "request": {
+        "id": "req_qdq0FAE7tGOgaB",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+[ customer.updated ]
+{
+    "id": "evt_1Dg58MG8UgnSL68UvXOOeefT",
+    "data": {
+        "object": {
+            "id": "cus_E6LbckdxbBs2xX",
+            "email": "kevin@10ware.com",
+            "object": "customer",
+            "created": 1544049124,
+            "sources": {
+                "url": "/v1/customers/cus_E6LbckdxbBs2xX/sources",
+                "data": [
+
+                    {"id": "card_1Dg58HG8UgnSL68UtHIfaQ7c", "name": null, "brand": "Visa", "last4": "4242", "object": "card", "country": "US", "funding": "credit", "customer": "cus_E6LbckdxbBs2xX", "exp_year": 2019, "metadata": [], "cvc_check": "pass", "exp_month": 2, "address_zip": null, "fingerprint": "e1uOCX2OaLtiKe7m", "address_city": null, "address_line1": null, "address_line2": null, "address_state": null, "dynamic_last4": null, "address_country": null, "address_zip_check": null, "address_line1_check": null, "tokenization_method": null}}, "type": "customer.source.created", "object": "event", "created": 1544511261, "request": {"id": "req_qdq0FAE7tGOgaB", "idempotency_key": null}, "livemode": false, "api_version": "2018-09-24", "pending_webhooks": 1}
+
+                    {"id": "card_1Dg58HG8UgnSL68UtHIfaQ7c", "name": null, "brand": "Visa", "last4": "4242", "object": "card", "country": "US", "funding": "credit", "customer": "cus_E6LbckdxbBs2xX", "exp_year": 2019, "metadata": [], "cvc_check": "pass", "exp_month": 2, "address_zip": null, "fingerprint": "e1uOCX2OaLtiKe7m", "address_city": null, "address_line1": null, "address_line2": null, "address_state": null, "dynamic_last4": null, "address_country": null, "address_zip_check": null, "address_line1_check": null, "tokenization_method": null},
+                    {"id": "card_1Dg53QG8UgnSL68UxjfiSL3e", "name": null, "brand": "MasterCard", "last4": "4444", "object": "card", "country": "US", "funding": "credit", "customer": "cus_E6LbckdxbBs2xX", "exp_year": 2019, "metadata": [], "cvc_check": "pass", "exp_month": 1, "address_zip": null, "fingerprint": "3IHHb6tTSScUdNJt", "address_city": null, "address_line1": null, "address_line2": null, "address_state": null, "dynamic_last4": null, "address_country": null, "address_zip_check": null, "address_line1_check": null, "tokenization_method": null},
+                    {"id": "card_1De8uVG8UgnSL68UUaUpDs8G", "name": null, "brand": "Visa", "last4": "4242", "object": "card", "country": "US", "funding": "credit", "customer": "cus_E6LbckdxbBs2xX", "exp_year": 2019, "metadata": [], "cvc_check": "pass", "exp_month": 1, "address_zip": null, "fingerprint": "e1uOCX2OaLtiKe7m", "address_city": null, "address_line1": null, "address_line2": null, "address_state": null, "dynamic_last4": null, "address_country": null, "address_zip_check": null, "address_line1_check": null, "tokenization_method": null}
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 3
+            },
+            "currency": "aud",
+            "discount": null,
+            "livemode": false,
+            "metadata": [],
+            "shipping": null,
+            "tax_info": null,
+            "delinquent": false,
+            "description": null,
+            "subscriptions": {
+                "url": "/v1/customers/cus_E6LbckdxbBs2xX/subscriptions",
+                "data": [],
+                "object": "list",
+                "has_more": false,
+                "total_count": 0
+            },
+            "default_source": "card_1Dg58HG8UgnSL68UtHIfaQ7c",
+            "invoice_prefix": "ED0214E",
+            "account_balance": 0,
+            "tax_info_verification": null
+        },
+        "previous_attributes": {
+            "default_source": "card_1Dg53QG8UgnSL68UxjfiSL3e"
+        }
+    },
+    "type": "customer.updated",
+    "object": "event",
+    "created": 1544511262,
+    "request": {
+        "id": "req_rGfGyeShr1kCJ9",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+
+//---------------------------------------------------------------------
+// $user->newSubscription($subscription_name, $plan_id)->create();
+//
+ID              sub_E8NOivyY78RQCz
+Created         2018/12/11
+Current period  Dec 11, 2018 to Jan 11, 2019
+
+[ invoice.created ]
+[ invoice.finalized ]
+[ invoice.payment_succeeded ]
+
+[ customer.subscription.created ]
+{
+    "id": "evt_1Dg6drG8UgnSL68U35cmhnJZ",
+    "data": {
+        "object": {
+            "id": "sub_E8NOivyY78RQCz",
+            "plan": {
+                "id": "au_5000_1m",
+                "tiers": null,
+                "active": true,
+                "amount": 1295,
+                "object": "plan",
+                "created": 1544516008,
+                "product": "prod_E8Muq5LsJ5hWAf",
+                "currency": "aud",
+                "interval": "month",
+                "livemode": false,
+                "metadata": [],
+                "nickname": "Australia 5000 1m",
+                "tiers_mode": null,
+                "usage_type": "licensed",
+                "billing_scheme": "per_unit",
+                "interval_count": 1,
+                "aggregate_usage": null,
+                "transform_usage": null,
+                "trial_period_days": null
+            },
+            "items": {
+                "url": "/v1/subscription_items?subscription=sub_E8NOivyY78RQCz",
+                "data": [
+                    {
+                        "id": "si_E8NOgA4UK8w0Xe",
+                        "plan": {
+                            "id": "au_5000_1m",
+                            "tiers": null,
+                            "active": true,
+                            "amount": 1295,
+                            "object": "plan",
+                            "created": 1544516008,
+                            "product": "prod_E8Muq5LsJ5hWAf",
+                            "currency": "aud",
+                            "interval": "month",
+                            "livemode": false,
+                            "metadata": [],
+                            "nickname": "Australia 5000 1m",
+                            "tiers_mode": null,
+                            "usage_type": "licensed",
+                            "billing_scheme": "per_unit",
+                            "interval_count": 1,
+                            "aggregate_usage": null,
+                            "transform_usage": null,
+                            "trial_period_days": null
+                        },
+                        "object": "subscription_item",
+                        "created": 1544517059,
+                        "metadata": [],
+                        "quantity": 1,
+                        "subscription": "sub_E8NOivyY78RQCz"
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "start": 1544517058,
+            "object": "subscription",
+            "status": "active",
+            "billing": "charge_automatically",
+            "created": 1544517058,
+            "customer": "cus_E6LbckdxbBs2xX",
+            "discount": null,
+            "ended_at": null,
+            "livemode": false,
+            "metadata": [],
+            "quantity": 1,
+            "trial_end": null,
+            "canceled_at": null,
+            "tax_percent": null,
+            "trial_start": null,
+            "days_until_due": null,
+            "default_source": null,
+            "current_period_end": 1547195458,
+            "billing_cycle_anchor": 1544517058,
+            "cancel_at_period_end": false,
+            "current_period_start": 1544517058,
+            "application_fee_percent": null
+        }
+    },
+    "type": "customer.subscription.created",
+    "object": "event",
+    "created": 1544517059,
+    "request": {
+        "id": "req_SMsFQcEA14L7Mc",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+
+[ charge.succeeded ]
+{
+    "id": "evt_1Dg6drG8UgnSL68USHvtQ4pP",
+    "data": {
+        "object": {
+            "id": "ch_1Dg6dqG8UgnSL68UbP6uvnz6",
+            "paid": true,
+            "order": null,
+            "amount": 1295,
+            "object": "charge",
+            "review": null,
+            "source": {
+                "id": "card_1Dg5jUG8UgnSL68UL0UrrcmU",
+                "name": null,
+                "brand": "Visa",
+                "last4": "4242",
+                "object": "card",
+                "country": "US",
+                "funding": "credit",
+                "customer": "cus_E6LbckdxbBs2xX",
+                "exp_year": 2019,
+                "metadata": [],
+                "cvc_check": null,
+                "exp_month": 2,
+                "address_zip": null,
+                "fingerprint": "e1uOCX2OaLtiKe7m",
+                "address_city": null,
+                "address_line1": null,
+                "address_line2": null,
+                "address_state": null,
+                "dynamic_last4": null,
+                "address_country": null,
+                "address_zip_check": null,
+                "address_line1_check": null,
+                "tokenization_method": null
+            },
+            "status": "succeeded",
+            "created": 1544517058,
+            "dispute": null,
+            "invoice": "in_1Dg6dqG8UgnSL68UjMpVT2Ea",
+            "outcome": {
+                "type": "authorized",
+                "reason": null,
+                "risk_level": "normal",
+                "risk_score": 48,
+                "network_status": "approved_by_network",
+                "seller_message": "Payment complete."
+            },
+            "refunds": {
+                "url": "/v1/charges/ch_1Dg6dqG8UgnSL68UbP6uvnz6/refunds",
+                "data": [],
+                "object": "list",
+                "has_more": false,
+                "total_count": 0
+            },
+            "captured": true,
+            "currency": "aud",
+            "customer": "cus_E6LbckdxbBs2xX",
+            "livemode": false,
+            "metadata": [],
+            "refunded": false,
+            "shipping": null,
+            "application": null,
+            "description": null,
+            "destination": null,
+            "failure_code": null,
+            "on_behalf_of": null,
+            "fraud_details": [],
+            "receipt_email": null,
+            "payment_intent": null,
+            "receipt_number": null,
+            "transfer_group": null,
+            "amount_refunded": 0,
+            "application_fee": null,
+            "failure_message": null,
+            "source_transfer": null,
+            "balance_transaction": "txn_1Dg6dqG8UgnSL68U6udMXuSt",
+            "statement_descriptor": null
+        }
+    },
+    "type": "charge.succeeded",
+    "object": "event",
+    "created": 1544517059,
+    "request": {
+        "id": "req_SMsFQcEA14L7Mc",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+
+//---------------------------------------------------------------------
+// $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+//
+ID                      sub_E8OEjLGa0X4RXW
+Created                 2018/12/11
+Scheduled to cancel on  2019/01/11
+
+[ customer.subscription.created ]
+
+[ charge.succeeded ]
+
+[ customer.subscription.updated ]
+{
+    "id": "evt_1Dg7S3G8UgnSL68UicWwzWw9",
+    "data": {
+        "object": {
+            "id": "sub_E8OEjLGa0X4RXW",
+            "plan": {
+                "id": "au_5000_1m",
+                "tiers": null,
+                "active": true,
+                "amount": 1295,
+                "object": "plan",
+                "created": 1544516008,
+                "product": "prod_E8Muq5LsJ5hWAf",
+                "currency": "aud",
+                "interval": "month",
+                "livemode": false,
+                "metadata": [],
+                "nickname": "Australia 5000 1m",
+                "tiers_mode": null,
+                "usage_type": "licensed",
+                "billing_scheme": "per_unit",
+                "interval_count": 1,
+                "aggregate_usage": null,
+                "transform_usage": null,
+                "trial_period_days": null
+            },
+            "items": {
+                "url": "/v1/subscription_items?subscription=sub_E8OEjLGa0X4RXW",
+                "data": [
+                    {
+                        "id": "si_E8OEsAx5bujvb0",
+                        "plan": {"id": "au_5000_1m", "tiers": null, "active": true, "amount": 1295, "object": "plan", "created": 1544516008, "product": "prod_E8Muq5LsJ5hWAf", "currency": "aud", "interval": "month", "livemode": false, "metadata": [], "nickname": "Australia 5000 1m", "tiers_mode": null, "usage_type": "licensed", "billing_scheme": "per_unit", "interval_count": 1, "aggregate_usage": null, "transform_usage": null, "trial_period_days": null},
+                        "object": "subscription_item",
+                        "created": 1544520167,
+                        "metadata": [],
+                        "quantity": 1,
+                        "subscription":
+                        "sub_E8OEjLGa0X4RXW"
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "start": 1544520170,
+            "object": "subscription",
+            "status": "active",
+            "billing": "charge_automatically",
+            "created": 1544520166,
+            "customer": "cus_E6LbckdxbBs2xX",
+            "discount": null,
+            "ended_at": null,
+            "livemode": false,
+            "metadata": [],
+            "quantity": 1,
+            "trial_end": null,
+            "canceled_at": 1544520170,
+            "tax_percent": null,
+            "trial_start": null,
+            "days_until_due": null,
+            "default_source": null,
+            "current_period_end": 1547198566,
+            "billing_cycle_anchor": 1544520166,
+            "cancel_at_period_end": true,
+            "current_period_start": 1544520166,
+            "application_fee_percent": null
+        },
+        "previous_attributes": {
+            "start": 1544520166,
+            "canceled_at": null,
+            "cancel_at_period_end": false
+        }
+    },
+    "type": "customer.subscription.updated",
+    "object": "event",
+    "created": 1544520170,
+    "request": {
+        "id": "req_7IyHjS62OQHvn2",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+
+//---------------------------------------------------------------------
+ID                      sub_E8NOivyY78RQCz
+Created                 2018/12/11
+Current period          Dec 11, 2018 to Jan 11, 2019
+
+ID                      sub_E8OEjLGa0X4RXW
+Created                 2018/12/11
+Scheduled to cancel on  2019/01/11

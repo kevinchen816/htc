@@ -13,6 +13,7 @@ use App\Models\Order;
 
 use Laravel\Cashier\Cashier;
 use Auth;
+use Debugbar;
 
 class CartController extends Controller
 {
@@ -243,7 +244,7 @@ class CartController extends Controller
             $sku = $cart->planProductSku()->get()[0];
             $month = $sku->month;
             $price = $sku->price;
-            $sub_id = $sku->sub_id;
+            $sub_id = $sku->sub_id; // 'au_5000_1m'
 
             /* Plan Product */
             $product_id = $sku->plan_product_id;
@@ -261,13 +262,32 @@ class CartController extends Controller
             ]);
             // $item->product()->associate($sku->plan_product_id); // NG
             // $item->productSku()->associate($sku); // NG
-            $item->planProduct()->associate($sku->plan_product_id);
-            $item->planProductSku()->associate($sku);
+            $item->planProduct()->associate($sku->plan_product_id); // function name must be planProduct
+            $item->planProductSku()->associate($sku); // function name must be planProductSku
             $item->save();
+
+            /* Stripe - subscribe plan */
+            $subscription_name = $iccid; //'89860117851014783481'
+            $plan_id = 'au_5000_1m'; // for test ($sub_id)
+            // $ret = $user->newSubscription($subscription_name, $plan_id)->create();
+            $ret = $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+
+            // if (!$request['auto-bill']) {
+            //    $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+            // } else {
+            //    $user->newSubscription($subscription_name, $plan_id)->create();
+            // }
+            // // $user->subscription($subscription_name)->cancel();
+
+            // // $user->newSubscription('main', 'monthly')->create($stripeToken, [
+            // //     'email' => $email,
+            // // ]);
+
         }
 
         $order->update(['total_amount' => $total]);
-return 'OK';
+// return 'OK';
+return dd($ret);
 
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
         // $charge = \Stripe\Charge::create([
@@ -280,25 +300,25 @@ return 'OK';
         // Cashier::useCurrency('eur', '€');
         Cashier::useCurrency($currency);
 
-        // ch_1De8vuG8UgnSL68UVaYHBGl7
-        // $charge = $user->charge($total*100);
-        $charge = $user->charge($total*100, [
-            // 'name' => 'Kevin Chen', //$user->card_name, // NG
-            // 'source' => $token,
-            'receipt_email' => $user->email,
-            // 'custom_option' => $value,
-        ]);
+        // // ch_1De8vuG8UgnSL68UVaYHBGl7
+        // // $charge = $user->charge($total*100);
+        // $charge = $user->charge($total*100, [
+        //     // 'name' => 'Kevin Chen', //$user->card_name, // NG
+        //     // 'source' => $token,
+        //     'receipt_email' => $user->email,
+        //     // 'custom_option' => $value,
+        // ]);
 
-        if (!$charge) {
+        // // if (!$charge) {
 
-        }
-return dd($charge);
+        // // }
+        // // try {
+        // //     $response = $user->charge(100);
+        // // } catch (Exception $e) {
+        // //     //
+        // // }
+// return dd($charge);
 
-        // try {
-        //     $response = $user->charge(100);
-        // } catch (Exception $e) {
-        //     //
-        // }
 
 // in_1De8vxG8UgnSL68Ubd5vOvh1
         // Payment for invoice ED0214E-0001 – ch_1De8vyG8UgnSL68UhmxYH7h2

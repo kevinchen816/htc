@@ -1,0 +1,49 @@
+注意：只能在开发过程中使用该 Laravel Debugbar ，使用该扩展包对性能有影响（收集、聚合数据有系统开销）。
+
+1.
+    $ composer require barryvdh/laravel-debugbar
+
+2. 修改 config/app.php
+
+    'providers' => [
+        ...
+        Barryvdh\Debugbar\ServiceProvider::class,
+    ],
+
+    'aliases' => [
+         ...
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+    ]
+
+3.
+    // .env
+    APP_DEBUG=true
+
+    // app.php
+    'debug' => env('APP_DEBUG', false),
+
+//-----------------------------------------------------------------
+// 以下可不需要设定
+4.
+    $ php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+
+5. 打开 config/debugbar.php，将 enabled 的值设置为：
+
+    'enabled' => env('APP_DEBUG', false),
+
+消息有 PSR-3 级别：
+debug, info, notice, warning, error, critical, alert, emergency
+（调试、信息、通知、警告、错误、关键、警报、紧急）
+
+Debugbar::debug($carts);
+Debugbar::info('INFO');
+Debugbar::notice('NOTICE');
+Debugbar::warning('WARNING');
+Debugbar::error('ERROR');
+Debugbar::alert('ALERT');
+
+
+Debugbar::info($object);
+Debugbar::error('Error!');
+Debugbar::warning('Watch out…');
+Debugbar::addMessage('Another message', 'mylabel');

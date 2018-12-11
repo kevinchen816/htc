@@ -167,17 +167,36 @@ $style = 'demo'; // for test
         $data['sel_account_tab'] = 'plans';
         Auth::user()->update($data);
         //+
-        // // session()->flash('success', 'Create Success');
-        // return redirect()->route('account.profile');
+// session()->flash('success', 'Create Success');
+return redirect()->route('account.profile');
 
 // new (TODO)
         // // $mode = 'setup';
         // // return view('plans.setup', compact('user', 'plan', 'mode'));
-        $mode = 'create';
+        $mode = 'create'; // TODO
         return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
     /*----------------------------------------------------------------------------------*/
+    public function getBuyPlan($plan_id) {
+// return $plan_id;
+        $user = Auth::user();
+
+        // $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+        if (!$plan) {
+            session()->flash('danger', 'ICCID not exist.');
+            return redirect()->back();
+        }
+        // $iccid = $plan->iccid;
+
+        // $data['sel_menu'] = 'plan';
+        // $user->update($data);
+
+        $mode = 'create'; // TODO
+        return view('plans.create', compact('user', 'plan', 'mode'));
+    }
+
     public function postBuyPlan(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 // return $request;
@@ -233,21 +252,26 @@ $style = 'demo'; // for test
 //         $sku_id = $request->tier;
 //     }
 
-//     public function getRenewPlan(Plan $plan) {
-//         $user = Auth::user();
-// //        $data['sel_menu'] = 'my_plans';
-// //        $user->update($data);
+    public function getRenewPlan(Plan $plan) {
+        $user = Auth::user();
+//        $data['sel_menu'] = 'my_plans';
+//        $user->update($data);
 
-//         $user_id = $user->id;
-//         // $plans = DB::table('plans')
-//         //     ->where('user_id', $user_id)
-//         //     //->orderBy('created_at', 'desc')
-//         //     ->paginate(10);
+        $user_id = $user->id;
+        // $plans = DB::table('plans')
+        //     ->where('user_id', $user_id)
+        //     //->orderBy('created_at', 'desc')
+        //     ->paginate(10);
 
-//         //return view('plans._usa', compact('user', 'plans'));
-// //        return view('plans._usa', compact('user'));
-//         return view('plans._australia', compact('user'));
-//     }
+        //return view('plans._usa', compact('user', 'plans'));
+//        return view('plans._usa', compact('user'));
+        return view('plans._australia', compact('user'));
+
+// // // $mode = 'setup';
+// // // return view('plans.setup', compact('user', 'plan', 'mode'));
+// $mode = 'create';
+// return view('plans.create', compact('user', 'plan', 'mode'));
+    }
 
     /*----------------------------------------------------------------------------------*/
     public function html_CreatePlan($plan) {

@@ -17,12 +17,14 @@ class OrderItem extends Model
     // protected $dates = ['reviewed_at'];
     public $timestamps = false;
 
-    // public function product() {
+    /* function name must be planProduct -> plan_product_id */
+    // public function product() { // NG
     public function planProduct() {
         return $this->belongsTo(PlanProduct::class);
     }
 
-    // public function productSku() {
+    /* function name must be planProductSku -> plan_product_sku_id */
+    // public function productSku() { // NG
     public function planProductSku() {
         return $this->belongsTo(PlanProductSku::class);
     }

@@ -245,7 +245,7 @@ class ImageUploadHandler
 
         $tz = date_default_timezone_get();
         date_default_timezone_set($camera->timezone);
-        $savename = date('Ymd').'_'.date('hi').'_'.$OriginalName;
+        $savename = date('Ymd').'_'.date('Hi').'_'.$OriginalName;
         date_default_timezone_set($tz);
 
         $savepath = $file->move($path_upload, $savename);
