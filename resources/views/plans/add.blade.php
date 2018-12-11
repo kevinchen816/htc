@@ -19,7 +19,7 @@
                 <div class="panel-body">
 
                     <!--<div class="col-md-6">-->
-                        <form method="POST" action="{{ route('plan.add') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        <form method="POST" action="{{ route('plans.add') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                             {{ csrf_field() }}
                             <input name="mode" type="hidden" value="new">
 

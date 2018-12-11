@@ -67,7 +67,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <!-- <a href="/plans/add-plan" class="btn btn-xs btn-primary" id="add-plan"> -->
-                <a href="{{ route('plan.add') }}" class="btn btn-xs btn-primary" id="add-plan">
+                <a href="{{ route('plans.add') }}" class="btn btn-xs btn-primary" id="add-plan">
                     <span class="glyphicon glyphicon-signal"></span>
                     Add another Plan
                 </a>

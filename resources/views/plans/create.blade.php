@@ -12,11 +12,13 @@
 
                 <div class="panel-heading">
                     <h4 class="panel-title">
-@if ($mode = 'setup')
-                        Setup Plan
-@else
-                        Configure Plan Renewal (Auto-Bill)
-@endif
+                        @if ($mode == 'create')
+                            Create Plan
+                        @elseif ($mode == 'update')
+                            Update Plan
+                        @else
+                            Configure Plan Renewal (Auto-Bill)
+                        @endif
                         <strong>{{ $plan->iccid }}</strong>
                     </h4>
                 </div>
@@ -24,9 +26,16 @@
                 <div class="panel-body">
 
                     <div class="col-md-6">
-                        <form method="POST" action="{{ route('plan.buy') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        @if ($mode == 'create')
+                            <form method="POST" action="{{ route('plans.create') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        @elseif ($mode == 'update')
+                            <form method="POST" action="{{ route('plans.update') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        @else
+                            <form method="POST" action="{{ route('plans.renew') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        @endif
+
                             {{ csrf_field() }}
-                            <input name="mode" type="hidden" value="setup">
+                            <input name="mode" type="hidden" value="{{ $mode }}">
                             <input name="planid" type="hidden" value="{{ $plan->id }}">
 
                             <div class="form-group">
@@ -59,7 +68,15 @@
                                 </div>
                                 <div class="col-md-7">
                                     <!-- <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-saved"></i> Save Setup</button> -->
-                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-shopping-cart"></i> Add Cart</button>
+                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="{{ $mode }}">
+                                        @if ($mode == 'create')
+                                        <i class="glyphicon glyphicon-shopping-cart"></i> Add Cart
+                                        @elseif ($mode == 'update')
+                                        <i class="glyphicon glyphicon-shopping-cart"></i> Update
+                                        @else
+                                        <i class="glyphicon glyphicon-shopping-cart"></i> Renew
+                                        @endif
+                                    </button>
                                     <a href="/plans/cancel" class="btn btn-sm btn-warning">Cancel</a>
                                 </div>
                             </div>

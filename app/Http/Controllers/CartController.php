@@ -50,6 +50,13 @@ class CartController extends Controller
     }
 
     public function html_ShopCart($user) {
+        $region = array(
+            'us' => 'USA',
+            'ca' => 'Canada',
+            'eu' => 'Europe',
+            'au' => 'Australia',
+        );
+
         $txt = '';
         $total = 0;
         // return $user->cartItems()->count();
@@ -92,7 +99,7 @@ class CartController extends Controller
 
             // $title = 'Points Reserve';
             // $title = $product->title.' ('.$points.' Points per Month) - for '.$month.' month(s)';
-            $title = $product->title;
+            $title = $region[$product->region].' '.$product->title;
             $title2 = $points.' Points per Month - for '.$month.' month(s)';
 
             $txt .= '<input name="rowId[]" type="hidden" value="'.$cart_id.'">';

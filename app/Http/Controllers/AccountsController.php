@@ -46,7 +46,6 @@ class AccountsController extends Controller
         //if (!Auth::check()) {
         //    return $this->back_to_login($portal);
         //}
-
         $user = Auth::user();
         $data['sel_menu'] = 'account';
         $user->update($data);
@@ -181,30 +180,30 @@ class AccountsController extends Controller
 
             /* Configure Plan Renewal */
 // TODO
-           // $handle .=                 '<div class="col-md-5">';
-           // if ($plan->status == 'active') {
-           //  $handle .=                     '<a href="/plans/setup-renewal/1"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
-           //  $handle .=                         '<i class="glyphicon glyphicon-refresh"> </i> Configure Plan Renewal';
-           //  $handle .=                     '</a>';
-           //  $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
-           //  $handle .=                         '<p>';
-           //  $handle .=                             'Renew Tier:';
-           //  $handle .=                             '<strong>';
-           //  $handle .=                                  ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
-           //  $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
-           //  $handle .=                             '</strong>';
-           //  $handle .=                         '</p>';
-           //  $handle .=                         '<p>';
-           //  $handle .=                             'Renew Auto-Reserve: ';
-           //  $handle .=                             '<strong>No</strong>';
-           //  $handle .=                         '</p>';
-           // } else {
-           //  $handle .=                     '<a href="/plans/buy/'.$plan->id.'" style="margin-left:20px;" class="btn btn-xs btn-primary">';
-           //  $handle .=                         '<i class="glyphicon glyphicon glyphicon-shopping-cart"> </i> Buy Data Plan';
-           //  $handle .=                     '</a>';
-           // }
-           // $handle .=                     '</div>';
-           // $handle .=                 '</div>'; // <!-- end col-md-5 -->
+           $handle .=                 '<div class="col-md-5">';
+           if ($plan->status == 'active') {
+            $handle .=                     '<a href="/plans/renew/'.$plan->id.'"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+            $handle .=                         '<i class="glyphicon glyphicon-refresh"> </i> Configure Plan Renewal';
+            $handle .=                     '</a>';
+            $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
+            $handle .=                         '<p>';
+            $handle .=                             'Renew Tier:';
+            $handle .=                             '<strong>';
+            $handle .=                                  ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
+            $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+            $handle .=                             '</strong>';
+            $handle .=                         '</p>';
+            $handle .=                         '<p>';
+            $handle .=                             'Renew Auto-Reserve: ';
+            $handle .=                             '<strong>No</strong>';
+            $handle .=                         '</p>';
+           } else {
+            $handle .=                     '<a href="/plans/update/'.$plan->id.'" style="margin-left:20px;" class="btn btn-xs btn-primary">';
+            $handle .=                         '<i class="glyphicon glyphicon glyphicon-signal"> </i> Update Plan';
+            $handle .=                     '</a>';
+           }
+           $handle .=                     '</div>';
+           $handle .=                 '</div>'; // <!-- end col-md-5 -->
 //+
             $handle .=             '</div>'; // <!-- end row -->
             $handle .=         '</div>';

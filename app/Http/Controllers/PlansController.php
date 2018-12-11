@@ -61,7 +61,7 @@ class PlansController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function getAddPlan() {
+    public function getAdd() {
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
         $user->update($data);
@@ -75,7 +75,7 @@ class PlansController extends Controller
         Error: Please read and agree to the TERMS and CONDITIONS.
         Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
     */
-    public function postAddPlan(Request $request) {
+    public function postAdd(Request $request) {
         //{"_token":"xxxx","mode":"new","iccid":null,"submit-new-plan":"update"}
         //{"_token":"xxxx","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
         $user = Auth::user();
@@ -117,7 +117,7 @@ class PlansController extends Controller
 $region = 'au'; // for test
 $style = 'demo'; // for test
         if ($style == 'demo') {
-            $status = 'active';
+            $status = 'deactive';
             $points = 50000;
         } else {
             // $status = 'suspend';
@@ -168,7 +168,7 @@ $style = 'demo'; // for test
         Auth::user()->update($data);
         //+
 // session()->flash('success', 'Create Success');
-return redirect()->route('account.profile');
+// return redirect()->route('account.profile');
 
 // new (TODO)
         // // $mode = 'setup';
@@ -178,11 +178,67 @@ return redirect()->route('account.profile');
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function getBuyPlan($plan_id) {
-// return $plan_id;
+//     public function getCreate($plan_id) {
+// // return $plan_id;
+//         $user = Auth::user();
+
+//         // // $plan = Plan::findOrFail($plan_id);
+//         $plan = Plan::find($plan_id);
+//         if (!$plan) {
+//             session()->flash('danger', 'ICCID not exist.');
+//             return redirect()->back();
+//         }
+//         // $iccid = $plan->iccid;
+
+//         // $data['sel_menu'] = 'plan';
+//         // $user->update($data);
+
+//         $mode = 'create'; // TODO
+//         return view('plans.create', compact('user', 'plan', 'mode'));
+//     }
+
+    public function postCreate(Request $request) {
+        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
+// return $request;
+
+        /* search Plan */
+        // $plan = DB::table('plans')->where('id', $request->planid)->first();
+        $plan = Plan::findOrFail($request->planid);
+        if (!$plan) {
+            session()->flash('danger', 'Add Cart Fail.');
+            return redirect()->back();
+        }
+        $iccid = $plan->iccid;
+
+        $sku_id = $request->tier;
+        $quantity = 1;
+
         $user = Auth::user();
 
-        // $plan = Plan::findOrFail($plan_id);
+        // 创建或修改购物车记录
+        // $cart = CartItem::where('iccid', $iccid)->first();
+        // if ($cart) {
+        //     $cart->planProductSku()->associate($sku_id);
+        //     $cart->update();
+        // } else {
+            $cart = new CartItem(['quantity' => $quantity, 'iccid' => $iccid]);
+            $cart->user()->associate($user);
+            $cart->planProductSku()->associate($sku_id);
+            $cart->save();
+        // }
+        // // return [];
+        // // return redirect()->route('account.profile');
+
+// Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
+        // return view('shop.cart', compact('user'));
+        return redirect()->route('shop.cart');
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function getUpdate($plan_id) {
+        $user = Auth::user();
+
+        // // $plan = Plan::findOrFail($plan_id);
         $plan = Plan::find($plan_id);
         if (!$plan) {
             session()->flash('danger', 'ICCID not exist.');
@@ -193,11 +249,50 @@ return redirect()->route('account.profile');
         // $data['sel_menu'] = 'plan';
         // $user->update($data);
 
-        $mode = 'create'; // TODO
+        $mode = 'update'; // TODO
         return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
-    public function postBuyPlan(Request $request) {
+    public function postUpdate(Request $request) {
+        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
+// return $request;
+
+        /* search Plan */
+        // $plan = DB::table('plans')->where('id', $request->planid)->first();
+        $plan = Plan::findOrFail($request->planid);
+        if (!$plan) {
+            session()->flash('danger', 'Add Cart Fail.');
+            return redirect()->back();
+        }
+        $iccid = $plan->iccid;
+
+        $sku_id = $request->tier;
+        $quantity = 1;
+
+        $user = Auth::user();
+
+        // 创建或修改购物车记录
+        $cart = CartItem::where('iccid', $iccid)->first();
+        if ($cart) {
+            $cart->planProductSku()->associate($sku_id);
+            $cart->update();
+        } else {
+            $cart = new CartItem(['quantity' => $quantity, 'iccid' => $iccid]);
+            $cart->user()->associate($user);
+            $cart->planProductSku()->associate($sku_id);
+            $cart->save();
+        }
+        // return [];
+        // return redirect()->route('account.profile');
+
+// Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
+        // return view('shop.cart', compact('user'));
+        return redirect()->route('shop.cart');
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    // add cart
+    public function postBuyPlanX(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 // return $request;
 
@@ -215,13 +310,11 @@ return redirect()->route('account.profile');
 
         // // 从数据库中查询该商品是否已经在购物车中
         // if ($cart = $user->cartItems()->where('plan_product_sku_id', $skuId)->first()) {
-
         //     // 如果存在则直接叠加商品数量
         //     $cart->update([
         //         'quantity' => $cart->quantity + $quantity,
         //     ]);
         // } else {
-
         //     // 否则创建一个新的购物车记录
         //     $cart = new CartItem(['quantity' => $quantity]);
         //     $cart->user()->associate($user);
@@ -246,31 +339,31 @@ return redirect()->route('account.profile');
     }
 
     /*----------------------------------------------------------------------------------*/
-//     public function postSetupPlan(Request $request) {
-//         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-// return $request;
-//         $sku_id = $request->tier;
-//     }
-
-    public function getRenewPlan(Plan $plan) {
+    public function getRenew($plan_id) {
         $user = Auth::user();
-//        $data['sel_menu'] = 'my_plans';
-//        $user->update($data);
 
-        $user_id = $user->id;
-        // $plans = DB::table('plans')
-        //     ->where('user_id', $user_id)
-        //     //->orderBy('created_at', 'desc')
-        //     ->paginate(10);
+        // // $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+        if (!$plan) {
+            session()->flash('danger', 'ICCID not exist.');
+            return redirect()->back();
+        }
+        // $iccid = $plan->iccid;
 
-        //return view('plans._usa', compact('user', 'plans'));
-//        return view('plans._usa', compact('user'));
-        return view('plans._australia', compact('user'));
+        // $data['sel_menu'] = 'plan';
+        // $user->update($data);
 
-// // // $mode = 'setup';
-// // // return view('plans.setup', compact('user', 'plan', 'mode'));
-// $mode = 'create';
-// return view('plans.create', compact('user', 'plan', 'mode'));
+        $mode = 'renew';
+        return view('plans.create', compact('user', 'plan', 'mode'));
+    }
+
+    public function postRenew(Request $request) {
+return $request;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function getCancel() {
+        return redirect()->route('account.profile');
     }
 
     /*----------------------------------------------------------------------------------*/

@@ -26,7 +26,7 @@
                     <div class="col-md-6">
                         <form method="POST" action="{{ route('plan.setup') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                             {{ csrf_field() }}
-                            <input name="mode" type="hidden" value="setup">
+                            <input name="mode" type="hidden" value="{{ $mode }}">
                             <input name="planid" type="hidden" value="{{ $plan->id }}">
 
                             <div class="form-group">
@@ -59,7 +59,9 @@
                                 </div>
                                 <div class="col-md-7">
                                     <!-- <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-saved"></i> Save Setup</button> -->
-                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update"><i class="glyphicon glyphicon-shopping-cart"></i> Add Cart</button>
+                                    <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="update">
+                                        <i class="glyphicon glyphicon-shopping-cart"></i> Setup
+                                    </button>
                                     <a href="/plans/cancel" class="btn btn-sm btn-warning">Cancel</a>
                                 </div>
                             </div>

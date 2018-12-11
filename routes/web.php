@@ -93,25 +93,26 @@ Route::group(['middleware' => 'auth'], function() {
             /plans/buy-reserve/{iccid}      -> /plan/buy/{iccid}
             /plans/setup-renewal/{iccid}    -> /plan/renew/{iccid}
         */
-        Route::get('/plans/add','PlansController@getAddPlan')->name('plan.add');
-        Route::post('/plans/add','PlansController@postAddPlan')->name('plan.add');
+        Route::get('/plans/add','PlansController@getAdd')->name('plans.add');
+        Route::post('/plans/add','PlansController@postAdd')->name('plans.add');
+
+        // Route::get('/plans/create/{plan}', 'PlansController@getCreate')->name('plan.create');
+        Route::post('/plans/create', 'PlansController@postCreate')->name('plans.create');
+
+        Route::get('/plans/update/{plan}', 'PlansController@getUpdate')->name('plans.update');
+        Route::post('/plans/update/', 'PlansController@postUpdate')->name('plans.update');
+
+        Route::get('/plans/renew/{plan}', 'PlansController@getRenew')->name('plans.renew');
+        Route::post('/plans/renew', 'PlansController@postRenew')->name('plans.renew');
+
+        Route::get('/plans/cancel', 'PlansController@getCancel')->name('plans.cancel');
+        //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
         // Route::get('/plans/buy','PlansController@getBuyPlan')->name('plan.buy');
         // Route::post('/plans/buy','PlansController@postBuyPlan')->name('plan.buy');
 
-        Route::get('/plans/buy/{plan}', 'PlansController@getBuyPlan')->name('plan.buy');
-        Route::post('/plans/buy', 'PlansController@postBuyPlan')->name('plan.buy');
-        // Route::post('/plans/setup','PlansController@postSetupPlan')->name('plan.setup');
-
-
 // Route::post('/cart/add', 'CartController@postAddCart')->name('cart.add');
 // Route::post('cart', 'CartController@postAddCart')->name('cart.add');
-
-        // Route::get('/plans/renew/{plan}', 'PlansController@renew')->name('plans.renew');
-        Route::get('/plans/setup-renewal/{plan}', 'PlansController@getRenewPlan')->name('plans.renew');
-
-        Route::get('/plans/cancel', 'AccountsController@getProfile')->name('plans.cancel');
-        //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
         // for test
         // Route::get('/plan/pause/{plan}', 'PlansController@pause')->name('plan.pause');
