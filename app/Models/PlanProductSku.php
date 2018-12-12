@@ -17,4 +17,8 @@ class PlanProductSku extends Model
     public function product() {
         return $this->belongsTo(PlanProduct::class);
     }
+
+    public function planProduct() {
+        return $this->belongsTo(PlanProduct::class);
+    }
 }

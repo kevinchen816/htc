@@ -93,19 +93,19 @@ Route::group(['middleware' => 'auth'], function() {
             /plans/buy-reserve/{iccid}      -> /plan/buy/{iccid}
             /plans/setup-renewal/{iccid}    -> /plan/renew/{iccid}
         */
-        Route::get('/plans/add','PlansController@getAdd')->name('plans.add');
-        Route::post('/plans/add','PlansController@postAdd')->name('plans.add');
+        Route::get('/plans/add','PlansController@getPlanAdd')->name('plans.add');
+        Route::post('/plans/add','PlansController@postPlanAdd')->name('plans.add');
 
-        // Route::get('/plans/create/{plan}', 'PlansController@getCreate')->name('plan.create');
-        Route::post('/plans/create', 'PlansController@postCreate')->name('plans.create');
+        // Route::get('/plans/create/{plan}', 'PlansController@getPlanCreate')->name('plan.create');
+        Route::post('/plans/create', 'PlansController@postPlanCreate')->name('plans.create');
 
-        Route::get('/plans/update/{plan}', 'PlansController@getUpdate')->name('plans.update');
-        Route::post('/plans/update/', 'PlansController@postUpdate')->name('plans.update');
+        Route::get('/plans/update/{plan}', 'PlansController@getPlanUpdate')->name('plans.update');
+        Route::post('/plans/update/', 'PlansController@postPlanUpdate')->name('plans.update');
 
-        Route::get('/plans/renew/{plan}', 'PlansController@getRenew')->name('plans.renew');
-        Route::post('/plans/renew', 'PlansController@postRenew')->name('plans.renew');
+        Route::get('/plans/renew/{plan}', 'PlansController@getPlanRenew')->name('plans.renew');
+        Route::post('/plans/renew', 'PlansController@postPlanRenew')->name('plans.renew');
 
-        Route::get('/plans/cancel', 'PlansController@getCancel')->name('plans.cancel');
+        Route::get('/plans/cancel', 'PlansController@getPlanCancel')->name('plans.cancel');
         //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 
         // Route::get('/plans/buy','PlansController@getBuyPlan')->name('plan.buy');

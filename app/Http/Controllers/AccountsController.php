@@ -9,6 +9,8 @@ use DB;
 
 use App\Models\Camera;
 use App\Models\Email;
+use App\Models\PlanProduct;
+use App\Models\PlanProductSku;
 
 class AccountsController extends Controller
 {
@@ -143,6 +145,30 @@ class AccountsController extends Controller
             }
 
             $status = ucwords($plan->status);
+            $sku_id = $plan->plan_product_sku_id;
+            $auto_bill = ($plan->auto_bill) ? 'Yes' : 'No';
+
+            $sku = PlanProductSku::find($sku_id);
+            if ($sku) {
+                $month = $sku->month; // 3
+                $price = $sku->price; // 26.95
+
+                // $product = $sku->planProduct(); // NG ??
+                $product = PlanProduct::find($sku->plan_product_id);
+                $title = $product->title;
+                $points = $product->points;
+
+                // Silver - 3 Months 36.95 for 3 Months
+                // Silver - 3 Months 36.95
+                if ($month > 1) {
+                    $tier = $title.' - '.$month.' Months '.$price;
+                } else {
+                    $tier = $title.' - '.$month.' Month '.$price;
+                }
+
+            } else {
+                $tier = '';
+            }
 
             $handle .= '<div class="row">';
             $handle .=     '<div class="col-md-12">';
@@ -195,12 +221,29 @@ class AccountsController extends Controller
             $handle .=                         '</p>';
             $handle .=                         '<p>';
             $handle .=                             'Renew Auto-Reserve: ';
-            $handle .=                             '<strong>No</strong>';
+            $handle .=                             '<strong>'.$auto_bill.'</strong>';
             $handle .=                         '</p>';
            } else {
             $handle .=                     '<a href="/plans/update/'.$plan->id.'" style="margin-left:20px;" class="btn btn-xs btn-primary">';
             $handle .=                         '<i class="glyphicon glyphicon glyphicon-signal"> </i> Update Plan';
             $handle .=                     '</a>';
+
+
+
+            $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
+            $handle .=                         '<p>';
+            $handle .=                             'Tier:';
+            $handle .=                             '<strong>';
+            $handle .=                                  ' <span class="label" style="font-size: 1.00em;">'.$tier.'</span>';
+            // $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+            $handle .=                             '</strong>';
+            $handle .=                         '</p>';
+            $handle .=                         '<p>';
+            $handle .=                             'Auto-Bill: ';
+            $handle .=                             '<strong>'.$auto_bill.'</strong>';
+            $handle .=                         '</p>';
+
+
            }
            $handle .=                     '</div>';
            $handle .=                 '</div>'; // <!-- end col-md-5 -->

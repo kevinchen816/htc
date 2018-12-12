@@ -61,7 +61,7 @@ class PlansController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function getAdd() {
+    public function getPlanAdd() {
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
         $user->update($data);
@@ -75,7 +75,7 @@ class PlansController extends Controller
         Error: Please read and agree to the TERMS and CONDITIONS.
         Error: Invalid ICCID. Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.
     */
-    public function postAdd(Request $request) {
+    public function postPlanAdd(Request $request) {
         //{"_token":"xxxx","mode":"new","iccid":null,"submit-new-plan":"update"}
         //{"_token":"xxxx","mode":"new","iccid":null,"agree-terms":"on","submit-new-plan":"update"}
         $user = Auth::user();
@@ -197,7 +197,7 @@ $style = 'demo'; // for test
 //         return view('plans.create', compact('user', 'plan', 'mode'));
 //     }
 
-    public function postCreate(Request $request) {
+    public function postPlanCreate(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 // return $request;
 
@@ -235,7 +235,7 @@ $style = 'demo'; // for test
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function getUpdate($plan_id) {
+    public function getPlanUpdate($plan_id) {
         $user = Auth::user();
 
         // // $plan = Plan::findOrFail($plan_id);
@@ -253,23 +253,25 @@ $style = 'demo'; // for test
         return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
-    public function postUpdate(Request $request) {
+    public function postPlanUpdate(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
 // return $request;
+        $plan_id = $request->planid;
+        $sku_id = $request->tier;
 
         /* search Plan */
         // $plan = DB::table('plans')->where('id', $request->planid)->first();
-        $plan = Plan::findOrFail($request->planid);
+        // $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
         if (!$plan) {
-            session()->flash('danger', 'Add Cart Fail.');
+            session()->flash('danger', 'Update Cart Fail.');
             return redirect()->back();
         }
-        $iccid = $plan->iccid;
-
-        $sku_id = $request->tier;
-        $quantity = 1;
+        $plan->plan_product_sku_id = $sku_id;
+        $plan->update();
 
         $user = Auth::user();
+        $iccid = $plan->iccid;
 
         // 创建或修改购物车记录
         $cart = CartItem::where('iccid', $iccid)->first();
@@ -277,7 +279,7 @@ $style = 'demo'; // for test
             $cart->planProductSku()->associate($sku_id);
             $cart->update();
         } else {
-            $cart = new CartItem(['quantity' => $quantity, 'iccid' => $iccid]);
+            $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
             $cart->user()->associate($user);
             $cart->planProductSku()->associate($sku_id);
             $cart->save();
@@ -339,7 +341,7 @@ $style = 'demo'; // for test
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function getRenew($plan_id) {
+    public function getPlanRenew($plan_id) {
         $user = Auth::user();
 
         // // $plan = Plan::findOrFail($plan_id);
@@ -357,12 +359,12 @@ $style = 'demo'; // for test
         return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
-    public function postRenew(Request $request) {
+    public function postPlanRenew(Request $request) {
 return $request;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function getCancel() {
+    public function getPlanCancel() {
         return redirect()->route('account.profile');
     }
 
@@ -379,7 +381,7 @@ return $request;
             ->get();
 
         $txt = '';
-        $checked = 'checked';
+        // $checked = 'checked';
         foreach ($products as $product) {
             $product_id = $product->id;
             $points = $product->points;
@@ -399,6 +401,8 @@ return $request;
             $txt .=         '</div>';
             $txt .=         '<div class="col-md-7">';
             foreach ($skus as $sku) {
+                $checked = ($sku->id == $plan->plan_product_sku_id) ? 'checked' : '';
+
                 $sku_id = $sku->id;
                 $month = $sku->month;
                 $price = $sku->price;
@@ -416,7 +420,7 @@ return $request;
                 $txt .=             '<div class="radio">';
                 $txt .=                 '<label><input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" ><span style="color:white;">'.$price.'</span> <span style="color:lime;"> '.$sku_month.'</span> <span style="color:red;"> '.$cpp.'</span></label>';
                 $txt .=             '</div>';
-                $checked = '';
+                // $checked = '';
             }
             $txt .=         '</div>';
             $txt .=     '</div>';
