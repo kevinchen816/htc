@@ -11,6 +11,9 @@ use App\Models\Camera;
 use App\Models\Email;
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
+use App\Models\CartItem;
+
+use Debugbar;
 
 class AccountsController extends Controller
 {
@@ -61,72 +64,73 @@ class AccountsController extends Controller
     }
 
     /*-----------------------------------------------------------*/
-    public function html_MyPlansX() {
-        $user = Auth::user();
-        $user_id = $user->id;
+//     public function html_MyPlansX() {
+//         $user = Auth::user();
+//         $user_id = $user->id;
 
-        $plans = DB::table('plans')
-            ->where('user_id', $user_id)
-            ->get();
+//         $plans = DB::table('plans')
+//             ->where('user_id', $user_id)
+//             ->get();
 
-        $handle = '';
-        foreach ($plans as $plan) {
-            $camera_name = '(No Camera)';
-            if ($plan->camera_id) {
-                $camera = Camera::find($plan->camera_id);
-                if ($camera) {
-                    $camera_name = $camera->description;
-                }
-            }
+//         $handle = '';
+//         foreach ($plans as $plan) {
+//             $camera_name = '(No Camera)';
+//             if ($plan->camera_id) {
+//                 $camera = Camera::find($plan->camera_id);
+//                 if ($camera) {
+//                     $camera_name = $camera->description;
+//                 }
+//             }
 
-            $handle .= '<div class="row">';
-            $handle .=     '<div class="col-md-12">';
-            $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
-            $handle .=             '<div class="row">';
-            $handle .=                 '<div class="col-md-5">';
-            // $handle .=                     '<i class="fa fa-dot-circle"></i>';
-            // $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
-            $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
-            $handle .=                     '<p></p>';
-            $handle .=                 '</div>';
-            $handle .=                 '<div class="col-md-5">';
-            $handle .=                 '</div>'; // <!-- end col -->
-            $handle .=             '</div>';
-            $handle .=         '</div>';
-            $handle .=     '</div>';
-            $handle .= '</div>';
+//             $handle .= '<div class="row">';
+//             $handle .=     '<div class="col-md-12">';
+//             $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
+//             $handle .=             '<div class="row">';
+//             $handle .=                 '<div class="col-md-5">';
+//             // $handle .=                     '<i class="fa fa-dot-circle"></i>';
+//             // $handle .=                     '<span class="label label-info" style="font-size: 1.00em;">Prepaid 6 Months</span>';
+//             $handle .=                     '<span class="label label-success" style="font-size:0.9em;">Active</span>';
+//             $handle .=                     '<p></p>';
+//             $handle .=                 '</div>';
+//             $handle .=                 '<div class="col-md-5">';
+//             $handle .=                 '</div>'; // <!-- end col -->
+//             $handle .=             '</div>';
+//             $handle .=         '</div>';
+//             $handle .=     '</div>';
+//             $handle .= '</div>';
 
-            $handle .= '<div class="row">';
-            $handle .=     '<div class="col-sm-6">';
-            $handle .=         '<table class="table plan-table">';
-            $handle .=             '<tbody>';
-//            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
-            $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
-            $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
-            $handle .=                 '</tr>';
-            //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
-            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
-            $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
-            $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
-            $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
-            $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
-            $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
-            $handle .=                 '</tr>';
-//            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
-//            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
-//            $handle .=                 '</tr>';
-            $handle .=             '</tbody>';
-            $handle .=         '</table>';
-            $handle .=     '</div>';
-            $handle .= '</div>';
-        }
-        return $handle;
-    }
+//             $handle .= '<div class="row">';
+//             $handle .=     '<div class="col-sm-6">';
+//             $handle .=         '<table class="table plan-table">';
+//             $handle .=             '<tbody>';
+// //            $handle .=                 '<tr><td class="pull-right"><i class="fa fa-bolt"></i>Sim ICCID:</td>';
+//             $handle .=                 '<tr><td class="pull-right"></i>ICCID:</td>';
+//             $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
+//             $handle .=                 '</tr>';
+//             //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
+//             $handle .=                 '<tr><td class="pull-right">Camera:</td>';
+//             $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
+//             $handle .=                 '</tr>';
+//             $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
+//             $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
+//             $handle .=                 '</tr>';
+//             $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
+//             $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
+//             $handle .=                 '</tr>';
+// //            $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
+// //            $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
+// //            $handle .=                 '</tr>';
+//             $handle .=             '</tbody>';
+//             $handle .=         '</table>';
+//             $handle .=     '</div>';
+//             $handle .= '</div>';
+//         }
+//         return $handle;
+//     }
 
     public function html_MyPlans() {
-        //return 'Hello';
+        Debugbar::info(__METHOD__);
+
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -136,6 +140,24 @@ class AccountsController extends Controller
 
         $handle = '';
         foreach ($plans as $plan) {
+            $sku = PlanProductSku::find($plan->plan_product_sku_id);
+            if ($sku) {
+                // $product = $sku->planProduct(); // NG ??
+                $product = PlanProduct::find($sku->plan_product_id);
+
+                // Silver - 5000 Points per Month
+                // 3 Months $36.95
+                $txt_month = ($sku->month > 1) ? 'Months' : 'Month';
+                $txt_tier = $product->title.' - '.$product->points.' Points per Month';
+                $txt_tier2 = $sku->month.' '.$txt_month.' <i class="fa fa-dollar-sign"></i>'.$sku->price;
+
+            } else {
+                Debugbar::error('plan product sku not found - id='.$plan->plan_product_sku_id);
+                $txt_tier = $txt_tier2 = '';
+            }
+            $txt_status = ucwords($plan->status);
+            $txt_auto_bill = ($plan->auto_bill) ? 'Yes' : 'No';
+
             $camera_name = '(No Camera)';
             if ($plan->camera_id) {
                 $camera = Camera::find($plan->camera_id);
@@ -144,30 +166,34 @@ class AccountsController extends Controller
                 }
             }
 
-            $status = ucwords($plan->status);
-            $sku_id = $plan->plan_product_sku_id;
-            $auto_bill = ($plan->auto_bill) ? 'Yes' : 'No';
-
-            $sku = PlanProductSku::find($sku_id);
-            if ($sku) {
-                $month = $sku->month; // 3
-                $price = $sku->price; // 26.95
-
-                // $product = $sku->planProduct(); // NG ??
-                $product = PlanProduct::find($sku->plan_product_id);
-                $title = $product->title;
-                $points = $product->points;
-
-                // Silver - 3 Months 36.95 for 3 Months
-                // Silver - 3 Months 36.95
-                if ($month > 1) {
-                    $tier = $title.' - '.$month.' Months '.$price;
+            // Cart: deactive & in cart
+            // Create New Plan: deactive & no in cart
+            // Renew: active
+            // Reactive: suspend
+            if ($plan->status == 'deactive') {
+                $cart = CartItem::where('iccid', $plan->iccid)->get();
+                Debugbar::debug('count='.count($cart));
+                if (count($cart)) {
+                    $action = 'cart';
+                    $action_url = '/shop/cart/';
+                    $action_name = 'Cart';
+                    $action_icon = 'shopping-cart';
                 } else {
-                    $tier = $title.' - '.$month.' Month '.$price;
+                    $action = 'create';
+                    $action_url = '/plans/create/'.$plan->id;
+                    $action_name = 'Create New Plan';
+                    $action_icon = 'plus';
                 }
-
+            } else if ($plan->status == 'active') {
+                $action = 'renew';
+                $action_url = '/plans/renew/'.$plan->id;
+                $action_name = 'Renew';
+                $action_icon = 'refresh';
             } else {
-                $tier = '';
+                $action = 'reactive';
+                $action_url = '/plans/renew/'.$plan->id;
+                $action_name = 'Reactive';
+                $action_icon = 'refresh';
             }
 
             $handle .= '<div class="row">';
@@ -183,7 +209,7 @@ class AccountsController extends Controller
 //          $handle .=                     ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
 // TODO     $handle .=                     ' <img src="/images/cad.png" width="30" style="margin-bottom:10px;"/>';
             }
-            $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$status.'</span>';
+            $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
 
             /* Auto-Reserve */
             // $handle .=                     '<p style="margin-top:4px;">';
@@ -207,45 +233,51 @@ class AccountsController extends Controller
             /* Configure Plan Renewal */
 // TODO
            $handle .=                 '<div class="col-md-5">';
-           if ($plan->status == 'active') {
-            $handle .=                     '<a href="/plans/renew/'.$plan->id.'"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
-            $handle .=                         '<i class="glyphicon glyphicon-refresh"> </i> Configure Plan Renewal';
+           // if ($action == 'active') {
+           //  $handle .=                     '<a href="/plans/renew/'.$plan->id.'"  style="margin-left:20px;" class="btn btn-xs btn-primary">';
+           //  $handle .=                         '<i class="glyphicon glyphicon-refresh"> </i> Configure Plan Renewal';
+           //  $handle .=                     '</a>';
+           //  $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
+           //  $handle .=                         '<p>';
+           //  $handle .=                             'Renew Tier:';
+           //  $handle .=                             '<strong>';
+           //  $handle .=                                  ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
+           //  $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+           //  $handle .=                             '</strong>';
+           //  $handle .=                         '</p>';
+           //  $handle .=                         '<p>';
+           //  $handle .=                             'Renew Auto-Reserve: ';
+           //  $handle .=                             '<strong>'.$txt_auto_bill.'</strong>';
+           //  $handle .=                         '</p>';
+           // } else if ($action == 'cart') {
+            $handle .=                     '<a href="'.$action_url.'" style="margin-left:20px;" class="btn btn-xs btn-primary">';
+            $handle .=                         '<i class="glyphicon glyphicon-'.$action_icon.'"> </i> '.$action_name;
             $handle .=                     '</a>';
+
+// if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
+if ($action == 'create') {
+
+} else {
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
             $handle .=                         '<p>';
-            $handle .=                             'Renew Tier:';
-            $handle .=                             '<strong>';
-            $handle .=                                  ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
-            $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
-            $handle .=                             '</strong>';
+            $handle .=                             '<strong>'.$txt_tier.'</strong>';
             $handle .=                         '</p>';
-            $handle .=                         '<p>';
-            $handle .=                             'Renew Auto-Reserve: ';
-            $handle .=                             '<strong>'.$auto_bill.'</strong>';
-            $handle .=                         '</p>';
-           } else {
-            $handle .=                     '<a href="/plans/update/'.$plan->id.'" style="margin-left:20px;" class="btn btn-xs btn-primary">';
-            $handle .=                         '<i class="glyphicon glyphicon glyphicon-signal"> </i> Update Plan';
-            $handle .=                     '</a>';
 
-
-
-            $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
             $handle .=                         '<p>';
             $handle .=                             'Tier:';
             $handle .=                             '<strong>';
-            $handle .=                                  ' <span class="label" style="font-size: 1.00em;">'.$tier.'</span>';
-            // $handle .=                                  ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
+            $handle .=                                  ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
             $handle .=                             '</strong>';
             $handle .=                         '</p>';
             $handle .=                         '<p>';
             $handle .=                             'Auto-Bill: ';
-            $handle .=                             '<strong>'.$auto_bill.'</strong>';
+            $handle .=                             '<strong>';
+            $handle .=                                  ' <span class="label" style="font-size: 1.00em;">'.$txt_auto_bill.'</span>';
+            $handle .=                             '</strong>';
             $handle .=                         '</p>';
+            $handle .=                     '</div>';
+}
 
-
-           }
-           $handle .=                     '</div>';
            $handle .=                 '</div>'; // <!-- end col-md-5 -->
 //+
             $handle .=             '</div>'; // <!-- end row -->
@@ -379,6 +411,8 @@ $handle .=                 '</tr>';
 
     /*-----------------------------------------------------------*/
     public function html_EmailSetup() {
+        Debugbar::info(__METHOD__);
+
         $user = Auth::user();
         $user_id = $user->id;
 

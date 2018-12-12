@@ -13,6 +13,7 @@ use Carbon\Carbon;
 
 use Auth;
 use DB;
+use Debugbar;
 
 // https://blog.csdn.net/m0sh1/article/details/80402589
 // composer require "guzzlehttp/guzzle:~6.3"
@@ -65,7 +66,6 @@ class PlansController extends Controller
         $user = Auth::user();
         $data['sel_menu'] = 'plan';
         $user->update($data);
-        // return view('plans.add-plan', compact('user'));
         return view('plans.add', compact('user'));
     }
 
@@ -86,8 +86,7 @@ class PlansController extends Controller
         //    'iccid' => 'required|unique:plans|max:20',
         // ]);
         if (!$request->iccid) {
-            //session()->flash('danger', 'Error: Please input an ICCID.');
-            session()->flash('danger', 'Please input ICCID.');
+            session()->flash('danger', 'Please input an ICCID.');
             return redirect()->back();
         }
         $iccid = $request->iccid;
@@ -101,7 +100,8 @@ class PlansController extends Controller
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
             //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
-            session()->flash('danger', 'ICCID had used.');
+            // session()->flash('danger', 'ICCID had used.');
+            session()->flash('danger', 'This ICCID has already been registered.');
             return redirect()->back();
         }
 
@@ -178,60 +178,50 @@ $style = 'demo'; // for test
     }
 
     /*----------------------------------------------------------------------------------*/
-//     public function getCreate($plan_id) {
-// // return $plan_id;
-//         $user = Auth::user();
+    public function getPlanCreate($plan_id) {
+        $user = Auth::user();
 
-//         // // $plan = Plan::findOrFail($plan_id);
-//         $plan = Plan::find($plan_id);
-//         if (!$plan) {
-//             session()->flash('danger', 'ICCID not exist.');
-//             return redirect()->back();
-//         }
-//         // $iccid = $plan->iccid;
+        // // $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+        if (!$plan) {
+            session()->flash('danger', 'ICCID not exist.');
+            return redirect()->back();
+        }
+        // $iccid = $plan->iccid;
 
-//         // $data['sel_menu'] = 'plan';
-//         // $user->update($data);
+        // $data['sel_menu'] = 'plan';
+        // $user->update($data);
 
-//         $mode = 'create'; // TODO
-//         return view('plans.create', compact('user', 'plan', 'mode'));
-//     }
+        $mode = 'create'; // TODO
+        return view('plans.create', compact('user', 'plan', 'mode'));
+    }
 
     public function postPlanCreate(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-// return $request;
+        $plan_id = $request->planid;
+        $sku_id = $request->tier;
 
         /* search Plan */
-        // $plan = DB::table('plans')->where('id', $request->planid)->first();
-        $plan = Plan::findOrFail($request->planid);
+        $plan = Plan::find($plan_id);
         if (!$plan) {
             session()->flash('danger', 'Add Cart Fail.');
             return redirect()->back();
         }
-        $iccid = $plan->iccid;
-
-        $sku_id = $request->tier;
-        $quantity = 1;
+        $plan->plan_product_sku_id = $sku_id;
+        $plan->update();
 
         $user = Auth::user();
+        $iccid = $plan->iccid;
 
-        // 创建或修改购物车记录
-        // $cart = CartItem::where('iccid', $iccid)->first();
-        // if ($cart) {
-        //     $cart->planProductSku()->associate($sku_id);
-        //     $cart->update();
-        // } else {
-            $cart = new CartItem(['quantity' => $quantity, 'iccid' => $iccid]);
-            $cart->user()->associate($user);
-            $cart->planProductSku()->associate($sku_id);
-            $cart->save();
-        // }
-        // // return [];
-        // // return redirect()->route('account.profile');
+        // 创建购物车记录
+        $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
+        $cart->user()->associate($user);
+        $cart->planProductSku()->associate($sku_id);
+        $cart->save();
 
-// Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
-        // return view('shop.cart', compact('user'));
+        // Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
         return redirect()->route('shop.cart');
+        // return redirect()->route('account.profile');
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -255,7 +245,6 @@ $style = 'demo'; // for test
 
     public function postPlanUpdate(Request $request) {
         // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-// return $request;
         $plan_id = $request->planid;
         $sku_id = $request->tier;
 
@@ -369,7 +358,10 @@ return $request;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function html_CreatePlan($plan) {
+    public function html_CreatePlan($plan, $mode) {
+        Debugbar::debug('plan='.$plan);
+        Debugbar::debug('mode='.$mode); // create, (update X), renew
+
         $region = $plan->region; // us, ca, eu, au, cn, tw
 
         // $product = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
@@ -381,7 +373,7 @@ return $request;
             ->get();
 
         $txt = '';
-        // $checked = 'checked';
+        $checked = 'checked';
         foreach ($products as $product) {
             $product_id = $product->id;
             $points = $product->points;
@@ -401,7 +393,9 @@ return $request;
             $txt .=         '</div>';
             $txt .=         '<div class="col-md-7">';
             foreach ($skus as $sku) {
-                $checked = ($sku->id == $plan->plan_product_sku_id) ? 'checked' : '';
+                if ($mode == 'renew') {
+                    $checked = ($sku->id == $plan->plan_product_sku_id) ? 'checked' : '';
+                }
 
                 $sku_id = $sku->id;
                 $month = $sku->month;
@@ -418,9 +412,23 @@ return $request;
                 // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
                 // $txt .=             '</div>';
                 $txt .=             '<div class="radio">';
-                $txt .=                 '<label><input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" ><span style="color:white;">'.$price.'</span> <span style="color:lime;"> '.$sku_month.'</span> <span style="color:red;"> '.$cpp.'</span></label>';
+                                     // '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
+
+                // $txt .=                 '<label><input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" ><span style="color:white;">'.$price.'</span> <span style="color:lime;"> '.$sku_month.'</span> <span style="color:red;"> '.$cpp.'</span></label>';
+
+                $txt .=                 '<label>';
+                $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" >';
+                $txt .=                         '<span style="color:white;">'.$price.'</span>';
+                $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>';
+                $txt .=                         '<span style="color:red;"> '.$cpp.'</span>';
+                $txt .=                 '</label>';
+
+
                 $txt .=             '</div>';
-                // $checked = '';
+
+                if ($mode == 'create') {
+                    $checked = '';
+                }
             }
             $txt .=         '</div>';
             $txt .=     '</div>';

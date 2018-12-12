@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @inject('pc', 'App\Http\Controllers\PlansController')
-                                    {!! $pc->html_CreatePlan($plan) !!}
+                                    {!! $pc->html_CreatePlan($plan, $mode) !!}
 
                                     @include('plans._help')
                                 </div>

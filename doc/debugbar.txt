@@ -35,6 +35,8 @@
 debug, info, notice, warning, error, critical, alert, emergency
 （调试、信息、通知、警告、错误、关键、警报、紧急）
 
+use Debugbar;
+
 Debugbar::debug($carts);
 Debugbar::info('INFO');
 Debugbar::notice('NOTICE');
