@@ -64,6 +64,24 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-md-3 control-label" for="inputSmall">Auto Bill</label>
+                                <div class="col-md-8">
+                                    <div style="margin-top:10px;">
+
+                                    <span class="button-checkbox">
+                                        <button type="button" class="btn btn-default btn-xs" data-color="info">Automatic Billing</button>
+                                        <input type="checkbox" class="hidden" name="auto-bill" id="auto-bill" checked />
+                                    </span>
+
+                                    <span class="help-block">
+                                        Check this option on your plan to have the system continue billing you automatically.
+                                    </span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="col-md-3">
                                 </div>
                                 <div class="col-md-7">

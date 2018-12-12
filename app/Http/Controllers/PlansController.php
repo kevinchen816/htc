@@ -197,9 +197,10 @@ $style = 'demo'; // for test
     }
 
     public function postPlanCreate(Request $request) {
-        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-        $plan_id = $request->planid;
-        $sku_id = $request->tier;
+        // {"_token":"xxxx","mode":"create","planid":"5","tier":"21","auto-bill":"on","submit-new-plan":"create"}
+        $plan_id = $request->input('planid'); //$request->planid;
+        $sku_id = $request->input('tier'); //$request->tier;
+        $auto_bill = ($request->input('auto-bill') == 'on') ? 1: 0;
 
         /* search Plan */
         $plan = Plan::find($plan_id);
@@ -208,98 +209,13 @@ $style = 'demo'; // for test
             return redirect()->back();
         }
         $plan->plan_product_sku_id = $sku_id;
+        $plan->auto_bill = $auto_bill;
         $plan->update();
 
         $user = Auth::user();
         $iccid = $plan->iccid;
 
-        // 创建购物车记录
-        $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
-        $cart->user()->associate($user);
-        $cart->planProductSku()->associate($sku_id);
-        $cart->save();
-
-        // Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
-        return redirect()->route('shop.cart');
-        // return redirect()->route('account.profile');
-    }
-
-    /*----------------------------------------------------------------------------------*/
-    public function getPlanUpdate($plan_id) {
-        $user = Auth::user();
-
-        // // $plan = Plan::findOrFail($plan_id);
-        $plan = Plan::find($plan_id);
-        if (!$plan) {
-            session()->flash('danger', 'ICCID not exist.');
-            return redirect()->back();
-        }
-        // $iccid = $plan->iccid;
-
-        // $data['sel_menu'] = 'plan';
-        // $user->update($data);
-
-        $mode = 'update'; // TODO
-        return view('plans.create', compact('user', 'plan', 'mode'));
-    }
-
-    public function postPlanUpdate(Request $request) {
-        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-        $plan_id = $request->planid;
-        $sku_id = $request->tier;
-
-        /* search Plan */
-        // $plan = DB::table('plans')->where('id', $request->planid)->first();
-        // $plan = Plan::findOrFail($plan_id);
-        $plan = Plan::find($plan_id);
-        if (!$plan) {
-            session()->flash('danger', 'Update Cart Fail.');
-            return redirect()->back();
-        }
-        $plan->plan_product_sku_id = $sku_id;
-        $plan->update();
-
-        $user = Auth::user();
-        $iccid = $plan->iccid;
-
-        // 创建或修改购物车记录
-        $cart = CartItem::where('iccid', $iccid)->first();
-        if ($cart) {
-            $cart->planProductSku()->associate($sku_id);
-            $cart->update();
-        } else {
-            $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
-            $cart->user()->associate($user);
-            $cart->planProductSku()->associate($sku_id);
-            $cart->save();
-        }
-        // return [];
-        // return redirect()->route('account.profile');
-
-// Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
-        // return view('shop.cart', compact('user'));
-        return redirect()->route('shop.cart');
-    }
-
-    /*----------------------------------------------------------------------------------*/
-    // add cart
-    public function postBuyPlanX(Request $request) {
-        // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
-// return $request;
-
-        /* search Plan */
-        // $plan = DB::table('plans')->where('id', $request->planid)->first();
-        $plan = Plan::findOrFail($request->planid);
-        if (!$plan) {
-            session()->flash('danger', 'Add Cart Fail.');
-            return redirect()->back();
-        }
-        $iccid = $plan->iccid;
-
-        $sku_id = $request->tier;
-        $quantity = 1;
-
-        // // 从数据库中查询该商品是否已经在购物车中
+        // 从数据库中查询该商品是否已经在购物车中 (reference)
         // if ($cart = $user->cartItems()->where('plan_product_sku_id', $skuId)->first()) {
         //     // 如果存在则直接叠加商品数量
         //     $cart->update([
@@ -313,21 +229,71 @@ $style = 'demo'; // for test
         //     $cart->save();
         // }
 
-        $user = Auth::user();
-
-        // 创建一个新的购物车记录
-        $cart = new CartItem(['quantity' => $quantity, 'iccid' => $iccid]);
+        // 创建购物车记录
+        $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
         $cart->user()->associate($user);
         $cart->planProductSku()->associate($sku_id);
         $cart->save();
 
-        // return [];
-        // return redirect()->route('account.profile');
-
-// Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
-        // return view('shop.cart', compact('user'));
+        // Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
         return redirect()->route('shop.cart');
+        // return redirect()->route('account.profile');
     }
+
+    /*----------------------------------------------------------------------------------*/
+    // public function getPlanUpdate($plan_id) {
+    //     $user = Auth::user();
+
+    //     // // $plan = Plan::findOrFail($plan_id);
+    //     $plan = Plan::find($plan_id);
+    //     if (!$plan) {
+    //         session()->flash('danger', 'ICCID not exist.');
+    //         return redirect()->back();
+    //     }
+    //     // $iccid = $plan->iccid;
+
+    //     // $data['sel_menu'] = 'plan';
+    //     // $user->update($data);
+
+    //     $mode = 'update'; // TODO
+    //     return view('plans.create', compact('user', 'plan', 'mode'));
+    // }
+
+    // public function postPlanUpdate(Request $request) {
+    //     // {"_token":"xxxx","mode":"setup","planid":"13","tier":"20","submit-new-plan":"update"}
+    //     $plan_id = $request->planid;
+    //     $sku_id = $request->tier;
+
+    //     /* search Plan */
+    //     // $plan = DB::table('plans')->where('id', $request->planid)->first();
+    //     // $plan = Plan::findOrFail($plan_id);
+    //     $plan = Plan::find($plan_id);
+    //     if (!$plan) {
+    //         session()->flash('danger', 'Update Cart Fail.');
+    //         return redirect()->back();
+    //     }
+    //     $plan->plan_product_sku_id = $sku_id;
+    //     $plan->update();
+
+    //     $user = Auth::user();
+    //     $iccid = $plan->iccid;
+
+    //     // 创建或修改购物车记录
+    //     $cart = CartItem::where('iccid', $iccid)->first();
+    //     if ($cart) {
+    //         $cart->planProductSku()->associate($sku_id);
+    //         $cart->update();
+    //     } else {
+    //         $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
+    //         $cart->user()->associate($user);
+    //         $cart->planProductSku()->associate($sku_id);
+    //         $cart->save();
+    //     }
+
+    //     // Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
+    //     return redirect()->route('shop.cart');
+    //     // return redirect()->route('account.profile');
+    // }
 
     /*----------------------------------------------------------------------------------*/
     public function getPlanRenew($plan_id) {

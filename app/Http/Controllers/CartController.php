@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddCartRequest;
 use App\Models\CartItem;
 
+use App\Models\Plan;
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
 use App\Models\Order;
@@ -85,8 +86,8 @@ class CartController extends Controller
             /* Plan Product */
             $product_id = $sku->plan_product_id;
             $product = PlanProduct::find($product_id);
-            $title = $product->title;
-            $points = $product->points;
+            // $title = $product->title;
+            // $points = $product->points;
 
             $subtotal = $quantity * $price;
             $total += $subtotal;
@@ -98,9 +99,13 @@ class CartController extends Controller
                 // $title = $product->title();
 
             // $title = 'Points Reserve';
-            // $title = $product->title.' ('.$points.' Points per Month) - for '.$month.' month(s)';
-            $title = $region[$product->region].' '.$product->title;
-            $title2 = $points.' Points per Month - for '.$month.' month(s)';
+            // $title = $region[$product->region].' '.$product->title;
+            $title = $product->title.' - '.$product->points.' Points per Month';
+            if ($month == 1) {
+                $title2 = $price.' per Month';
+            } else {
+                $title2 = $price.' for '.$month.' Months';
+            }
 
             $txt .= '<input name="rowId[]" type="hidden" value="'.$cart_id.'">';
             $txt .= '<tr>';
@@ -133,8 +138,6 @@ class CartController extends Controller
             $txt .=         '</a>';
             $txt .=     '</td>';
             $txt .= '</tr>';
-
-
         }
         $txt .= '<tr>';
         $txt .=     '<td></td>';
@@ -214,17 +217,12 @@ class CartController extends Controller
     */
     public function postShopPay(Request $request) {
         // {"_token":"xxxx","rowId":["5","6"]}
-// return $request;
- // return dd($request);
- // return dd($request->user());
- // return $request->user()->email;
-
         $user = Auth::user();
         $stripe_id = $user->stripe_id;
         $currency = $user->currency;
 
         /* Create Order */
-        $order   = new Order([
+        $order = new Order([
             // 'address'      => [ // 将地址信息放入订单中
             //     'address'       => $address->full_address,
             //     'zip'           => $address->zip,
@@ -273,27 +271,24 @@ class CartController extends Controller
             $item->planProductSku()->associate($sku); // function name must be planProductSku
             $item->save();
 
+            /* Plan */
+            $plan = Plan::where('iccid', $iccid)->first();
+
             /* Stripe - subscribe plan */
             $subscription_name = $iccid; //'89860117851014783481'
             $plan_id = 'au_5000_1m'; // for test ($sub_id)
-            // $ret = $user->newSubscription($subscription_name, $plan_id)->create();
-            $ret = $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
 
-            // if (!$request['auto-bill']) {
-            //    $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
-            // } else {
-            //    $user->newSubscription($subscription_name, $plan_id)->create();
-            // }
-            // // $user->subscription($subscription_name)->cancel();
-
-            // // $user->newSubscription('main', 'monthly')->create($stripeToken, [
-            // //     'email' => $email,
-            // // ]);
-
+            if ($plan->auto_bill) {
+                $ret = $user->newSubscription($subscription_name, $plan_id)->create();
+            } else {
+                $ret = $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+            }
+            // $user->newSubscription('main', 'monthly')->create($stripeToken, [
+            //     'email' => $email,
+            // ]);
         }
 
         $order->update(['total_amount' => $total]);
-// return 'OK';
 return dd($ret);
 
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");

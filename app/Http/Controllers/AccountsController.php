@@ -146,17 +146,21 @@ class AccountsController extends Controller
                 $product = PlanProduct::find($sku->plan_product_id);
 
                 // Silver - 5000 Points per Month
-                // 3 Months $36.95
-                $txt_month = ($sku->month > 1) ? 'Months' : 'Month';
+                // $155.95 for 6 Months
                 $txt_tier = $product->title.' - '.$product->points.' Points per Month';
-                $txt_tier2 = $sku->month.' '.$txt_month.' <i class="fa fa-dollar-sign"></i>'.$sku->price;
+                if ($sku->month == 1) {
+                    $txt_tier2 = $sku->price.' per Month';
+                } else {
+                    $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
+                }
+                // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
 
             } else {
                 Debugbar::error('plan product sku not found - id='.$plan->plan_product_sku_id);
                 $txt_tier = $txt_tier2 = '';
             }
             $txt_status = ucwords($plan->status);
-            $txt_auto_bill = ($plan->auto_bill) ? 'Yes' : 'No';
+            $txt_auto_bill = ($plan->auto_bill == 1) ? 'Yes' : 'No';
 
             $camera_name = '(No Camera)';
             if ($plan->camera_id) {
