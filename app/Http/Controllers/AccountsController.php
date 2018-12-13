@@ -131,6 +131,21 @@ class AccountsController extends Controller
     public function html_MyPlans() {
         Debugbar::info(__METHOD__);
 
+        $img_region = array(
+            'us' => '/images/usd.png',
+            'ca' => '/images/cad.png',
+            'eu' => '/images/eur.png',
+            'au' => '/images/aud.png',
+        );
+
+        $currency_region = array(
+            'us' => '$',
+            'ca' => '$',
+            'eu' => '€',
+            'au' => '$',
+            // 'gb' => '£', // gbp
+        );
+
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -142,25 +157,29 @@ class AccountsController extends Controller
         foreach ($plans as $plan) {
             $sku = PlanProductSku::find($plan->plan_product_sku_id);
             if ($sku) {
-                // $product = $sku->planProduct(); // NG ??
                 $product = PlanProduct::find($sku->plan_product_id);
 
-                // Silver - 5000 Points per Month
-                // $155.95 for 6 Months
-                $txt_tier = $product->title.' - '.$product->points.' Points per Month';
+                // Silver 1 Month
+                $txt_month = ($sku->month > 1) ? 'Month' : 'Months';
+                $txt_plan = $product->title.' '.$sku->month.' '.$txt_month;
+
+                // $12.95 per Month
+                // $txt_tier = $product->title.' - '.$product->points.' Points per Month';
                 if ($sku->month == 1) {
-                    $txt_tier2 = $sku->price.' per Month';
+                    $txt_plan2 = $sku->price.' per Month';
                 } else {
-                    $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
+                    $txt_plan2 = $sku->price.' for '.$sku->month.' Months';
                 }
-                // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                // $txt_plan2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                $txt_plan2 = $currency_region[$plan->region].$txt_plan2;
 
             } else {
                 Debugbar::error('plan product sku not found - id='.$plan->plan_product_sku_id);
-                $txt_tier = $txt_tier2 = '';
+                $txt_plan = $txt_plan2 = '';
             }
             $txt_status = ucwords($plan->status);
             $txt_auto_bill = ($plan->auto_bill == 1) ? 'Yes' : 'No';
+            $txt_region = $img_region[$plan->region];
 
             $camera_name = '(No Camera)';
             if ($plan->camera_id) {
@@ -176,7 +195,6 @@ class AccountsController extends Controller
             // Reactive: suspend
             if ($plan->status == 'deactive') {
                 $cart = CartItem::where('iccid', $plan->iccid)->get();
-                Debugbar::debug('count='.count($cart));
                 if (count($cart)) {
                     $action = 'cart';
                     $action_url = '/shop/cart/';
@@ -200,6 +218,34 @@ class AccountsController extends Controller
                 $action_icon = 'refresh';
             }
 
+            /* search Subscription */
+            $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
+            if ($subscription) {
+                $sku = PlanProductSku::where('sub_id', $subscription->stripe_plan)->first();
+                if ($sku) {
+                    $product = PlanProduct::find($sku->plan_product_id);
+
+                    // Silver - 5000 Points per Month
+                    // $155.95 for 6 Months
+                    $txt_tier = $product->title.' - '.$product->points.' Points per Month';
+                    if ($sku->month == 1) {
+                        $txt_tier2 = $sku->price.' per Month';
+                    } else {
+                        $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
+                    }
+                    // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                    $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
+
+                } else {
+                    Debugbar::error('plan product sku not found - id='.$plan->plan_product_sku_id);
+                    $txt_tier = $txt_tier2 = '';
+                }
+
+
+            } else {
+
+            }
+
             $handle .= '<div class="row">';
             $handle .=     '<div class="col-md-12">';
             $handle .=         '<div style="margin-top:10px; margin-bottom:4px; border-bottom: 1px solid gray;border-top: 1px solid lime; padding-bottom: 4px; padding-top: 4px;padding-left:10px; background-color: #444">';
@@ -207,13 +253,14 @@ class AccountsController extends Controller
 
             /* Silver 1 Month */
             $handle .=                 '<div class="col-md-5">';
-            $handle .=                     '<i class="fa fa-dot-circle"></i>';
-            if ($plan->status == 'active') {
-// TODO     $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">Silver 1 Month</span>';
-//          $handle .=                     ' <span style="color:lime;"><i class="fa fa-dollar-sign"></i>12.95 per Month</span>';
-// TODO     $handle .=                     ' <img src="/images/cad.png" width="30" style="margin-bottom:10px;"/>';
-            }
+            // $handle .=                     '<i class="fa fa-dot-circle"></i>';
             $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
+            if ($plan->status == 'active') {
+                $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.$txt_plan.'</span>';
+                $handle .=                     ' <span style="color:lime;">'.$txt_plan2.'</span>';
+                $handle .=                     ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
+            }
+            // $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
 
             /* Auto-Reserve */
             // $handle .=                     '<p style="margin-top:4px;">';

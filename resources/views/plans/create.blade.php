@@ -70,7 +70,7 @@
 
                                     <span class="button-checkbox">
                                         <button type="button" class="btn btn-default btn-xs" data-color="info">Automatic Billing</button>
-                                        <input type="checkbox" class="hidden" name="auto-bill" id="auto-bill" checked />
+                                        <input type="checkbox" class="hidden" name="auto-bill" id="auto-bill" {{ $plan->auto_bill ? 'checked' : '' }} />
                                     </span>
 
                                     <span class="help-block">
@@ -90,9 +90,9 @@
                                         @if ($mode == 'create')
                                         <i class="glyphicon glyphicon-shopping-cart"></i> Add Cart
                                         @elseif ($mode == 'update')
-                                        <i class="glyphicon glyphicon-shopping-cart"></i> Update
+                                        <i class="glyphicon glyphicon-ok"></i> Update
                                         @else
-                                        <i class="glyphicon glyphicon-shopping-cart"></i> Renew
+                                        <i class="glyphicon glyphicon-refresh"></i> Renew
                                         @endif
                                     </button>
                                     <a href="/plans/cancel" class="btn btn-sm btn-warning">Cancel</a>

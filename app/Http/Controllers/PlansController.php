@@ -315,7 +315,52 @@ $style = 'demo'; // for test
     }
 
     public function postPlanRenew(Request $request) {
-return $request;
+        // {"_token":"xxxx","mode":"renew","planid":"12","tier":"22","auto-bill":"on","submit-new-plan":"renew"}
+
+        $plan_id = $request->input('planid'); //$request->planid;
+        $sku_id = $request->input('tier'); //$request->tier;
+        $auto_bill = ($request->input('auto-bill') == 'on') ? 1: 0;
+
+        $user = Auth::user();
+
+        $plan = Plan::find($plan_id);
+        if (!$plan) {
+            session()->flash('danger', 'Renew ICCID not found. '.$plan_id);
+            return redirect()->route('account.profile');
+        }
+
+        $sku = PlanProductSku::find($sku_id);
+        if (!$sku) {
+            session()->flash('danger', 'Rernew plan product not found. '.$sku_id);
+            return redirect()->route('account.profile');
+        }
+
+// Debugbar::debug('#subscription...start');
+        // if ($auto_bill != $plan->auto_bill) {
+            if ($auto_bill) {
+                $user->subscription($plan->iccid)
+                     ->swap($sku->sub_id);
+                     // ->resume();
+            } else {
+                $user->subscription($plan->iccid)
+                     ->swap($sku->sub_id)
+                     ->cancel();
+            }
+        // }
+// Debugbar::debug('#subscription...end');
+
+        // $user->subscription('main')->swap('provider-plan-id');
+        // $subscription_name = $iccid;
+        // $new_plan = 'au_5000_1m';
+        // $user->subscription($plan->iccid)->swap($sku->sub_id);
+
+        $plan->auto_bill = $auto_bill;
+        $plan->update();
+// Debugbar::debug('#plan...update done');
+
+        // Success: Your account Renewal setup was saved.
+        session()->flash('success', 'Renew Success');
+        return redirect()->route('account.profile');
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -329,6 +374,16 @@ return $request;
         Debugbar::debug('mode='.$mode); // create, (update X), renew
 
         $region = $plan->region; // us, ca, eu, au, cn, tw
+
+        if ($mode == 'renew') {
+            $sku_id = 0;
+            $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
+            if ($subscription) {
+                $sku = PlanProductSku::where('sub_id', $subscription->stripe_plan)->first();
+                $sku_id = ($sku) ? $sku->id : 0;
+            }
+            Debugbar::debug('sku_id='.$sku_id);
+        }
 
         // $product = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
         // $product = PlanProduct::find(14);
@@ -359,20 +414,21 @@ return $request;
             $txt .=         '</div>';
             $txt .=         '<div class="col-md-7">';
             foreach ($skus as $sku) {
+
                 if ($mode == 'renew') {
-                    $checked = ($sku->id == $plan->plan_product_sku_id) ? 'checked' : '';
+                    // $checked = ($sku->id == $plan->plan_product_sku_id) ? 'checked' : '';
+                    $checked = ($sku->id == $sku_id) ? 'checked' : '';
                 }
 
-                $sku_id = $sku->id;
-                $month = $sku->month;
-                $price = $sku->price;
-                $cpp = '[cpp: '.($price/$points).']'; //'[cpp: 0.00259]';
-
-                if ($month == 1) {
+                // $sku_id = $sku->id;
+                // $month = $sku->month;
+                // $price = $sku->price;
+                if ($sku->month == 1) {
                     $sku_month = 'per Month';
                 } else {
-                    $sku_month = 'for '.$month.' Month';
+                    $sku_month = 'for '.$sku->month.' Month';
                 }
+                $cpp = '[cpp: '.($sku->price/$points).']'; //'[cpp: 0.00259]';
 
                 // $txt .=             '<div class="radio">';
                 // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
@@ -383,8 +439,8 @@ return $request;
                 // $txt .=                 '<label><input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" ><span style="color:white;">'.$price.'</span> <span style="color:lime;"> '.$sku_month.'</span> <span style="color:red;"> '.$cpp.'</span></label>';
 
                 $txt .=                 '<label>';
-                $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" >';
-                $txt .=                         '<span style="color:white;">'.$price.'</span>';
+                $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku->id.'" >';
+                $txt .=                         '<span style="color:white;">'.$sku->price.'</span>';
                 $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>';
                 $txt .=                         '<span style="color:red;"> '.$cpp.'</span>';
                 $txt .=                 '</label>';

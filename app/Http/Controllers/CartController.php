@@ -221,6 +221,9 @@ class CartController extends Controller
         $stripe_id = $user->stripe_id;
         $currency = $user->currency;
 
+        // Cashier::useCurrency('eur', '€');
+        Cashier::useCurrency($currency);
+
         /* Create Order */
         $order = new Order([
             // 'address'      => [ // 将地址信息放入订单中
@@ -252,9 +255,8 @@ class CartController extends Controller
             $sub_id = $sku->sub_id; // 'au_5000_1m'
 
             /* Plan Product */
-            $product_id = $sku->plan_product_id;
-            $product = PlanProduct::find($product_id);
-            $title = $product->title;
+            $product = PlanProduct::find($sku->plan_product_id);
+            // $title = $product->title;
             $points = $product->points;
 
             $subtotal = $quantity * $price;
@@ -265,8 +267,6 @@ class CartController extends Controller
                 'quantity' => $quantity,
                 'price'  => $price,
             ]);
-            // $item->product()->associate($sku->plan_product_id); // NG
-            // $item->productSku()->associate($sku); // NG
             $item->planProduct()->associate($sku->plan_product_id); // function name must be planProduct
             $item->planProductSku()->associate($sku); // function name must be planProductSku
             $item->save();
@@ -275,21 +275,31 @@ class CartController extends Controller
             $plan = Plan::where('iccid', $iccid)->first();
 
             /* Stripe - subscribe plan */
-            $subscription_name = $iccid; //'89860117851014783481'
-            $plan_id = 'au_5000_1m'; // for test ($sub_id)
-
             if ($plan->auto_bill) {
-                $ret = $user->newSubscription($subscription_name, $plan_id)->create();
+                $ret = $user->newSubscription($iccid, $sub_id)->create();
             } else {
-                $ret = $user->newSubscription($subscription_name, $plan_id)->create()->cancel();
+                $ret = $user->newSubscription($iccid, $sub_id)->create()->cancel();
             }
-            // $user->newSubscription('main', 'monthly')->create($stripeToken, [
-            //     'email' => $email,
-            // ]);
+            // $ret = $user->newSubscription($iccid, $sub_id)
+            //             // ->trialDays(10)
+            //             // ->withMetadata(['hello'=>'This is a Meta test.'])
+            //             ->withMetadata(['order_id' => 5678])
+            //             ->create();
+            //             // ->create($stripeToken, [
+            //             //     'email' => $email,
+            //             // ]);
+
+            $plan->status = 'active';
+            $plan->points = $points * $month;
+            $plan->points_used = 0;
+            $plan->update();
+
+            $cart->delete();
         }
 
         $order->update(['total_amount' => $total]);
-return dd($ret);
+
+return redirect()->route('account.profile');
 
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
         // $charge = \Stripe\Charge::create([
@@ -298,9 +308,6 @@ return dd($ret);
         //     'description' => 'Example charge',
         //     'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
         // ]);
-
-        // Cashier::useCurrency('eur', '€');
-        Cashier::useCurrency($currency);
 
         // // ch_1De8vuG8UgnSL68UVaYHBGl7
         // // $charge = $user->charge($total*100);
@@ -312,15 +319,16 @@ return dd($ret);
         // ]);
 
         // // if (!$charge) {
-
         // // }
         // // try {
         // //     $response = $user->charge(100);
         // // } catch (Exception $e) {
         // //     //
         // // }
+// echo $charge->id.'<br/>';
+// echo $charge->amount.'<br/>';
+// echo $charge->status.'<br/>';
 // return dd($charge);
-
 
 // in_1De8vxG8UgnSL68Ubd5vOvh1
         // Payment for invoice ED0214E-0001 – ch_1De8vyG8UgnSL68UhmxYH7h2
@@ -330,10 +338,6 @@ return dd($ret);
         // ]);
 // return dd($invoice);
 
-        echo $charge->id.'<br/>';
-        echo $charge->amount.'<br/>';
-        echo $charge->status.'<br/>';
-        return; // $charge->id;
 
         // // $user->subscription('main')->swap('provider-plan-id');
         // $subscription_name = $iccid;
