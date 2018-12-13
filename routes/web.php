@@ -267,20 +267,21 @@ Route::get('/email/test', 'MailController@test')->name('email.test');
 
 
 /* for stripe test */
-Route::get('/stripe', 'AccountsController@stripe');
-Route::get('/stripe/new', 'AccountsController@stripe_new');
-Route::get('/stripe/card', 'AccountsController@stripe_card');
-Route::get('/stripe/cus', 'AccountsController@stripe_customer');
-Route::get('/stripe/charge', 'AccountsController@stripe_charge');
-Route::get('/stripe/sub', 'AccountsController@stripe_sub');
-Route::get('/stripe/change', 'AccountsController@stripe_change');
-Route::get('/stripe/cancel', 'AccountsController@stripe_cancel');
-Route::get('/stripe/pause', 'AccountsController@stripe_pause');
-Route::get('/stripe/reactive', 'AccountsController@stripe_reactive');
-Route::get('/trial', 'AccountsController@trial');
-Route::get('/swap1', 'AccountsController@swap1');
-Route::get('/swap3', 'AccountsController@swap3');
-Route::get('/swap6', 'AccountsController@swap6');
+// Route::get('/stripe', 'AccountsController@stripe');
+Route::get('/stripe/test', 'AccountsController@getStripeTest');
+// Route::get('/stripe/new', 'AccountsController@stripe_new');
+// Route::get('/stripe/card', 'AccountsController@stripe_card');
+// Route::get('/stripe/cus', 'AccountsController@stripe_customer');
+// Route::get('/stripe/charge', 'AccountsController@stripe_charge');
+// Route::get('/stripe/sub', 'AccountsController@stripe_sub');
+// Route::get('/stripe/change', 'AccountsController@stripe_change');
+// Route::get('/stripe/cancel', 'AccountsController@stripe_cancel');
+// Route::get('/stripe/pause', 'AccountsController@stripe_pause');
+// Route::get('/stripe/reactive', 'AccountsController@stripe_reactive');
+// Route::get('/trial', 'AccountsController@trial');
+// Route::get('/swap1', 'AccountsController@swap1');
+// Route::get('/swap3', 'AccountsController@swap3');
+// Route::get('/swap6', 'AccountsController@swap6');
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     // return $invoiceId;

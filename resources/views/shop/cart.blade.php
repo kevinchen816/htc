@@ -7,27 +7,27 @@
 @section('content')
 @inject('cart', 'App\Http\Controllers\CartController')
 <div class="container">
-    <div class="row" style="margin-top: 20px;">
+<!--     <div class="row" style="margin-top: 20px;">
         <div class="well">
             <a href="{{ route('currency.us') }}" class="change-currency"><img src="/images/usd.png" width="50" style="margin-right:30px;"/></a>
             <a href="{{ route('currency.ca') }}" class="change-currency"><img src="/images/cad.png" width="50" style="margin-right:30px;"/></a>
             <a href="{{ route('currency.au') }}" class="change-currency"><img src="/images/aud.png" width="50" style="margin-right:30px;"/></a>
             <a href="{{ route('currency.eu') }}" class="change-currency"><img src="/images/eur.png" width="50" style="margin-right:30px;"/></a>
         </div>
-    </div>
+    </div> -->
 
     <div class="row" style="bottom-margin: 8px;">
         <div class="col-sm-12">
             <h2 class="bold text-uppercase"><strong>Cart</strong>
 
                 @if ($user->currency == 'usd')
-                    <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/>
+                    <!-- <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/> -->
                 @elseif ($user->currency == 'cad')
-                    <img src="/images/cad.png" width="40" style="margin-bottom:10px;"/>
+                    <!-- <img src="/images/cad.png" width="40" style="margin-bottom:10px;"/> -->
                 @elseif ($user->currency == 'aud')
-                    <img src="/images/aud.png" width="40" style="margin-bottom:10px;"/>
+                    <!-- <img src="/images/aud.png" width="40" style="margin-bottom:10px;"/> -->
                 @elseif ($user->currency == 'eur')
-                    <img src="/images/eur.png" width="40" style="margin-bottom:10px;"/>
+                    <!-- <img src="/images/eur.png" width="40" style="margin-bottom:10px;"/> -->
                 @endif
 
 @if (count($user->cartItems()->get()) > 0)

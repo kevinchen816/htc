@@ -47,20 +47,22 @@ class AccountsController extends Controller
     }
 
     /*-----------------------------------------------------------*/
-    public function _profile($portal = 0) {
-        //if (!Auth::check()) {
-        //    return $this->back_to_login($portal);
-        //}
+    // public function _profile($portal = 0) {
+    //     $user = Auth::user();
+    //     $data['sel_menu'] = 'account';
+    //     $user->update($data);
+
+    //     //return view('account.profile', compact('user'));
+    //     return view('account.profile', compact('portal', 'user'));
+    // }
+
+    public function getProfile() {
         $user = Auth::user();
         $data['sel_menu'] = 'account';
         $user->update($data);
 
-        //return view('account.profile', compact('user'));
-        return view('account.profile', compact('portal', 'user'));
-    }
-
-    public function getProfile() {
-        return $this->_profile(0);
+        return view('account.profile', compact('user'));
+        // return $this->_profile(0);
     }
 
     /*-----------------------------------------------------------*/
@@ -194,12 +196,14 @@ class AccountsController extends Controller
             // Renew: active
             // Reactive: suspend
             if ($plan->status == 'deactive') {
-                $cart = CartItem::where('iccid', $plan->iccid)->get();
-                if (count($cart)) {
+                $cart = CartItem::where('iccid', $plan->iccid)->first();
+                if ($cart) {
                     $action = 'cart';
                     $action_url = '/shop/cart/';
                     $action_name = 'Cart';
                     $action_icon = 'shopping-cart';
+                    // Debugbar::debug($cart->plan_product_sku_id);
+
                 } else {
                     $action = 'create';
                     $action_url = '/plans/create/'.$plan->id;
@@ -218,32 +222,35 @@ class AccountsController extends Controller
                 $action_icon = 'refresh';
             }
 
-            /* search Subscription */
-            $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
-            if ($subscription) {
-                $sku = PlanProductSku::where('sub_id', $subscription->stripe_plan)->first();
-                if ($sku) {
-                    $product = PlanProduct::find($sku->plan_product_id);
+            /*
 
-                    // Silver - 5000 Points per Month
-                    // $155.95 for 6 Months
-                    $txt_tier = $product->title.' - '.$product->points.' Points per Month';
-                    if ($sku->month == 1) {
-                        $txt_tier2 = $sku->price.' per Month';
-                    } else {
-                        $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
-                    }
-                    // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
-                    $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
+            */
+            $sku = null;
+            $txt_tier = $txt_tier2 = 'xxx';
+            if ($action == 'cart') {
+                $sku = PlanProductSku::find($cart->plan_product_sku_id);
 
-                } else {
-                    Debugbar::error('plan product sku not found - id='.$plan->plan_product_sku_id);
-                    $txt_tier = $txt_tier2 = '';
+            } else if (($action == 'renew')||($action == 'reactive')) {
+                $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
+                if ($subscription) {
+                    $sku = PlanProductSku::where('sub_id', $subscription->stripe_plan)->first();
                 }
+            }
 
+            /* search Subscription */
+            if ($sku) {
+                $product = PlanProduct::find($sku->plan_product_id);
 
-            } else {
-
+                // Silver - 5000 Points per Month
+                // $155.95 for 6 Months
+                $txt_tier = $product->title.' - '.$product->points.' Points per Month';
+                if ($sku->month == 1) {
+                    $txt_tier2 = $sku->price.' per Month';
+                } else {
+                    $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
+                }
+                // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
             }
 
             $handle .= '<div class="row">';
@@ -306,9 +313,7 @@ class AccountsController extends Controller
             $handle .=                     '</a>';
 
 // if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
-if ($action == 'create') {
-
-} else {
+if ($action != 'create') {
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
             $handle .=                         '<p>';
             $handle .=                             '<strong>'.$txt_tier.'</strong>';
@@ -417,8 +422,6 @@ $handle .=                 '</tr>';
             $handle .=     '</div>'; // <!-- end col-sm-6 -->
 */
             $handle .= '</div>'; // <!-- end row -->
-
-
         }
         return $handle;
     }
@@ -564,14 +567,26 @@ $handle .=                 '</tr>';
     /*
     {
         "_token":"NU81sCo2nwHyYvMQYugQzrZzMr0O5p8szCRNe5nl",
-        "portal":"0",
         "cardholder-name":"Kevin",
         "cardholder-phone":"18664933085",
         "stripeToken":"tok_1DThUGG8UgnSL68Ub0C7FfEh"
     }
     */
+    /*
+        us 4242 4242 4242 4242
+        ca 4000 0012 4000 0000
+        eu 4000 0027 6000 0016 (Germany)
+        eu 4000 0025 0000 0003 (France)
+        au 4000 0003 6000 0006
+        cn 4000 0015 6000 0002
+        hk 4000 0034 4000 0004
+    */
     public function postBilling(Request $request) {
-        //$portal = $request->portal;
+        // {"_token":"xxxx","cardholder-name":"Kevin","stripeToken":"tok_1Dh1V9G8UgnSL68USELWLL34"}
+        $next = $request->input('next', 'back');
+        $card_name = $request->input('cardholder-name');
+        // $card_phone = $request->input('cardholder-phone');
+
         $user = Auth::user();
         // $user_id = $user->id;
 
@@ -593,21 +608,38 @@ $handle .=                 '</tr>';
         if ($user->stripe_id) {
             $user->updateCard($stripeToken);
         } else {
-           // $ret = $user->createAsStripeCustomer($stripeToken);
-           $ret = $user->createAsStripeCustomer($stripeToken, [
-               // 'currency' => 'usd',
-           ]);
+            $ret = $user->createAsStripeCustomer($stripeToken);
         }
 
-        // $stripeToken = $_POST['stripeToken'];
-        // $user->updateCard($stripeToken);
+        $card = $user->defaultCard();
+        if ($card) {
+            $card->name = $card_name;
+            // $card->address_country = 'address_country';
+            // $card->address_zip = '1234';
+            // $card->address_state = 'address_state';
+            // $card->address_city = 'address_city';
+            // $card->address_line1 = 'address_line1';
+            // $card->address_line2 = 'address_line2';
+            $card = $card->save();
+
+            // "exp_month":1,
+            // "exp_year":2019,
+            $user->card_expiry = $card->exp_month.'/'.$card->exp_year;
+            $user->card_name = $card_name;
+            // $user->card_phone = $card_phone;
+            $user->update();
+        }
+
+        // session()->flash('success', 'Success: Your Credit card was updated and attached to your account.');
         session()->flash('success', 'Success: Update Credit Card Information.');
-        // //session()->flash('success', 'Success: Account Billing Saved.');
-        if ($user->sel_menu == 'cart') {
-            // session()->flash('success', 'Success: Your Credit card was updated and attached to your account.');
+        if ($next == 'cart') {
+            if ($user->sel_menu != 'cart') {
+                $user->sel_menu = 'cart';
+                $user->update();
+            }
             return redirect()->route('shop.cart');
         } else {
-            // session()->flash('success', 'Success: Update Card Information.');
+            // return redirect()->route('account.profile');
             return redirect()->back();
         }
     }
@@ -735,6 +767,62 @@ return var_dump($ret);
 
 // $ret = $user->subscription('main')->resume();
         //return redirect()->back();
+    }
+
+    public function getStripeTest() {
+        $user = Auth::user();
+
+        /*
+            {
+                "id":"card_1Dh0ffG8UgnSL68UpMQMh6R3",
+                "object":"card",
+                "address_city":null,
+                "address_country":null,
+                "address_line1":null,
+                "address_line1_check":null,
+                "address_line2":null,
+                "address_state":null,
+                "address_zip":null,
+                "address_zip_check":null,
+                "brand":"Visa",
+                "country":"AU",
+                "customer":"cus_E9JChurv4Dhiah",
+                "cvc_check":"pass",
+                "dynamic_last4":null,
+                "exp_month":1,
+                "exp_year":2019,
+                "fingerprint":"VcL1sXkTk3GuqULy",
+                "funding":"credit",
+                "last4":"0006",
+                "metadata":[],
+                "name":"Jenny Rosen",
+                "tokenization_method":null
+            }
+        */
+
+        /*
+
+            Billing address:
+                address_line1
+                address_line2
+                address_city, address_state, 1234, address_country
+        */
+        $card = $user->defaultCard();
+        $card->name = 'Kevin Chen';
+        $card->address_country = 'address_country';
+        $card->address_zip = '1234';
+        $card->address_state = 'address_state';
+        $card->address_city = 'address_city';
+        $card->address_line1 = 'address_line1';
+        $card->address_line2 = 'address_line2';
+        $ret = $card->save();
+
+// \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+// $customer = \Stripe\Customer::retrieve($user->stripe_id);
+// $card = $customer->sources->retrieve("card_1DgiLnG8UgnSL68UDvqdza9H");
+// $card->name = "Jenny Rosen";
+// $card->save();
+        return $ret;
     }
 
     public function trial() { // for test

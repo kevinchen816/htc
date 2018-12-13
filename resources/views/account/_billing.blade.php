@@ -18,10 +18,18 @@
             </p>
         </div>
 
+        <div class="alert alert-defaulto" style="background-color: #088;">
+            <h4>Please Input Test Card Number</h4>
+            <p>4242 4242 4242 4242 (USA)</p>
+            <p>4000 0012 4000 0000 (Canada)</p>
+            <p>4000 0027 6000 0016 (Europe)</p>
+            <p>4000 0003 6000 0006 (Australia)</p>
+        </div>
+
 @if ($user->stripe_id)
         <div class="alert alert-default" style="background-color: #333;">
             <!--<h4>The Active Card on file is: <span class="label label-highlight" style="font-size: 0.80em"> Visa ***********4242,  Expiry 1 / 2019</span></h4>-->
-            <h4>The Active Card on file is: <span class="label label-highlight" style="font-size: 0.80em"> {{ $user->card_brand }} ***********{{ $user->card_last_four }}</span></h4>
+            <h4>The Active Card on file is: <span class="label label-highlight" style="font-size: 0.80em"> {{ $user->card_brand }} ***********{{ $user->card_last_four }}, {{ $user->card_expiry }}</span></h4>
         </div>
 @endif
 
@@ -30,18 +38,21 @@
 
         <form method="POST" action="{{ route('account.billing') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="payment-form">
             {{ csrf_field() }}
+            @if (isset($next))
+            <input name="next" type="hidden" value="{{ $next }}">
+            @endif
 
             <div class="form-group">
                 <label class="col-md-3 control-label">Cardholder Name</label>
                 <div class="col-md-6">
-                  <input name="cardholder-name" id="cardholder-name" class="field form-control input-sm" placeholder="Name on Card" value="" />
+                  <input name="cardholder-name" id="cardholder-name" class="field form-control input-sm" placeholder="Name on Card" value="{{ $user->card_name }}" />
                 </div>
             </div>
 
 <!--              <div class="form-group">
                 <label class="col-md-3 control-label">Cardholder Phone</label>
                 <div class="col-md-6">
-                  <input name="cardholder-phone" id="cardholder-phone" class="field form-control input-sm" type="tel" placeholder="(123) 456-7890"  value="" />
+                  <input name="cardholder-phone" id="cardholder-phone" class="field form-control input-sm" type="tel" placeholder="(123) 456-7890"  value="{{ $user->card_phone }}" />
                 </div>
             </div>
  -->

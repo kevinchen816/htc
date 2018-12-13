@@ -58,6 +58,21 @@ class CartController extends Controller
             'au' => 'Australia',
         );
 
+        $img_region = array(
+            'us' => '/images/usd.png',
+            'ca' => '/images/cad.png',
+            'eu' => '/images/eur.png',
+            'au' => '/images/aud.png',
+        );
+
+        $currency_symbol_region = array(
+            'us' => '$',
+            'ca' => '$',
+            'eu' => '€',
+            'au' => '$',
+            // 'gb' => '£', // gbp
+        );
+
         $txt = '';
         $total = 0;
         // return $user->cartItems()->count();
@@ -84,28 +99,25 @@ class CartController extends Controller
             $price = $sku->price;
 
             /* Plan Product */
-            $product_id = $sku->plan_product_id;
-            $product = PlanProduct::find($product_id);
-            // $title = $product->title;
-            // $points = $product->points;
+            // $product_id = $sku->plan_product_id;
+            $product = PlanProduct::find($sku->plan_product_id);
+            $txt_region = $img_region[$product->region];
+            $txt_currency = $currency_symbol_region[$product->region];
 
             $subtotal = $quantity * $price;
             $total += $subtotal;
 
-                // $product = $cart->planProductSku()->get()->product()->get(); // NG
-                // $product = $cart->planProductSku()->get()->product(); // NG
-                // $product = $cart->planProductSku()->product(); // NG
-                // echo dd($product);
-                // $title = $product->title();
-
-            // $title = 'Points Reserve';
+            // SILVER - 5000 Points per Month
+            // 12.95 per Month
             // $title = $region[$product->region].' '.$product->title;
             $title = $product->title.' - '.$product->points.' Points per Month';
+            $title .= ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
             if ($month == 1) {
                 $title2 = $price.' per Month';
             } else {
                 $title2 = $price.' for '.$month.' Months';
             }
+            $title2 = $txt_currency.$title2;
 
             $txt .= '<input name="rowId[]" type="hidden" value="'.$cart_id.'">';
             $txt .= '<tr>';
@@ -119,7 +131,7 @@ class CartController extends Controller
             // $txt .=         'SKU ID: '.$sku_id.'<br/>';
             // $txt .=         $month.' month<br/>';
             // $txt .=         $price.'<br/>';
-            // $txt .=         'Product ID: '.$product_id.'<br/>';
+            // $txt .=         'Product ID: '.$sku->plan_product_id.'<br/>';
             // $txt .=         $product->title.'<br/>';
             // $txt .=         $points.'<br/>';
             /* for test e */
@@ -129,9 +141,9 @@ class CartController extends Controller
             // $txt .=         <!--<input type="text" name="qty[]" value="1" maxlength="03" class="form-control input-sm">-->
             $txt .=         $quantity;
             $txt .=     '</td>';
-            $txt .=     '<td  class="col-sm-2" style="text-align:right">'.$price.'</td>';
+            $txt .=     '<td  class="col-sm-2" style="text-align:right">'.$txt_currency.$price.'</td>';
             $txt .=     '<td class="col-sm-1"></td>';
-            $txt .=     '<td class="col-sm-1" style="text-align:right">'.$price*$quantity.'</td>';
+            $txt .=     '<td class="col-sm-1" style="text-align:right">'.$txt_currency.$price*$quantity.'</td>';
             $txt .=     '<td class="col-sm-1">';
             $txt .=         '<a href="/shop/cart-remove/'.$cart_id.'" class="btn btn-xs btn-warning remove-item" title="Remove Item">';
             $txt .=             '<i class="fa fa-times" ></i>';
@@ -139,14 +151,16 @@ class CartController extends Controller
             $txt .=     '</td>';
             $txt .= '</tr>';
         }
-        $txt .= '<tr>';
-        $txt .=     '<td></td>';
-        $txt .=     '<td></td>';
-        $txt .=     '<td></td>';
-        $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>Total:</strong></td>';
-        $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>'.$total.'</strong></td>';
-        $txt .=     '<td></td>';
-        $txt .= '</tr>';
+        if ($carts->count() > 0) {
+            $txt .= '<tr>';
+            $txt .=     '<td></td>';
+            $txt .=     '<td></td>';
+            $txt .=     '<td></td>';
+            $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>Total:</strong></td>';
+            $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>'.$txt_currency.$total.'</strong></td>';
+            $txt .=     '<td></td>';
+            $txt .= '</tr>';
+        }
         return $txt;
     }
 
@@ -155,7 +169,8 @@ class CartController extends Controller
         $user = Auth::user();
         // $data['sel_menu'] = 'cart';
         // $user->update($data);
-        return view('shop.editcard', compact('user'));
+        $next = 'cart';
+        return view('shop.editcard', compact('user', 'next'));
     }
 
     public function getShopCartRemove($cart_id) {

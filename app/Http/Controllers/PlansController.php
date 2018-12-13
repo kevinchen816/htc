@@ -112,18 +112,17 @@ class PlansController extends Controller
         //     return redirect()->back();
         // }
         // $region = $sim->region; // us, ca, eu, au, cn, tw
-        // $style = $sim->style; // demo
+        // $style = $sim->style; // demo, normal
 
 $region = 'au'; // for test
-$style = 'demo'; // for test
+// $style = 'demo'; // for test
+$style = 'normal'; // for test
         if ($style == 'demo') {
-            $status = 'deactive';
-            $points = 50000;
-        } else {
-            // $status = 'suspend';
-            // $points = 0;
             $status = 'active';
             $points = 50000;
+        } else {
+            $status = 'deactive';
+            $points = 0;
         }
 
         /* Stripe - create customer id */
@@ -236,7 +235,18 @@ $style = 'demo'; // for test
         $cart->save();
 
         // Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
-        return redirect()->route('shop.cart');
+
+        if ($user->stripe_id) {
+            return redirect()->route('shop.cart');
+        } else {
+            // $user->sel_menu = 'cart';
+            // $user->update();
+
+            $next = 'cart';
+            return view('shop.editcard', compact('user', 'next'));
+            // return view('shop.editcard', compact('user'));
+            // return redirect()->route('shop.editcard');
+        }
         // return redirect()->route('account.profile');
     }
 
