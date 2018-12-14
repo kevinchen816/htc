@@ -202,101 +202,270 @@ class PlanProductsController extends Controller
         return $form;
     }
 
-    public function build() {
-        // DB::table('plan_products')->insert([
-        //     ['region'=>'au', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10],
-        //     ['region'=>'au', 'title'=>'GOLD', 'description'=>'10000 Points per Month', 'price'=>20],
-        //     ['region'=>'au', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
+    public function build_product($p) {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        //     ['region'=>'us', 'title'=>'SILVER', 'description'=>'5000 Points per Month', 'price'=>10],
-        //     ['region'=>'us', 'title'=>'GOLD', 'description'=>'10000 Points per Month', 'price'=>20],
-        //     ['region'=>'us', 'title'=>'PLATINUM PRO', 'description'=>'20000 Points per Month', 'price'=>30],
-        // ]);
+        \Stripe\Product::create([
+          'id' => $p['id'],     //'eu_silver_5000',
+          'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
+          'type' => 'service',
+        ]);
+
+        $plan_product_id = DB::table("plan_products")->insertGetId([
+            'region' => $p['region'],
+            'title' => $p['name'],
+            'points' => $p['points'],
+            'active' => $p['active']
+        ]);
+
+        foreach ($p['plans'] as $plan) {
+            $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
+            \Stripe\Plan::create([
+                'product' => $p['id'],
+                'id' => $plan_id,
+                'interval' => 'month',
+                'interval_count' => $plan['month'], // 1,
+                'currency' => $p['currency'],       // 'usd',
+                'amount' => $plan['amount'],        // 1295,
+            ]);
+
+            DB::table('plan_product_skus')->insert([
+                'plan_product_id' => $plan_product_id,
+                'sub_id' => $plan_id,
+                'month' => $plan['month'],
+                'price' => $plan['amount']/100,
+                'active' => $plan['active']
+            ]);
+        }
+    }
+
+    public function build() {
+        /* eu */
+        $product_eu_bronze = array(
+            'id' => 'eu_bronze_2500',
+            'name' => 'BRONZE',
+            'points' => 2500,
+            'region' => 'eu',
+            'currency' => 'eur',
+            'active' => 0,
+            'plans' => [
+                // ['id'=>'eu_2500_1m', 'interval'=>'month', 'interval_count'=>1, 'amount'=>895, 'active'=>1],
+                // ['id'=>'eu_2500_3m', 'interval'=>'month', 'interval_count'=>3, 'amount'=>2495, 'active'=>1],
+                // ['id'=>'eu_2500_6m', 'interval'=>'month', 'interval_count'=>6, 'amount'=>4895, 'active'=>1],
+                // ['id'=>'eu_2500_12m', 'interval'=>'month', 'interval_count'=>12, 'amount'=>9695, 'active'=>0],
+                ['month'=>1, 'amount'=>895, 'active'=>1],
+                ['month'=>3, 'amount'=>2495, 'active'=>1],
+                ['month'=>6, 'amount'=>4895, 'active'=>1],
+                ['month'=>12, 'amount'=>9695, 'active'=>0],
+            ]
+        );
+
+        $product_eu_silver = array(
+            'id' => 'eu_silver_5000',
+            'name' => 'SILVER',
+            'points' => 5000,
+            'region' => 'eu',
+            'currency' => 'eur',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1295, 'active'=>1],
+                ['month'=>3, 'amount'=>3695, 'active'=>1],
+                ['month'=>6, 'amount'=>7295, 'active'=>1],
+                ['month'=>12, 'amount'=>14495, 'active'=>0],
+            ]
+        );
+
+         $product_eu_gold = array(
+            'id' => 'eu_gold_10000',
+            'name' => 'GOLD',
+            'points' => 10000,
+            'region' => 'eu',
+            'currency' => 'eur',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1995, 'active'=>1],
+                ['month'=>3, 'amount'=>5795, 'active'=>1],
+                ['month'=>6, 'amount'=>11495, 'active'=>1],
+                ['month'=>12, 'amount'=>22895, 'active'=>0],
+            ]
+        );
+
+         $product_eu_platinum = array(
+            'id' => 'eu_platinum_20000',
+            'name' => 'PLATINUM PRO',
+            'points' => 20000,
+            'region' => 'eu',
+            'currency' => 'eur',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>2695, 'active'=>1],
+                ['month'=>3, 'amount'=>7795, 'active'=>1],
+                ['month'=>6, 'amount'=>25595, 'active'=>1],
+                ['month'=>12, 'amount'=>31095, 'active'=>0],
+            ]
+        );
+
+        /*------------------------------------------------------------------*/
+        /* au */
+        $product_au_bronze = array(
+            'id' => 'au_bronze_2500',
+            'name' => 'BRONZE',
+            'points' => 2500,
+            'region' => 'au',
+            'currency' => 'aud',
+            'active' => 0,
+            'plans' => [
+                ['month'=>1, 'amount'=>895, 'active'=>1],
+                ['month'=>3, 'amount'=>2495, 'active'=>1],
+                ['month'=>6, 'amount'=>4895, 'active'=>1],
+                ['month'=>12, 'amount'=>9695, 'active'=>0],
+            ]
+        );
+
+        $product_au_silver = array(
+            'id' => 'au_silver_5000',
+            'name' => 'SILVER',
+            'points' => 5000,
+            'region' => 'au',
+            'currency' => 'aud',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1295, 'active'=>1],
+                ['month'=>3, 'amount'=>3695, 'active'=>1],
+                ['month'=>6, 'amount'=>7295, 'active'=>1],
+                ['month'=>12, 'amount'=>14495, 'active'=>0],
+            ]
+        );
+
+         $product_au_gold = array(
+            'id' => 'au_gold_10000',
+            'name' => 'GOLD',
+            'points' => 10000,
+            'region' => 'au',
+            'currency' => 'aud',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1995, 'active'=>1],
+                ['month'=>3, 'amount'=>5795, 'active'=>1],
+                ['month'=>6, 'amount'=>11495, 'active'=>1],
+                ['month'=>12, 'amount'=>22895, 'active'=>0],
+            ]
+        );
+
+         $product_au_platinum = array(
+            'id' => 'au_platinum_20000',
+            'name' => 'PLATINUM PRO',
+            'points' => 20000,
+            'region' => 'au',
+            'currency' => 'aud',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>2695, 'active'=>1],
+                ['month'=>3, 'amount'=>7795, 'active'=>1],
+                ['month'=>6, 'amount'=>25595, 'active'=>1],
+                ['month'=>12, 'amount'=>31095, 'active'=>0],
+            ]
+        );
+
+        /* eu */
+        $this->build_product($product_eu_bronze);
+        $this->build_product($product_eu_silver);
+        $this->build_product($product_eu_gold);
+        $this->build_product($product_eu_platinum);
+
+        /* au */
+        $this->build_product($product_au_bronze);
+        $this->build_product($product_au_silver);
+        $this->build_product($product_au_gold);
+        $this->build_product($product_au_platinum);
+
+return 'build plan...OK';
 
         /* us, ca, eu, au, cn, tw */
         /* eu */
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'eu', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_1m', 'month'=>1, 'active'=>1, 'price'=>8.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_3m', 'month'=>3, 'active'=>1, 'price'=>24.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_6m', 'month'=>6, 'active'=>1, 'price'=>48.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_12m', 'month'=>12, 'active'=>0, 'price'=>96.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'eu', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_1m', 'month'=>1, 'active'=>1, 'price'=>8.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_3m', 'month'=>3, 'active'=>1, 'price'=>24.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_6m', 'month'=>6, 'active'=>1, 'price'=>48.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_12m', 'month'=>12, 'active'=>0, 'price'=>96.95],
+        // ]);
 
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'eu', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_1m', 'month'=>1, 'active'=>1, 'price'=>12.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_3m', 'month'=>3, 'active'=>1, 'price'=>36.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_6m', 'month'=>6, 'active'=>1, 'price'=>72.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_12m', 'month'=>12, 'active'=>0, 'price'=>144.95],
-        ]);
 
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'eu', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_1m', 'month'=>1, 'active'=>1, 'price'=>19.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_3m', 'month'=>3, 'active'=>1, 'price'=>57.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_6m', 'month'=>6, 'active'=>1, 'price'=>114.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_12m', 'month'=>12, 'active'=>0, 'price'=>228.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'eu', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_1m', 'month'=>1, 'active'=>1, 'price'=>12.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_3m', 'month'=>3, 'active'=>1, 'price'=>36.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_6m', 'month'=>6, 'active'=>1, 'price'=>72.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_12m', 'month'=>12, 'active'=>0, 'price'=>144.95],
+        // ]);
 
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'eu', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_1m', 'month'=>1, 'active'=>1, 'price'=>26.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_3m', 'month'=>3, 'active'=>1, 'price'=>77.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_6m', 'month'=>6, 'active'=>1, 'price'=>155.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_12m', 'month'=>12, 'active'=>0, 'price'=>310.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'eu', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_1m', 'month'=>1, 'active'=>1, 'price'=>19.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_3m', 'month'=>3, 'active'=>1, 'price'=>57.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_6m', 'month'=>6, 'active'=>1, 'price'=>114.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_12m', 'month'=>12, 'active'=>0, 'price'=>228.95],
+        // ]);
+
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'eu', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_1m', 'month'=>1, 'active'=>1, 'price'=>26.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_3m', 'month'=>3, 'active'=>1, 'price'=>77.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_6m', 'month'=>6, 'active'=>1, 'price'=>155.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_12m', 'month'=>12, 'active'=>0, 'price'=>310.95],
+        // ]);
 
         /* au */
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'au_2500_1m', 'month'=>1, 'active'=>1, 'price'=>8.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_2500_3m', 'month'=>3, 'active'=>1, 'price'=>24.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_2500_6m', 'month'=>6, 'active'=>1, 'price'=>48.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_2500_12m', 'month'=>12, 'active'=>0, 'price'=>96.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'au', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_1m', 'month'=>1, 'active'=>1, 'price'=>8.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_3m', 'month'=>3, 'active'=>1, 'price'=>24.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_6m', 'month'=>6, 'active'=>1, 'price'=>48.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_12m', 'month'=>12, 'active'=>0, 'price'=>96.95],
+        // ]);
 
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'au_5000_1m', 'month'=>1, 'active'=>1, 'price'=>12.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_5000_3m', 'month'=>3, 'active'=>1, 'price'=>36.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_5000_6m', 'month'=>6, 'active'=>1, 'price'=>72.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_5000_12m', 'month'=>12, 'active'=>0, 'price'=>144.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'au', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_1m', 'month'=>1, 'active'=>1, 'price'=>12.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_3m', 'month'=>3, 'active'=>1, 'price'=>36.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_6m', 'month'=>6, 'active'=>1, 'price'=>72.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_12m', 'month'=>12, 'active'=>0, 'price'=>144.95],
+        // ]);
 
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'au_10000_1m', 'month'=>1, 'active'=>1, 'price'=>19.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_10000_3m', 'month'=>3, 'active'=>1, 'price'=>57.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_10000_6m', 'month'=>6, 'active'=>1, 'price'=>114.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_10000_12m', 'month'=>12, 'active'=>0, 'price'=>228.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'au', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_1m', 'month'=>1, 'active'=>1, 'price'=>19.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_3m', 'month'=>3, 'active'=>1, 'price'=>57.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_6m', 'month'=>6, 'active'=>1, 'price'=>114.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_12m', 'month'=>12, 'active'=>0, 'price'=>228.95],
+        // ]);
 
-        $id = DB::table("plan_products")->insertGetId(
-            ['region'=>'au', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
-        );
-        DB::table('plan_product_skus')->insert([
-            ['plan_product_id'=>$id, 'sub_id'=>'au_20000_1m', 'month'=>1, 'active'=>1, 'price'=>26.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_20000_3m', 'month'=>3, 'active'=>1, 'price'=>77.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_20000_6m', 'month'=>6, 'active'=>1, 'price'=>155.95],
-            ['plan_product_id'=>$id, 'sub_id'=>'au_20000_12m', 'month'=>12, 'active'=>0, 'price'=>310.95],
-        ]);
+        // $id = DB::table("plan_products")->insertGetId(
+        //     ['region'=>'au', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
+        // );
+        // DB::table('plan_product_skus')->insert([
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_1m', 'month'=>1, 'active'=>1, 'price'=>26.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_3m', 'month'=>3, 'active'=>1, 'price'=>77.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_6m', 'month'=>6, 'active'=>1, 'price'=>155.95],
+        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_12m', 'month'=>12, 'active'=>0, 'price'=>310.95],
+        // ]);
 
-        return 'build...OK';
+        // return 'build...OK';
     }
 
     /* (1) DB facade */

@@ -78,7 +78,7 @@
 @if (($user->stripe_id) && (count($user->cartItems()->get()) > 0))
                 <a class="btn btn-xs btn-success pull-right" id="btn-paynow">
                     <!-- <i class="fa fa-bolt"></i> Pay Now [Visa ****4242,  Expiry 1/2019] -->
-                    <i class="fa fa-bolt"></i> Pay Now [{{ $user->card_brand }} ****{{ $user->card_last_four }}]
+                    <i class="fa fa-bolt"></i> Pay Now [{{ $user->card_brand }} ****{{ $user->card_last_four }}, {{ $user->card_expiry }}]
                 </a>
 @endif
             </div>

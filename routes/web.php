@@ -278,10 +278,6 @@ Route::get('/stripe/test', 'AccountsController@getStripeTest');
 // Route::get('/stripe/cancel', 'AccountsController@stripe_cancel');
 // Route::get('/stripe/pause', 'AccountsController@stripe_pause');
 // Route::get('/stripe/reactive', 'AccountsController@stripe_reactive');
-// Route::get('/trial', 'AccountsController@trial');
-// Route::get('/swap1', 'AccountsController@swap1');
-// Route::get('/swap3', 'AccountsController@swap3');
-// Route::get('/swap6', 'AccountsController@swap6');
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     // return $invoiceId;
