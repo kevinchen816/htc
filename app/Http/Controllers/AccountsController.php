@@ -13,6 +13,8 @@ use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
 use App\Models\CartItem;
 
+use Carbon\Carbon;
+
 use Debugbar;
 
 class AccountsController extends Controller
@@ -157,7 +159,8 @@ class AccountsController extends Controller
 
         $handle = '';
         foreach ($plans as $plan) {
-            $sku = PlanProductSku::find($plan->plan_product_sku_id);
+            // $sku = PlanProductSku::find($plan->plan_product_sku_id);
+            $sku = PlanProductSku::where('sub_plan', $plan->sub_plan)->first(); // au_5000_1m
             if ($sku) {
                 $product = PlanProduct::find($sku->plan_product_id);
 
@@ -176,7 +179,7 @@ class AccountsController extends Controller
                 $txt_plan2 = $currency_region[$plan->region].$txt_plan2;
 
             } else {
-                Debugbar::error('plan product sku not found - id='.$plan->plan_product_sku_id);
+                Debugbar::error('plan product sku not found - '.$plan->sub_plan);
                 $txt_plan = $txt_plan2 = '';
             }
             $txt_status = ucwords($plan->status);
@@ -202,7 +205,6 @@ class AccountsController extends Controller
                     $action_url = '/shop/cart/';
                     $action_name = 'Cart';
                     $action_icon = 'shopping-cart';
-                    // Debugbar::debug($cart->plan_product_sku_id);
 
                 } else {
                     $action = 'create';
@@ -232,16 +234,35 @@ class AccountsController extends Controller
                 $sku = PlanProductSku::find($cart->plan_product_sku_id);
 
             } else if (($action == 'renew')||($action == 'reactive')) {
-                $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
-                if ($subscription) {
-                    $sku = PlanProductSku::where('sub_id', $subscription->stripe_plan)->first();
+                // $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
+                // if ($subscription) {
+                //     $sku = PlanProductSku::where('sub_plan', $subscription->stripe_plan)->first();
+                //     if ($subscription->ends_at) {
+                //         $dt = date_create($subscription->ends_at);
+                //         $dt = date_format($dt, $user->date_format);
+                //         // $txt_service_end = 'Service Ends by 2019/10/04 07:59:59';
+                //         $txt_service_end = 'Service Ends by '.$dt;
+                //     }
+                // }
 
-                    if ($subscription->ends_at) {
-                        $dt = date_create($subscription->ends_at);
-                        $dt = date_format($dt, $user->date_format);
-                        // $txt_service_end = 'Service Ends by 2019/10/04 07:59:59';
-                        $txt_service_end = 'Service Ends by '.$dt;
-                    }
+                $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
+
+                $dt = date_create($plan->sub_start);
+                $dt = date_format($dt, $user->date_format);
+                // $txt_service_start = 'Service Start at '.$dt;
+                $txt_service_start = $dt;
+
+                if ($plan->auto_bill) {
+                    $dt = date_create($plan->sub_end);
+                    $dt = date_format($dt, $user->date_format);
+                    // $txt_service_end = 'Service Renew at '.$dt;
+                    $txt_service_end = $dt;
+
+                } else {
+                    $dt = date_create($plan->sub_end);
+                    $dt = date_format($dt, $user->date_format);
+                    // $txt_service_end = 'Service End by '.$dt;
+                    $txt_service_end = $dt;
                 }
             }
 
@@ -260,6 +281,16 @@ class AccountsController extends Controller
                 // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
                 $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
             }
+
+// $handle .= '<table class="table">';
+//             $handle .=                          '<tr><td >Service Start at : </td>';
+//             $handle .=                              '<td>'.$txt_service_start.'</td>';
+//             $handle .=                          '</tr>';
+
+//             $handle .=                          '<tr><td >Service : </td>';
+//             $handle .=                              '<td>'.$txt_service_start.'</td>';
+//             $handle .=                          '</tr>';
+// $handle .= '</table>';
 
             $handle .= '<div class="row">';
             $handle .=     '<div class="col-md-12">';
@@ -286,13 +317,32 @@ class AccountsController extends Controller
             // $handle .=                     '</p>';
             /* Auto-Bill */
             // $handle .=                     '<p>';
-            $handle .=                     '<p style="margin-top:4px;">';
-            $handle .=                         '<span class="button-checkbox" style="margin-left:20px;">';
-            // $handle .=                             '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Bill (renews after 19/12/2018 8:00:00 am)</button>';
-            // $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
-            // // $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
-            $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$txt_service_end.'</span>';
-            $handle .=                         '</span>';
+            // $handle .=                     '<p style="margin-top:4px;">';
+            // $handle .=                         '<span class="button-checkbox" style="margin-left:20px;">';
+            // // $handle .=                             '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Bill (renews after 19/12/2018 8:00:00 am)</button>';
+            // // $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
+            // // // $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
+            // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$txt_service_start.'</span>';
+            // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$txt_service_end.'</span>';
+            // $handle .=                         '</span>';
+            // $handle .=                     '</p>';
+
+            $handle .=                     '<p style="margin-top:8px;">';
+            $handle .=                     '<table class="table">';
+            $handle .=                         '<tbody class="text-warning">';
+            $handle .=                         '<tr><td class="pull-right">Service Start at : </td>';
+            $handle .=                             '<td>'.$txt_service_start.'</td>';
+            $handle .=                         '</tr>';
+            if ($plan->auto_bill) {
+            $handle .=                         '<tr><td class="pull-right">Service Renew at : </td>';
+            } else {
+            $handle .=                         '<tr><td class="pull-right">Service End at : </td>';
+            }
+
+            $handle .=                             '<td>'.$txt_service_end.'</td>';
+            $handle .=                         '</tr>';
+            $handle .=                         '</tbody>';
+            $handle .=                     '</table>';
             $handle .=                     '</p>';
 
             $handle .=                     '<p></p>';
@@ -324,6 +374,7 @@ class AccountsController extends Controller
 
 // if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
 if ($action != 'create') {
+    if ($plan->auto_bill) {
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
             $handle .=                         '<p>';
             $handle .=                             '<strong>'.$txt_tier.'</strong>';
@@ -342,6 +393,7 @@ if ($action != 'create') {
             $handle .=                             '</strong>';
             $handle .=                         '</p>';
             $handle .=                     '</div>';
+    }
 }
 
            $handle .=                 '</div>'; // <!-- end col-md-5 -->
@@ -785,23 +837,18 @@ return var_dump($ret);
         //return redirect()->back();
     }
 
-    public function getStripeTest() {
+    public function stripeCardGet() {
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
-        $user = Auth::user();
-
         /*
             {
                 "id":"card_1Dh0ffG8UgnSL68UpMQMh6R3",
                 "object":"card",
                 "address_city":null,
                 "address_country":null,
-                "address_line1":null,
-                "address_line1_check":null,
+                "address_line1":null, "address_line1_check":null,
                 "address_line2":null,
                 "address_state":null,
-                "address_zip":null,
-                "address_zip_check":null,
+                "address_zip":null, "address_zip_check":null,
                 "brand":"Visa",
                 "country":"AU",
                 "customer":"cus_E9JChurv4Dhiah",
@@ -823,25 +870,213 @@ return var_dump($ret);
                 address_line2
                 address_city, address_state, 1234, address_country
         */
-        // $card = $user->defaultCard();
-        // $card->name = 'Kevin Chen';
-        // $card->address_country = 'address_country';
-        // $card->address_zip = '1234';
-        // $card->address_state = 'address_state';
-        // $card->address_city = 'address_city';
-        // $card->address_line1 = 'address_line1';
-        // $card->address_line2 = 'address_line2';
-        // $ret = $card->save();
-        // return $ret;
+        $user = Auth::user();
+        $card = $user->defaultCard();
+        return dd($card);
+    }
 
-$subscription_name = '89860117851014783481';
-// $subscription_name = '89860117851014783507';
+    public function stripeCardUpdate() {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $user = Auth::user();
+
+        $card = $user->defaultCard();
+        $card->name = 'Kevin Chen';
+        $card->address_country = 'address_country';
+        $card->address_zip = '1234';
+        $card->address_state = 'address_state';
+        $card->address_city = 'address_city';
+        $card->address_line1 = 'address_line1';
+        $card->address_line2 = 'address_line2';
+        $ret = $card->save();
+        return $ret;
+    }
+
+    // https://stripe.com/docs/api/subscriptions/object
+    public function stripeSubscriptionGet($sub_id = null, $subscription_name = null) {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $user = Auth::user();
+
+        if ($subscription_name) {
+            $sub_id = $user->subscription($subscription_name)->stripe_id;
+        // } else {
+        //     $sub_id = 'sub_E9fsz77ZAGt3ml';
+        }
+
+        $sub = \Stripe\Subscription::retrieve($sub_id);
+
+        echo 'id = '.$sub_id;
+        echo '</br>';
+
+        $date = date_create();
+        date_timestamp_set($date, $sub->billing_cycle_anchor);
+        echo 'billing_cycle_anchor = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+        date_timestamp_set($date, $sub->current_period_start);
+        echo 'current_period_start = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+        date_timestamp_set($date, $sub->current_period_end);
+        echo 'current_period_end   = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+        echo 'cancel_at_period_end = ';
+        echo ($sub->cancel_at_period_end=='true') ? 'true (Auto-Bill: No)' : 'false (Auto-Bill: Yes)';
+        echo '</br>';
+        echo '<hr>';
+
+        date_timestamp_set($date, $sub->trial_start);
+        echo 'trial_start = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+        date_timestamp_set($date, $sub->trial_end);
+        echo 'trial_end   = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+        echo '<hr>';
+
+        date_timestamp_set($date, $sub->start);
+        echo 'start   = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+        date_timestamp_set($date, $sub->ended_at);
+        echo 'ended_at   = '.date_format($date, 'Y-m-d H:i:s (U)');
+        echo '</br>';
+
+        echo $sub->items->data[0]->id;
+        echo '</br>';
+        echo $sub->plan->id;
+        echo '</br>';
+
+        echo '<hr>';
+        echo Carbon::now();
+        echo '</br>';
+        echo Carbon::now('Australia/Brisbane');
+        echo '</br>';
+
+        return dd($sub);
+    }
+
+    public function stripeSubscriptionCreate($plan) {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        /*
+            {
+                "id":"sub_E9ZxsDczLVJt5S",
+                "object":"subscription",
+                "application_fee_percent":null,
+                "billing":"charge_automatically",
+                "billing_cycle_anchor":1544794459,
+                "cancel_at_period_end":false,
+                "canceled_at":null,
+                "created":1544794459,
+                "current_period_end":1547472859,
+                "current_period_start":1544794459,
+                "customer":"cus_E9NlSNcBIFHcQn",
+                "days_until_due":null,"default_source":null,"discount":null,"ended_at":null,"items":{"object":"list","data":[{"id":"si_E9ZxhNbScbVwbV","object":"subscription_item","created":1544794459,"metadata":[],"plan":{"id":"au_5000_1m","object":"plan","active":true,"aggregate_usage":null,"amount":1295,"billing_scheme":"per_unit","created":1544749007,"currency":"aud","interval":"month","interval_count":1,"livemode":false,"metadata":[],"nickname":null,"product":"au_silver_5000","tiers":null,"tiers_mode":null,"transform_usage":null,"trial_period_days":null,"usage_type":"licensed"},"quantity":1,"subscription":"sub_E9ZxsDczLVJt5S"}],"has_more":false,"total_count":1,"url":"\/v1\/subscription_items?subscription=sub_E9ZxsDczLVJt5S"},"livemode":false,"metadata":[],"plan":{"id":"au_5000_1m","object":"plan","active":true,"aggregate_usage":null,"amount":1295,"billing_scheme":"per_unit","created":1544749007,"currency":"aud","interval":"month","interval_count":1,"livemode":false,"metadata":[],"nickname":null,"product":"au_silver_5000","tiers":null,"tiers_mode":null,"transform_usage":null,"trial_period_days":null,"usage_type":"licensed"
+                },
+                "quantity":1,
+                "start":1544794459,
+                "status":"active",
+                "tax_percent":null,
+                "trial_end":null,
+                "trial_start":null
+            }
+        */
+        $user = Auth::user();
+        $ret = \Stripe\Subscription::create([
+            'customer' => $user->stripe_id,
+            'items' => [
+                [
+                    'plan' => $plan,
+                ],
+            ],
+            'metadata' => [
+                'order_sn' => 'KT123456666',
+                'iccid' => '89860117851014783481',
+            ],
+            'prorate' => false,
+            'cancel_at_period_end' => true,
+            // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
+        ]);
+        return dd($ret);
+
+        // $ret = $user->newSubscription('89860117851014783481', $plan)->create(null, [
+        //     // 'email' => $email,
+        //     'metadata' => [
+        //         'order_sn' => 'KT123456666',
+        //         'iccid' => '89860117851014783481',
+        //     ],
+        // ]);
+        // return $ret;
+    }
+
+    // public function stripeSubscriptionUpdate($subscription_name = null) {
+    public function stripeSubscriptionUpdate($subscription_id, $plan) {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        // $subscription = \Stripe\Subscription::retrieve("sub_E9alHUZK4SRcoK");
+        // $subscription->id = 'au_5000_3m';
+        // // $subscription->customer = 'cus_E9af0ON3WpCGto'; // NG
+        // $subscription->prorate = false;
+        // // $subscription->billing_cycle_anchor = unchanged; // now, unchanged (NG)
+        // $subscription->cancel_at_period_end = false;
+        // // $subscription->tax_percent = 10;
+        // $subscription->save();
+
+        $subscription = \Stripe\Subscription::retrieve($subscription_id);
+        $ret = \Stripe\Subscription::update($subscription_id , [
+            'items' => [
+                [
+                    'id' => $subscription->items->data[0]->id,
+                    'plan' => $plan,
+                ],
+            ],
+            'prorate' => false,
+            'cancel_at_period_end' => false,
+            // 'billing_cycle_anchor' => 'unset', // unset, 'now', or 'unchanged'
+            // 'trial_end' => $subscription->current_period_end, //1546007683,
+        ]);
+
+        // Changing plan intervals. There's no way to leave billing cycle unchanged.
+
+        return dd($ret);
+    }
+
+    public function stripeSubscriptionDelete($subscription_name = null) {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $sub_id = 'sub_E9ZxsDczLVJt5S';
+        $sub = \Stripe\Subscription::retrieve($sub_id);
+        $ret = $sub->cancel();
+        return $ret;
+    }
+
+    public function getStripeTest1() {
+        return $this->stripeSubscriptionCreate('au_5000_1m');
+    }
+
+    public function getStripeTest2() {
+        return $this->stripeSubscriptionUpdate('sub_E9fsz77ZAGt3ml', 'au_10000_3m');
+    }
+
+    public function getStripeTest() {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $user = Auth::user();
+
+        $subscription_name = '89860117851014783481';
+        // $subscription_name = '89860117851014783507';
+        // $subscription_name = '8944503540145562674';
 
 // return $user->newSubscription($subscription_name, 'au_5000_1m')->create();
 
 // // return $user->subscription($subscription_name)->cancelNow();
 // $user->subscription($subscription_name)->cancel(); // Auto-Bill: No
 
+// return $this->stripeSubscriptionCreate('au_10000_1m');
+// return $this->stripeSubscriptionUpdate();
+// return $this->stripeSubscriptionDelete();
+// return $this->stripeCardUpdate();
+// return $this->stripeCardGet();
+// return $this->stripeSubscriptionGet($subscription_name);
+return $this->stripeSubscriptionGet('sub_E9fsz77ZAGt3ml');
+return;
 
 /*
     用户 *必须* 仍然在他们的宽限期内才可以恢复订阅
@@ -854,71 +1089,28 @@ $subscription_name = '89860117851014783481';
 // $user->subscription($subscription_name)->swap('au_5000_1m');
 // return;
 
-/*
-    {
-        "id":"sub_E9Og7jbDdYv895",
-        "object":"subscription",
-        "application_fee_percent":null,
-        "billing":"charge_automatically",
-        "billing_cycle_anchor":1544752461,
-        "cancel_at_period_end":true,
-        "canceled_at":1544753739,
-        "created":1544752461,
-            "current_period_end":1547430861,
-            "current_period_start":1544752461,
-        "customer":"cus_E9NlSNcBIFHcQn",
-        "days_until_due":null,
-        "default_source":null,
-        "discount":null,
-        "ended_at":null,
-        "items":{
-            "object":"list",
-            "data":[
-                {
-                    "id":"si_E9OgKJd5oOCi3A",
-                    "object":"subscription_item",
-                    "created":1544752461,
-                    "metadata":[],
-                    "plan":{
-                        "id":"au_5000_1m",
-                        "object":"plan",
-                        "active":true,
-                        "aggregate_usage":null,"amount":1295,"billing_scheme":"per_unit","created":1544749007,"currency":"aud","interval":"month","interval_count":1,"livemode":false,"metadata":[],"nickname":null,"product":"au_silver_5000","tiers":null,"tiers_mode":null,"transform_usage":null,"trial_period_days":null,"usage_type":"licensed"
-                    },
-                    "quantity":1,"subscription":"sub_E9Og7jbDdYv895"
-                }
-            ],
-            "has_more":false,"total_count":1,"url":"\/v1\/subscription_items?subscription=sub_E9Og7jbDdYv895"
-        },
-        "livemode":false,
-        "metadata":[],
-        "plan":{
-            "id":"au_5000_1m","object":"plan","active":true,"aggregate_usage":null,"amount":1295,"billing_scheme":"per_unit","created":1544749007,"currency":"aud","interval":"month","interval_count":1,"livemode":false,"metadata":[],"nickname":null,"product":"au_silver_5000","tiers":null,"tiers_mode":null,"transform_usage":null,"trial_period_days":null,"usage_type":"licensed"
-        },
-        "quantity":1,
-        "start":1544753739,
-        "status":"active","tax_percent":null,"trial_end":null,"trial_start":null
-    }
-*/
-$sub_id = $user->subscription($subscription_name)->stripe_id;
-echo 'id = '.$sub_id;
-echo '</br>';
-
 // $ret = \Stripe\Subscription::update($sub_id, [
 //     'cancel_at_period_end' => true,     // cancel, pause
 //     // 'cancel_at_period_end' => false,    // resume, reactive
 // ]);
 
-    $subscription = \Stripe\Subscription::retrieve($sub_id);
-    // $subscription->cancel_at_period_end = false;
-    // $subscription->prorate = false;
-    // $subscription->items->id = 'au_5000_3m';
-    // $subscription->save();
+    /*
+        prorate:
+            If false, the anchor period will be free (similar to a trial)
+            and no proration adjustments will be created.
+    */
+//     $subscription = \Stripe\Subscription::retrieve($sub_id);
+//     $subscription->cancel_at_period_end = false;
+//     $subscription->prorate = false;
+//     // $subscription->items->id = 'au_5000_3m';
+//     $subscription->save();
 
-$si_id = $subscription->items->data[0]->id;
-$si = \Stripe\SubscriptionItem::retrieve($si_id);
-$si->plan = 'au_5000_3m';
-$si->save();
+// $user->subscription($subscription_name)->swap('au_5000_1m');
+
+// $si_id = $subscription->items->data[0]->id;
+// $si = \Stripe\SubscriptionItem::retrieve($si_id);
+// $si->plan = 'au_5000_1m';
+// $si->save();
 
     // // $ret = $subscription->update(['cancel_at_period_end' => true]);
     // \Stripe\Subscription::update($sub_id, [
@@ -936,24 +1128,6 @@ $si->save();
     //     // ]
     // ]);
 
-$sub = \Stripe\Subscription::retrieve($sub_id);
-
-$date = date_create();
-date_timestamp_set($date, $sub->current_period_start);
-echo 'current_period_start = '.date_format($date, 'Y-m-d H:i:s (U)');
-echo '</br>';
-date_timestamp_set($date, $sub->current_period_end);
-echo 'current_period_end   = '.date_format($date, 'Y-m-d H:i:s (U)');
-echo '</br>';
-echo 'cancel_at_period_end = ';
-echo ($sub->cancel_at_period_end=='true') ? 'true (Auto-Bill: No)' : 'false (Auto-Bill: Yes)';
-echo '</br>';
-echo $sub->items->data[0]->id;
-echo '</br>';
-echo $sub->plan->id;
-echo '</br>';
-return dd($sub);
-
 // // return dd($user->subscription($subscription_name)->valid());
 // // return dd($user->subscription($subscription_name)->active());
 // // return dd($user->subscription($subscription_name)->recurring());
@@ -961,7 +1135,6 @@ return dd($sub);
 // return dd($user->subscription($subscription_name)->ended());
 // return dd($user->subscription($subscription_name)->onTrial());
 return dd($user->subscription($subscription_name)->onGracePeriod());
-
 
 // return $user->subscription($subscription_name);
 // return dd($user->subscribed($subscription_name));
@@ -974,7 +1147,6 @@ return dd($user->subscription($subscription_name)->onGracePeriod());
 // $card->name = "Jenny Rosen";
 // $card->save();
     }
-
 
     public function stripe_new() { // for test
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");

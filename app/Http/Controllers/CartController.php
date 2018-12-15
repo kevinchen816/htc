@@ -267,7 +267,7 @@ class CartController extends Controller
             $sku = $cart->planProductSku()->get()[0];
             $month = $sku->month;
             $price = $sku->price;
-            $sub_id = $sku->sub_id; // 'au_5000_1m'
+            $sub_plan = $sku->sub_plan; // 'au_5000_1m'
 
             /* Plan Product */
             $product = PlanProduct::find($sku->plan_product_id);
@@ -290,26 +290,46 @@ class CartController extends Controller
             $plan = Plan::where('iccid', $iccid)->first();
 
             /* Stripe - subscribe plan */
-            if ($plan->auto_bill) {
-                $ret = $user->newSubscription($iccid, $sub_id)->create();
-            } else {
-                $ret = $user->newSubscription($iccid, $sub_id)->create()->cancel();
+            // if ($plan->auto_bill) {
+            //     $ret = $user->newSubscription($iccid, $sub_plan)->create();
+            // } else {
+            //     $ret = $user->newSubscription($iccid, $sub_plan)->create()->cancel();
+            // }
+            // // $ret = $user->newSubscription($iccid, $sub_plan)
+            // //             // ->trialDays(10)
+            // //             // ->withMetadata(['hello'=>'This is a Meta test.'])
+            // //             ->withMetadata(['order_id' => 5678])
+            // //             ->create();
+
+            \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+            $subscription = \Stripe\Subscription::create([
+                'customer' => $user->stripe_id,
+                'items' => [
+                    [
+                        'plan' => $sub_plan,
+                    ],
+                ],
+                'metadata' => [
+                    'order_sn' => $order->no,
+                    'iccid' => $iccid,
+                ],
+                'prorate' => false,
+                'cancel_at_period_end' => ($plan->auto_bill) ? false : true,
+                // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
+            ]);
+
+            if ($subscription->status == 'active') {
+                $plan->status = 'active';
+                $plan->points = $points * $month;
+                $plan->points_used = 0;
+                $plan->sub_id = $subscription->id;
+                $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
+                $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
+                $plan->next_sub_plan = $sub_plan;
+                $plan->update();
+
+                $cart->delete();
             }
-            // $ret = $user->newSubscription($iccid, $sub_id)
-            //             // ->trialDays(10)
-            //             // ->withMetadata(['hello'=>'This is a Meta test.'])
-            //             ->withMetadata(['order_id' => 5678])
-            //             ->create();
-            //             // ->create($stripeToken, [
-            //             //     'email' => $email,
-            //             // ]);
-
-            $plan->status = 'active';
-            $plan->points = $points * $month;
-            $plan->points_used = 0;
-            $plan->update();
-
-            $cart->delete();
         }
 
         $order->update(['total_amount' => $total]);
@@ -353,7 +373,6 @@ return redirect()->route('account.profile');
         // ]);
 // return dd($invoice);
 
-
         // // $user->subscription('main')->swap('provider-plan-id');
         // $subscription_name = $iccid;
         // $new_plan = 'au_5000_1m';
@@ -369,19 +388,6 @@ return redirect()->route('account.profile');
 // if ($user->onTrial()) {}
 
     }
-
-    // https://docs.golaravel.com/docs/5.0/billing/#invoices
-    public function getShopTest() {
-        $user = Auth::user();
-        // $ret = $user->onTrial(); // 确认用户是否还在试用期间：
-        // $ret = $user->cancelled(); // 确认用户是否曾经订购但是已经取消了服务 // NG
-        // $ret = $user->onGracePeriod(); // 确认用户是否已经取消订单，但是服务还没有到期 // NG
-        // $ret = $user->everSubscribed(); // 确认用户是否订购过应用程序里的方案 // NG
-        $ret = $user->onPlan('monthly'); // 用方案 ID 来确认用户是否订购某方案 // OK
-        // $ret = $user->onTrial();
-return dd($ret);
-    }
-
 
     /*----------------------------------------------------------------------------------*/
     /* for test */ /* https://laravelacademy.org/post/1432.html */

@@ -23,20 +23,24 @@ class CreatePlansTable extends Migration
             $table->string('style')->nullable();    // Prepaid, Pay as you go
             $table->string('status')->nullable();   // active, preactive, suspend
 
-            $table->integer('bill_points')->default(0); // 5000, 10000, 20000
-            $table->integer('bill_month')->default(1); // 1, 3
-            $table->float('bill_price')->default(0);
-            $table->date('bill_begin')->nullable();
-            $table->date('bill_end')->nullable();
-            $table->integer('auto_bill')->default(0);
-            $table->integer('auto_reserve')->default(0);
+            // $table->integer('bill_points')->default(0); // 5000, 10000, 20000
+            // $table->integer('bill_month')->default(1); // 1, 3
+            // $table->float('bill_price')->default(0);
+            // $table->date('bill_begin')->nullable();
+            // $table->date('bill_end')->nullable();
 
-            $table->date('date_renew')->nullable();
-            $table->date('date_bill')->nullable();
+            // $table->integer('auto_bill')->default(0);
+            // $table->integer('auto_reserve')->default(0);
 
-            $table->float('points')->default(0);
-            $table->float('points_used')->default(0);
-            $table->integer('sms')->default(0);
+            // $table->date('date_renew')->nullable();
+            // $table->date('date_bill')->nullable();
+
+            // $table->float('points')->default(0);
+            // $table->float('points_used')->default(0);
+            $table->decimal('points', 10, 2)->default(0);
+            $table->decimal('points_used', 10, 2)->default(0);
+
+            // $table->integer('sms')->default(0);
             $table->integer('sms_sent')->default(0);
 
             $table->timestamps();

@@ -31,7 +31,8 @@ class CreatePlanProductSkusTable extends Migration
                   ->references('id')->on('plan_products')
                   ->onDelete('cascade');
 
-            $table->string('sub_id');
+            // $table->string('sub_id');
+            $table->string('sub_plan');
 
             $table->timestamps();
         });

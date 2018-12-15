@@ -194,7 +194,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/shop/editcard', 'CartController@getShopEditCard')->name('shop.editcard');
 
         Route::post('/shop/pay', 'CartController@postShopPay')->name('shop.pay');
-Route::get('/shop/test', 'CartController@getShopTest')->name('shop.test');
 
         Route::get('/currency/us', 'CartController@getCurrencyUS')->name('currency.us');
         Route::get('/currency/ca', 'CartController@getCurrencyCA')->name('currency.ca');
@@ -269,6 +268,8 @@ Route::get('/email/test', 'MailController@test')->name('email.test');
 /* for stripe test */
 // Route::get('/stripe', 'AccountsController@stripe');
 Route::get('/stripe/test', 'AccountsController@getStripeTest');
+Route::get('/stripe/test1', 'AccountsController@getStripeTest1');
+Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
 // Route::get('/stripe/new', 'AccountsController@stripe_new');
 // Route::get('/stripe/card', 'AccountsController@stripe_card');
 // Route::get('/stripe/cus', 'AccountsController@stripe_customer');

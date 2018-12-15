@@ -202,20 +202,13 @@ class PlanProductsController extends Controller
         return $form;
     }
 
-    public function build_product($p) {
+    public function build_stripe($p) {
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
         \Stripe\Product::create([
           'id' => $p['id'],     //'eu_silver_5000',
           'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
           'type' => 'service',
-        ]);
-
-        $plan_product_id = DB::table("plan_products")->insertGetId([
-            'region' => $p['region'],
-            'title' => $p['name'],
-            'points' => $p['points'],
-            'active' => $p['active']
         ]);
 
         foreach ($p['plans'] as $plan) {
@@ -228,10 +221,22 @@ class PlanProductsController extends Controller
                 'currency' => $p['currency'],       // 'usd',
                 'amount' => $plan['amount'],        // 1295,
             ]);
+        }
+    }
 
+    public function build_product($p) {
+        $plan_product_id = DB::table("plan_products")->insertGetId([
+            'region' => $p['region'],
+            'title' => $p['name'],
+            'points' => $p['points'],
+            'active' => $p['active']
+        ]);
+
+        foreach ($p['plans'] as $plan) {
+            $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
             DB::table('plan_product_skus')->insert([
                 'plan_product_id' => $plan_product_id,
-                'sub_id' => $plan_id,
+                'sub_plan' => $plan_id,
                 'month' => $plan['month'],
                 'price' => $plan['amount']/100,
                 'active' => $plan['active']
@@ -239,7 +244,7 @@ class PlanProductsController extends Controller
         }
     }
 
-    public function build() {
+    public function build($type) {
         /* eu */
         $product_eu_bronze = array(
             'id' => 'eu_bronze_2500',
@@ -367,19 +372,34 @@ class PlanProductsController extends Controller
             ]
         );
 
-        /* eu */
-        $this->build_product($product_eu_bronze);
-        $this->build_product($product_eu_silver);
-        $this->build_product($product_eu_gold);
-        $this->build_product($product_eu_platinum);
+         if ($type == 1) {
+            /* eu */
+            $this->build_product($product_eu_bronze);
+            $this->build_product($product_eu_silver);
+            $this->build_product($product_eu_gold);
+            $this->build_product($product_eu_platinum);
 
-        /* au */
-        $this->build_product($product_au_bronze);
-        $this->build_product($product_au_silver);
-        $this->build_product($product_au_gold);
-        $this->build_product($product_au_platinum);
+            /* au */
+            $this->build_product($product_au_bronze);
+            $this->build_product($product_au_silver);
+            $this->build_product($product_au_gold);
+            $this->build_product($product_au_platinum);
 
-return 'build plan...OK';
+         } if ($type == 2) {
+            /* eu */
+            $this->build_stripe($product_eu_bronze);
+            $this->build_stripe($product_eu_silver);
+            $this->build_stripe($product_eu_gold);
+            $this->build_stripe($product_eu_platinum);
+
+            /* au */
+            $this->build_stripe($product_au_bronze);
+            $this->build_stripe($product_au_silver);
+            $this->build_stripe($product_au_gold);
+            $this->build_stripe($product_au_platinum);
+         }
+
+return 'build...OK #'.$type;
 
         /* us, ca, eu, au, cn, tw */
         /* eu */

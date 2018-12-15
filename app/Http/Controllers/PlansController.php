@@ -197,8 +197,8 @@ $style = 'normal'; // for test
 
     public function postPlanCreate(Request $request) {
         // {"_token":"xxxx","mode":"create","planid":"5","tier":"21","auto-bill":"on","submit-new-plan":"create"}
-        $plan_id = $request->input('planid'); //$request->planid;
-        $sku_id = $request->input('tier'); //$request->tier;
+        $plan_id = $request->input('planid');
+        $sku_id = $request->input('tier');
         $auto_bill = ($request->input('auto-bill') == 'on') ? 1: 0;
 
         /* search Plan */
@@ -207,12 +207,18 @@ $style = 'normal'; // for test
             session()->flash('danger', 'Add Cart Fail.');
             return redirect()->back();
         }
-        $plan->plan_product_sku_id = $sku_id;
+
+        $sku = PlanProductSku::find($sku_id);
+         if (!$sku) {
+            session()->flash('danger', 'Plan not found.');
+            return redirect()->back();
+        }
+        // $plan->plan_product_sku_id = $sku_id;
+        $plan->sub_plan = $sku->sub_plan; // au_5000_1m
         $plan->auto_bill = $auto_bill;
         $plan->update();
 
         $user = Auth::user();
-        $iccid = $plan->iccid;
 
         // 从数据库中查询该商品是否已经在购物车中 (reference)
         // if ($cart = $user->cartItems()->where('plan_product_sku_id', $skuId)->first()) {
@@ -229,22 +235,17 @@ $style = 'normal'; // for test
         // }
 
         // 创建购物车记录
-        $cart = new CartItem(['quantity' => 1, 'iccid' => $iccid]);
+        $cart = new CartItem(['quantity' => 1, 'iccid' => $plan->iccid]);
         $cart->user()->associate($user);
         $cart->planProductSku()->associate($sku_id);
         $cart->save();
 
         // Success: Buy Reserve for Plan with SIM ICCID 8944503540145561039 was added to your cart.
-
         if ($user->stripe_id) {
             return redirect()->route('shop.cart');
         } else {
-            // $user->sel_menu = 'cart';
-            // $user->update();
-
             $next = 'cart';
             return view('shop.editcard', compact('user', 'next'));
-            // return view('shop.editcard', compact('user'));
             // return redirect()->route('shop.editcard');
         }
         // return redirect()->route('account.profile');
@@ -312,7 +313,7 @@ $style = 'normal'; // for test
         // // $plan = Plan::findOrFail($plan_id);
         $plan = Plan::find($plan_id);
         if (!$plan) {
-            session()->flash('danger', 'ICCID not exist.');
+            session()->flash('danger', 'ICCID not exist. id='.$plan_id);
             return redirect()->back();
         }
         // $iccid = $plan->iccid;
@@ -345,28 +346,21 @@ $style = 'normal'; // for test
             return redirect()->route('account.profile');
         }
 
-// Debugbar::debug('#subscription...start');
-        // if ($auto_bill != $plan->auto_bill) {
-            if ($auto_bill) {
-                $user->subscription($plan->iccid)
-                     ->swap($sku->sub_id);
-                     // ->resume();
-            } else {
-                $user->subscription($plan->iccid)
-                     ->swap($sku->sub_id)
-                     ->cancel();
-            }
-        // }
-// Debugbar::debug('#subscription...end');
+        // // if ($auto_bill != $plan->auto_bill) {
+        //     if ($auto_bill) {
+        //         $user->subscription($plan->iccid)
+        //              ->swap($sku->sub_plan);
+        //              // ->resume();
+        //     } else {
+        //         $user->subscription($plan->iccid)
+        //              ->swap($sku->sub_plan)
+        //              ->cancel();
+        //     }
+        // // }
 
-        // $user->subscription('main')->swap('provider-plan-id');
-        // $subscription_name = $iccid;
-        // $new_plan = 'au_5000_1m';
-        // $user->subscription($plan->iccid)->swap($sku->sub_id);
-
+        $plan->next_sub_plan = $sku->sub_plan;
         $plan->auto_bill = $auto_bill;
         $plan->update();
-// Debugbar::debug('#plan...update done');
 
         // Success: Your account Renewal setup was saved.
         session()->flash('success', 'Renew Success');
@@ -386,12 +380,15 @@ $style = 'normal'; // for test
         $region = $plan->region; // us, ca, eu, au, cn, tw
 
         if ($mode == 'renew') {
-            $sku_id = 0;
-            $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
-            if ($subscription) {
-                $sku = PlanProductSku::where('sub_id', $subscription->stripe_plan)->first();
-                $sku_id = ($sku) ? $sku->id : 0;
-            }
+            // $sku_id = 0;
+            // $subscription = DB::table("subscriptions")->where('name', $plan->iccid)->first();
+            // if ($subscription) {
+            //     $sku = PlanProductSku::where('sub_plan', $subscription->stripe_plan)->first();
+            //     $sku_id = ($sku) ? $sku->id : 0;
+            // }
+
+            $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
+            $sku_id = ($sku) ? $sku->id : 0;
             Debugbar::debug('sku_id='.$sku_id);
         }
 
@@ -586,4 +583,10 @@ $style = 'normal'; // for test
         ]);
         return var_dump($ret);
     }
+
+
+    /*-----------------------------------------------------------*/
+
+
+
 }
