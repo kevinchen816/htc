@@ -215,6 +215,7 @@ $style = 'normal'; // for test
         }
         // $plan->plan_product_sku_id = $sku_id;
         $plan->sub_plan = $sku->sub_plan; // au_5000_1m
+        $plan->next_sub_plan = $sku->sub_plan;
         $plan->auto_bill = $auto_bill;
         $plan->update();
 
@@ -309,31 +310,22 @@ $style = 'normal'; // for test
     /*----------------------------------------------------------------------------------*/
     public function getPlanRenew($plan_id) {
         $user = Auth::user();
-
-        // // $plan = Plan::findOrFail($plan_id);
         $plan = Plan::find($plan_id);
         if (!$plan) {
             session()->flash('danger', 'ICCID not exist. id='.$plan_id);
             return redirect()->back();
         }
-        // $iccid = $plan->iccid;
-
-        // $data['sel_menu'] = 'plan';
-        // $user->update($data);
-
         $mode = 'renew';
         return view('plans.create', compact('user', 'plan', 'mode'));
     }
 
     public function postPlanRenew(Request $request) {
         // {"_token":"xxxx","mode":"renew","planid":"12","tier":"22","auto-bill":"on","submit-new-plan":"renew"}
-
         $plan_id = $request->input('planid'); //$request->planid;
         $sku_id = $request->input('tier'); //$request->tier;
         $auto_bill = ($request->input('auto-bill') == 'on') ? 1: 0;
 
         $user = Auth::user();
-
         $plan = Plan::find($plan_id);
         if (!$plan) {
             session()->flash('danger', 'Renew ICCID not found. '.$plan_id);
@@ -368,6 +360,22 @@ $style = 'normal'; // for test
     }
 
     /*----------------------------------------------------------------------------------*/
+    public function getPlanReactive($plan_id) {
+        $user = Auth::user();
+        $plan = Plan::find($plan_id);
+        if (!$plan) {
+            session()->flash('danger', 'ICCID not exist. id='.$plan_id);
+            return redirect()->back();
+        }
+        $mode = 'reactive';
+        return view('plans.create', compact('user', 'plan', 'mode'));
+    }
+
+     public function postPlanReactive(Request $request) {
+        return $this->postPlanCreate($request);
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function getPlanCancel() {
         return redirect()->route('account.profile');
     }
@@ -387,9 +395,14 @@ $style = 'normal'; // for test
             //     $sku_id = ($sku) ? $sku->id : 0;
             // }
 
-            $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
-            $sku_id = ($sku) ? $sku->id : 0;
-            Debugbar::debug('sku_id='.$sku_id);
+            // $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
+            // $sku_id = ($sku) ? $sku->id : 0;
+            $select_sub_plan = $plan->next_sub_plan;
+
+        } else if ($mode == 'reactive') {
+            // $sku = PlanProductSku::where('sub_plan', $plan->sub_plan)->first();
+            // $sku_id = ($sku) ? $sku->id : 0;
+            $select_sub_plan = $plan->sub_plan;
         }
 
         // $product = PlanProduct::findOrFail(14); // 查找不存在的记录时会抛出异常
@@ -421,15 +434,11 @@ $style = 'normal'; // for test
             $txt .=         '</div>';
             $txt .=         '<div class="col-md-7">';
             foreach ($skus as $sku) {
-
-                if ($mode == 'renew') {
-                    // $checked = ($sku->id == $plan->plan_product_sku_id) ? 'checked' : '';
-                    $checked = ($sku->id == $sku_id) ? 'checked' : '';
+                if (($mode == 'renew')||($mode == 'reactive')) {
+                    // $checked = ($sku->id == $sku_id) ? 'checked' : '';
+                    $checked = ($sku->sub_plan == $select_sub_plan) ? 'checked' : '';
                 }
 
-                // $sku_id = $sku->id;
-                // $month = $sku->month;
-                // $price = $sku->price;
                 if ($sku->month == 1) {
                     $sku_month = 'per Month';
                 } else {
@@ -441,18 +450,12 @@ $style = 'normal'; // for test
                 // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
                 // $txt .=             '</div>';
                 $txt .=             '<div class="radio">';
-                                     // '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
-
-                // $txt .=                 '<label><input type="radio" name="tier" '.$checked.' value="'.$sku_id.'" ><span style="color:white;">'.$price.'</span> <span style="color:lime;"> '.$sku_month.'</span> <span style="color:red;"> '.$cpp.'</span></label>';
-
                 $txt .=                 '<label>';
                 $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku->id.'" >';
-                $txt .=                         '<span style="color:white;">'.$sku->price.'</span>';
-                $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>';
-                $txt .=                         '<span style="color:red;"> '.$cpp.'</span>';
+                $txt .=                         '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
+                $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
+                $txt .=                         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
                 $txt .=                 '</label>';
-
-
                 $txt .=             '</div>';
 
                 if ($mode == 'create') {
@@ -528,41 +531,21 @@ $style = 'normal'; // for test
     /*----------------------------------------------------------------------------------*/
     public function pause(Plan $plan) {
         $user = Auth::user();
-
-        // $plan->delete();
-        // // return back();
-
-        // // $plans = Plan::all();
-        // $plans = Plan::paginate(5);
-
-        // $subscriptions = DB::table('subscriptions')->where('iccid', $iccid)->get();
-        // $subscription = $subscription->first();
-        $subscription_name = $plan->iccid;
-        $user->subscription($subscription_name)->cancel();
-
+        $user->subscription($plan->iccid)->cancel();
         session()->flash('success', 'Pause Success');
-        // return view('plans.index', compact('user', 'plans'));
         return redirect()->back();
     }
 
     public function active(Plan $plan) {
         $user = Auth::user();
-
-        $subscription_name = $plan->iccid;
-        $user->subscription($subscription_name)->resume();
-
+        $user->subscription($plan->iccid)->resume();
         session()->flash('success', 'Active Success');
         return redirect()->back();
     }
 
     public function change(Plan $plan) {
         $user = Auth::user();
-
-        // $user->subscription('main')->swap('provider-plan-id');
-        $subscription_name = $plan->iccid;
-        $new_plan = 'plan_5000_3m_us';
-        $user->subscription($subscription_name)->swap($new_plan);
-
+        $user->subscription($plan->iccid)->swap('au_5000_1m');
         session()->flash('success', 'Change Success');
         return redirect()->back();
     }
@@ -572,21 +555,4 @@ $style = 'normal'; // for test
         session()->flash('success', 'Cancel Success');
         return redirect()->back();
     }
-
-    /*-----------------------------------------------------------*/
-    public function stripe_new() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $ret = \Stripe\Customer::create([
-            "description" => "kevin@10ware.com", // cus_Dv0fI1h5DQi2tb
-//            "currency" =>  "usd"
-//          "source" => "tok_visa" // obtained with Stripe.js
-        ]);
-        return var_dump($ret);
-    }
-
-
-    /*-----------------------------------------------------------*/
-
-
-
 }

@@ -105,6 +105,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/plans/renew/{plan}', 'PlansController@getPlanRenew')->name('plans.renew');
         Route::post('/plans/renew', 'PlansController@postPlanRenew')->name('plans.renew');
 
+        Route::get('/plans/reactive/{plan}', 'PlansController@getPlanReactive')->name('plans.reactive');
+        Route::post('/plans/reactive', 'PlansController@postPlanReactive')->name('plans.reactive');
+
         Route::get('/plans/cancel', 'PlansController@getPlanCancel')->name('plans.cancel');
         //Route::get('/plans/delete/{plan}', 'PlansController@delete')->name('plans.delete');
 

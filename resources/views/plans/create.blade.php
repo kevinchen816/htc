@@ -13,11 +13,11 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         @if ($mode == 'create')
-                            Create Plan
-                        @elseif ($mode == 'update')
-                            Update Plan
+                            Create Plan -
+                        @elseif ($mode == 'reactive')
+                            Reactive Plan -
                         @else
-                            Configure Plan Renewal (Auto-Bill)
+                            Renew Plan -
                         @endif
                         <strong>{{ $plan->iccid }}</strong>
                     </h4>
@@ -28,8 +28,8 @@
                     <div class="col-md-6">
                         @if ($mode == 'create')
                             <form method="POST" action="{{ route('plans.create') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
-                        @elseif ($mode == 'update')
-                            <form method="POST" action="{{ route('plans.update') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+                        @elseif ($mode == 'reactive')
+                            <form method="POST" action="{{ route('plans.reactive') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                         @else
                             <form method="POST" action="{{ route('plans.renew') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                         @endif
@@ -89,8 +89,8 @@
                                     <button type="submit" class="btn btn-primary btn-sm" name="submit-new-plan" value="{{ $mode }}">
                                         @if ($mode == 'create')
                                         <i class="glyphicon glyphicon-shopping-cart"></i> Add Cart
-                                        @elseif ($mode == 'update')
-                                        <i class="glyphicon glyphicon-ok"></i> Update
+                                        @elseif ($mode == 'reactive')
+                                        <i class="glyphicon glyphicon-saved"></i> Reactive
                                         @else
                                         <i class="glyphicon glyphicon-refresh"></i> Renew
                                         @endif

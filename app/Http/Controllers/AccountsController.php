@@ -219,9 +219,9 @@ class AccountsController extends Controller
                 $action_icon = 'refresh';
             } else {
                 $action = 'reactive';
-                $action_url = '/plans/renew/'.$plan->id;
+                $action_url = '/plans/reactive/'.$plan->id;
                 $action_name = 'Reactive';
-                $action_icon = 'refresh';
+                $action_icon = 'saved';
             }
 
             /*
@@ -246,24 +246,10 @@ class AccountsController extends Controller
                 // }
 
                 $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
-
                 $dt = date_create($plan->sub_start);
-                $dt = date_format($dt, $user->date_format);
-                // $txt_service_start = 'Service Start at '.$dt;
-                $txt_service_start = $dt;
-
-                if ($plan->auto_bill) {
-                    $dt = date_create($plan->sub_end);
-                    $dt = date_format($dt, $user->date_format);
-                    // $txt_service_end = 'Service Renew at '.$dt;
-                    $txt_service_end = $dt;
-
-                } else {
-                    $dt = date_create($plan->sub_end);
-                    $dt = date_format($dt, $user->date_format);
-                    // $txt_service_end = 'Service End by '.$dt;
-                    $txt_service_end = $dt;
-                }
+                $txt_service_start = date_format($dt, $user->date_format);
+                $dt = date_create($plan->sub_end);
+                $txt_service_end = date_format($dt, $user->date_format);
             }
 
             /* search Subscription */
@@ -305,7 +291,7 @@ class AccountsController extends Controller
                 $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.$txt_plan.'</span>';
                 $handle .=                     ' <span style="color:lime;">'.$txt_plan2.'</span>';
                 $handle .=                     ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
-            }
+
             // $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
 
             /* Auto-Reserve */
@@ -330,21 +316,21 @@ class AccountsController extends Controller
             $handle .=                     '<p style="margin-top:8px;">';
             $handle .=                     '<table class="table">';
             $handle .=                         '<tbody class="text-warning">';
-            $handle .=                         '<tr><td class="pull-right">Service Start at : </td>';
-            $handle .=                             '<td>'.$txt_service_start.'</td>';
-            $handle .=                         '</tr>';
+            $handle .=                             '<tr><td class="pull-right">Service Start at : </td>';
+            $handle .=                                 '<td>'.$txt_service_start.'</td>';
+            $handle .=                             '</tr>';
             if ($plan->auto_bill) {
-            $handle .=                         '<tr><td class="pull-right">Service Renew at : </td>';
+                $handle .=                         '<tr><td class="pull-right">Service Renew at : </td>';
             } else {
-            $handle .=                         '<tr><td class="pull-right">Service End at : </td>';
+                $handle .=                         '<tr><td class="pull-right">Service End at : </td>';
             }
 
-            $handle .=                             '<td>'.$txt_service_end.'</td>';
+            $handle .=                                 '<td>'.$txt_service_end.'</td>';
             $handle .=                         '</tr>';
             $handle .=                         '</tbody>';
             $handle .=                     '</table>';
             $handle .=                     '</p>';
-
+        }
             $handle .=                     '<p></p>';
             $handle .=                 '</div>'; // <!-- end col-md-5 -->
 
@@ -374,8 +360,8 @@ class AccountsController extends Controller
 
 // if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
 if ($action != 'create') {
-    if ($plan->auto_bill) {
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
+            if ($plan->auto_bill) {
             $handle .=                         '<p>';
             $handle .=                             '<strong>'.$txt_tier.'</strong>';
             $handle .=                         '</p>';
@@ -386,6 +372,7 @@ if ($action != 'create') {
             $handle .=                                  ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
             $handle .=                             '</strong>';
             $handle .=                         '</p>';
+            }
             $handle .=                         '<p>';
             $handle .=                             'Auto-Bill: ';
             $handle .=                             '<strong>';
@@ -393,7 +380,6 @@ if ($action != 'create') {
             $handle .=                             '</strong>';
             $handle .=                         '</p>';
             $handle .=                     '</div>';
-    }
 }
 
            $handle .=                 '</div>'; // <!-- end col-md-5 -->
