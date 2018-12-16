@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Action;
 use App\Models\Camera;
 use App\Models\Photo;
+use App\Models\Plan;
 use App\Models\Firmware;
 use App\Models\LogApi;
 use Auth;
@@ -16,8 +17,8 @@ use Illuminate\Support\Facades\Storage;
 use Schema;
 //use Storage;
 use App\Http\Controllers\MailController;
-
 use Mail;
+use Carbon\Carbon;
 
 /*
 ICCID:
@@ -29,22 +30,26 @@ Truphone #2 - 8944503540145561039 F
 
 //define(ERR_INVALID_SIM_CARD, '801');
 const ERR_INVALID_SIM_CARD          = 801;
-const ERR_PLAN_EMPTY                = 802;
-const ERR_INVALID_CAMERA            = 803;
-const ERR_NOT_CAMERA_OWNER          = 804;
-const ERR_NO_UPLOAD_FILE            = 805;
-const ERR_NO_REQUEST_ID             = 806;
-const ERR_INVALID_REQUEST_ID        = 807;
-const ERR_INVALID_PHOTO_ID          = 808;
+const ERR_PLAN_SUSPEND              = 802;
+const ERR_PLAN_DEACTIVE             = 803;
+const ERR_PLAN_NOT_ACTIVE           = 804;
+const ERR_PLAN_EMPTY                = 805;
+const ERR_PLAN_EXPIRE               = 806;
+const ERR_INVALID_CAMERA            = 807;
+const ERR_NOT_CAMERA_OWNER          = 808;
+const ERR_NO_UPLOAD_FILE            = 809;
+const ERR_NO_REQUEST_ID             = 810;
+const ERR_INVALID_REQUEST_ID        = 811;
+const ERR_INVALID_PHOTO_ID          = 812;
 
-const ERR_NO_BLOCK_NUMBER           = 811;
-const ERR_NO_BLOCK_ID               = 812;
-const ERR_NO_CRC32                  = 813;
-const ERR_NO_FILE_BUFFER            = 814;
-const ERR_CRC32_FAIL                = 815;
-const ERR_INVALID_BLOCK_NUMBER      = 816;
-const ERR_INVALID_BLOCK_ID          = 817;
-const ERR_COPY_MERGE_FILE_FAIL      = 818;
+const ERR_NO_BLOCK_NUMBER           = 820;
+const ERR_NO_BLOCK_ID               = 821;
+const ERR_NO_CRC32                  = 822;
+const ERR_NO_FILE_BUFFER            = 823;
+const ERR_CRC32_FAIL                = 824;
+const ERR_INVALID_BLOCK_NUMBER      = 825;
+const ERR_INVALID_BLOCK_ID          = 826;
+const ERR_COPY_MERGE_FILE_FAIL      = 827;
 
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
@@ -134,6 +139,10 @@ class CamerasController extends Controller
     public function getErrorMessage($errorCode) {
         static $errors = array(
             ERR_INVALID_SIM_CARD => 'Invalid SIM card',
+            ERR_PLAN_SUSPEND => 'Plan is suspend',
+            ERR_PLAN_DEACTIVE => 'Plan is deactive',
+            ERR_PLAN_NOT_ACTIVE => 'Plan not active',
+            ERR_PLAN_EXPIRE => 'Plan is expire',
             ERR_PLAN_EMPTY => 'Plan points empty',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
@@ -1638,12 +1647,26 @@ class CamerasController extends Controller
     public function Plan_Check($iccid) {
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
-            if ($plan->points_used < $plan->points) {
-                $ret['err'] = 0;
-                $ret['user_id'] = $plan->user_id;
+            if ($plan->status == 'active') {
+                if (Carbon::now()->gt($plan->sub_end)) {
+                    $ret['err'] = ERR_PLAN_EXPIRE;
+                } else {
+                    if ($plan->points_used < $plan->points) {
+                        $ret['err'] = 0;
+                        $ret['user_id'] = $plan->user_id;
+                    } else {
+                        $ret['err'] = ERR_PLAN_EMPTY;
+                    }
+                }
+
+            } else if ($plan->status == 'deactive') {
+                $ret['err'] = ERR_PLAN_DEACTIVE;
+            } else if ($plan->status == 'suspend') {
+                $ret['err'] = ERR_PLAN_SUSPEND;
             } else {
-                $ret['err'] = ERR_PLAN_EMPTY;
+                $ret['err'] = ERR_PLAN_NOT_ACTIVE;
             }
+
         } else {
             $ret['err'] = ERR_INVALID_SIM_CARD;
         }
@@ -4429,6 +4452,47 @@ return $request;
     //        $email->photo_Send($user, $camera, $filename);
     //    }
     //}
+
+    public function test() {
+        $now = Carbon::now();
+        $plan = Plan::first();
+        return var_dump(Carbon::now()->lte($plan->sub_end));
+
+        $dt = Carbon::create(2018, 12, 31, 20, 26, 11, 'America/Vancouver');
+        return var_dump($now->gt($dt));
+
+        // https://blog.csdn.net/gengfu_php/article/details/78307950
+        // {"date":"2018-12-16 02:05:35.018006","timezone_type":3,"timezone":"PRC"}
+        // echo Carbon::now(); // 2018-12-16 02:06:37
+        // echo Carbon::now()->toDateString(); // 2018-12-16
+        // echo Carbon::today()->toDateTimeString(); // 2018-12-16 00:00:00
+        // echo Carbon::yesterday()->toDateTimeString(); // 2018-12-15 00:00:00
+        // echo Carbon::tomorrow()->toDateTimeString(); // 2018-12-17 00:00:00
+        // echo Carbon::parse('+1 months')->toDateTimeString(); //2019-01-16 02:11:20
+        // echo Carbon::now()->addDays(10); //2018-12-26 02:12:21
+
+        /*
+            min –返回最小日期。
+            max – 返回最大日期。
+            eq – 判断两个日期是否相等。
+            gt – 判断第一个日期是否比第二个日期大。
+            lt – 判断第一个日期是否比第二个日期小。
+            gte – 判断第一个日期是否大于等于第二个日期。
+            lte – 判断第一个日期是否小于等于第二个日期。
+        */
+        // echo Carbon::now()->tzName; // PRC
+        $now = Carbon::now();
+        $dt = Carbon::create(2018, 12, 31, 20, 26, 11, 'America/Vancouver');
+        return var_dump($now->gt($dt));
+
+        // $first = Carbon::create(2012, 9, 5, 1);
+        // $second = Carbon::create(2012, 9, 5, 5);
+        // var_dump(Carbon::create(2012, 9, 5, 3)->between($first, $second));
+        // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second));
+        // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second, false)); // 第三个可选参数指定比较是否可以相等，默认为true
+        // return var_dump($Carbon::now()->isFuture());
+        // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
+    }
 }
 
 

@@ -977,7 +977,7 @@ return var_dump($ret);
                 'iccid' => '89860117851014783481',
             ],
             'prorate' => false,
-            'cancel_at_period_end' => true,
+            'cancel_at_period_end' => false,
             // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
         ]);
         return dd($ret);
@@ -1034,11 +1034,76 @@ return var_dump($ret);
     }
 
     public function getStripeTest1() {
-        return $this->stripeSubscriptionCreate('au_5000_1m');
+        // return $this->stripeSubscriptionCreate('au_2500_1d');
+
+        $user = Auth::user();
+        $stripe_id = $user->stripe_id;
+        $currency = $user->currency;
+
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        $charge = \Stripe\Charge::create([
+            'amount' => 100,
+            'currency' => $currency, //'usd',
+            'description' => 'This is an example charge.',
+            'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
+        ]);
+
+// charge.succeeded
+echo $charge->id.'<br/>';           // ch_1Di2B7G8UgnSL68UAb5ufwbI
+echo $charge->customer.'<br/>';     // cus_E9af0ON3WpCGto
+echo $charge->amount.'<br/>';       // 100
+echo $charge->currency.'<br/>';     // usd
+echo $charge->status.'<br/>';       // succeeded
+echo $charge->description.'<br/>';  // This is an example charge.
+echo $charge->invoice.'<br/>';      // null
+// echo $charge->metadata.'<br/>';
+return dd($charge);
+
+
     }
 
     public function getStripeTest2() {
-        return $this->stripeSubscriptionUpdate('sub_E9fsz77ZAGt3ml', 'au_10000_3m');
+        // return $this->stripeSubscriptionUpdate('sub_E9fsz77ZAGt3ml', 'au_10000_3m');
+
+        $user = Auth::user();
+        $stripe_id = $user->stripe_id;
+        $currency = $user->currency;
+
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $invoice_item = \Stripe\InvoiceItem::create([
+            "customer" => $stripe_id,
+            "amount" => 123,
+            "currency" => $currency,
+            "description" => "This is an item #1."
+        ]);
+
+        $invoice_item = \Stripe\InvoiceItem::create([
+            "customer" => $stripe_id,
+            "amount" => 456,
+            "currency" => $currency,
+            "description" => "This is an item #2."
+        ]);
+// return dd($invoice_item);
+
+        $invoice = \Stripe\Invoice::create([
+            "customer" => $stripe_id,
+            // "auto_advance" => true, /* auto-finalize this draft after ~1 hour */
+            "auto_advance" => false,
+        ]);
+// return dd($invoice);
+
+        // $invoice = \Stripe\Invoice::retrieve("in_1Di2TWG8UgnSL68UyISyvYcU");
+//         $invoice->finalizeInvoice();
+// return dd($ret);
+
+        $ret = $invoice->pay();
+
+echo $ret->customer.'<br/>';    // cus_E9af0ON3WpCGto
+echo $ret->charge.'<br/>';      // ch_1Di2cYG8UgnSL68U1YxHtDxP
+echo $ret->paid.'<br/>';        // true
+echo $ret->status.'<br/>';      // paid (draft, open, paid, uncollectible, or void)
+return dd($ret);
     }
 
     public function getStripeTest() {
@@ -1061,7 +1126,7 @@ return var_dump($ret);
 // return $this->stripeCardUpdate();
 // return $this->stripeCardGet();
 // return $this->stripeSubscriptionGet($subscription_name);
-return $this->stripeSubscriptionGet('sub_E9fsz77ZAGt3ml');
+return $this->stripeSubscriptionGet('sub_EA2qCz3bBPMHC7');
 return;
 
 /*

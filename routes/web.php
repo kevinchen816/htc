@@ -242,6 +242,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 });
 
+// Route::get('/test', function() {return 'OK';});
+Route::get('/test', 'Api\CamerasController@test');
 Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
 
 /*-----------------------------------------------------------*/
@@ -266,7 +268,6 @@ Route::get('/email/test', 'MailController@test')->name('email.test');
 // Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
 
 /*-----------------------------------------------------------*/
-
 
 /* for stripe test */
 // Route::get('/stripe', 'AccountsController@stripe');

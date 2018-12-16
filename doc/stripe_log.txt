@@ -1,0 +1,319 @@
+order_sn = "KT123456666"                    <== 建立订单
+iccid = "89860117851014783481"              <== 建立订单
+
+//subscription_id = "sub_EA2qCz3bBPMHC7"      <-- "customer.subscription.created" (不需要，可能会在 "invoice.finalized" 后面）
+
+invoice_id = "in_1DhikOG8UgnSL68UVoybIVf5"  <-- "invoice.finalized"
+charge_id = "ch_1DhikOG8UgnSL68U9UQflRrm"   <-- "invoice.finalized"
+subscription_id = "sub_EA2qCz3bBPMHC7"      <-- "invoice.finalized"
+
+invoice_status = "paid"                     <-- "invoice.payment_succeeded"
+
+charge_status = "succeeded"                 <-- "charge.succeeded"
+
+
+//-------------------------------------------------
+顺序
+case（1）新订阅
+    "invoice.finalized"
+        // "invoice.created" ??
+    "invoice.payment_succeeded"
+        // "customer.subscription.created"
+    "charge.succeeded"
+
+case (2) 新订阅
+        //"invoice.created"
+    "invoice.finalized"
+    "invoice.payment_succeeded"
+        //"customer.subscription.created"
+    "charge.succeeded"
+
+case (3) 订阅到期 - 自动扣款
+    "invoice.created"                   02:47:20
+    "customer.subscription.updated"     02:47:35
+
+    "charge.succeeded"                  03:47:31
+    "invoice.payment_succeeded"         03:47:36
+    “invoice.updated”                   03:47:36
+    "invoice.finalized"                 03:47:37
+
+cadse (4) 订阅到期 - 删除
+    type = "customer.subscription.deleted"
+        data.object.id = "sub_E9ezipeZrlBaPE"
+        data.object.metadata.iccid = "89860117851014783481"
+        data.object.metadata.order_sn = "KT123456666"
+
+//-------------------------------------------------
+invoice.payment_failed
+If the payment fails or the customer does not have a valid payment source, an invoice.payment_failed event is sent, the subscription becomes past_due and the status field remains open.
+
+charge.failed
+
+customer.subscription.trial_will_end
+
+Changing a subscription results in customer.subscription.updated events.
+
+Using trial periods (which is how you change the billing cycle)
+
+https://stripe.com/docs/billing/lifecycle#subscription-states
+Subscription states
+    trialing
+    active
+    past_due
+    canceled
+    unpaid
+
+//-------------------------------------------------
+type = "customer.subscription.created"
+    data.object.id = "sub_EA2qCz3bBPMHC7"
+    data.object.items.data[0].id = "si_EA2qbDNTemJjCN"
+    data.object.customer = "cus_E9af0ON3WpCGto"
+    data.object.metadata.iccid = "89860117851014783481"
+    data.object.metadata.order_sn = "KT123456666"
+
+
+//type = "invoice.created"
+//    data.object.id = "in_1DhikOG8UgnSL68UVoybIVf5"
+//    data.object.charge = "ch_1DhikOG8UgnSL68U9UQflRrm"
+//    data.object.customer = "cus_E9af0ON3WpCGto"
+//    data.object.subscription = "sub_EA2qCz3bBPMHC7"
+//    data.object.billing_reason = "subscription_update"
+//    data.object.lines.data[0].id = "sli_6428ab47da8d1c"
+data.object.lines.data[0].plan.id = "au_2500_2d"
+//    data.object.lines.data[0].metadata.iccid = "89860117851014783481"
+//    data.object.lines.data[0].metadata.order_sn = "KT123456666"
+//    data.object.lines.data[0].subscription = "sub_EA2qCz3bBPMHC7"
+//    data.object.lines.data[0].subscription_item = "si_EA2qbDNTemJjCN"
+data.object.billing_reason = "subscription_update" // 新订阅
+data.object.billing_reason = "subscription_cycle"  // 订阅到期 - 自动扣款
+
+
+type = "invoice.finalized"
+    data.object.id = "in_1DhikOG8UgnSL68UVoybIVf5"
+    data.object.charge = "ch_1DhikOG8UgnSL68U9UQflRrm"
+    data.object.customer = "cus_E9af0ON3WpCGto"
+    data.object.subscription = "sub_EA2qCz3bBPMHC7"
+    data.object.billing_reason = subscription_update"
+    data.object.lines.data[0].id = "sli_6428ab47da8d1c"
+    data.object.lines.data[0].metadata.iccid = "89860117851014783481"
+    data.object.lines.data[0].metadata.order_sn = "KT123456666"
+    data.object.lines.data[0].subscription = "sub_EA2qCz3bBPMHC7"
+    data.object.lines.data[0].subscription_item = "si_EA2qbDNTemJjCN"
+data.object.billing_reason = "subscription_update" // 新订阅
+data.object.billing_reason = "subscription_cycle"  // 订阅到期 - 自动扣款
+
+//
+type = "invoice.payment_succeeded"
+    data.object.id = "in_1DhikOG8UgnSL68UVoybIVf5"
+    data.object.charge = "ch_1DhikOG8UgnSL68U9UQflRrm"
+    data.object.status = "paid"
+    data.object.customer = "cus_E9af0ON3WpCGto"
+    data.object.subscription: "sub_EA2qCz3bBPMHC7",
+data.object.lines.data[0].plan.id = "au_2500_2d"
+data.object.billing_reason = "subscription_update" // 新订阅
+data.object.billing_reason = "subscription_cycle"  // 订阅到期 - 自动扣款
+
+
+type = "charge.succeeded"
+    data.object.id = "ch_1DhikOG8UgnSL68U9UQflRrm"
+    data.object.status = "succeeded"
+    data.object.invoice = "in_1DhikOG8UgnSL68UVoybIVf5"
+    data.object.customer = "cus_E9af0ON3WpCGto"
+
+//--------------------------------------------------
+"invoice.payment_succeeded"
+{
+	"id": "evt_1DhikQG8UgnSL68Ujn9GLmKT",
+	"data": {
+		"object": {
+			"id": "in_1DhikOG8UgnSL68UVoybIVf5",
+			"tax": 0,
+			"date": 1544901864,
+			"paid": true,
+			"lines": {
+				"url": "/v1/invoices/in_1DhikOG8UgnSL68UVoybIVf5/lines",
+				"data": [
+					{
+						"id": "sli_6428ab47da8d1c",
+						"plan": {
+							"id": "au_2500_1d",
+							"tiers": null,
+							"active": true,
+							"amount": 100,
+							"object": "plan",
+							"created": 1544901433,
+							"product": "au_bronze_2500",
+							"currency": "aud",
+							"interval": "day",
+							"livemode": false,
+							"metadata": [],
+							"nickname": "1 day",
+							"tiers_mode": null,
+							"usage_type": "licensed",
+							"billing_scheme": "per_unit",
+							"interval_count": 1,
+							"aggregate_usage": null,
+							"transform_usage": null,
+							"trial_period_days": 1
+						},
+						"type": "subscription",
+						"amount": 100,
+						"object": "line_item",
+						"period": {
+							"end": 1544988264,
+							"start": 1544901864
+						},
+						"currency": "aud",
+						"livemode": false,
+						"metadata": {
+							"iccid": "89860117851014783481",
+							"order_sn": "KT123456666"
+						},
+						"quantity": 1,
+						"proration": false,
+						"description": "1 × BRONZE (au_bronze_2500) (at $1.00 / day)",
+						"discountable": true,
+						"subscription": "sub_EA2qCz3bBPMHC7",
+						"subscription_item": "si_EA2qbDNTemJjCN"
+					}
+				],
+				"object": "list",
+				"has_more": false,
+				"total_count": 1
+			},
+			"total": 100,
+			"charge": "ch_1DhikOG8UgnSL68U9UQflRrm",
+			"closed": true,
+			"number": "F83EBA9-0024",
+			"object": "invoice",
+			"status": "paid",
+			"billing": "charge_automatically",
+			"currency": "aud",
+			"customer": "cus_E9af0ON3WpCGto",
+			"discount": null,
+			"due_date": null,
+			"forgiven": false,
+			"livemode": false,
+			"metadata": [],
+			"subtotal": 100,
+			"attempted": true,
+			"amount_due": 100,
+			"period_end": 1544901864,
+			"amount_paid": 100,
+			"description": null,
+			"invoice_pdf": "https://pay.stripe.com/invoice/invst_4hQhwOuFhd3wJIij9rtfzzvHr0/pdf",
+			"tax_percent": null,
+			"auto_advance": false,
+			"finalized_at": 1544901864,
+			"period_start": 1544901864,
+			"subscription": "sub_EA2qCz3bBPMHC7",
+			"attempt_count": 1,
+			"billing_reason": "subscription_update",
+			"default_source": null,
+			"ending_balance": 0,
+			"payment_intent": null,
+			"receipt_number": null,
+			"application_fee": null,
+			"amount_remaining": 0,
+			"starting_balance": 0,
+			"hosted_invoice_url": "https://pay.stripe.com/invoice/invst_4hQhwOuFhd3wJIij9rtfzzvHr0",
+			"next_payment_attempt": null,
+			"statement_descriptor": null,
+			"webhooks_delivered_at": null
+		}
+	},
+	"type": "invoice.payment_succeeded",
+	"object": "event",
+	"created": 1544901865,
+	"request": {
+		"id": "req_9lKKMzV2fcVFNq",
+		"idempotency_key": null
+	},
+	"livemode": false,
+	"api_version": "2018-09-24",
+	"pending_webhooks": 1
+}
+
+//--------------------------------------------------
+//    "charge.succeeded"
+{
+	"id": "evt_1DhikQG8UgnSL68U5F7UAWCH",
+	"data": {
+		"object": {
+			"id": "ch_1DhikOG8UgnSL68U9UQflRrm",
+			"paid": true,
+			"order": null,
+			"amount": 100,
+			"object": "charge",
+			"review": null,
+			"source": {
+				"id": "card_1DhHU7G8UgnSL68Uk8bHtvJa",
+				"name": "CHEN CHIN TSANN",
+				"brand": "Visa",
+				"last4": "0006",
+				"object": "card",
+				"country": "AU",
+				"funding": "credit",
+				"customer": "cus_E9af0ON3WpCGto",
+				"exp_year": 2019,
+				"metadata": [],
+				"cvc_check": null,
+				"exp_month": 1,
+				"address_zip": null,
+				"fingerprint": "VcL1sXkTk3GuqULy",
+				"address_city": null,
+				"address_line1": null,
+				"address_line2": null,
+				"address_state": null,
+				"dynamic_last4": null,
+				"address_country": null,
+				"address_zip_check": null,
+				"address_line1_check": null,
+				"tokenization_method": null
+			},
+			"status": "succeeded",
+			"created": 1544901864,
+			"dispute": null,
+			"invoice": "in_1DhikOG8UgnSL68UVoybIVf5",
+			"outcome": {
+			},
+			"refunds": {
+			},
+			"captured": true,
+			"currency": "aud",
+			"customer": "cus_E9af0ON3WpCGto",
+			"livemode": false,
+			"metadata": [],
+			"refunded": false,
+			"shipping": null,
+			"application": null,
+			"description": null,
+			"destination": null,
+			"failure_code": null,
+			"on_behalf_of": null,
+			"fraud_details": [],
+			"receipt_email": null,
+			"payment_intent": null,
+			"receipt_number": null,
+			"transfer_group": null,
+			"amount_refunded": 0,
+			"application_fee": null,
+			"failure_message": null,
+			"source_transfer": null,
+			"balance_transaction": "txn_1DhikOG8UgnSL68USrQSuCxo",
+			"statement_descriptor": null
+		}
+	},
+	"type": "charge.succeeded",
+	"object": "event",
+	"created": 1544901865,
+	"request": {
+		"id": "req_9lKKMzV2fcVFNq",
+		"idempotency_key": null
+	},
+	"livemode": false,
+	"api_version": "2018-09-24",
+	"pending_webhooks": 1
+}
+
+

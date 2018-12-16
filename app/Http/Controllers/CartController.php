@@ -347,7 +347,6 @@ return redirect()->route('account.profile');
         // // ch_1De8vuG8UgnSL68UVaYHBGl7
         // // $charge = $user->charge($total*100);
         // $charge = $user->charge($total*100, [
-        //     // 'name' => 'Kevin Chen', //$user->card_name, // NG
         //     // 'source' => $token,
         //     'receipt_email' => $user->email,
         //     // 'custom_option' => $value,
@@ -373,20 +372,15 @@ return redirect()->route('account.profile');
         // ]);
 // return dd($invoice);
 
-        // // $user->subscription('main')->swap('provider-plan-id');
-        // $subscription_name = $iccid;
-        // $new_plan = 'au_5000_1m';
-        // $user->subscription($subscription_name)->swap($new_plan);
-
-        // session()->flash('success', 'Charge Success');
-        // return redirect()->back();
+// $user->subscription($iccid)->swap('au_5000_1m');
+// $user->subscription('monthly')->resume($creditCardToken);
+// if ($user->onTrial()) {}
 
 // $user->trial_ends_at = Carbon::now()->addDays(14);
 // $user->save();
 
-// $user->subscription('monthly')->resume($creditCardToken);
-// if ($user->onTrial()) {}
-
+        // session()->flash('success', 'Charge Success');
+        // return redirect()->back();
     }
 
     /*----------------------------------------------------------------------------------*/
