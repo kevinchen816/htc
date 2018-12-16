@@ -45,15 +45,18 @@ cadse (4) 订阅到期 - 删除
 
 //-------------------------------------------------
 invoice.payment_failed
-If the payment fails or the customer does not have a valid payment source, an invoice.payment_failed event is sent, the subscription becomes past_due and the status field remains open.
+- If the payment fails or the customer does not have a valid payment source,
+  an invoice.payment_failed event is sent,
+  the subscription becomes past_due and the status field remains open.
 
 charge.failed
 
+customer.subscription.updated
+- Changing a subscription results in customer.subscription.updated events.
+
+- Using trial periods (which is how you change the billing cycle)
+
 customer.subscription.trial_will_end
-
-Changing a subscription results in customer.subscription.updated events.
-
-Using trial periods (which is how you change the billing cycle)
 
 https://stripe.com/docs/billing/lifecycle#subscription-states
 Subscription states
