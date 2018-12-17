@@ -11,7 +11,9 @@ use App\Models\Plan;
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
 use App\Models\Order;
+use App\Models\OrderItem;
 
+use Carbon\Carbon;
 use Laravel\Cashier\Cashier;
 use Auth;
 use Debugbar;
@@ -232,6 +234,8 @@ class CartController extends Controller
     */
     public function postShopPay(Request $request) {
         // {"_token":"xxxx","rowId":["5","6"]}
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
         $user = Auth::user();
         $stripe_id = $user->stripe_id;
         $currency = $user->currency;
@@ -253,87 +257,218 @@ class CartController extends Controller
         $order->user()->associate($user); // 订单关联到当前用户
         $order->save();
 
-        $total = 0;
+        $total_amount = 0;
         $rows = $request->rowId;
         foreach ($rows as $row_id) {
             $cart_id = $row_id;
-
             $cart = CartItem::find($cart_id);
-            $iccid = $cart->iccid;
-            $quantity = $cart->quantity;
+            if ($cart) {
+                $iccid = $cart->iccid;
+                $quantity = $cart->quantity;
 
-            /* Plan Product SKU */
-            // $sku_id = $cart->plan_product_sku_id;
-            $sku = $cart->planProductSku()->get()[0];
-            $month = $sku->month;
-            $price = $sku->price;
-            $sub_plan = $sku->sub_plan; // 'au_5000_1m'
+                /* Plan Product SKU */
+                // // $sku_id = $cart->plan_product_sku_id;
+                // $sku = $cart->planProductSku()->get()[0];
+                $sku = PlanProductSku::find($cart->plan_product_sku_id);
+                $month = $sku->month;
+                $price = $sku->price;
+                $sub_plan = $sku->sub_plan; // 'au_5000_1m'
 
-            /* Plan Product */
-            $product = PlanProduct::find($sku->plan_product_id);
-            // $title = $product->title;
-            $points = $product->points;
+                /* Plan Product */
+                $product = PlanProduct::find($sku->plan_product_id);
+                $title = $product->title;
+                $points = $product->points;
 
-            $subtotal = $quantity * $price;
-            $total += $subtotal;
+                /* Create Order Item */
+                $item = $order->items()->make([
+                    'iccid' => $iccid,
+                    'sub_plan' => $sub_plan,
+                    'month' => $month,
+                    'points' => $points,
+                    'quantity' => $quantity,
+                    'price'  => $price,
+                ]);
+                $item->planProduct()->associate($sku->plan_product_id); // function name must be planProduct
+                $item->planProductSku()->associate($sku); // function name must be planProductSku
+                $item->save();
 
-            /* Create Order Item */
-            $item = $order->items()->make([
-                'quantity' => $quantity,
-                'price'  => $price,
-            ]);
-            $item->planProduct()->associate($sku->plan_product_id); // function name must be planProduct
-            $item->planProductSku()->associate($sku); // function name must be planProductSku
-            $item->save();
-
-            /* Plan */
-            $plan = Plan::where('iccid', $iccid)->first();
-
-            /* Stripe - subscribe plan */
-            // if ($plan->auto_bill) {
-            //     $ret = $user->newSubscription($iccid, $sub_plan)->create();
-            // } else {
-            //     $ret = $user->newSubscription($iccid, $sub_plan)->create()->cancel();
-            // }
-            // // $ret = $user->newSubscription($iccid, $sub_plan)
-            // //             // ->trialDays(10)
-            // //             // ->withMetadata(['hello'=>'This is a Meta test.'])
-            // //             ->withMetadata(['order_id' => 5678])
-            // //             ->create();
-
-            \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-            $subscription = \Stripe\Subscription::create([
-                'customer' => $user->stripe_id,
-                'items' => [
-                    [
+                /* create Invoice Item */
+                // SILVER 5000 Points per Month - for 1 Month
+                // SILVER 5000 for 1 Month
+                $txt_month = ($month > 1) ? 'Months' : 'Month';
+                $description = $title.' '.$points.' Points per Month - for '.$month.' '.$txt_month;
+                $amount = $quantity * $price;
+                $total_amount += $amount;
+                \Stripe\InvoiceItem::create([
+                    "customer" => $stripe_id,
+                    "amount" => $amount*100,
+                    "currency" => $currency,
+                    "description" => $description, //"SILVER 5000 Points per Month - for 1 Month",
+                    'metadata' => [
+                        'order_no' => $order->no,
+                        'iccid' => $iccid,
                         'plan' => $sub_plan,
                     ],
-                ],
-                'metadata' => [
-                    'order_sn' => $order->no,
-                    'iccid' => $iccid,
-                ],
-                'prorate' => false,
-                'cancel_at_period_end' => ($plan->auto_bill) ? false : true,
-                // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
-            ]);
+                ]);
 
-            if ($subscription->status == 'active') {
-                $plan->status = 'active';
-                $plan->points = $points * $month;
-                $plan->points_used = 0;
-                $plan->sub_id = $subscription->id;
-                $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
-                $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
-                $plan->next_sub_plan = $sub_plan;
-                $plan->update();
-
+                /* delete Cart Item */
                 $cart->delete();
+
+                /* Plan */
+                // $plan = Plan::where('iccid', $iccid)->first();
+
+                /* Stripe - subscribe plan */
+                // // if ($plan->auto_bill) {
+                // //     $ret = $user->newSubscription($iccid, $sub_plan)->create();
+                // // } else {
+                // //     $ret = $user->newSubscription($iccid, $sub_plan)->create()->cancel();
+                // // }
+                // // // $ret = $user->newSubscription($iccid, $sub_plan)
+                // // //             ->trialDays(10)
+                // // //             ->withMetadata(['order_id' => 5678])
+                // // //             ->create();
+
+                // $subscription = \Stripe\Subscription::create([
+                //     'customer' => $user->stripe_id,
+                //     'items' => [
+                //         [
+                //             'plan' => $sub_plan,
+                //         ],
+                //     ],
+                //     'metadata' => [
+                //         'order_sn' => $order->no,
+                //         'iccid' => $iccid,
+                //     ],
+                //     'prorate' => false,
+                //     'cancel_at_period_end' => ($plan->auto_bill) ? false : true,
+                //     // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
+                // ]);
+
+                // if ($subscription->status == 'active') {
+                //     $plan->status = 'active';
+                //     $plan->points = $points * $month;
+                //     $plan->points_used = 0;
+                //     $plan->sub_id = $subscription->id;
+                //     $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
+                //     $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
+                //     $plan->next_sub_plan = $sub_plan;
+                //     $plan->update();
+
+                //     $cart->delete();
+                // }
             }
         }
 
-        $order->update(['total_amount' => $total]);
+        $order->update(['total_amount' => $total_amount]);
 
+        $invoice = \Stripe\Invoice::create([
+            "customer" => $stripe_id,
+            "auto_advance" => false, /* true: auto-finalize this draft after ~1 hour */
+            'metadata' => [
+                'order_no' => $order->no,
+            ],
+        ]);
+        $ret = $invoice->pay();
+
+// echo $ret->customer.'<br/>';    // cus_E9af0ON3WpCGto
+// echo $ret->charge.'<br/>';      // ch_1Di2cYG8UgnSL68U1YxHtDxP
+// echo $ret->paid.'<br/>';        // true
+// echo $ret->status.'<br/>';      // paid (draft, open, paid, uncollectible, or void)
+        if ($ret->status == 'paid') {
+            $charge = \Stripe\Charge::retrieve($ret->charge);
+            $status = $charge->status;
+            if ($charge->status == 'succeeded') {
+                $charge_id = $charge->id;
+                $currency = $charge->currency;
+                $amount = $charge->amount;
+
+                // $card_id = $charge->source['id'];
+                // $name = $charge->source['name'];
+                // $card = $charge->source['brand'];
+                // $last4 = $charge->source['last4'];
+                // $exp_month = $charge->source['exp_month'];
+                // $exp_year = $charge->source['exp_year'];
+                // $country = $charge->source['country'];
+
+                $order->pay_method = $charge->source['brand']; // Visa
+                $order->pay_no = $charge->id;
+                // $order->pay_info = $charge->source; // JSON
+
+                $dt = date_create();
+                date_timestamp_set($dt, $charge->created);
+                //date_format($dt, 'Y-m-d H:i:s (U)');
+                $order->pay_at = $dt;
+                $order->closed = true;
+                $order->save();
+
+// echo $order->no;
+                // $items = OrderItem::where('order_id', $order->no)->get();
+                $order = Order::where('no', $order->no)->first();
+                $order_items = OrderItem::where('order_id', $order->id)->get();
+                // $items = $order->items();
+// return dd($items);
+                foreach ($order_items as $item) {
+                    $iccid = $item['iccid'];
+                    $sub_plan = $item['sub_plan'];
+                    $month = $item['month'];
+                    $points = $item['points'];
+
+                    $plan = Plan::where('iccid', $iccid)->first();
+                    $auto_bill = $plan->auto_bill;
+
+                    /* Plan Product SKU */
+                    // $sku = PlanProductSku::find($item->plan_product_sku_id);
+                    // $sub_plan = $sku->sub_plan; // 'au_5000_1m'
+                    // $month = $sku->month;
+
+                    /* Plan Product */
+                    // $product = PlanProduct::find($sku->plan_product_id);
+                    // $points = $product->points;
+
+                    // Carbon::createFromTimestamp($charge->created);
+                    $subscription = \Stripe\Subscription::create([
+                        'customer' => $user->stripe_id,
+                        'items' => [
+                            ['plan' => $sub_plan]
+                        ],
+                        // 'items' => [
+                        //     [
+                        //         'plan' => $sub_plan,
+                        //     ],
+                        // ],
+                        'metadata' => [
+                            // 'order_sn' => $order->no,
+                            'iccid' => $iccid,
+                        ],
+                        'prorate' => false,
+                        'cancel_at_period_end' => $auto_bill ? false : true,
+                        // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
+                        // 'trial_end' => Carbon::createFromTimestamp($charge->created)->addMonth($month),
+                        // 'trial_period_days' => $month*30;
+                    ]);
+
+                    if ($subscription->status == 'active') {
+                        // $subscription->id
+
+                        // $subscription = \Stripe\Subscription::retrieve($subscription->id);
+                        $subscription = \Stripe\Subscription::update($subscription->id , [
+                            'trial_end' => $subscription->current_period_end,
+                        ]);
+
+                        $plan->status = 'active';
+                        $plan->points = $points * $month;
+                        $plan->points_used = 0;
+                        $plan->sub_id = $subscription->id;
+                        $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
+                        $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
+                        $plan->next_sub_plan = $sub_plan;
+                        $plan->update();
+                    }
+                }
+            }
+        }
+
+return dd($subscription);
 return redirect()->route('account.profile');
 
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");

@@ -30,18 +30,86 @@ case (2) 新订阅
 
 case (3) 订阅到期 - 自动扣款
     "invoice.created"                   02:47:20
+        data.object.billing_reason = "subscription_cycle"
+        data.object.id = "in_1DhiAVG8UgnSL68UZhx96Hwk"
+
+        data.object.subscription = "sub_E9exFejVSdzFnM"         <-- 从 DB::plans 取得 iccid
+        data.object.customer = "cus_E9af0ON3WpCGto"             <-- 从 DB::users 取得 user_id
+        data.object.lines.data[0].plan.id = "au_5000_1m"
+
     "customer.subscription.updated"     02:47:35
 
     "charge.succeeded"                  03:47:31
+        data.object.status = "succeeded"
+        data.object.invoice = "in_1DhiAVG8UgnSL68UZhx96Hwk"     <-- 从 DB::plan_history 取得数据
+
+        data.object.id = "ch_1Dhj6kG8UgnSL68UWvvUcJIU"
+        data.object.currency = "aud"                            <-- 依据订阅的 plan 决定，如 au_5000_1m
+        data.object.source.id = "card_1DhHU7G8UgnSL68Uk8bHtvJa"
+        data.object.source.name = "Kevin"
+        data.object.source.brand = "Visa"
+        data.object.source.last4 = "0006"
+        data.object.source.country = "AU"
+        data.object.source.exp_year = 2019
+        data.object.source.exp_month = 1
+
+        data.object.customer = "cus_E9af0ON3WpCGto"
+
+
     "invoice.payment_succeeded"         03:47:36
-    “invoice.updated”                   03:47:36
+    "invoice.updated"                   03:47:36
     "invoice.finalized"                 03:47:37
 
-cadse (4) 订阅到期 - 删除
+case (4) 订阅到期 - 删除
     type = "customer.subscription.deleted"
         data.object.id = "sub_E9ezipeZrlBaPE"
         data.object.metadata.iccid = "89860117851014783481"
         data.object.metadata.order_sn = "KT123456666"
+
+case (5) 购物车订单
+    invoiceitem.created
+    invoiceitem.created
+    invoiceitem.updated
+    invoiceitem.updated
+
+    invoice.created
+        data.object.billing_reason = "manual"
+        data.object.id = "in_1Di2khG8UgnSL68UGAExzC3Z"
+
+        data.object.customer = "cus_E9af0ON3WpCGto"             <-- 从 DB::users 取得 user_id
+
+        data.object.metadata.order_sn = "KT123456666"           <-- 从 DB::order 及 DB:order_items 取出所有订阅的 iccid
+
+
+
+    charge.succeeded
+        data.object.invoide = "in_1Di2khG8UgnSL68UGAExzC3Z"     <-- 从 DB::plan_history 取得数据
+
+        data.object.id = "ch_1Di2kiG8UgnSL68Ut2SEr8IP"
+        data.object.source.id = "card_1DhHU7G8UgnSL68Uk8bHtvJa"
+        data.object.source.name = "Kevin"
+        data.object.source.brand = "Visa"
+        data.object.source.last4 = "0006"
+        data.object.source.country = "AU"
+        data.object.source.exp_year = 2019
+        data.object.source.exp_month = 1
+
+
+    invoice.payment_succeeded
+        in_1Di2khG8UgnSL68UGAExzC3Z
+        ch_1Di2kiG8UgnSL68Ut2SEr8IP
+
+    invoice.updated
+        in_1Di2khG8UgnSL68UGAExzC3Z
+        ch_1Di2kiG8UgnSL68Ut2SEr8IP
+        "paid":false        -> true
+        "charge":null       -> ch_1Di2kiG8UgnSL68Ut2SEr8IP
+        "status":"draft"    -> "paid"
+
+    invoice.finalized
+        in_1Di2khG8UgnSL68UGAExzC3Z
+        ch_1Di2kiG8UgnSL68Ut2SEr8IP
+
 
 //-------------------------------------------------
 invoice.payment_failed
@@ -87,9 +155,9 @@ data.object.lines.data[0].plan.id = "au_2500_2d"
 //    data.object.lines.data[0].metadata.order_sn = "KT123456666"
 //    data.object.lines.data[0].subscription = "sub_EA2qCz3bBPMHC7"
 //    data.object.lines.data[0].subscription_item = "si_EA2qbDNTemJjCN"
-data.object.billing_reason = "subscription_update" // 新订阅
-data.object.billing_reason = "subscription_cycle"  // 订阅到期 - 自动扣款
-
+data.object.billing_reason = "subscription_update"  // 新订阅
+data.object.billing_reason = "subscription_cycle"   // 订阅到期 - 自动扣款
+data.object.billing_reason = "manual"               // 购物车订单
 
 type = "invoice.finalized"
     data.object.id = "in_1DhikOG8UgnSL68UVoybIVf5"

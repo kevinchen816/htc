@@ -25,9 +25,10 @@ class CreateOrdersTable extends Migration
             $table->decimal('total_amount', 10, 2);
             // $table->text('remark')->nullable();
 
-            $table->dateTime('paid_at')->nullable();
-            $table->string('payment_method')->nullable();
-            $table->string('payment_no')->nullable();
+            $table->string('pay_method')->nullable();
+            $table->string('pay_no')->nullable();
+            $table->json('pay_info')->nullable();
+            $table->dateTime('pay_at')->nullable();
 
             // // $table->string('refund_status');
             // $table->string('refund_status')->default(\App\Models\Order::REFUND_STATUS_PENDING);

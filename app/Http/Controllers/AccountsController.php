@@ -1075,28 +1075,72 @@ return dd($charge);
             "customer" => $stripe_id,
             "amount" => 123,
             "currency" => $currency,
-            "description" => "This is an item #1."
+            "description" => "SILVER 5000 Points per Month - for 1 Month",
+            // "description" => "SILVER 5000 for 1 Month",
+            'metadata' => [
+                'order_no' => '20181211071911733169', //$order->no,
+                'iccid' => '89860117851014783481', // $iccid,
+                'plan' => 'au_5000_1m',
+            ],
         ]);
+/*
+Stripe\InvoiceItem JSON: {
+    "id": "ii_1DiBy6G8UgnSL68UGRXnuFhD",
+    "object": "invoiceitem",
+    "amount": 123,
+    "currency": "aud",
+    "customer": "cus_E9af0ON3WpCGto",
+    "date": 1545014190,
+    "description": "SILVER 5000 Points per Month - for 1 Month",
+    "discountable": true,
+    "invoice": null,
+    "livemode": false,
+    "metadata": {
+        "order_no": "20181211071911733169",
+        "iccid": "89860117851014783481",
+        "plan": "au_5000_1m"
+    },
+    "period": {
+        "end": 1545014190,
+        "start": 1545014190
+    },
+    "plan": null,
+    "proration": false,
+    "quantity": 1,
+    "subscription": null,
+    "unit_amount": 123
+}
+*/
+// echo $invoice_item.'<br/>';
+// return dd($invoice_item);
 
         $invoice_item = \Stripe\InvoiceItem::create([
             "customer" => $stripe_id,
             "amount" => 456,
             "currency" => $currency,
-            "description" => "This is an item #2."
+            "description" => "SILVER 5000 Points per Month - for 3 Months",
+            // "description" => "SILVER 5000 for 3 Month",
+            'metadata' => [
+                'order_no' => '20181211071911733169', //$order->no,
+                'iccid' => '89860117851014783507', // $iccid,
+                'plan' => 'au_5000_3m',
+            ],
         ]);
+// echo $invoice_item.'<br/>';
 // return dd($invoice_item);
 
         $invoice = \Stripe\Invoice::create([
             "customer" => $stripe_id,
             // "auto_advance" => true, /* auto-finalize this draft after ~1 hour */
             "auto_advance" => false,
+            'metadata' => [
+                'order_no' => '20181211071911733169', //$order->no,
+            ],
         ]);
-// return dd($invoice);
+        // return dd($invoice);
 
         // $invoice = \Stripe\Invoice::retrieve("in_1Di2TWG8UgnSL68UyISyvYcU");
-//         $invoice->finalizeInvoice();
-// return dd($ret);
-
+        // $invoice->finalizeInvoice(); // NG
         $ret = $invoice->pay();
 
 echo $ret->customer.'<br/>';    // cus_E9af0ON3WpCGto
@@ -1108,6 +1152,10 @@ return dd($ret);
 
     public function getStripeTest() {
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $charge = \Stripe\Charge::retrieve("ch_1DiChoG8UgnSL68UOemUqSt8");
+return dd($charge);
+
 
         $user = Auth::user();
 

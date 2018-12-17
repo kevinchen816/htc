@@ -31,6 +31,11 @@ class CreateOrderItemsTable extends Migration
             // $table->text('review')->nullable();
             // $table->timestamp('reviewed_at')->nullable();
 
+            $table->string('iccid')->nullable();
+            $table->string('sub_plan')->nullable();
+            $table->integer('points')->default(0);
+            $table->integer('month')->default(0);
+
             // $table->timestamps();
         });
     }

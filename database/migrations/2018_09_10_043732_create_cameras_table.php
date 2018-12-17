@@ -36,8 +36,8 @@ class CreateCamerasTable extends Migration
             $table->string('region')->nullable()->default('AU');
             $table->string('timezone')->nullable()->default('Australia/Sydney');
 
-            $table->integer('points')->default(0);
-            $table->integer('points_used')->default(0);
+            $table->integer('points')->default(0); // del
+            $table->integer('points_used')->default(0); // del
 
             /* status */
             $table->string('battery')->default('');
