@@ -245,7 +245,7 @@ class AccountsController extends Controller
                 //     }
                 // }
 
-                $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
+                $sku = PlanProductSku::where('sub_plan', $plan->renew_plan)->first();
                 $dt = date_create($plan->sub_start);
                 $txt_service_start = date_format($dt, $user->date_format);
                 $dt = date_create($plan->sub_end);

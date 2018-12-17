@@ -215,7 +215,7 @@ $style = 'normal'; // for test
         }
         // $plan->plan_product_sku_id = $sku_id;
         $plan->sub_plan = $sku->sub_plan; // au_5000_1m
-        $plan->next_sub_plan = $sku->sub_plan;
+        $plan->renew_plan = $sku->sub_plan;
         $plan->auto_bill = $auto_bill;
         $plan->update();
 
@@ -354,11 +354,11 @@ $style = 'normal'; // for test
 
 
         $plan->auto_bill = $auto_bill;
-        // $plan->next_sub_plan = $sku->sub_plan;
+        // $plan->renew_plan = $sku->sub_plan;
         if ($auto_bill) {
-            $plan->next_sub_plan = $sku->sub_plan;
+            $plan->renew_plan = $sku->sub_plan;
         } else {
-            $plan->next_sub_plan = $plan->sub_plan;
+            $plan->renew_plan = $plan->sub_plan;
         }
         $plan->update();
 
@@ -415,9 +415,9 @@ $style = 'normal'; // for test
             //     $sku_id = ($sku) ? $sku->id : 0;
             // }
 
-            // $sku = PlanProductSku::where('sub_plan', $plan->next_sub_plan)->first();
+            // $sku = PlanProductSku::where('sub_plan', $plan->renew_plan)->first();
             // $sku_id = ($sku) ? $sku->id : 0;
-            $select_sub_plan = $plan->next_sub_plan;
+            $select_sub_plan = $plan->renew_plan;
 
         } else if ($mode == 'reactive') {
             // $sku = PlanProductSku::where('sub_plan', $plan->sub_plan)->first();

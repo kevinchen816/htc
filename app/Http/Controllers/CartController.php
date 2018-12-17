@@ -351,7 +351,7 @@ class CartController extends Controller
                 //     $plan->sub_id = $subscription->id;
                 //     $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
                 //     $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
-                //     $plan->next_sub_plan = $sub_plan;
+                //     $plan->renew_plan = $sub_plan;
                 //     $plan->update();
 
                 //     $cart->delete();
@@ -392,7 +392,7 @@ class CartController extends Controller
 
                 $order->pay_method = $charge->source['brand']; // Visa
                 $order->pay_no = $charge->id;
-                // $order->pay_info = $charge->source; // JSON
+                // $order->pay_info = json_encode($charge->source); // JSON
 
                 $dt = date_create();
                 date_timestamp_set($dt, $charge->created);
@@ -400,6 +400,8 @@ class CartController extends Controller
                 $order->pay_at = $dt;
                 $order->closed = true;
                 $order->save();
+
+// return dd($charge->source);
 
 // echo $order->no;
                 // $items = OrderItem::where('order_id', $order->no)->get();
@@ -456,7 +458,7 @@ class CartController extends Controller
                         $plan->sub_id = $subscription->id;
                         $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
                         $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
-                        $plan->next_sub_plan = $sub_plan;
+                        $plan->renew_plan = $sub_plan;
                         $plan->update();
                     }
                 }
