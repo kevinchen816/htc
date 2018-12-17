@@ -431,11 +431,6 @@ class CartController extends Controller
                         'items' => [
                             ['plan' => $sub_plan]
                         ],
-                        // 'items' => [
-                        //     [
-                        //         'plan' => $sub_plan,
-                        //     ],
-                        // ],
                         'metadata' => [
                             // 'order_sn' => $order->no,
                             'iccid' => $iccid,
@@ -468,7 +463,7 @@ class CartController extends Controller
             }
         }
 
-return dd($subscription);
+// return dd($subscription);
 return redirect()->route('account.profile');
 
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");

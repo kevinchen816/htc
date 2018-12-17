@@ -320,6 +320,8 @@ $style = 'normal'; // for test
     }
 
     public function postPlanRenew(Request $request) {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
         // {"_token":"xxxx","mode":"renew","planid":"12","tier":"22","auto-bill":"on","submit-new-plan":"renew"}
         $plan_id = $request->input('planid'); //$request->planid;
         $sku_id = $request->input('tier'); //$request->tier;
@@ -338,21 +340,39 @@ $style = 'normal'; // for test
             return redirect()->route('account.profile');
         }
 
-        // // if ($auto_bill != $plan->auto_bill) {
-        //     if ($auto_bill) {
-        //         $user->subscription($plan->iccid)
-        //              ->swap($sku->sub_plan);
-        //              // ->resume();
-        //     } else {
-        //         $user->subscription($plan->iccid)
-        //              ->swap($sku->sub_plan)
-        //              ->cancel();
-        //     }
-        // // }
+        // // // if ($auto_bill != $plan->auto_bill) {
+        // //     if ($auto_bill) {
+        // //         $user->subscription($plan->iccid)
+        // //              ->swap($sku->sub_plan);
+        // //              // ->resume();
+        // //     } else {
+        // //         $user->subscription($plan->iccid)
+        // //              ->swap($sku->sub_plan)
+        // //              ->cancel();
+        // //     }
+        // // // }
 
-        $plan->next_sub_plan = $sku->sub_plan;
+
         $plan->auto_bill = $auto_bill;
+        // $plan->next_sub_plan = $sku->sub_plan;
+        if ($auto_bill) {
+            $plan->next_sub_plan = $sku->sub_plan;
+        } else {
+            $plan->next_sub_plan = $plan->sub_plan;
+        }
         $plan->update();
+
+        $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
+        $subscription = \Stripe\Subscription::update($plan->sub_id , [
+            'items' => [
+                [
+                    'id' => $subscription->items->data[0]->id,
+                    'plan' => $sku->sub_plan,
+                ],
+            ],
+            'cancel_at_period_end' => $auto_bill ? false : true,
+        ]);
+        // return dd($subscription); // for debug
 
         // Success: Your account Renewal setup was saved.
         session()->flash('success', 'Renew Success');
@@ -364,7 +384,7 @@ $style = 'normal'; // for test
         $user = Auth::user();
         $plan = Plan::find($plan_id);
         if (!$plan) {
-            session()->flash('danger', 'ICCID not exist. id='.$plan_id);
+            session()->flash('danger', 'ICCID not exist. id ='.$plan_id);
             return redirect()->back();
         }
         $mode = 'reactive';
