@@ -4455,6 +4455,9 @@ return $request;
 
     public function test() {
         $now = Carbon::now();
+        $now->addMonth(1);
+return $now->timestamp;
+
         $plan = Plan::first();
         return var_dump(Carbon::now()->lte($plan->sub_end));
 

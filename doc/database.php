@@ -1,11 +1,12 @@
-<?php
-
-$student=DB::select("select * from vipinfo");
-
-    //返回一个二维数组  $student
-    var_dump($student);
-        //以节点树的形式输出结果
-    dd($student);
 
 
+$php artisan make:model Models/Users -m
+
+//$php artisan make:migration create_users_table --create=users
+
+class PlanHistory extends Model
+{
+
+    protected $table = 'plan_history';
+}
 

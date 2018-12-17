@@ -25,6 +25,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('total_amount', 10, 2);
             // $table->text('remark')->nullable();
 
+            $table->string('pay_invoice')->nullable();
             $table->string('pay_method')->nullable();
             $table->string('pay_no')->nullable();
             $table->json('pay_info')->nullable();
