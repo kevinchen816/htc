@@ -22,7 +22,7 @@ class WebhookController extends CashierController
      * @return Response
      */
     public function handleInvoiceCreated($payload) {
-return new Response('Webhook Handled', 200);
+// return new Response('Webhook Handled', 200);
 
         $user = $this->getUserByStripeId($payload['data']['object']['customer']);
         if ($user) {
@@ -68,7 +68,7 @@ return new Response('Webhook Handled', 200);
 
     /*----------------------------------------------------------------------------------*/
     public function handleChargeSucceeded($payload) {
-return new Response('Webhook Handled', 200);
+// return new Response('Webhook Handled', 200);
 
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 

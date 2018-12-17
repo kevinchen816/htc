@@ -211,6 +211,49 @@ class CartController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+    public function _paySubscriptionX() {
+        // $plan = Plan::where('iccid', $iccid)->first();
+
+        /* Stripe - subscribe plan */
+        // // if ($plan->auto_bill) {
+        // //     $ret = $user->newSubscription($iccid, $sub_plan)->create();
+        // // } else {
+        // //     $ret = $user->newSubscription($iccid, $sub_plan)->create()->cancel();
+        // // }
+        // // // $ret = $user->newSubscription($iccid, $sub_plan)
+        // // //             ->trialDays(10)
+        // // //             ->withMetadata(['order_id' => 5678])
+        // // //             ->create();
+
+        // $subscription = \Stripe\Subscription::create([
+        //     'customer' => $user->stripe_id,
+        //     'items' => [
+        //         [
+        //             'plan' => $sub_plan,
+        //         ],
+        //     ],
+        //     'metadata' => [
+        //         'order_sn' => $order->no,
+        //         'iccid' => $iccid,
+        //     ],
+        //     'prorate' => false,
+        //     'cancel_at_period_end' => ($plan->auto_bill) ? false : true,
+        //     // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
+        // ]);
+
+        // if ($subscription->status == 'active') {
+        //     $plan->status = 'active';
+        //     $plan->points = $points * $month;
+        //     $plan->points_used = 0;
+        //     $plan->sub_id = $subscription->id;
+        //     $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
+        //     $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
+        //     $plan->renew_plan = $sub_plan;
+        //     $plan->update();
+        //     $cart->delete();
+        // }
+    }
+
     /*
         {
             "_token":"xxxx",
@@ -318,47 +361,7 @@ class CartController extends Controller
                 $cart->delete();
 
                 /* Plan */
-                // $plan = Plan::where('iccid', $iccid)->first();
-
-                /* Stripe - subscribe plan */
-                // // if ($plan->auto_bill) {
-                // //     $ret = $user->newSubscription($iccid, $sub_plan)->create();
-                // // } else {
-                // //     $ret = $user->newSubscription($iccid, $sub_plan)->create()->cancel();
-                // // }
-                // // // $ret = $user->newSubscription($iccid, $sub_plan)
-                // // //             ->trialDays(10)
-                // // //             ->withMetadata(['order_id' => 5678])
-                // // //             ->create();
-
-                // $subscription = \Stripe\Subscription::create([
-                //     'customer' => $user->stripe_id,
-                //     'items' => [
-                //         [
-                //             'plan' => $sub_plan,
-                //         ],
-                //     ],
-                //     'metadata' => [
-                //         'order_sn' => $order->no,
-                //         'iccid' => $iccid,
-                //     ],
-                //     'prorate' => false,
-                //     'cancel_at_period_end' => ($plan->auto_bill) ? false : true,
-                //     // 'billing_cycle_anchor' => 1546272000, // 2019-01-01 00:00:00
-                // ]);
-
-                // if ($subscription->status == 'active') {
-                //     $plan->status = 'active';
-                //     $plan->points = $points * $month;
-                //     $plan->points_used = 0;
-                //     $plan->sub_id = $subscription->id;
-                //     $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
-                //     $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
-                //     $plan->renew_plan = $sub_plan;
-                //     $plan->update();
-
-                //     $cart->delete();
-                // }
+                // $this->_paySubscriptionX();
             }
         }
 
@@ -386,7 +389,6 @@ class CartController extends Controller
         if ($ret->status == 'paid') {
             if ($ret->charge) {
                 $charge = \Stripe\Charge::retrieve($ret->charge);
-                // $status = $charge->status;
                 if ($charge->status == 'succeeded') {
                     $charge_id = $charge->id;
                     $currency = $charge->currency;
@@ -433,11 +435,13 @@ class CartController extends Controller
                         // $points = $product->points;
 
                         // Carbon::createFromTimestamp($charge->created);
-// $subscription = null;
+                        // $subscription = null;
+
+                        // send_invoice: If invoice billing method is 'send_invoice', you must specify 'days_until_due'.
                         $trial_end = Carbon::now()->addMonth($month)->timestamp;
                         $subscription = \Stripe\Subscription::create([
                             'customer' => $user->stripe_id,
-                            //'billing' => 'send_invoice', // charge_automatically, send_invoice
+                            // 'billing' => 'charge_automatically', // charge_automatically, send_invoice
                             'items' => [
                                 ['plan' => $sub_plan]
                             ],
@@ -448,15 +452,14 @@ class CartController extends Controller
                             ],
                             'prorate' => false,
                             'cancel_at_period_end' => $auto_bill ? false : true,
-                            'billing_cycle_anchor' => $trial_end, //Carbon::now()->addMonth($month)->timestamp,
+                            // 'billing_cycle_anchor' => $trial_end, //Carbon::now()->addMonth($month)->timestamp,
                             // 'trial_end' => Carbon::createFromTimestamp($charge->created)->addMonth($month), // NG (must be an integer)
                             // 'trial_period_days' => $month*30;
-                            // 'trial_end' => $trial_end, // 2019/01/17 02:43:50
+                            'trial_end' => $trial_end, //1548780000
                         ]);
 
-                        if ($subscription && $subscription->status == 'active') {
-                            // $subscription->id
-
+                        // if ($subscription && ($subscription->status == 'active')) {
+                        if ($subscription && ($subscription->status == 'trialing')) {
                             // // $subscription = \Stripe\Subscription::retrieve($subscription->id);
                             // $subscription = \Stripe\Subscription::update($subscription->id , [
                             //     'trial_end' => $subscription->current_period_end,
@@ -496,13 +499,23 @@ class CartController extends Controller
                             $ph->pay_info = $order->pay_info; //json_encode($data['source']);
                             $ph->pay_at = $order->pay_at;
                             $ph->save();
+
+                        } else {
+                            if ($subscription) {
+                                session()->flash('danger', 'Subscription Fail - '.$subscription->status); // trialing
+                            } else {
+                                session()->flash('danger', 'Subscription Fail');
+                            }
                         }
                     }
+
+                } else { // ($charge->status == 'succeeded')
+                    session()->flash('danger', 'Charge Status Fail - '.$charge->status);
                 }
-            } else {
+            } else { // ($ret->charge)
                 session()->flash('danger', 'Charge Fail');
             }
-        } else {
+        } else { // ($ret->status == 'paid')
             session()->flash('danger', 'Invoice Pay Fail');
         }
 

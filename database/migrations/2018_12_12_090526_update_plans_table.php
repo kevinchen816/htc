@@ -20,11 +20,10 @@ class UpdatePlansTable extends Migration
             // //       ->references('id')->on('plan_product_skus')
             // //       ->onDelete('cascade'); //NG
 
-            $table->string('sub_plan')->nullable()->after('sms_sent');
-            $table->string('sub_id')->nullable()->after('sub_plan');
-            $table->timestamp('sub_start')->nullable()->after('sub_id');
+            $table->string('sub_id')->nullable()->after('sms_sent');
+            $table->string('sub_plan')->nullable()->after('sub_id');
+            $table->timestamp('sub_start')->nullable()->after('sub_plan');
             $table->timestamp('sub_end')->nullable()->after('sub_start');
-            // $table->string('next_sub_plan')->nullable()->after('sub_end');
             $table->string('renew_plan')->nullable()->after('sub_end');
             $table->string('renew_invoice')->nullable()->after('renew_plan');
 
@@ -42,8 +41,8 @@ class UpdatePlansTable extends Migration
     public function down()
     {
         Schema::table('plans', function (Blueprint $table) {
-            $table->dropColumn('sub_plan');
             $table->dropColumn('sub_id');
+            $table->dropColumn('sub_plan');
             $table->dropColumn('sub_start');
             $table->dropColumn('sub_end');
             $table->dropColumn('renew_plan');

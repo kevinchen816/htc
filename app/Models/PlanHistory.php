@@ -17,7 +17,7 @@ class PlanHistory extends Model
         'points',
         'points_reserve',
 
-        'sub_plan', 'sub_id', 'sub_start', 'sub_end',
+        'sub_id', 'sub_plan', 'sub_start', 'sub_end',
         'pay_invoice', 'pay_method', 'pay_no', 'pay_info', 'pay_at',
     ];
 }
