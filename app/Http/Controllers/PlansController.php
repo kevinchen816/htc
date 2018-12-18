@@ -120,11 +120,11 @@ class PlansController extends Controller
     $style = 'normal'; // for test
 // } else {
 //     $region = 'au'; // for test
-//     $style = 'demo'; // for test
+//     $style = 'test'; // for test
 // }
 //+
 
-        if ($style == 'demo') {
+        if ($style == 'test') {
             $status = 'active';
             $points = 50000;
         } else {
@@ -355,7 +355,6 @@ class PlansController extends Controller
         // //     }
         // // // }
 
-
         $plan->auto_bill = $auto_bill;
         // $plan->renew_plan = $sku->sub_plan;
         if ($auto_bill) {
@@ -365,17 +364,19 @@ class PlansController extends Controller
         }
         $plan->update();
 
-        $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
-        $subscription = \Stripe\Subscription::update($plan->sub_id , [
-            'items' => [
-                [
-                    'id' => $subscription->items->data[0]->id,
-                    'plan' => $sku->sub_plan,
+        if ($plan->sub_id) {
+            $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
+            $subscription = \Stripe\Subscription::update($plan->sub_id , [
+                'items' => [
+                    [
+                        'id' => $subscription->items->data[0]->id,
+                        'plan' => $sku->sub_plan,
+                    ],
                 ],
-            ],
-            'cancel_at_period_end' => $auto_bill ? false : true,
-        ]);
-        // return dd($subscription); // for debug
+                'cancel_at_period_end' => $auto_bill ? false : true,
+            ]);
+            // return dd($subscription); // for debug
+        }
 
         // Success: Your account Renewal setup was saved.
         session()->flash('success', 'Renew Success');

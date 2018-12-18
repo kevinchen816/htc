@@ -134,7 +134,6 @@ class AccountsController extends Controller
 
     public function html_MyPlans() {
         Debugbar::info(__METHOD__);
-return 'TEST';
 
         $img_region = array(
             'us' => '/images/usd.png',
@@ -160,6 +159,8 @@ return 'TEST';
 
         $handle = '';
         foreach ($plans as $plan) {
+            $plan_style = $plan->style ? $plan->style : 'test';
+
             // $sku = PlanProductSku::find($plan->plan_product_sku_id);
             $sku = PlanProductSku::where('sub_plan', $plan->sub_plan)->first(); // au_5000_1m
             if ($sku) {
@@ -185,7 +186,7 @@ return 'TEST';
             }
             $txt_status = ucwords($plan->status);
             $txt_auto_bill = ($plan->auto_bill == 1) ? 'Yes' : 'No';
-            $txt_region = $img_region[$plan->region];
+            $txt_region = ($plan->region) ? $img_region[$plan->region] : '';
 
             $camera_name = '(No Camera)';
             if ($plan->camera_id) {
@@ -288,7 +289,10 @@ return 'TEST';
             $handle .=                 '<div class="col-md-5">';
             // $handle .=                     '<i class="fa fa-dot-circle"></i>';
             $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
-            if ($plan->status == 'active') {
+if ($plan->status == 'active') {
+    if ($plan_style == 'test') {
+                $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.'TEST'.'</span>';
+    } else {
                 $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.$txt_plan.'</span>';
                 $handle .=                     ' <span style="color:lime;">'.$txt_plan2.'</span>';
                 $handle .=                     ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
@@ -331,7 +335,8 @@ return 'TEST';
             $handle .=                         '</tbody>';
             $handle .=                     '</table>';
             $handle .=                     '</p>';
-        }
+    }
+}
             $handle .=                     '<p></p>';
             $handle .=                 '</div>'; // <!-- end col-md-5 -->
 
@@ -355,24 +360,27 @@ return 'TEST';
            //  $handle .=                             '<strong>'.$txt_auto_bill.'</strong>';
            //  $handle .=                         '</p>';
            // } else if ($action == 'cart') {
+if ($plan_style == 'test') {
+
+} else {
             $handle .=                     '<a href="'.$action_url.'" style="margin-left:20px;" class="btn btn-xs btn-primary">';
             $handle .=                         '<i class="glyphicon glyphicon-'.$action_icon.'"> </i> '.$action_name;
             $handle .=                     '</a>';
 
-// if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
-if ($action != 'create') {
+        // if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
+        if ($action != 'create') {
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
             if ($plan->auto_bill) {
-            $handle .=                         '<p>';
-            $handle .=                             '<strong>'.$txt_tier.'</strong>';
-            $handle .=                         '</p>';
+                $handle .=                     '<p>';
+                $handle .=                         '<strong>'.$txt_tier.'</strong>';
+                $handle .=                     '</p>';
 
-            $handle .=                         '<p>';
-            $handle .=                             'Tier:';
-            $handle .=                             '<strong>';
-            $handle .=                                  ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
-            $handle .=                             '</strong>';
-            $handle .=                         '</p>';
+                $handle .=                     '<p>';
+                $handle .=                         'Tier:';
+                $handle .=                         '<strong>';
+                $handle .=                              ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
+                $handle .=                         '</strong>';
+                $handle .=                     '</p>';
             }
             $handle .=                         '<p>';
             $handle .=                             'Auto-Bill: ';
@@ -381,6 +389,7 @@ if ($action != 'create') {
             $handle .=                             '</strong>';
             $handle .=                         '</p>';
             $handle .=                     '</div>';
+        }
 }
 
            $handle .=                 '</div>'; // <!-- end col-md-5 -->
