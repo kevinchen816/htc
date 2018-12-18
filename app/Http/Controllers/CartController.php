@@ -260,6 +260,7 @@ class CartController extends Controller
         $ph->user_id = $plan->user_id;
 
         $ph->event = $event; //'create';
+        $ph->status = 'success';
         $ph->points = $plan->points;
         // $ph->points_reserve = 0;
 

@@ -114,9 +114,16 @@ class PlansController extends Controller
         // $region = $sim->region; // us, ca, eu, au, cn, tw
         // $style = $sim->style; // demo, normal
 
-$region = 'au'; // for test
-// $style = 'demo'; // for test
-$style = 'normal'; // for test
+// for test
+// if ($user->permission == 1) {
+    $region = 'au'; // for test
+    $style = 'normal'; // for test
+// } else {
+//     $region = 'au'; // for test
+//     $style = 'demo'; // for test
+// }
+//+
+
         if ($style == 'demo') {
             $status = 'active';
             $points = 50000;
@@ -161,19 +168,15 @@ $style = 'normal'; // for test
 ////$ret = $this->m2m_iccid_deactive('89610185002185155463');
 //$ret = $this->m2m_iccid_active($iccid);
 
-// old
-        // TODO
-        $data['sel_account_tab'] = 'plans';
-        Auth::user()->update($data);
-        //+
-// session()->flash('success', 'Create Success');
-// return redirect()->route('account.profile');
-
-// new (TODO)
-        // // $mode = 'setup';
-        // // return view('plans.setup', compact('user', 'plan', 'mode'));
-        $mode = 'create'; // TODO
-        return view('plans.create', compact('user', 'plan', 'mode'));
+        // if ($user->permission == 1) {
+            $mode = 'create';
+            return view('plans.create', compact('user', 'plan', 'mode'));
+        // } else {
+        //     $data['sel_account_tab'] = 'plans';
+        //     Auth::user()->update($data);
+        //     session()->flash('success', 'Create Success');
+        //     return redirect()->route('account.profile');
+        // }
     }
 
     /*----------------------------------------------------------------------------------*/
