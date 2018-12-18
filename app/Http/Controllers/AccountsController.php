@@ -134,6 +134,7 @@ class AccountsController extends Controller
 
     public function html_MyPlans() {
         Debugbar::info(__METHOD__);
+return 'TEST';
 
         $img_region = array(
             'us' => '/images/usd.png',
