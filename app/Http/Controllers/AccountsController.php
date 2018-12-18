@@ -171,18 +171,17 @@ class AccountsController extends Controller
             if ($sku) {
                 $product = PlanProduct::find($sku->plan_product_id);
 
-                // Silver 1 Month
-                $txt_month = ($sku->month > 1) ? 'Month' : 'Months';
-                $txt_plan = $product->title.' '.$sku->month.' '.$txt_month;
+                // Silver - 3 Months
+                $txt_plan = $product->title.' - '.$sku->month.' Month'.(($sku->month>1)?'s':'');
 
                 // $12.95 per Month
-                // $txt_tier = $product->title.' - '.$product->points.' Points per Month';
-                if ($sku->month == 1) {
-                    $txt_plan2 = $sku->price.' per Month';
-                } else {
-                    $txt_plan2 = $sku->price.' for '.$sku->month.' Months';
-                }
-                // $txt_plan2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                // if ($sku->month == 1) {
+                //     $txt_plan2 = $sku->price.' per Month';
+                // } else {
+                //     $txt_plan2 = $sku->price.' for '.$sku->month.' Months';
+                // }
+                // // $txt_plan2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                $txt_plan2 = $sku->price.' for '.$product->points*$sku->month.' Points';
                 $txt_plan2 = $currency_region[$plan->region].$txt_plan2;
 
             } else {
@@ -263,15 +262,18 @@ class AccountsController extends Controller
             if ($sku) {
                 $product = PlanProduct::find($sku->plan_product_id);
 
-                // Silver - 5000 Points per Month
-                // $155.95 for 6 Months
-                $txt_tier = $product->title.' - '.$product->points.' Points per Month';
-                if ($sku->month == 1) {
-                    $txt_tier2 = $sku->price.' per Month';
-                } else {
-                    $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
-                }
-                // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                // Silver - 3 Months
+                // $txt_tier = $product->title.' - '.$product->points.' Points per Month';
+                $txt_tier = $product->title.' - '.$sku->month.' Month'.(($sku->month>1)?'s':'');
+
+                // $155.95 for 15000 Points
+                // if ($sku->month == 1) {
+                //     $txt_tier2 = $sku->price.' per Month';
+                // } else {
+                //     $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
+                // }
+                // // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
+                $txt_tier2 = $sku->price.' for '.$product->points*$sku->month.' Points';
                 $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
             }
 
@@ -381,9 +383,10 @@ if ($plan_style == 'test') {
                 $handle .=                     '</p>';
 
                 $handle .=                     '<p>';
-                $handle .=                         'Tier:';
+                // $handle .=                         'Tier:';
                 $handle .=                         '<strong>';
-                $handle .=                              ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
+                // $handle .=                              ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
+                $handle .=                              ' <span style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
                 $handle .=                         '</strong>';
                 $handle .=                     '</p>';
             }
