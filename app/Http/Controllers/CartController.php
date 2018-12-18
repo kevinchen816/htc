@@ -332,7 +332,12 @@ class CartController extends Controller
 
         // $trial_end = Carbon::now()->addMonth($month)->timestamp;
         $pay_at = new Carbon($order->pay_at);
-        $trial_end = $pay_at->addMonth($month)->timestamp;
+        if ($sub_plan == 'au_5000_1d') {
+            $trial_end = $pay_at->addDay(1)->timestamp; // for test
+        } else {
+            $trial_end = $pay_at->addMonth($month)->timestamp;
+        }
+
         $subscription = \Stripe\Subscription::create([
             'customer' => $user->stripe_id,
             'items' => [

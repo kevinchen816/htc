@@ -186,7 +186,7 @@ class PlanProductsController extends Controller
             // $form->text('description', 'SKU Description'); //->rules('required');
             $form->text('month', 'Month')->rules('required');
             $form->text('price', 'Price')->rules('required|numeric|min:0.01');
-            $form->text('sub_id', 'Subscription ID');
+            $form->text('sub_plan', 'Subscription ID');
             // $form->text('stock', '剩余库存')->rules('required|integer|min:0');
 
             // $form->radio('on_sale', 'Active')
