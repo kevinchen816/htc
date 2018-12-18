@@ -153,9 +153,14 @@ class AccountsController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        $plans = DB::table('plans')
-            ->where('user_id', $user_id)
-            ->get();
+        if ($user->permission == 1) {
+            $plans = DB::table('plans')
+                ->get();
+        } else {
+            $plans = DB::table('plans')
+                ->where('user_id', $user_id)
+                ->get();
+        }
 
         $handle = '';
         foreach ($plans as $plan) {
