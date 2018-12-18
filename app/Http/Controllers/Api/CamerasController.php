@@ -20,6 +20,7 @@ use App\Http\Controllers\MailController;
 use Mail;
 use Carbon\Carbon;
 
+
 /*
 ICCID:
 UniCOM #1   - 89860117851014783481
@@ -4456,7 +4457,19 @@ return $request;
     public function test() {
         $now = Carbon::now();
         $now->addMonth(1);
-return $now->timestamp;
+
+$db = DB::table('orders')->find(1);
+$carbon = new Carbon($db->pay_at); //
+// return $db->pay_at; // 2018-12-18 11:10:50
+// return $carbon; // {"date":"2018-12-18 11:10:50.000000","timezone_type":3,"timezone":"PRC"}
+// return $carbon->addMonth(1); // {"date":"2019-01-18 11:10:50.000000","timezone_type":3,"timezone":"PRC"}
+return $carbon->addMonth(1)->timestamp; // 1547781050
+// $ret = new Carbon($db->pay_at)->addMonth(1)->timestamp; // NG
+// return $ret;
+
+// $carbon = new Carbon('first day of January 2008', 'America/Vancouver');
+// $carbon = new Carbon('first day of January 2008', 'America/Vancouver');
+// return $now->timestamp;
 
         $plan = Plan::first();
         return var_dump(Carbon::now()->lte($plan->sub_end));

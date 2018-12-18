@@ -18,6 +18,7 @@ class CreatePlanProductsTable extends Migration
 
             /* USA (AT&T), Canada, Europe, Australia */
             $table->string('region');       // us, ca, eu, au, cn, tw
+            $table->string('currency');     // usd, cad, eur, aud, cny, twd
             $table->string('title');        // BRONZE, SILVER, GOLD, PLATINUM PRO
             $table->string('description');  // 5000 Points per Month // $table->text
             $table->integer('points')->default(0);

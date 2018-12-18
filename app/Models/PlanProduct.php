@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class PlanProduct extends Model
 {
     protected $fillable = [
-        'region',
-        'title', 'description', 'image', 'active',
+        'region', 'currency',
+        'title', 'description', 'points', 'image', 'active',
         'rating', 'sold_count', 'price'
     ];
 

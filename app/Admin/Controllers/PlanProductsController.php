@@ -90,6 +90,7 @@ class PlanProductsController extends Controller
 
         $grid->id('ID');
         $grid->region('Region');
+        $grid->currency('Currency');
         $grid->title('Plan');   // Title
         // $grid->description('Description');
         $grid->points('Points');
@@ -136,6 +137,7 @@ class PlanProductsController extends Controller
 
         $show->id('ID');
         $show->region('Region');
+        $show->currency('Currency');
         $show->title('Title');
         // $show->description('Description');
         $show->points('Points');
@@ -161,6 +163,7 @@ class PlanProductsController extends Controller
         $form = new Form(new PlanProduct);
 
         $form->text('region', 'Region');
+        $form->text('currency', 'Currency');
         $form->text('title', 'Title');
         // $form->text('description', 'Description');
         $form->text('points', 'Points');
@@ -213,6 +216,16 @@ class PlanProductsController extends Controller
 
         foreach ($p['plans'] as $plan) {
             $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
+            // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['interval_count']; // 'us_5000_1m'
+            // if ($plan['interval'] == 'day') {
+            //     $plan_id .= 'd';
+            // } else if ($plan['interval'] == 'week') {
+            //     $plan_id .= 'w';
+            // } else if ($plan['interval'] == 'month') {
+            //     $plan_id .= 'm';
+            // } else if ($plan['interval'] == 'year') {
+            //     $plan_id .= 'y';
+            // }
             \Stripe\Plan::create([
                 'product' => $p['id'],
                 'id' => $plan_id,
@@ -227,6 +240,7 @@ class PlanProductsController extends Controller
     public function build_product($p) {
         $plan_product_id = DB::table("plan_products")->insertGetId([
             'region' => $p['region'],
+            'currency' => $p['currency'],
             'title' => $p['name'],
             'points' => $p['points'],
             'active' => $p['active']
@@ -234,6 +248,16 @@ class PlanProductsController extends Controller
 
         foreach ($p['plans'] as $plan) {
             $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
+            // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['interval_count']; // 'us_5000_1m'
+            // if ($plan['interval'] == 'day') {
+            //     $plan_id .= 'd';
+            // } else if ($plan['interval'] == 'week') {
+            //     $plan_id .= 'w';
+            // } else if ($plan['interval'] == 'month') {
+            //     $plan_id .= 'm';
+            // } else if ($plan['interval'] == 'year') {
+            //     $plan_id .= 'y';
+            // }
             DB::table('plan_product_skus')->insert([
                 'plan_product_id' => $plan_product_id,
                 'sub_plan' => $plan_id,
