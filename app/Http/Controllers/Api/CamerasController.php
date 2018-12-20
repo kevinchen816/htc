@@ -3113,6 +3113,12 @@ class CamerasController extends Controller
     /* TAB Function
     /*----------------------------------------------------------------------------------*/
     /* TAB Overview */
+    public function html_OverviewTitle($camera) {
+        $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+        $txt = '<strong><span class="label label-highlight" style="font-size: 1.0em;">'.ucfirst($plan->status).'</strong>';
+        return $txt;
+    }
+
     public function html_OverviewStatus($camera) {
         $txt  = $this->ovItemShow('Description', $camera->description);
         $txt .= $this->ovItemShow('Location', $camera->location);

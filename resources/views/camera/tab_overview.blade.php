@@ -6,7 +6,8 @@
             <h4 class="panel-title">
                 Status
                 <span class="pull-right">Plan:
-                    <strong><span class="label label-highlight" style="font-size: 1.0em;">Active</strong>
+                    <!-- <strong><span class="label label-highlight" style="font-size: 1.0em;">Active</strong> -->
+                    {!! $cc->html_OverviewTitle($camera) !!}
                 </span>
             </h4>
         </div>
