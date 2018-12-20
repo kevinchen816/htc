@@ -1649,7 +1649,10 @@ class CamerasController extends Controller
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
             if ($plan->status == 'active') {
-                if (Carbon::now()->gt($plan->sub_end) && ($plan->style == 'normal')) {
+
+                $now = Carbon::now()->subDays(1);
+                // if (Carbon::now()->gt($plan->sub_end) && ($plan->style == 'normal')) {
+                if ($now->gt($plan->sub_end) && ($plan->style == 'normal')) {
                     $ret['err'] = ERR_PLAN_EXPIRE;
                 } else {
                     if ($plan->points_used < $plan->points) {

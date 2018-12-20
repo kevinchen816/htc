@@ -160,6 +160,40 @@ class WebhookController extends CashierController
 //         return new Response('Webhook Handled', 200);
 //     }
 
+    public function handleCustomerSubscriptionDeleted(array $payload)
+    {
+        $user = $this->getUserByStripeId($payload['data']['object']['customer']);
+        if ($user) {
+            $data = $payload['data']['object'];
+
+            // $iccid = $data['metadata']['iccid'];
+            $plan = Plan::where('sub_id', $data['id'])->first();
+            if ($plan) {
+                /* create Plan History */
+                $ph = new PlanHistory();
+                $ph->iccid = $plan->iccid;
+                $ph->user_id = $plan->user_id;
+                $ph->event = 'delete';
+                $ph->status = 'customer.subscription.deleted';
+                $ph->points = $plan->points_used;
+                // $ph->points_reserve = 0;
+                $ph->sub_id = $plan->sub_id; // sub_EAh5xs7HT6ObHB
+                $ph->sub_plan = $plan->sub_plan;
+                $ph->sub_start = $plan->sub_start;
+                $ph->sub_end = $plan->sub_end;
+                $ph->save();
+
+                $plan->status = 'suspend';
+                $plan->points = 0;
+                $plan->points_used = 0;
+                // $plan->renew_plan = $plan->sub_plan;
+                $plan->renew_invoice = '';
+                $plan->update();
+            }
+        }
+        return new Response('Webhook Handled', 200);
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function log_add($payload) {
         $log = new LogStripe;
