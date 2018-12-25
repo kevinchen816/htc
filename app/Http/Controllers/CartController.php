@@ -330,12 +330,12 @@ class CartController extends Controller
         // $product = PlanProduct::find($sku->plan_product_id);
         // $points = $product->points;
 
-        // $trial_end = Carbon::now()->addMonth($month)->timestamp;
+        // $sub_end = Carbon::now()->addMonth($month)->timestamp;
         $pay_at = new Carbon($order->pay_at);
         if ($sub_plan == 'au_5000_1d') {
-            $trial_end = $pay_at->addDay(1)->timestamp; // for test
+            $sub_end = $pay_at->addDay(1)->timestamp; // for test
         } else {
-            $trial_end = $pay_at->addMonth($month)->timestamp;
+            $sub_end = $pay_at->addMonth($month)->timestamp;
         }
 
         $subscription = \Stripe\Subscription::create([
@@ -348,13 +348,14 @@ class CartController extends Controller
             ],
             'prorate' => false,
             'cancel_at_period_end' => $plan->auto_bill ? false : true,
-            'trial_end' => $trial_end, //1548780000
-            // 'billing_cycle_anchor' => $trial_end,
+// 'trial_end' => $sub_end, //1548780000
+'billing_cycle_anchor' => $sub_end,
         ]);
 
         /* status = trialing, active, past_due, canceled, or unpaid */
         // if ($subscription && ($subscription->status == 'active')) {
-        if ($subscription && ($subscription->status == 'trialing')) {
+// if ($subscription && ($subscription->status == 'trialing')) {
+if ($subscription) {
             // // $subscription = \Stripe\Subscription::retrieve($subscription->id);
             // $subscription = \Stripe\Subscription::update($subscription->id , [
             //     'trial_end' => $subscription->current_period_end,

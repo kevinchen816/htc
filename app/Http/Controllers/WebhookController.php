@@ -91,36 +91,38 @@ class WebhookController extends CashierController
                 $sku = PlanProductSku::where('sub_plan', $plan->renew_plan)->first();
                 $product = PlanProduct::find($sku->plan_product_id);
 
-                $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
-                if ($subscription) {
-                    $subscription = \Stripe\Subscription::update($subscription->id , [
-                        'trial_end' => $subscription->current_period_end,
-                    ]);
-                    // echo $subscription; // for debug
+// TODO
+                // $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
+                // if ($subscription) {
+                //     $subscription = \Stripe\Subscription::update($subscription->id , [
+                //         'trial_end' => $subscription->current_period_end,
+                //     ]);
+                //     // echo $subscription; // for debug
 
-                    $plan->status = 'active';
-                    $plan->sub_plan = $plan->renew_plan;
-                    $plan->points = $product->points * $sku->month;
-                    $plan->points_used = 0;
-                    $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
-                    $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
-                    $plan->update();
+                //     $plan->status = 'active';
+                //     $plan->sub_plan = $plan->renew_plan;
+                //     $plan->points = $product->points * $sku->month;
+                //     $plan->points_used = 0;
+                //     $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
+                //     $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
+                //     $plan->update();
 
-                    /* update Plan History */
-                    $pay_at = date_create();
-                    date_timestamp_set($pay_at, $data['created']);
+                //     /* update Plan History */
+                //     $pay_at = date_create();
+                //     date_timestamp_set($pay_at, $data['created']);
 
-                    $ph = PlanHistory::where('pay_invoice', $data['invoice'])->first();
-                    $ph->status = 'success';
-                    $ph->points = $plan->points;
-                    $ph->sub_start = $plan->sub_start;
-                    $ph->sub_end = $plan->sub_end;
-                    $ph->pay_method = $data['source']['brand'];
-                    $ph->pay_no = $data['id']; // ch_1Dhj6kG8UgnSL68UWvvUcJIU
-                    $ph->pay_info = json_encode($data['source']);
-                    $ph->pay_at = $pay_at;
-                    $ph->update();
-                }
+                //     $ph = PlanHistory::where('pay_invoice', $data['invoice'])->first();
+                //     $ph->status = 'success';
+                //     $ph->points = $plan->points;
+                //     $ph->sub_start = $plan->sub_start;
+                //     $ph->sub_end = $plan->sub_end;
+                //     $ph->pay_method = $data['source']['brand'];
+                //     $ph->pay_no = $data['id']; // ch_1Dhj6kG8UgnSL68UWvvUcJIU
+                //     $ph->pay_info = json_encode($data['source']);
+                //     $ph->pay_at = $pay_at;
+                //     $ph->update();
+                // }
+//+
             }
             // echo $data['id'].'</br>';
             // echo $data['invoice'].'</br>';
