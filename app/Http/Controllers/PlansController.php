@@ -374,6 +374,9 @@ class PlansController extends Controller
                     ],
                 ],
                 'cancel_at_period_end' => $auto_bill ? false : true,
+// 'billing_cycle_anchor' => $subscription->billing_cycle_anchor, // NG
+// 'billing_cycle_anchor' => 'unchanged', // Changing plan intervals. There's no way to leave billing cycle unchanged.
+'prorate' => false,
             ]);
             // return dd($subscription); // for debug
         }
