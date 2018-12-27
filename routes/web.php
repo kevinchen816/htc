@@ -274,6 +274,8 @@ Route::get('/email/test', 'MailController@test')->name('email.test');
 Route::get('/stripe/test', 'AccountsController@getStripeTest');
 Route::get('/stripe/test1', 'AccountsController@getStripeTest1');
 Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
+Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
+Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
 // Route::get('/stripe/new', 'AccountsController@stripe_new');
 // Route::get('/stripe/card', 'AccountsController@stripe_card');
 // Route::get('/stripe/cus', 'AccountsController@stripe_customer');

@@ -366,20 +366,32 @@ class PlansController extends Controller
 
         if ($plan->sub_id) {
             $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
-            $subscription = \Stripe\Subscription::update($plan->sub_id , [
-                'items' => [
-                    [
-                        'id' => $subscription->items->data[0]->id,
-                        'plan' => $sku->sub_plan,
+            if ($subscription) {
+
+                if ($subscription->trial_end != $subscription->current_period_end) {
+                    $subscription = \Stripe\Subscription::update($plan->sub_id , [
+                        'prorate' => false,
+                        'trial_end' => $subscription->current_period_end,
+                    ]);
+                }
+
+                $subscription = \Stripe\Subscription::update($plan->sub_id , [
+                    'items' => [
+                        [
+                            'id' => $subscription->items->data[0]->id,
+                            'plan' => $sku->sub_plan,
+                        ],
                     ],
-                ],
-                'cancel_at_period_end' => $auto_bill ? false : true,
-                'trial_end' => $subscription->current_period_end,
-                'prorate' => false,
-// 'billing_cycle_anchor' => $subscription->billing_cycle_anchor, // NG
-// 'billing_cycle_anchor' => 'unchanged', // Changing plan intervals. There's no way to leave billing cycle unchanged.
-            ]);
-            // return dd($subscription); // for debug
+                    'prorate' => false,
+                    'cancel_at_period_end' => $auto_bill ? false : true,
+// 'trial_end' => $subscription->current_period_end,
+
+                    /* Changing plan intervals. There's no way to leave billing cycle unchanged. */
+                    // 'billing_cycle_anchor' => 'unchanged',
+                    // 'billing_cycle_anchor' => $subscription->billing_cycle_anchor, // NG
+                ]);
+                // return dd($subscription); // for debug
+            }
         }
 
         // Success: Your account Renewal setup was saved.

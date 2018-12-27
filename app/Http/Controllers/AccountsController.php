@@ -959,29 +959,6 @@ return var_dump($ret);
 
     public function stripeSubscriptionCreate($plan) {
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        /*
-            {
-                "id":"sub_E9ZxsDczLVJt5S",
-                "object":"subscription",
-                "application_fee_percent":null,
-                "billing":"charge_automatically",
-                "billing_cycle_anchor":1544794459,
-                "cancel_at_period_end":false,
-                "canceled_at":null,
-                "created":1544794459,
-                "current_period_end":1547472859,
-                "current_period_start":1544794459,
-                "customer":"cus_E9NlSNcBIFHcQn",
-                "days_until_due":null,"default_source":null,"discount":null,"ended_at":null,"items":{"object":"list","data":[{"id":"si_E9ZxhNbScbVwbV","object":"subscription_item","created":1544794459,"metadata":[],"plan":{"id":"au_5000_1m","object":"plan","active":true,"aggregate_usage":null,"amount":1295,"billing_scheme":"per_unit","created":1544749007,"currency":"aud","interval":"month","interval_count":1,"livemode":false,"metadata":[],"nickname":null,"product":"au_silver_5000","tiers":null,"tiers_mode":null,"transform_usage":null,"trial_period_days":null,"usage_type":"licensed"},"quantity":1,"subscription":"sub_E9ZxsDczLVJt5S"}],"has_more":false,"total_count":1,"url":"\/v1\/subscription_items?subscription=sub_E9ZxsDczLVJt5S"},"livemode":false,"metadata":[],"plan":{"id":"au_5000_1m","object":"plan","active":true,"aggregate_usage":null,"amount":1295,"billing_scheme":"per_unit","created":1544749007,"currency":"aud","interval":"month","interval_count":1,"livemode":false,"metadata":[],"nickname":null,"product":"au_silver_5000","tiers":null,"tiers_mode":null,"transform_usage":null,"trial_period_days":null,"usage_type":"licensed"
-                },
-                "quantity":1,
-                "start":1544794459,
-                "status":"active",
-                "tax_percent":null,
-                "trial_end":null,
-                "trial_start":null
-            }
-        */
         $user = Auth::user();
         $ret = \Stripe\Subscription::create([
             'customer' => $user->stripe_id,
@@ -1076,8 +1053,6 @@ echo $charge->description.'<br/>';  // This is an example charge.
 echo $charge->invoice.'<br/>';      // null
 // echo $charge->metadata.'<br/>';
 return dd($charge);
-
-
     }
 
     public function getStripeTest2() {
@@ -1168,21 +1143,83 @@ echo $ret->status.'<br/>';      // paid (draft, open, paid, uncollectible, or vo
 return dd($ret);
     }
 
+    public function getStripeTest3() {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $user = Auth::user();
+        $stripe_id = $user->stripe_id;
+        // $currency = $user->currency;
+
+        $sub_end = Carbon::now()->addMonth(1)->timestamp;
+        $subscription = \Stripe\Subscription::create([
+            'customer' => $user->stripe_id,
+            'items' => [
+                ['plan' => 'au_20000_1m']
+            ],
+            'metadata' => [
+                'iccid' => '89860117851014783481',
+            ],
+            'prorate' => false,
+            'cancel_at_period_end' => false,
+//            'trial_end' => $sub_end,
+            // 'billing_cycle_anchor' => $sub_end,
+        ]);
+return dd($subscription);
+    }
+
+    public function getStripeTest4() {
+        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+
+        $user = Auth::user();
+        $stripe_id = $user->stripe_id;
+        // $currency = $user->currency;
+
+        $sub_id = 'sub_EEKP1LbRq2KWOr';
+        $subscription = \Stripe\Subscription::retrieve($sub_id);
+// return dd($subscription);
+
+        if ($subscription) {
+
+            if ($subscription->trial_end != $subscription->current_period_end) {
+echo 'trial_end != current_period_end<br/>';
+                $subscription = \Stripe\Subscription::update($sub_id , [
+                    'prorate' => false,
+                    'trial_end' => $subscription->current_period_end,
+                ]);
+            }
+
+            $subscription = \Stripe\Subscription::update($sub_id , [
+                'items' => [
+                    [
+                        'id' => $subscription->items->data[0]->id,
+                        'plan' => 'au_5000_1m',
+                    ],
+                ],
+                'prorate' => false,
+                'cancel_at_period_end' => false,
+// 'trial_end' => $subscription->current_period_end,
+
+                /* Changing plan intervals. There's no way to leave billing cycle unchanged. */
+                // 'billing_cycle_anchor' => 'unchanged',
+                // 'billing_cycle_anchor' => $subscription->billing_cycle_anchor, // NG
+            ]);
+            // return dd($subscription); // for debug
+        }
+return dd($subscription);
+    }
+
     public function getStripeTest() {
         \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
 
-        $charge = \Stripe\Charge::retrieve("ch_1DiChoG8UgnSL68UOemUqSt8");
-return dd($charge);
-
+//         $charge = \Stripe\Charge::retrieve("ch_1DiChoG8UgnSL68UOemUqSt8");
+// return dd($charge);
 
         $user = Auth::user();
 
-        $subscription_name = '89860117851014783481';
+        // $subscription_name = '89860117851014783481';
         // $subscription_name = '89860117851014783507';
         // $subscription_name = '8944503540145562674';
-
 // return $user->newSubscription($subscription_name, 'au_5000_1m')->create();
-
 // // return $user->subscription($subscription_name)->cancelNow();
 // $user->subscription($subscription_name)->cancel(); // Auto-Bill: No
 
