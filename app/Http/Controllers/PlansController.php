@@ -323,7 +323,7 @@ class PlansController extends Controller
     }
 
     public function postPlanRenew(Request $request) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         // {"_token":"xxxx","mode":"renew","planid":"12","tier":"22","auto-bill":"on","submit-new-plan":"renew"}
         $plan_id = $request->input('planid'); //$request->planid;

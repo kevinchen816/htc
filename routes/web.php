@@ -204,9 +204,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/currency/eu', 'CartController@getCurrencyEU')->name('currency.eu');
 
         /* for test */
-        Route::get('/invoice', 'CartController@getInvoice')->name('invoice');
-        Route::get('/invoice/{id}', 'CartController@getInvoiceDownload')->name('invoice.download');
-        Route::get('/invoice/test', 'CartController@getInvoiceTest')->name('invoice.test');
+        // Route::get('/invoice', 'CartController@getInvoice')->name('invoice');
+        // Route::get('/invoice/{id}', 'CartController@getInvoiceDownload')->name('invoice.download');
+        // Route::get('/invoice/test', 'CartController@getInvoiceTest')->name('invoice.test');
 
         /*-----------------------------------------------------------*/
         /* Admin */
@@ -242,12 +242,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 });
 
-// Route::get('/test', function() {return 'OK';});
-Route::get('/test', 'Api\CamerasController@test');
-Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
-
-/*-----------------------------------------------------------*/
-
+/*----------------------------------------------------------------------------------*/
 Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
 Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
 Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick-start');
@@ -264,47 +259,6 @@ Route::post('/support/contact', function() {return '/support/contact';})->name('
 Route::get('/email/optin', function() { return '/email/optin'; })->name('email.optin');
 Route::get('/email/optout', function() { return '/email/optout'; })->name('email.optout');
 
-Route::get('/email/test', 'MailController@test')->name('email.test');
-// Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
-
-/*-----------------------------------------------------------*/
-
-/* for stripe test */
-// Route::get('/stripe', 'AccountsController@stripe');
-Route::get('/stripe/test', 'AccountsController@getStripeTest');
-Route::get('/stripe/test1', 'AccountsController@getStripeTest1');
-Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
-Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
-Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
-// Route::get('/stripe/new', 'AccountsController@stripe_new');
-// Route::get('/stripe/card', 'AccountsController@stripe_card');
-// Route::get('/stripe/cus', 'AccountsController@stripe_customer');
-// Route::get('/stripe/charge', 'AccountsController@stripe_charge');
-// Route::get('/stripe/sub', 'AccountsController@stripe_sub');
-// Route::get('/stripe/change', 'AccountsController@stripe_change');
-// Route::get('/stripe/cancel', 'AccountsController@stripe_cancel');
-// Route::get('/stripe/pause', 'AccountsController@stripe_pause');
-// Route::get('/stripe/reactive', 'AccountsController@stripe_reactive');
-
-Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
-    // return $invoiceId;
-    return $request->user()->downloadInvoice($invoiceId, [
-        'vendor'  => 'Your Company',
-        'product' => 'Your Product',
-    ]);
-});
-
-/* for test */
-//Route::get('/camera/test', 'Api\CamerasController@test');
-//Route::get('/bootstrap', function () { return view('bootstrap'); });
-//Route::get('/env', function () { return env('APP_ENV'); });
-
-//Route::group(['prefix' => 'accounts/{account_id}'], function () {
-//    Route::get('detail', function ($account_id)    {
-//        // accounts/{account_id}/detail
-//    });
-//});
-
 /* default.blade.php */
     // $('#show_cameras').click(function() { /* default.blade.php */
     //$.get('/account/showcameralist/open'); // $.get() 方法使用 HTTP GET 请求从服务器加载数据 (JQuery)
@@ -317,6 +271,32 @@ Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     Route::get('/account/showcameralist/close', function() {
         return 'close';
     });
+
+/*----------------------------------------------------------------------------------*/
+/* for test */
+// Route::get('/test', function() {return 'OK';});
+// Route::get('/test', 'Api\CamerasController@test');
+// Route::get('/email/test', 'MailController@test')->name('email.test');
+// Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
+
+Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
+
+/* for stripe test */
+// Route::get('/stripe', 'AccountsController@stripe');
+Route::get('/stripe/test', 'AccountsController@getStripeTest');
+Route::get('/stripe/test1', 'AccountsController@getStripeTest1');
+Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
+Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
+Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
+
+//Route::get('/bootstrap', function () { return view('bootstrap'); });
+//Route::get('/env', function () { return env('APP_ENV'); });
+
+//Route::group(['prefix' => 'accounts/{account_id}'], function () {
+//    Route::get('detail', function ($account_id)    {
+//        // accounts/{account_id}/detail
+//    });
+//});
 
 /*
 https://restapi-telstra.jasper.com/rws/api/v1

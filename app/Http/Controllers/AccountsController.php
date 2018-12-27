@@ -656,7 +656,7 @@ $handle .=                 '</tr>';
         $user = Auth::user();
         // $user_id = $user->id;
 
-        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         // $stripeToken = $_POST['stripeToken'];
         // $ret = \Stripe\Customer::create([
         //     "email" => $user->email,
@@ -821,7 +821,7 @@ $handle .=                 '</tr>';
          "stripeToken":"tok_1DR0OHG8UgnSL68UTWNMptbB"}
     */
     public function stripe() { // for test
-        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -842,7 +842,7 @@ return var_dump($ret);
     }
 
     public function stripeCardGet() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         /*
             {
                 "id":"card_1Dh0ffG8UgnSL68UpMQMh6R3",
@@ -880,7 +880,7 @@ return var_dump($ret);
     }
 
     public function stripeCardUpdate() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = Auth::user();
 
@@ -898,7 +898,7 @@ return var_dump($ret);
 
     // https://stripe.com/docs/api/subscriptions/object
     public function stripeSubscriptionGet($sub_id = null, $subscription_name = null) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = Auth::user();
 
@@ -958,7 +958,7 @@ return var_dump($ret);
     }
 
     public function stripeSubscriptionCreate($plan) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $user = Auth::user();
         $ret = \Stripe\Subscription::create([
             'customer' => $user->stripe_id,
@@ -989,7 +989,7 @@ return var_dump($ret);
 
     // public function stripeSubscriptionUpdate($subscription_name = null) {
     public function stripeSubscriptionUpdate($subscription_id, $plan) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         // $subscription = \Stripe\Subscription::retrieve("sub_E9alHUZK4SRcoK");
         // $subscription->id = 'au_5000_3m';
@@ -1020,7 +1020,7 @@ return var_dump($ret);
     }
 
     public function stripeSubscriptionDelete($subscription_name = null) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $sub_id = 'sub_E9ZxsDczLVJt5S';
         $sub = \Stripe\Subscription::retrieve($sub_id);
@@ -1029,18 +1029,13 @@ return var_dump($ret);
     }
 
     public function getStripeTest1() {
-        // return $this->stripeSubscriptionCreate('au_2500_1d');
-
         $user = Auth::user();
-        $stripe_id = $user->stripe_id;
-        $currency = $user->currency;
-
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $charge = \Stripe\Charge::create([
             'amount' => 100,
-            'currency' => $currency, //'usd',
+            'currency' => $user->currency, //'usd',
             'description' => 'This is an example charge.',
-            'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
+            'customer' =>$user->stripe_id, //'cus_DvGvznoT2EBbyn',
         ]);
 
 // charge.succeeded
@@ -1056,18 +1051,12 @@ return dd($charge);
     }
 
     public function getStripeTest2() {
-        // return $this->stripeSubscriptionUpdate('sub_E9fsz77ZAGt3ml', 'au_10000_3m');
-
         $user = Auth::user();
-        $stripe_id = $user->stripe_id;
-        $currency = $user->currency;
-
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $invoice_item = \Stripe\InvoiceItem::create([
-            "customer" => $stripe_id,
+            "customer" => $user->stripe_id,
             "amount" => 123,
-            "currency" => $currency,
+            "currency" => $user->currency,
             "description" => "SILVER 5000 Points per Month - for 1 Month",
             // "description" => "SILVER 5000 for 1 Month",
             'metadata' => [
@@ -1076,34 +1065,6 @@ return dd($charge);
                 'plan' => 'au_5000_1m',
             ],
         ]);
-/*
-Stripe\InvoiceItem JSON: {
-    "id": "ii_1DiBy6G8UgnSL68UGRXnuFhD",
-    "object": "invoiceitem",
-    "amount": 123,
-    "currency": "aud",
-    "customer": "cus_E9af0ON3WpCGto",
-    "date": 1545014190,
-    "description": "SILVER 5000 Points per Month - for 1 Month",
-    "discountable": true,
-    "invoice": null,
-    "livemode": false,
-    "metadata": {
-        "order_no": "20181211071911733169",
-        "iccid": "89860117851014783481",
-        "plan": "au_5000_1m"
-    },
-    "period": {
-        "end": 1545014190,
-        "start": 1545014190
-    },
-    "plan": null,
-    "proration": false,
-    "quantity": 1,
-    "subscription": null,
-    "unit_amount": 123
-}
-*/
 // echo $invoice_item.'<br/>';
 // return dd($invoice_item);
 
@@ -1144,7 +1105,7 @@ return dd($ret);
     }
 
     public function getStripeTest3() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = Auth::user();
         $stripe_id = $user->stripe_id;
@@ -1168,20 +1129,15 @@ return dd($subscription);
     }
 
     public function getStripeTest4() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
-        $user = Auth::user();
-        $stripe_id = $user->stripe_id;
-        // $currency = $user->currency;
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $sub_id = 'sub_EEKP1LbRq2KWOr';
         $subscription = \Stripe\Subscription::retrieve($sub_id);
 // return dd($subscription);
 
         if ($subscription) {
-
             if ($subscription->trial_end != $subscription->current_period_end) {
-echo 'trial_end != current_period_end<br/>';
+                echo 'trial_end != current_period_end<br/>';
                 $subscription = \Stripe\Subscription::update($sub_id , [
                     'prorate' => false,
                     'trial_end' => $subscription->current_period_end,
@@ -1197,8 +1153,6 @@ echo 'trial_end != current_period_end<br/>';
                 ],
                 'prorate' => false,
                 'cancel_at_period_end' => false,
-// 'trial_end' => $subscription->current_period_end,
-
                 /* Changing plan intervals. There's no way to leave billing cycle unchanged. */
                 // 'billing_cycle_anchor' => 'unchanged',
                 // 'billing_cycle_anchor' => $subscription->billing_cycle_anchor, // NG
@@ -1209,16 +1163,15 @@ return dd($subscription);
     }
 
     public function getStripeTest() {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        $user = Auth::user();
 
 //         $charge = \Stripe\Charge::retrieve("ch_1DiChoG8UgnSL68UOemUqSt8");
 // return dd($charge);
 
-        $user = Auth::user();
-
         // $subscription_name = '89860117851014783481';
         // $subscription_name = '89860117851014783507';
-        // $subscription_name = '8944503540145562674';
 // return $user->newSubscription($subscription_name, 'au_5000_1m')->create();
 // // return $user->subscription($subscription_name)->cancelNow();
 // $user->subscription($subscription_name)->cancel(); // Auto-Bill: No
@@ -1302,154 +1255,9 @@ return dd($user->subscription($subscription_name)->onGracePeriod());
 // $card->save();
     }
 
-    public function stripe_new() { // for test
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $ret = \Stripe\Customer::create([
-            "description" => "kevin@10ware.com", // cus_Dv0fI1h5DQi2tb
-//            "currency" =>  "usd"
-//          "source" => "tok_visa" // obtained with Stripe.js
-        ]);
-        return var_dump($ret);
-    }
-
-    public function stripe_card() { // for test
-       \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $customer = \Stripe\Customer::retrieve("cus_DvGvznoT2EBbyn");
-        $ret = $customer->sources->create(["source" => "tok_mastercard"]);
-        return $ret;
-
-// $customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
-// $card = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9");
-// $card->name = "Kevin Chen";
-// $ret = $card->save();
-
-//$customer = \Stripe\Customer::retrieve("cus_Dv0jZNVpx8GerY");
-//$ret = $customer->sources->retrieve("card_1DTAiDG8UgnSL68U8rmAr1U9")->delete();
-//return $ret;
-    }
-
-    public function stripe_customer() { // for test
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $ret = \Stripe\Customer::retrieve("cus_DvGvznoT2EBbyn");
-        return $ret;
-    }
-
-    public function stripe_charge() { // for test
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
-//        $ret = \Stripe\Token::create([
-//          "card" => [
-//            "number" => "4242424242424242",
-//            "exp_month" => 11,
-//            "exp_year" => 2019,
-//            "cvc" => "314"
-//          ]
-//        ]);
-//return $ret;
-
-        //$stripeToken = ;
-        //$charge = \Stripe\Charge::create([
-        //    'amount' => 1000,
-        //    'currency' => 'usd',
-        //    'description' => 'Example charge',
-        //    'source' => $stripeToken,
-        //]);
-
-        $charge = \Stripe\Charge::create([
-            'amount' => 10000,
-            'currency' => 'usd',
-            'description' => 'Example charge',
-            'customer' => 'cus_DvGvznoT2EBbyn',
-        ]);
-
-        return $charge;
-    }
-
-    /* http://tool.chinaz.com/Tools/unixtime.aspx */
-    public function stripe_sub() { // for test
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-
-        $subscription = \Stripe\Subscription::create([
-           'customer' => 'cus_Dx6kWaXPFqZXhD',
-           'items' => [['plan' => 'plan_5000_1m_us']],
-           // 'billing_cycle_anchor' => 1543593600,    // 2018/12/01
-           // 'trial_end' => 1543593600,             // 2018/12/01
-           'trial_end' => 1542643200,             // 2018/12/20
-        ]);
-        return $subscription;
-    }
-
-    public function stripe_delete() { // for test , delete
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-//"cancel_at_period_end": "true"
-        $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
-        $ret = $subscription->cancel();
-        return $ret;
-    }
-
-    public function stripe_cancel() { // for test , cancel
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        // $subscription = \Stripe\Subscription::retrieve('sub_DvH09yNROg5tdj');
-        // $ret = $subscription->update(['cancel_at_period_end' => true]);
-        $ret = \Stripe\Subscription::update('sub_Dx7YQIW4g1fkxD', [
-          'cancel_at_period_end' => true,
-        ]);
-        return $ret;
-    }
-
-    public function stripe_resume() { // for test , resume
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $ret = \Stripe\Subscription::update('sub_Dx7YQIW4g1fkxD', [
-          'cancel_at_period_end' => false,
-        ]);
-        return $ret;
-    }
-
-    public function stripe_change() { // for test
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        $ret = \Stripe\Subscription::update('sub_DxCpW25xCDyLlx', [
-            'cancel_at_period_end' => false,
-            // 'cancel_at_period_end' => true,
-            // 'prorate' => false,
-            'items' => [
-                [
-                    'id' => $subscription->items->data[0]->id, //"id":"si_DvH0QM6GF5Bllt"
-                    'plan' => 'plan_5000_3m_us',
-                ],
-            ],
-        ]);
-        return $ret;
-    }
-
-    /*-----------------------------------------------------------*/
-    //public function charge_test(Request $request) {
-    //    $portal = $request->portal;
-    //    if (!Auth::check()) {
-    //        return $this->back_to_login($portal);
-    //    }
-    //
-    //    $user = Auth::user();
-    //    $user_id = $user->id;
-    //
-    //    // Set your secret key: remember to change this to your live secret key in production
-    //    // See your keys here: https://dashboard.stripe.com/account/apikeys
-    //    \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-    //
-    //    // Token is created using Checkout or Elements!
-    //    // Get the payment token ID submitted by the form:
-    //    $stripeToken = $_POST['stripeToken'];
-    //    $charge = \Stripe\Charge::create([
-    //        'amount' => 1000,
-    //        'currency' => 'usd',
-    //        'description' => 'Example charge',
-    //        'source' => $stripeToken,
-    //    ]);
-    //    return $charge;
-    //}
-
 /*
     public function billing2(Request $request) {
-        \Stripe\Stripe::setApiKey('sk_test_LfAFK776KACX3gaKrSxXNJ0r'); //Ë½Ô¿
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $post = request()->post();
         if (empty($post['order_id']) || empty($post['stripe_token']))
             return ['status' => -1, 'msg' => '²ÎÊý´íÎó'];

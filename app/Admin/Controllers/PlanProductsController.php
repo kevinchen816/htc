@@ -206,7 +206,8 @@ class PlanProductsController extends Controller
     }
 
     public function build_stripe($p) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         \Stripe\Product::create([
           'id' => $p['id'],     //'eu_silver_5000',
@@ -562,11 +563,25 @@ return 'build...OK #'.$type;
         $db=DB::table("plan_products")
             // ->select('region','title', 'price')
             // ->where('price', '>=', 20) // 一个条件
+            // ->where([
+            //         ['region', '==', 'au'],
+            //         ['price', '>=', '20'],
+            //     ])
             // ->whereRaw('price >= ? and region = ?', [20, 'au']) // 多个条件
+            // ->whereDate('created_at', '2016-10-10') // whereDate / whereMonth / whereDay / whereYear
             // ->orderBy('price','asc') // asc, desc
             ->get(); // 返回多条数据
             // ->first(); // 返回1条数据
+        // $db = $db->addSelect('currency')->get();
         dd($db);
+
+        // https://laravelacademy.org/post/6140.html
+        // $users = DB::table('users')
+        // ->select(DB::raw('count(*) as user_count, status'))
+        // ->where('status', '<>', 1)
+        // ->groupBy('status')
+        // ->get();
+        // dd($users);
 
         /* 新增 */
         // $bool=DB::table("plan_products")->insert([

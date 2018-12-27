@@ -4400,42 +4400,6 @@ return $request;
     }
 
     /*----------------------------------------------------------------------------------*/
-    //public function test() {
-    //    $id     = 1;
-    //    $camera = Camera::findOrFail($id);
-    //    //dd($camera);
-    //    return $camera;
-    //
-    //    //return $camera->module_id;
-    //    //return $camera['module_id'];
-    //    $field = 'module_id';
-    //    return $camera[$field];
-    //
-    //    $columns = Schema::getColumnListing('cameras');
-    //    print_r($columns);
-    //    return $columns;
-    //
-    //    $tables = DB::select('show tables');
-    //    //print_r($tables);
-    //    //return $tables;
-    //
-    //    $tables  = array_column($tables, 'Tables_in_htc');
-    //    $columns = ['email', 'user_name', 'nick_name', 'first_name', 'last_name'];
-    //    foreach ($tables as $key => $value) {
-    //        // foreach ($columns as $k => $v) {
-    //        //     if (Schema::hasColumn($value, $v)) {
-    //        //         $table[] = $value;
-    //        //     };
-    //        // }
-    //        // $columns[] = Schema::getColumnListing('users');
-    //        //print_r($key);
-    //        print_r($value);
-    //    }
-    //    print_r($tables);
-    //    return $tables;
-    //}
-
-    /*----------------------------------------------------------------------------------*/
     public function email_Photo_Send($user_id, $camera, $filename) {
         if ($camera->noti_email == 'on') {
             $user = DB::table('users')->where('id', $user_id)->first();
@@ -4520,45 +4484,3 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     }
 }
 
-
-/*
-// https://laravelacademy.org/post/6140.html
-$users = DB::table('users')->select('name', 'email as user_email')->get();
-
-// Ã¥Â¼ÂºÃ¥Ë†Â¶Ã¦Å¸Â¥Ã¨Â¯Â¢Ã¨Â¿â€Ã¥â€ºÅ¾Ã¤Â¸ÂÃ©â€¡ÂÃ¥Â¤ÂÃ§Å¡â€žÃ§Â»â€œÃ¦Å¾Å“Ã©â€º?$users = DB::table('users')->distinct()->get();
-
-$query = DB::table('users')->select('name');
-$users = $query->addSelect('age')->get();
-
-$users = DB::table('users')->where('votes', '=', 100)->get();
-$users = DB::table('users')->where('votes', 100)->get();
-
-$users = DB::table('users')->where([
-['status', '=', '1'],
-['subscribed', '<>', '1'],
-])->get();
-
-$users = DB::table('users')
-->orderBy('name', 'desc')
-->get();
-
-// whereDate / whereMonth / whereDay / whereYear
-$users = DB::table('users')
-->whereDate('created_at', '2016-10-10')
-->get();
-
-// Ã¥Å½Å¸Ã§â€Å¸Ã¨Â¡Â¨Ã¨Â¾Â¾Ã¥Â¼?$users = DB::table('users')
-->select(DB::raw('count(*) as user_count, status'))
-->where('status', '<>', 1)
-->groupBy('status')
-->get();
-
-// 10.3
-$statuses = $user->statuses()
-->orderBy('created_at', 'desc')
-->paginate(30);
-
-$topics = $topic->withOrder($request->order)
-->where('category_id', $category->id)
-->paginate(20);
- */

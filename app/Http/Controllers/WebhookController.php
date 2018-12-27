@@ -80,7 +80,8 @@ class WebhookController extends CashierController
 
     /*----------------------------------------------------------------------------------*/
     public function handleChargeSucceeded($payload) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = $this->getUserByStripeId($payload['data']['object']['customer']);
         if ($user) {

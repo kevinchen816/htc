@@ -278,7 +278,7 @@ class CartController extends Controller
     }
 
     public function updateOrder($order, $charge_id) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         /* status = succeeded, pending, or failed */
         $charge = \Stripe\Charge::retrieve($charge_id);
@@ -311,7 +311,7 @@ class CartController extends Controller
     // public function createSubscription($iccid, $plan_product_sku_id) {
     // public function createSubscription($iccid, $sub_plan, $points, $month) {
     public function createSubscription($order, $order_item) {
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $iccid = $order_item['iccid'];
         $sub_plan = $order_item['sub_plan'];
@@ -373,18 +373,6 @@ class CartController extends Controller
     }
 
     /*
-        {
-            "_token":"xxxx",
-            "rowId":[
-                "db9eb667c48190b1dcccad1fec678ed40",
-                "db9eb667c48190b1dcccad1fec678ed40",
-                "db9eb667c48190b1dcccad1fec678ed40",
-                "b9eb667c48190b1dcccad1fec678ed40",
-                "aca3ae0c296c8ce863a7d51d0dbb221c"
-            ]
-        }
-    */
-    /*
         Your Credit card was charged successfully.
         Date: 2018/12/05 20:26:35
         Invoice: 00026
@@ -396,7 +384,7 @@ class CartController extends Controller
     */
     public function postShopPay(Request $request) {
         // {"_token":"xxxx","rowId":["5","6"]}
-        \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = Auth::user();
         $stripe_id = $user->stripe_id;
@@ -512,116 +500,77 @@ class CartController extends Controller
         }
 return redirect()->route('account.profile');
 
-        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        // $charge = \Stripe\Charge::create([
-        //     'amount' => $total*100, //10000,
-        //     'currency' => $currency, //'usd',
-        //     'description' => 'Example charge',
-        //     'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
-        // ]);
+//         try {
+//             $charge = \Stripe\Charge::create([
+//                 'amount' => $total*100, //10000,
+//                 'currency' => $currency, //'usd',
+//                 'description' => 'Example charge',
+//                 'customer' => $stripe_id, //'cus_DvGvznoT2EBbyn',
+//             ]);
+//             // $charge = $user->charge($total*100);
+//         } catch (Exception $e) { // \Exception $e
+//             return ['status' => -1, 'msg' => $e->getMessage()];
+//         }
 
-        // // ch_1De8vuG8UgnSL68UVaYHBGl7
-        // // $charge = $user->charge($total*100);
-        // $charge = $user->charge($total*100, [
-        //     // 'source' => $token,
-        //     'receipt_email' => $user->email,
-        //     // 'custom_option' => $value,
-        // ]);
-
-        // // if (!$charge) {
-        // // }
-        // // try {
-        // //     $response = $user->charge(100);
-        // // } catch (Exception $e) {
-        // //     //
-        // // }
+//         $event = $charge->jsonSerialize();
+//         if ($event['status'] == 'succeeded' || $event['status'] == 'pending') {
+//             return ['status' => 1, 'msg' => 'OK'];
+//         } else {
+//             return ['status' => -1, 'msg' => $event['status']];
+//         }
 // echo $charge->id.'<br/>';
 // echo $charge->amount.'<br/>';
 // echo $charge->status.'<br/>';
 // return dd($charge);
 
-// in_1De8vxG8UgnSL68Ubd5vOvh1
         // Payment for invoice ED0214E-0001 – ch_1De8vyG8UgnSL68UhmxYH7h2
         // $invoice = $user->invoiceFor('One Time Fee', $total*100);
         // $user->invoiceFor('One Time Fee', 500, [
         //     'custom-option' => $value,
         // ]);
 // return dd($invoice);
-
-// $user->subscription($iccid)->swap('au_5000_1m');
-// $user->subscription('monthly')->resume($creditCardToken);
-// if ($user->onTrial()) {}
-
-// $user->trial_ends_at = Carbon::now()->addDays(14);
-// $user->save();
-
-        // session()->flash('success', 'Charge Success');
-        // return redirect()->back();
     }
 
     /*----------------------------------------------------------------------------------*/
     /* for test */ /* https://laravelacademy.org/post/1432.html */
-    public function getInvoice() {
-        $user = Auth::user();
-        $invoices = $user->invoices();
-        // $invoices = $user->invoicesIncludingPending(); // Include pending invoices in the results...
-        // return dd($invoices);
-// return count($invoices);
+//     public function getInvoice() {
+//         $user = Auth::user();
+//         $invoices = $user->invoices();
+//         // $invoices = $user->invoicesIncludingPending(); // Include pending invoices in the results...
+//         // return dd($invoices);
+// // return count($invoices);
 
-        /*
-            <table>
-                @foreach ($invoices as $invoice)
-                    <tr>
-                        <td>{{ $invoice->date()->toFormattedDateString() }}</td>
-                        <td>{{ $invoice->total() }}</td>
-                        <td><a href="/user/invoice/{{ $invoice->id }}">Download</a></td>
-                    </tr>
-                @endforeach
-            </table>
+//         $txt = '';
+//         $txt .= '<table>';
+//         foreach ($invoices as $invoice) {
+//             $txt .= '<tr>';
+//                 $txt .= '<td>'.$invoice->date()->toFormattedDateString().'</td>';
+//                 $txt .= '<td>'.$invoice->total().'</td>';
+//                 $txt .= '<td><a href="/invoice/'.$invoice->id.'">Download</a></td>';
+//                 $txt .= '<td>'.$invoice->id.'</td>';
+//                 // $txt .= '<td>'.$invoice->dateString().'</td>'; // NG
+//                 // $txt .= '<td>'.$invoice->dollars().'</td>';
+//             $txt .= '</tr>';
+//         }
+//         $txt .= '</table>';
+//         return $txt;
+//     }
 
-            {{ $invoice->id }}
-            {{ $invoice->dateString() }}
-            {{ $invoice->dollars() }}
-        */
-        $txt = '';
-        $txt .= '<table>';
-        foreach ($invoices as $invoice) {
-            $txt .= '<tr>';
-                $txt .= '<td>'.$invoice->date()->toFormattedDateString().'</td>';
-                $txt .= '<td>'.$invoice->total().'</td>';
-                $txt .= '<td><a href="/invoice/'.$invoice->id.'">Download</a></td>';
-                $txt .= '<td>'.$invoice->id.'</td>';
-                // $txt .= '<td>'.$invoice->dateString().'</td>'; // NG
-                // $txt .= '<td>'.$invoice->dollars().'</td>';
-            $txt .= '</tr>';
-        }
-        $txt .= '</table>';
-return $txt;
+//     public function getInvoiceDownload($invoiceId) {
+//         // Gold Member_12_2018.pdf
+//         return Auth::user()->downloadInvoice($invoiceId, [
+//             'vendor'  => 'KMCam Pro',
+//             'product' => 'Gold Member',
+//         ]);
+//     }
 
-
-        // if ($user->subscribed()) {
-        if ($user->subscribed()) {
-            return 'Subscribed';
-        } else {
-            return 'No Subscribed';
-        }
-    }
-
-    public function getInvoiceDownload($invoiceId) {
-        // Gold Member_12_2018.pdf
-        return Auth::user()->downloadInvoice($invoiceId, [
-            'vendor'  => 'KMCam Pro',
-            'product' => 'Gold Member',
-        ]);
-    }
-
-    public function getInvoiceTest() {
-        // Gold Member_12_2018.pdf
-        $invoiceId = 'in_1De8LCG8UgnSL68UgRJeFTZw';
-        return Auth::user()->downloadInvoice($invoiceId, [
-            'vendor'  => 'KMCam Pro',
-            'product' => 'Gold Member',
-        ]);
-    }
+//     public function getInvoiceTest() {
+//         // Gold Member_12_2018.pdf
+//         $invoiceId = 'in_1De8LCG8UgnSL68UgRJeFTZw';
+//         return Auth::user()->downloadInvoice($invoiceId, [
+//             'vendor'  => 'KMCam Pro',
+//             'product' => 'Gold Member',
+//         ]);
+//     }
 
 }
