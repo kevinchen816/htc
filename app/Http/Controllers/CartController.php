@@ -330,13 +330,15 @@ class CartController extends Controller
         // $product = PlanProduct::find($sku->plan_product_id);
         // $points = $product->points;
 
-        // $sub_end = Carbon::now()->addMonth($month)->timestamp;
-        $pay_at = new Carbon($order->pay_at);
-        if ($sub_plan == 'au_5000_1d') {
-            $sub_end = $pay_at->addDay(1)->timestamp; // for test
-        } else {
-            $sub_end = $pay_at->addMonth($month)->timestamp;
-        }
+// TODO
+        // // $sub_end = Carbon::now()->addMonth($month)->timestamp;
+        // $pay_at = new Carbon($order->pay_at);
+        // if ($sub_plan == 'au_5000_1d') {
+        //     $sub_end = $pay_at->addDay(1)->timestamp; // for test
+        // } else {
+        //     $sub_end = $pay_at->addMonth($month)->timestamp;
+        // }
+//+
 
         $subscription = \Stripe\Subscription::create([
             'customer' => $user->stripe_id,
@@ -348,7 +350,7 @@ class CartController extends Controller
             ],
             'prorate' => false,
             'cancel_at_period_end' => $plan->auto_bill ? false : true,
-            'trial_end' => $sub_end, //1548780000
+            // 'trial_end' => $sub_end, // TODO
 // 'billing_cycle_anchor' => $sub_end,
         ]);
 

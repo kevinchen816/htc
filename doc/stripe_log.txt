@@ -29,7 +29,7 @@ case (2) 新订阅
     "charge.succeeded"
 
 case (3) 订阅到期 - 自动扣款
-    "invoice.created"                   02:47:20
+    "invoice.created"                       21:19:17
         data.object.billing_reason = "subscription_cycle"
         data.object.id = "in_1DhiAVG8UgnSL68UZhx96Hwk"
 
@@ -37,9 +37,9 @@ case (3) 订阅到期 - 自动扣款
         data.object.customer = "cus_E9af0ON3WpCGto"             <-- 从 DB::users 取得 user_id
         data.object.lines.data[0].plan.id = "au_5000_1m"
 
-    "customer.subscription.updated"     02:47:35
+    "customer.subscription.updated"         21:19:17
 
-    "charge.succeeded"                  03:47:31
+    "charge.succeeded"                      22:19:29
         data.object.status = "succeeded"
         data.object.invoice = "in_1DhiAVG8UgnSL68UZhx96Hwk"     <-- 从 DB::plan_history 取得数据
 
@@ -56,9 +56,21 @@ case (3) 订阅到期 - 自动扣款
         data.object.customer = "cus_E9af0ON3WpCGto"
 
 
-    "invoice.payment_succeeded"         03:47:36
-    "invoice.updated"                   03:47:36
-    "invoice.finalized"                 03:47:37
+    "invoice.payment_succeeded"             22:19:29
+    "invoice.updated"                       22:19:30
+    "invoice.finalized"                     22:19:31
+
+$subscription = \Stripe\Subscription::update($subscription->id , [
+    'trial_end' => $subscription->current_period_end,
+    'prorate' => false,
+
+]);
+    "invoice.created"                       22:19:32
+    "invoice.finalized"                     22:19:33
+    "invoice.payment_succeeded"             22:19:33
+    "customer.subscription.updated"         22:19:33
+    "customer.subscription.trial_will_end"  22:19:34
+
 
 case (4) 订阅到期 - 删除
     type = "customer.subscription.deleted"

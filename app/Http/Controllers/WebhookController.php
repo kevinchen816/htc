@@ -91,14 +91,14 @@ class WebhookController extends CashierController
                 $sku = PlanProductSku::where('sub_plan', $plan->renew_plan)->first();
                 $product = PlanProduct::find($sku->plan_product_id);
 
-// TODO
                 $subscription = \Stripe\Subscription::retrieve($plan->sub_id);
                 if ($subscription) {
-                    $subscription = \Stripe\Subscription::update($subscription->id , [
-                        'trial_end' => $subscription->current_period_end,
-                        'prorate' => false,
-
-                    ]);
+// TODO
+//                    $subscription = \Stripe\Subscription::update($subscription->id , [
+//                        'trial_end' => $subscription->current_period_end,
+//                        'prorate' => false,
+//                    ]);
+//+
                     // echo $subscription; // for debug
 
                     $plan->status = 'active';
@@ -124,7 +124,6 @@ class WebhookController extends CashierController
                     $ph->pay_at = $pay_at;
                     $ph->update();
                 }
-//+
             }
             // echo $data['id'].'</br>';
             // echo $data['invoice'].'</br>';
