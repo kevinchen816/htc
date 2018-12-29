@@ -3750,7 +3750,11 @@ class CamerasController extends Controller
     }
 
     public function home() {
-        return $this->route_to_cameras();
+        if (Auth::check()) {
+            return $this->route_to_cameras();
+        } else {
+            return redirect()->route('login');
+        }
     }
 
     public function postActiveTab() {

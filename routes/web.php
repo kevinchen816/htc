@@ -52,7 +52,6 @@ Route::post('/10ware/logout', 'SessionsController@destroy_10ware')->name('logout
 Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de');
 */
 
-
 /*-----------------------------------------------------------*/
 /*
     app/Http/Controllers/HomeController.php

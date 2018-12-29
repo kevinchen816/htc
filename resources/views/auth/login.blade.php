@@ -40,9 +40,12 @@
                             @endif
                         </div>
 
-                      <div class="checkbox-XX">
-                        <label><input type="checkbox" name="remember"> Remember Me</label>
-                      </div>
+                        <!-- <div class="checkbox"> -->
+                        <div class="checkbox-XX">
+                            <label>
+                                <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                            </label>
+                        </div>
 
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
