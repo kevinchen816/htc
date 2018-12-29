@@ -320,7 +320,8 @@ class CamerasController extends Controller
             'Standard Low (640x)'       => '8',
             'Standard Medium (800x)'    => '9',
             'Standard High (1024x)'     => '10',
-            'High Def (1280x)'          => '11',
+            'HD 720p (1280x)'           => '11',
+            'FHD 1080p (1920x)'         => '12',
         );
         $array['help'] = 'This determines the frame size of the video in pixels, or how wide it is when viewed on your computer monitor. A higher resolution means the video file saved to the SD card is larger and when uploaded uses more battery and costs more image points from your data plan, but it will have more detail on the other hand.';
         return $array;
@@ -4483,4 +4484,3 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
     }
 }
-
