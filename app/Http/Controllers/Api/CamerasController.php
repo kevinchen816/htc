@@ -1687,7 +1687,7 @@ class CamerasController extends Controller
             array(13.0, 15.5 , 19.5 ),  // 5
         );
 
-        $point_video_thumb = array(1.0, 2.0, 3.0, 6.0);
+        $point_video_thumb = array(1.0, 2.0, 3.0, 6.0, 10.0);
 
         $resolution = (integer) ($param->upload_resolution);
         if (isset($param->photo_quality)) {
