@@ -3811,24 +3811,30 @@ class CamerasController extends Controller
         }
     }
 
+// public function validateCredentials(UserContract $user, array $credentials)
+// {
+//     $plain = $credentials['password'];
+
+//     return $this->hasher->check($plain, $user->getAuthPassword());
+// }
+
     public function postDelete(Request $request) {
-        //if (Auth::attempt(['password' => $request->password])) {
-        //    return 'OK';
-        //} else {
-        //    return 'NG';
-        //}
+        // {"_token":"xxxx","id":"1","password":"123456"}
+        $user = Auth::user();
+        if (Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
+            $camera = Camera::find($request->id);
+            if ($camera) {
+                $camera->delete();
+                $camera->photos()->delete();
+                $camera->actions()->delete();
+                $camera->log_apis()->delete();
 
-        //$camera = DB::table('cameras')->find($request->id); // NG
-        $camera = Camera::find($request->id); // OK
-        if ($camera) {
-            $camera->delete();
-            $camera->photos()->delete();
-            $camera->actions()->delete();
-            $camera->log_apis()->delete();
-
-            $user = Auth::user();
-            $data['sel_camera'] = 0; // IMPORTANT !!
-            $user->update($data);
+                $data['sel_camera'] = 0; // IMPORTANT !!
+                $user->update($data);
+            }
+            session()->flash('success', ' Success: Camera Deleted. All associated media files removed.');
+        } else {
+            session()->flash('danger', 'Error: Invalid Password. Please try again.');
         }
         return $this->route_to_cameras();
     }
@@ -4126,16 +4132,22 @@ class CamerasController extends Controller
                 "password":"12345"
             }
         */
-        $camera_id = $request->id;
-        $action_code = $request->action;
-        $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
-        if ($ret == 0) {
-            $param = array(
-                'camera_id'   => $camera_id,
-                'action_code' => $action_code,
-                'status'      => ACTION_REQUESTED,
-            );
-            $this->Action_Add($param);
+        $user = Auth::user();
+        if (Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
+            $camera_id = $request->id;
+            $action_code = $request->action;
+            $ret = $this->Action_Search($camera_id, $action_code, ACTION_REQUESTED);
+            if ($ret == 0) {
+                $param = array(
+                    'camera_id'   => $camera_id,
+                    'action_code' => $action_code,
+                    'status'      => ACTION_REQUESTED,
+                );
+                $this->Action_Add($param);
+            }
+            session()->flash('success', 'Success: Erase SD Card queued.');
+        } else {
+            session()->flash('danger', 'Error: Invalid Password. Please try again.');
         }
         return redirect()->back();
     }
