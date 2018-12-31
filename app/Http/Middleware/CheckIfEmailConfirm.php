@@ -16,7 +16,6 @@ class CheckIfEmailConfirm
      */
     public function handle($request, Closure $next)
     {
-// return var_dump($request);
         if (!$request->user()->email_verified) {
 
             /* return JSON when request by AJAX */

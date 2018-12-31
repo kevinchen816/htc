@@ -1,0 +1,154 @@
+<?php
+
+/*
+    **** 监听用户注册事件 ****
+    /app/Providers/EventServiceProvider.php
+*/
+class EventServiceProvider extends ServiceProvider
+{
+    protected $listen = [
+        Registered::class => [
+            RegisteredListener::class,
+        ],
+    ];
+}
+
+/*
+    **** 用户注册后发送确认邮件 ****
+    /app/Listeners/RegisteredListener.php
+*/
+class RegisteredListener
+{
+    public function handle($event) {
+        $user = $event->user; // 获取到刚刚注册的用户
+        $user->notify(new EmailConfirmNotification()); // 调用 notify 发送通知
+    }
+}
+
+/*
+    **** 发送邮件 ****
+    /app/Notifications/EmailConfirmNotification.php
+*/
+class EmailConfirmNotification extends Notification
+{
+    use Queueable;
+
+    public function via($notifiable) {
+        return ['mail'];
+    }
+
+    public function toMail($notifiable) {
+        $token = Str::random(16);
+        Cache::set('email_confirm_'.$notifiable->email, $token, 30); /* 30min */
+
+        /*
+           http://portal.xxx.com/confirm/verify?email=kevin%4010ware.com&token=R9aJFp1yQmT0Jr6G
+        */
+        $url = route('confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
+
+        /* /vendor/laravel/framework/src/Illuminate/Notifications/resources/views/email.blade.php */
+        return (new MailMessage)
+                ->greeting('Hello '.$notifiable->name.',')
+                ->subject('Email Verification')
+                ->line('Click on the below button to verify your email address and confirm your account registration.')
+                ->action('Verify', $url)
+                ->line('Thank you');
+    }
+}
+
+//----------------------------------------------------------------------
+/*
+    **** 检查用户帐号是否已邮件确认 ****
+*/
+
+/* /app/Http/Kernel.php */
+    protected $routeMiddleware = [
+        .....
+        'email_confirm' => \App\Http\Middleware\CheckIfEmailConfirm::class,
+    ];
+
+/*
+    $ php artisan make:middleware CheckIfEmailConfirm
+
+    /app/Http/Middleware/CheckIfEmailConfirm.php
+*/
+class CheckIfEmailConfirm
+{
+    public function handle($request, Closure $next) {
+
+        if (!$request->user()->email_verified) {
+
+            if ($request->expectsJson()) {
+                /* return JSON when request by AJAX */
+                return response()->json(['msg' => 'Please verify email address first.'], 400);
+            }
+
+            session()->flash('success', 'You are now registered, but your account is not yet confirmed.
+            Please look in your inbox for a confirmation email and click the Verify link.');
+
+            Auth::logout();
+            return redirect(route('login'));
+        }
+        return $next($request);
+    }
+}
+
+/* /routes/web.php */
+    Route::get('/confirm/send', 'EmailConfirmController@getSend')->name('confirm.send');
+    Route::post('/confirm/send', 'EmailConfirmController@postSend')->name('confirm.send');
+    Route::get('/confirm/verify', 'EmailConfirmController@getVerify')->name('confirm.verify'); // IMPORTANT !!
+
+    Route::group(['middleware' => 'email_confirm'], function() {
+        .....
+    }
+
+//----------------------------------------------------------------------
+/* /app/Http/Controllers/EmailConfirmController.php */
+class EmailConfirmController extends Controller
+{
+    public function getSend(Request $request) {
+        return view('auth.send_confirmation_email');
+    }
+
+    public function postSend(Request $request) {
+        .....
+        $user->notify(new EmailConfirmNotification());
+    }
+
+    public function getVerify(Request $request) {
+        $email = $request->input('email');
+        $token = $request->input('token');
+
+        if ($token != Cache::get('email_confirm_'.$email)) {
+            session()->flash('warning', 'The link is incorrect or has expired.');
+            return redirect(route('login'));
+        }
+
+        Cache::forget('email_confirm_'.$email);
+        $user->update(['email_verified' => true]);
+
+        session()->flash('success', 'Account registration email confirmation. You can login now.');
+        return redirect(route('login'));
+    }
+
+}
+
+//----------------------------------------------------------------------
+/*
+    汉化 Email 认证邮件
+    https://laravel-china.org/articles/17222
+*/
+    return (new MailMessage)
+                ->greeting('Hello '.$notifiable->name.',')
+                ->subject(Lang::getFromJson('Verify Email Address'))
+                ->line(Lang::getFromJson('Please click the button below to verify your email address.'))
+                ->action(
+                    Lang::getFromJson('Verify'),
+                    $url
+                )
+                ->line(Lang::getFromJson('Thank you'));
+
+想要汉化剩下的内容很容易。
+只需要运行 php artisan vendor:publish --tag=laravel-notifications
+将邮件模板发布到 resources/views 下。
+
