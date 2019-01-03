@@ -16,10 +16,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Schema;
 //use Storage;
-use App\Http\Controllers\MailController;
-use Mail;
-use Carbon\Carbon;
 
+use Mail;
+use App\Http\Controllers\MailController;
+use App\Mail\PhotoSend;
+
+use Carbon\Carbon;
 
 /*
 ICCID:
@@ -4417,32 +4419,45 @@ return $request;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function email_Photo_Send($user_id, $camera, $filename) {
-        if ($camera->noti_email == 'on') {
-            $user = DB::table('users')->where('id', $user_id)->first();
-            if ($user) {
-                $to = $user->email;
-                $subject = $camera->description;
-                $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
-                $param = array(
-                    'user_name'=>$user->name,
-                    'camera_name'=>$camera->description,
-                    'imgPath'=>$imgPath,
-                );
-                Mail::send('emails.photo', $param, function($message) use($to, $subject) {
-                    $message ->to($to)->subject($subject);
-                });
-            }
-        }
-    }
+    // public function email_Photo_Send($user_id, $camera, $filename) {
+    //     if ($camera->noti_email == 'on') {
+    //         $user = DB::table('users')->where('id', $user_id)->first();
+    //         if ($user) {
+    //             $to = $user->email;
+    //             $subject = $camera->description;
+    //             $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+    //             $param = array(
+    //                 'user_name' => $user->name,
+    //                 'camera_name' => $camera->description,
+    //                 'imgPath' => $imgPath,
+    //             );
+    //             Mail::send('emails.photo', $param, function($message) use($to, $subject) {
+    //                 $message ->to($to)->subject($subject);
+    //             });
+    //         }
+    //     }
+    // }
 
-    //public function email_Photo_Send($user_id, $camera, $filename) {
+    // public function email_Photo_Send($user_id, $camera, $filename) {
     //    $user = DB::table('users')->where('id', $user_id)->first();
     //    if ($user) {
     //        $email = new MailController;
     //        $email->photo_Send($user, $camera, $filename);
     //    }
-    //}
+    // }
+
+    public function email_Photo_Send($user_id, $camera, $filename) {
+       $user = DB::table('users')->where('id', $user_id)->first();
+       if ($user) {
+            $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+
+            // Mail::to($user->email)
+            //     ->send(new PhotoSend($user->name, $camera->description, $imgPath));
+
+            Mail::to($user->email) // Kevin<kevin@10ware.com>
+                ->queue(new PhotoSend($user->name, $camera->description, $imgPath));
+       }
+    }
 
     public function test() {
         $now = Carbon::now();

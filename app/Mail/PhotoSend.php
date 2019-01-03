@@ -35,11 +35,15 @@ class PhotoSend extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        //$subject = $this->$camera_name;
-        return $this->view('emails.photo');
-        //return $this->from('kevin@10ware.com')
-        //            ->subject($subject)
-        //            ->view('emails.photo');
+        // $subject = $this->camera_name;
+        // return $this->view('emails.photo');
+        // return $this->from('kevin@10ware.com')
+        //            // ->subject($subject)
+        //             ->subject('Hello')
+                    // ->view('emails.photo');
+
+        return $this->subject($this->camera_name)
+                    ->view('emails.photo');
     }
 }
 

@@ -1,0 +1,173 @@
+https://laravel-china.org/courses/laravel-intermediate-training/5.7/mail-notification/2637
+
+7.6. 邮件通知
+
+Laravel 支持多种邮件驱动:
+    - Mailgun 、 Amazon SES 、Maildrill 都是第三方邮件服务。
+    - mail 驱动使用 PHP 提供的 mail 函数。
+    - sendmail 驱动通过 Sendmail/Postfix（Linux）提供的命令发送邮件，
+    - smtp 驱动使用支持 ESMTP 的 SMTP 服务器发送邮件。
+
+    ** mail 不安全，sendmail 需要安装配置 Sendmail/Postfix，并且信用不高，很容易被当成垃圾邮件，
+    ** 第三方服务的信用是最高的，商业软件推荐使用。
+
+//------------------------------------------------------------------
+.env
+# http://sample.test:8025
+xMAIL_DRIVER=smtp
+xMAIL_HOST=127.0.0.1
+xMAIL_PORT=1025
+xMAIL_USERNAME=null
+xMAIL_PASSWORD=null
+xMAIL_ENCRYPTION=null
+
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.exmail.qq.com
+MAIL_PORT=465
+MAIL_USERNAME=no-reply@10ware.com
+MAIL_PASSWORD=Caperplus7002
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=no-reply@10ware.com   <-- 此值必须同 MAIL_USERNAME 一致
+MAIL_FROM_NAME=no-reply
+
+zMAIL_DRIVER=smtp
+zMAIL_HOST=email-smtp.us-east-1.amazonaws.com
+zMAIL_PORT=465
+zMAIL_USERNAME=AKIAIGAM443EV34BMP2Q
+zMAIL_PASSWORD=Ak2dmhSzBJ/4lTV4Dsj0/RBNO44wRCg7Z5eE0gvsLsTF
+zMAIL_ENCRYPTION=ssl
+zMAIL_FROM_ADDRESS=no-reply@10ware.com
+zMAIL_FROM_NAME=no-reply
+
+
+//------------------------------------------------------------------
+// 我们可以通过对通知类添加 ShouldQueue 接口和 Queueable trait 把通知加入队列。
+
+use Illuminate\Contracts\Queue\ShouldQueue;     <-- 使用队列发送邮件
+
+//class EmailConfirmNotification extends Notification
+class EmailConfirmNotification extends Notification implements ShouldQueue  <-- 使用队列发送邮件
+{
+    use Queueable;  <-- 使用队列发送邮件
+
+    public function via($notifiable) {
+        return ['mail'];        <-- mail 通知频道
+    }
+
+    // 因为开启了 mail 频道，我们还需要新增 toMail 方法
+    public function toMail($notifiable) {
+        $token = Str::random(16);
+        Cache::set('email_confirm_'.$notifiable->email, $token, 30);
+        $url = route('confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
+
+        return (new MailMessage)
+                ->greeting('Hello '.$notifiable->name.',')
+                ->subject('Verify Email Address')
+                ->line('Please click the button below to verify your email address.')
+                ->action('Verify Email Address', $url)
+                ->line('If you did not create an account, no further action is required.');
+    }
+}
+
+
+5. 使用队列发送邮件
+    大家应该会发现我们提交回复时，服务器响应会变得非常缓慢，
+    这是『邮件通知』功能请求了 QQ SMTP 服务器进行邮件发送所产生的延迟。
+    我们已经学过了，对于处理此类延迟，最好的方式是使用队列系统。
+
+    我们可以通过对通知类添加 ShouldQueue 接口和 Queueable trait 把通知加入队列。
+    它们两个在使用 make:notification 命令来生成通知文件时就已经被导入，我们只需添加到通知类接口即可。
+
+    class EmailConfirmNotification extends Notification implements ShouldQueue
+
+QUEUE_CONNECTION=redis      <-- 测试
+
+命令行运行队列监控：
+$ php artisan horizon
+
+QUEUE_DRIVER=sync
+
+//------------------------------------------------------------------
+[ Laravel 5.5 文档 ] 进阶系列 —— 在 Laravel 中实现邮件配置、预览和发送
+
+https://laravelacademy.org/post/8437.html
+
+SES 驱动
+要使用 Amazon SES 驱动（收费），先安装 Amazon AWS 的 PHP SDK，
+你可以通过添加如下行到 composer.json 文件的 require 部分然后运行 composer update 命令来安装该库：
+
+    "aws/aws-sdk-php": "~3.0"
+
+接下来，设置配置文件 config/mail.php 中的 driver 选项为 ses。
+然后，验证配置文件 config/services.php 包含如下选项：
+
+    'ses' => [
+        'key' => 'your-ses-key',
+        'secret' => 'your-ses-secret',
+        'region' => 'ses-region',  // e.g. us-east-1
+    ],
+
+
+[ 生成可邮寄类 ]
+    在 Laravel 中，应用发送的每一封邮件都可以表示为“可邮寄”类，这些类都存放在 app/Mail 目录。
+    如果没看到这个目录，别担心，它将会在你使用 make:mail 命令创建第一个可邮寄类时生成：
+
+        $ php artisan make:mail PhotoSend
+
+    所有的可邮寄类配置都在 build 方法中完成，在这个方法中，你可以调用多个方法，
+    例如 from、subject、view 和 attach 来配置邮件的内容和发送。
+
+        public function build()
+        {
+            return $this->from('example@example.com')
+                ->view('emails.orders.shipped');
+        }
+
+    ** 使用全局的 from 地址
+    不过，如果你的应用在所有邮件中都使用相同的发送地址，在每个生成的可邮寄类中都调用 from 方法就显得很累赘。
+    取而代之地，你可以在配置文件 config/mail.php 中指定一个全局的发送地址，
+    该地址可用于在所有可邮寄类中没有指定其它发送地址的场景下（即作为默认发件人）：
+
+        'from' => ['address' => 'example@example.com', 'name' => 'App Name'],
+
+
+    public function email_Photo_Send($user_id, $camera, $filename) {
+       $user = DB::table('users')->where('id', $user_id)->first();
+       if ($user) {
+            $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+
+            Mail::to($user->email)
+                // ->cc($moreUsers)
+                // ->bcc($evenMoreUsers)
+                // ->send(new PhotoSend($user->name, $camera->description, $imgPath));
+                ->queue(new PhotoSend(...));    <-- 将邮件发送放到队列中在后台发送
+
+                // 如果你想要延迟队列中邮件消息的发送，可以使用 later 方法。
+                $when = Carbon\Carbon::now()->addMinutes(10);
+                ->later($when, new PhotoSend(...));
+
+       }
+    }
+
+
+    ** 默认队列
+        如果你的可邮寄类总是想要推送到队列，可以在该类上实现 ShouldQueue 契约。
+        这样，即使你调用 send 方法，可邮寄类还是会被推送到队列，因为它实现了这个契约：
+
+[ 事件 ]
+    Laravel 会在发送邮件消息前触发两个事件，
+    MessageSending 事件在消息发送前触发，
+    MessageSent 事件在消息发送后触发。
+    需要注意的是这两个事件是在邮件被发送前后触发，而不是推送到队列时，
+    你可以在 EventServiceProvider 中注册对应的事件监听器：
+
+        protected $listen = [
+            'Illuminate\Mail\Events\MessageSending' => [
+                'App\Listeners\LogSendingMessage',
+            ],
+            'Illuminate\Mail\Events\MessageSent' => [
+                'App\Listeners\LogSentMessage',
+            ],
+        ];
+
+

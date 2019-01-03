@@ -1,50 +1,58 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-    <style>
-        @media only screen and (max-width: 600px) {
-            .inner-body {
-                width: 100% !important;
-            }
+<html>
+    <style type="text/css"  rel="stylesheet"  media="all"></style>
 
-            .footer {
-                width: 100% !important;
-            }
-        }
-
-        @media only screen and (max-width: 500px) {
-            .button {
-                width: 100% !important;
-            }
-        }
-    </style>
-
-    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%"  cellpadding="0"  cellspacing="0">
         <tr>
-            <td align="center">
-                <table class="content" width="100%" cellpadding="0" cellspacing="0">
+            <td style="width: 100%; margin: 0; padding: 0; background-color: #F2F4F6;"  align="center">
+                <table width="100%"  cellpadding="0"  cellspacing="0">
 
-                    <!-- Email Body -->
                     <tr>
-                        <td class="body" width="100%" cellpadding="0" cellspacing="0">
-                            <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0">
-                                <!-- Body content -->
+                        <td style="padding: 25px 0; text-align: center;">
+                            <a style=""  href="{{ route('home') }}"  target="_blank">
+                                {{ config('app.name') }}
+                            </a>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td style="width: 100%; margin: 0; padding: 0; border-top: 1px solid #EDEFF2; border-bottom: 1px solid #EDEFF2; background-color: #FFF;"  width="100%">
+                            <table style="width: auto; max-width: 570px; margin: 0 auto; padding: 0;"  align="center"  width="570"  cellpadding="0"  cellspacing="0">
                                 <tr>
-                                    <td class="content-cell">
-                                        @yield('content')
+                                    <td style="">
+
+                                            @yield('content')
+
+<!--                                             <p style="margin-top: 0; color: #74787E; font-size: 16px; line-height: 1.5em;">
+                                                Click this link to stop the site from sending any emails to your address:<br/>
+                                                <a href="http://www.ridgetec.us/email/optout">
+                                                    Change Email Preference and Opt Out
+                                                </a>
+                                            </p> -->
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
 
+
+                    <tr>
+                        <td>
+                            <table style="width: auto; max-width: 570px; margin: 0 auto; padding: 0; text-align: center;"  align="center"  width="570"  cellpadding="0"  cellspacing="0">
+                                <tr>
+                                    <td style="">
+                                        <p style="margin-top: 0; color: #74787E; font-size: 12px; line-height: 1.5em;">
+                                            &copy; 2018
+                                            <a style="color: #3869D4;"  href="{{ route('home') }}"  target="_blank">{{ config('app.name') }}</a>.
+                                            All rights reserved.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
     </table>
-</body>
 </html>

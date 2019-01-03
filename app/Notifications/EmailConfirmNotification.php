@@ -10,7 +10,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Str;
 use Cache;
 
-class EmailConfirmNotification extends Notification
+// class EmailConfirmNotification extends Notification
+class EmailConfirmNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -52,15 +53,15 @@ class EmailConfirmNotification extends Notification
         $url = route('confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
 
         return (new MailMessage)
-                    ->greeting('Hello '.$notifiable->name.',')
-                    // ->subject('Email Verification')
-                    ->subject('Verify Email Address')
-                    // ->line('Click on the below button to verify your email address and confirm your account registration.')
-                    ->line('Please click the button below to verify your email address.')
-                    // ->action('Verify', $url)
-                    ->action('Verify Email Address', $url)
-                    ->line('If you did not create an account, no further action is required.');
-                    // ->line('Thank you');
+                ->greeting('Hello '.$notifiable->name.',')
+                // ->subject('Email Verification')
+                ->subject('Verify Email Address')
+                // ->line('Click on the below button to verify your email address and confirm your account registration.')
+                ->line('Please click the button below to verify your email address.')
+                // ->action('Verify', $url)
+                ->action('Verify Email Address', $url)
+                ->line('If you did not create an account, no further action is required.');
+                // ->line('Thank you');
 
         // return (new MailMessage)
         //             ->greeting('Hello '.$notifiable->name.',')
