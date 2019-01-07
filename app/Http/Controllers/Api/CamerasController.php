@@ -1833,6 +1833,8 @@ class CamerasController extends Controller
         $data['last_contact'] = $datetime;
         if ($api_type == 'arm') {                       // status with Arm='Y'
             $data['last_armed'] = $datetime;
+            $data['arm_photos'] = 0;
+            $data['arm_points'] = 0;
         } else if ($api_type == 'report') {
             $data['last_hb'] = $datetime;
         } else if ($api_type == 'upload_photo') {       // uploadthumb, uploadoriginal
