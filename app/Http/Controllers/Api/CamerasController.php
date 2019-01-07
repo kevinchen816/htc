@@ -22,6 +22,7 @@ use App\Http\Controllers\MailController;
 use App\Mail\PhotoSend;
 
 use Carbon\Carbon;
+use JPush\Client as JPush;
 
 /*
 ICCID:
@@ -4522,5 +4523,55 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second, false)); // 第三个可选参数指定比较是否可以相等，默认为true
         // return var_dump($Carbon::now()->isFuture());
         // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
+    }
+
+    /*
+    // 光特亿
+    appKey ="bbe4f8c3aa56d8e61d2fd2fd";
+    masterSecret = "c37f1c5cc7a509af1033de9c";
+
+    // 鱼乐世界
+    appKey2 ="3f5a52de66b60b36ff0417df";
+    masterSecret2 = "14b1cba7bfeb9354e18e3482";
+
+    // Caperplus
+    appKey3 ="ccb1d48def8634eb00de636d";
+    masterSecret3 = "a572b36206138bbbf143ce2b";
+    */
+
+    public function push_test() {
+        // 光特亿
+        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd';
+        $master_secret = 'c37f1c5cc7a509af1033de9c';
+
+        // Caperplus
+        // $app_key = 'ccb1d48def8634eb00de636d';
+        // $master_secret = 'a572b36206138bbbf143ce2b';
+
+        $client = new JPush($app_key, $master_secret);
+        $client->push()
+            ->setPlatform('all')
+            // ->addAllAudience()
+            ->addRegistrationId('190e35f7e005b796d3b')
+            ->setNotificationAlert('Hello')
+            // ->iosNotification('Hello IOS', array(
+            //     'sound' => 'sound.caf',
+            //     // 'badge' => '+1',
+            //     // 'content-available' => true,
+            //     // 'mutable-content' => true,
+            //     'category' => 'jiguang',
+            //     'extras' => array(
+            //         'key' => 'value',
+            //         'jiguang'
+            //     ),
+            // ))
+            ->androidNotification('Hi, Android', array(
+                // 'title' => 'hello jpush',
+                'extras' => array(
+                    'url' => 'http://www.caperplus.com',
+                ),
+            ))
+            ->send();
+return dd($client);
     }
 }

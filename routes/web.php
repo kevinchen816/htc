@@ -288,6 +288,8 @@ Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
 Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
 Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
 
+Route::get('/push', 'Api\CamerasController@push_test');
+
 //Route::get('/bootstrap', function () { return view('bootstrap'); });
 //Route::get('/env', function () { return env('APP_ENV'); });
 
