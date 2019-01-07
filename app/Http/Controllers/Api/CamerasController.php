@@ -1953,6 +1953,11 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+//     public function status(Request $request) {
+//         $ret['ret'] = 'Hello';
+// return $ret;
+//     }
+
     public function status(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -4449,16 +4454,18 @@ return $request;
     // }
 
     public function email_Photo_Send($user_id, $camera, $filename) {
-       $user = DB::table('users')->where('id', $user_id)->first();
-       if ($user) {
-            $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
+        if ($camera->noti_email == 'on') {
+            $user = DB::table('users')->where('id', $user_id)->first();
+            if ($user) {
+                $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
 
-            // Mail::to($user->email)
-            //     ->send(new PhotoSend($user->name, $camera->description, $imgPath));
+                // Mail::to($user->email)
+                //     ->send(new PhotoSend($user->name, $camera->description, $imgPath));
 
-            Mail::to($user->email) // Kevin<kevin@10ware.com>
-                ->queue(new PhotoSend($user->name, $camera->description, $imgPath));
-       }
+                Mail::to($user->email) // Kevin<kevin@10ware.com>
+                    ->queue(new PhotoSend($user->name, $camera->description, $imgPath));
+            }
+        }
     }
 
     public function test() {

@@ -40,14 +40,14 @@ class CreateCamerasTable extends Migration
             $table->integer('points_used')->default(0); // del
 
             /* status */
-            $table->string('battery')->default('');
+            $table->string('battery')->default('')->nullable();
             $table->integer('signal_value')->default(0);
-            $table->string('card_space')->default('');
-            $table->string('card_size')->default('');
-            $table->string('temperature')->default('');
-            $table->string('dsp_version')->default('');
-            $table->string('mcu_version')->default('');
-            $table->string('cellular')->default('');
+            $table->string('card_space')->default('')->nullable();
+            $table->string('card_size')->default('')->nullable();
+            $table->string('temperature')->default('')->nullable();
+            $table->string('dsp_version')->default('')->nullable();
+            $table->string('mcu_version')->default('')->nullable();
+            $table->string('cellular')->default('')->nullable();
 
             /* settings */
             $table->string('camera_mode')->default('p');        // p, v

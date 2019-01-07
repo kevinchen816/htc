@@ -85,7 +85,8 @@ class ActionsController extends Controller
         $camera_id = $camera->id;
         $actions = DB::table('actions')
             ->where('camera_id', $camera_id)
-            ->orderBy('requested', 'desc')
+            // ->orderBy('requested', 'desc') // NG: must consider change timezone issue
+            ->orderBy('id', 'desc')
             ->get();
 
         $txt = '';
