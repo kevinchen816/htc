@@ -4568,10 +4568,40 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             ->androidNotification('Hi, Android', array(
                 // 'title' => 'hello jpush',
                 'extras' => array(
-                    'url' => 'http://www.caperplus.com',
+                    // 'url' => 'http://www.caperplus.com',
+                    'url' => 'http://portal.kmcampro.com/uploads/7/1547295213_xLuPXhn5fe.JPG',
                 ),
             ))
             ->send();
+
+        $client->push()
+            ->setPlatform('all')
+            // ->addAllAudience()
+            ->addRegistrationId('13165ffa4e282202377')
+            ->setNotificationAlert('Hello')
+            ->iosNotification('Hello IOS', array(
+                'sound' => 'sound.caf',
+                // 'badge' => '+1',
+                // 'content-available' => true,
+                // 'mutable-content' => true,
+                'category' => 'jiguang',
+                'extras' => array(
+                    'key' => 'value',
+                    'jiguang'
+                ),
+            ))
+            ->send();
+/*
+"ajpush":{
+    "id":"20266207195350636",
+    "title":"KMCam Pro",
+    "content":"Hi, Android",
+    "extra":{
+        "url":"http://www.caperplus.com"
+    }
+}
+*/
+
 return dd($client);
     }
 }
