@@ -2986,21 +2986,32 @@ class CamerasController extends Controller
             $this->Camera_Status_Update($request, 'log');
 
             if ($request->RequestID) {
-
-                if ($request->status == 'enable') {
-                    $action_code = 'LE';
-                } else if ($request->status == 'disable') {
-                    $action_code = 'LD';
-                } else if ($request->status == 'missing') {
-                    $action_code = 'LU';
-                }
-
                 $param = array(
                     'request_id'  => $request->RequestID,
                     'camera_id'   => $camera->id,
-                    'action_code' => $action_code,
+                    // 'action_code' => $action_code,
                 );
-                $this->Action_Completed($param);
+
+                if ($request->status == 'enable') {
+                    // $action_code = 'LE';
+                    $param['action_code'] = 'LE';
+                    $this->Action_Completed($param);
+                } else if ($request->status == 'disable') {
+                    // $action_code = 'LD';
+                    $param['action_code'] = 'LD';
+                    $this->Action_Completed($param);
+                } else if ($request->status == 'missing') {
+                    // $action_code = 'LU';
+                    $param['action_code'] = 'LU';
+                    $this->Action_Failed($param);
+                }
+
+                // $param = array(
+                //     'request_id'  => $request->RequestID,
+                //     'camera_id'   => $camera->id,
+                //     'action_code' => $action_code,
+                // );
+                // $this->Action_Completed($param);
             }
         }
 
