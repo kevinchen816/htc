@@ -2987,8 +2987,10 @@ class CamerasController extends Controller
 
                 if ($request->status == 'enable') {
                     $action_code = 'LE';
-                } else {
+                } else if ($request->status == 'disable') {
                     $action_code = 'LD';
+                } else if ($request->status == 'missing') {
+                    $action_code = 'LU';
                 }
 
                 $param = array(
