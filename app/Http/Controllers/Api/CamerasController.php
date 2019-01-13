@@ -1836,6 +1836,8 @@ class CamerasController extends Controller
             $data['last_armed'] = $datetime;
             $data['arm_photos'] = 0;
             $data['arm_points'] = 0;
+            $data['log'] = 0;
+
         } else if ($api_type == 'report') {
             $data['last_hb'] = $datetime;
         } else if ($api_type == 'upload_photo') {       // uploadthumb, uploadoriginal
