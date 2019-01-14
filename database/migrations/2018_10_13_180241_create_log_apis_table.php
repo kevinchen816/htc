@@ -25,6 +25,10 @@ class CreateLogApisTable extends Migration
 
             $table->string('api');
             $table->integer('type')->nullable();
+            $table->string('battery')->nullable();
+            $table->integer('voltage')->nullable();
+            $table->integer('light')->nullable();
+
             $table->json('request')->nullable();
             $table->json('response')->nullable();
 

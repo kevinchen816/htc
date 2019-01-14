@@ -992,6 +992,30 @@ class CamerasController extends Controller
 
             $logapi->api = $api;
             $logapi->type = $type;
+
+            if (isset($request->DataList)) {
+                $data = $request->DataList;
+                if (isset($data->Battery)) {
+                    $logapi->battery = $data->Battery;
+                }
+
+                if (isset($data->Voltage)) {
+                    $logapi->voltage = $data->Voltage;
+                }
+            } else {
+                if (isset($request->Battery)) {
+                    $logapi->battery = $request->Battery;
+                }
+
+                if (isset($request->Voltage)) {
+                    $logapi->voltage = $request->Voltage;
+                }
+
+                if (isset($request->LightSensor)) {
+                    $logapi->light = $request->LightSensor;
+                }
+            }
+
 //            $logapi->request = $request->getContent();
             $logapi->request = json_encode($request->all()); // string
             $logapi->response = json_encode($response);
