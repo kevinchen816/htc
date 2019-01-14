@@ -995,22 +995,20 @@ class CamerasController extends Controller
 
             if (isset($request->DataList)) {
                 $data = $request->DataList;
-                if (isset($data->Battery)) {
-                    $logapi->battery = $data->Battery;
+                if (isset($data['Battery'])) {
+                    $logapi->battery = $data['Battery'];
+                }
+                if (isset($data['Voltage'])) {
+                    $logapi->voltage = $data['Voltage'];
                 }
 
-                if (isset($data->Voltage)) {
-                    $logapi->voltage = $data->Voltage;
-                }
             } else {
                 if (isset($request->Battery)) {
                     $logapi->battery = $request->Battery;
                 }
-
                 if (isset($request->Voltage)) {
                     $logapi->voltage = $request->Voltage;
                 }
-
                 if (isset($request->LightSensor)) {
                     $logapi->light = $request->LightSensor;
                 }
