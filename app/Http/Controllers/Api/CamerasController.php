@@ -2046,11 +2046,11 @@ class CamerasController extends Controller
             $datalist['video_resolution']  = (string) $camera->video_resolution;
             $datalist['video_rate']        = (string) $camera->video_fps;
             $datalist['video_bitrate']     = (string) $camera->video_bitrate;
-            $datalist['video_bitrate7']    = (string) $camera->video_bitrate7;
-            $datalist['video_bitrate8']    = (string) $camera->video_bitrate8;
-            $datalist['video_bitrate9']    = (string) $camera->video_bitrate9;
-            $datalist['video_bitrate10']   = (string) $camera->video_bitrate10;
-            $datalist['video_bitrate11']   = (string) $camera->video_bitrate11;
+            // $datalist['video_bitrate7']    = (string) $camera->video_bitrate7;
+            // $datalist['video_bitrate8']    = (string) $camera->video_bitrate8;
+            // $datalist['video_bitrate9']    = (string) $camera->video_bitrate9;
+            // $datalist['video_bitrate10']   = (string) $camera->video_bitrate10;
+            // $datalist['video_bitrate11']   = (string) $camera->video_bitrate11;
             $datalist['video_length']      = (string) $camera->video_length;
             $datalist['video_sound']       = (string) $camera->video_sound;
             $datalist['photoburst']        = (string) $camera->photo_burst;
