@@ -115,9 +115,9 @@ class CreateCamerasTable extends Migration
             $table->string('blockmode5')->default('off');       // off, on
             $table->string('blockmode7')->default('off');        // off, on
             $table->string('blockmode8')->default('off');        // off, on
-            $table->string('blockmode9')->default('on');        // off, on
-            $table->string('blockmode10')->default('on');       // off, on
-            $table->string('blockmode11')->default('on');       // off, on
+            $table->string('blockmode9')->default('off');        // off, on
+            $table->string('blockmode10')->default('off');       // off, on
+            $table->string('blockmode11')->default('off');       // off, on
 
             /* event data*/
             $table->dateTime('last_contact')->nullable();       // 1000-01-01 00:00:00 ~ 9999-12-31 23:59:59
