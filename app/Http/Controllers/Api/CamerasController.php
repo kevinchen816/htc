@@ -2303,7 +2303,6 @@ class CamerasController extends Controller
                 $param['savename'] = $savename; //$ret['savename'];
                 $param['filesize'] = $filesize; //$ret['filesize'];
 
-
                 $points = $this->Plan_Update($param);
                 $param['points'] = $points;
 
@@ -4510,6 +4509,7 @@ return $request;
         }
     }
 
+    /*----------------------------------------------------------------------------------*/
     public function test() {
         $now = Carbon::now();
         $now->addMonth(1);
@@ -4566,83 +4566,66 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
     }
 
+    /*----------------------------------------------------------------------------------*/
     /*
-    // 光特亿
-    appKey ="bbe4f8c3aa56d8e61d2fd2fd";
-    masterSecret = "c37f1c5cc7a509af1033de9c";
-
-    // 鱼乐世界
-    appKey2 ="3f5a52de66b60b36ff0417df";
-    masterSecret2 = "14b1cba7bfeb9354e18e3482";
-
-    // Caperplus
-    appKey3 ="ccb1d48def8634eb00de636d";
-    masterSecret3 = "a572b36206138bbbf143ce2b";
-    */
-
-    public function push_test() {
         // 光特亿
-        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd';
+        appKey ="bbe4f8c3aa56d8e61d2fd2fd";
+        masterSecret = "c37f1c5cc7a509af1033de9c";
+    */
+    public function push_test() {
+        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
         $master_secret = 'c37f1c5cc7a509af1033de9c';
-
-        // Caperplus
-        // $app_key = 'ccb1d48def8634eb00de636d';
-        // $master_secret = 'a572b36206138bbbf143ce2b';
+        $url = 'http://portal.kmcampro.com/uploads/7/1547295213_xLuPXhn5fe.JPG';
+        // $url = 'http://www.caperplus.com';
 
         $client = new JPush($app_key, $master_secret);
+
+        $ret =
         $client->push()
-            ->setPlatform('all')
+            // ->setPlatform('all')
+            ->setPlatform(['ios', 'android'])
+            ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
             // ->addAllAudience()
-            ->addRegistrationId('190e35f7e005b796d3b')
-            ->setNotificationAlert('Hello')
-            // ->iosNotification('Hello IOS', array(
-            //     'sound' => 'sound.caf',
-            //     // 'badge' => '+1',
-            //     // 'content-available' => true,
-            //     // 'mutable-content' => true,
-            //     'category' => 'jiguang',
-            //     'extras' => array(
-            //         'key' => 'value',
-            //         'jiguang'
-            //     ),
-            // ))
+            ->addRegistrationId('190e35f7e005b796d3b') // Android
+            ->addRegistrationId('13165ffa4e282202377') // iOS
+            // ->setNotificationAlert('Hello')
             ->androidNotification('Hi, Android', array(
                 // 'title' => 'hello jpush',
                 'extras' => array(
-                    // 'url' => 'http://www.caperplus.com',
-                    'url' => 'http://portal.kmcampro.com/uploads/7/1547295213_xLuPXhn5fe.JPG',
+                    'url' => $url,
                 ),
             ))
-            ->send();
-
-        $client->push()
-            ->setPlatform('all')
-            // ->addAllAudience()
-            ->addRegistrationId('13165ffa4e282202377')
-            ->setNotificationAlert('Hello')
-            ->iosNotification('Hello IOS', array(
-                'sound' => 'sound.caf',
-                // 'badge' => '+1',
-                // 'content-available' => true,
-                // 'mutable-content' => true,
-                'category' => 'jiguang',
+            ->iosNotification('Hello iOS', array(
+                // 'sound' => 'sound.caf',
+                // // 'badge' => '+1',
+                // // 'content-available' => true,
+                // // 'mutable-content' => true,
+                // 'category' => 'jiguang',
                 'extras' => array(
-                    'key' => 'value',
-                    'jiguang'
+                    'url' => $url,
                 ),
             ))
             ->send();
-/*
-"ajpush":{
-    "id":"20266207195350636",
-    "title":"KMCam Pro",
-    "content":"Hi, Android",
-    "extra":{
-        "url":"http://www.caperplus.com"
+        return dd($ret);
     }
-}
-*/
 
-return dd($client);
+    public function push_test2() {
+        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
+        $master_secret = 'c37f1c5cc7a509af1033de9c';
+
+        // $client = new JPush($app_key, $master_secret);
+        $client = new JPush($app_key, $master_secret, null);
+        $push = $client->push();
+        $push->options(['apns_production'=>true]); // IMPORTANT !! must for iOS
+        // $push->setPlatform('all');
+        // $push->setPlatform('ios', 'android');
+        $push->setPlatform(['ios', 'android']);
+        $push->addRegistrationId('190e35f7e005b796d3b'); // Android
+        $push->addRegistrationId('13165ffa4e282202377'); // iOS
+        $push->setNotificationAlert('alert'); // 细分可以为 iOS Notification 、 Android Notification
+        $push->message('Hello JPush');
+
+        $ret = $push->send();
+        return dd($ret);
     }
 }

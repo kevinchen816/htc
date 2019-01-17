@@ -242,16 +242,14 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 /*----------------------------------------------------------------------------------*/
+// Route::get('/tour/start', function() {return '/tour/plans';})->name('tour.start');
 Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
 Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
 Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick-start');
 //Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
 
-Route::get('/tour/start', function() {return '/tour/plans';})->name('tour.start');
-
-//Route::get('/support/emailpolicy', function() {'Api\CamerasController@emailpolicy';})->name('support.emailpolicy');
+// Route::get('/support/emailpolicy', function() {'Api\CamerasController@emailpolicy';})->name('support.emailpolicy');
 Route::get('/support/contact', function() {return '/support/contact';})->name('support.contact');
-//Route::get('/support/contact', function() {return view('support.contact');})->name('support.contact');
 Route::post('/support/contact', function() {return '/support/contact';})->name('support.contact');
 
 /* /email/verification */
@@ -261,15 +259,15 @@ Route::get('/email/optout', function() { return '/email/optout'; })->name('email
 /* default.blade.php */
     // $('#show_cameras').click(function() { /* default.blade.php */
     //$.get('/account/showcameralist/open'); // $.get() 方法使用 HTTP GET 请求从服务器加载数据 (JQuery)
-    Route::get('/account/showcameralist/open', function() {
-        return 'open';
-    });
+    // Route::get('/account/showcameralist/open', function() {
+    //     return 'open';
+    // });
 
     // $('#close_cameras').click(function() { /* default.blade.php */
     //$.get('/account/showcameralist/close');
-    Route::get('/account/showcameralist/close', function() {
-        return 'close';
-    });
+    // Route::get('/account/showcameralist/close', function() {
+    //     return 'close';
+    // });
 
 /*----------------------------------------------------------------------------------*/
 /* for test */
@@ -281,14 +279,15 @@ Route::get('/email/optout', function() { return '/email/optout'; })->name('email
 Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
 
 /* for stripe test */
-// Route::get('/stripe', 'AccountsController@stripe');
-Route::get('/stripe/test', 'AccountsController@getStripeTest');
-Route::get('/stripe/test1', 'AccountsController@getStripeTest1');
-Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
-Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
-Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
+// // Route::get('/stripe', 'AccountsController@stripe');
+// Route::get('/stripe/test', 'AccountsController@getStripeTest');
+// Route::get('/stripe/test1', 'AccountsController@getStripeTest1');
+// Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
+// Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
+// Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
 
 Route::get('/push', 'Api\CamerasController@push_test');
+// Route::get('/push2', 'Api\CamerasController@push_test2');
 
 //Route::get('/bootstrap', function () { return view('bootstrap'); });
 //Route::get('/env', function () { return env('APP_ENV'); });
