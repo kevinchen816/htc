@@ -287,7 +287,7 @@ Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@downlo
 // Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
 
 Route::get('/push', 'Api\CamerasController@push_test');
-// Route::get('/push2', 'Api\CamerasController@push_test2');
+Route::get('/push2', 'Api\CamerasController@push_test2');
 
 //Route::get('/bootstrap', function () { return view('bootstrap'); });
 //Route::get('/env', function () { return env('APP_ENV'); });
