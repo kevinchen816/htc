@@ -6,6 +6,7 @@ use App\Handlers\ImageUploadHandler;
 use App\Http\Controllers\Controller;
 use App\Models\Action;
 use App\Models\Camera;
+use App\Models\Device;
 use App\Models\Photo;
 use App\Models\Plan;
 use App\Models\Firmware;
@@ -1976,6 +1977,7 @@ class CamerasController extends Controller
 
         $response = $this->Response_Result($err, $camera);
         if ($user_id && $camera) {
+            $this->pushHeartbeat($user_id, $camera);
             $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -2120,6 +2122,7 @@ class CamerasController extends Controller
 
         $response = $this->Response_Result($err, $camera, $datalist);
         if ($user_id && $camera) {
+            $this->pushDownloadSettings($user_id, $camera);
             $this->LogApi_Add('downloadsettings', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -2393,6 +2396,8 @@ class CamerasController extends Controller
         $camera = $ret['camera'];
         $response = $ret['response'];
         if ($user_id && $camera) {
+            $body = 'New Photo: '.$request->FileName;
+            $this->pushNewFile($user_id, $camera, $body);
             $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -2546,6 +2551,8 @@ class CamerasController extends Controller
 
         $response = $this->Response_Result($err, $camera);
         if ($user_id && $camera) {
+            $body = 'New Original Photo: '.$request->FileName;
+            $this->pushNewFile($user_id, $camera, $body);
             $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -2585,6 +2592,8 @@ class CamerasController extends Controller
         $camera = $ret['camera'];
         $response = $ret['response'];
         if ($user_id && $camera) {
+            $body = 'New Video Photo: '.$request->FileName;
+            $this->pushNewFile($user_id, $camera, $body);
             $this->LogApi_Add('uploadvideothumb', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -2684,6 +2693,8 @@ class CamerasController extends Controller
 
         $response = $this->Response_Result($err, $camera);
         if ($user_id && $camera) {
+            $body = 'New Video: '.$request->FileName;
+            $this->pushNewFile($user_id, $camera, $body);
             $this->LogApi_Add('uploadvideo', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -4602,10 +4613,34 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             ->send();
     }
 
-    public function pushHeartbeat($camera) {
-        $this->pushMessage('190e35f7e005b796d3b', 'Cam#1', 'Heartbeat');
-        $this->pushMessage('13165ffa4e282202377', 'Cam#1', 'Heartbeat');
+    public function pushHeartbeat($user_id, $camera) {
+        $devices = DB::table('devices')
+            ->where('user_id', $user_id)
+            ->get();
 
+        foreach ($devices as $device) {
+            $this->pushMessage($device->push_id, $camera->description, 'Heartbeat');
+        }
+    }
+
+    public function pushDownloadSettings($user_id, $camera) {
+        $devices = DB::table('devices')
+            ->where('user_id', $user_id)
+            ->get();
+
+        foreach ($devices as $device) {
+            $this->pushMessage($device->push_id, $camera->description, 'Download Settings');
+        }
+    }
+
+    public function pushNewFile($user_id, $camera, $body) {
+        $devices = DB::table('devices')
+            ->where('user_id', $user_id)
+            ->get();
+
+        foreach ($devices as $device) {
+            $this->pushMessage($device->push_id, $camera->description, $body);
+        }
     }
 
     public function push_test() {
@@ -4679,6 +4714,25 @@ return 'OK';
         $ret = $push->send();
         return dd($ret);
     }
+
+    public function device_add() {
+        $user = Auth::user();
+
+        $device = new Device;
+        $device->name = 'Android';
+        $device->user_id = $user->id;
+        $device->push_id = '190e35f7e005b796d3b';
+        $device->save();
+
+        $device = new Device;
+        $device->name = 'iOS';
+        $device->user_id = $user->id;
+        $device->push_id = '13165ffa4e282202377';
+        $device->save();
+
+        return 'Add Device OK';
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function ajax_test(Request $request) {
         return $request;

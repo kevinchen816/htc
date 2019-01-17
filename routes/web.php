@@ -288,6 +288,7 @@ Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@downlo
 
 Route::get('/push', 'Api\CamerasController@push_test');
 Route::get('/push2', 'Api\CamerasController@push_test2');
+Route::get('/device/add', 'Api\CamerasController@device_add');
 
 //Route::get('/bootstrap', function () { return view('bootstrap'); });
 //Route::get('/env', function () { return env('APP_ENV'); });

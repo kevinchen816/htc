@@ -19,6 +19,7 @@ use Laravel\Cashier\Billable;
 use Laravel\Cashier\Contracts\Billable as BillableContract;
 
 use App\Models\Camera;
+use App\Models\Device;
 use App\Models\Plan;
 use App\Models\CartItem;
 
@@ -60,6 +61,10 @@ class User extends Authenticatable
 
     public function cameras() {
         return $this->hasMany(Camera::class);
+    }
+
+    public function devices() {
+        return $this->hasMany(Device::class);
     }
 
     public function plans() {
