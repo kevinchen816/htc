@@ -356,6 +356,10 @@ class CamerasController extends Controller
             '6X'                => '1800',
             '8X'                => '2400',
             '16X/Highest Cost'  => '5000',
+            '20X (test)'        => '6000',
+            '25X (test)'        => '8000',
+            '30X (test)'        => '9000',
+            '35X (test)'        => '10000',
         );
         $array['help'] = 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.';
         return $array;
