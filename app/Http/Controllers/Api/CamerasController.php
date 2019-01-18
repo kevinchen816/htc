@@ -4740,6 +4740,10 @@ return 'OK';
     public function ajax_test(Request $request) {
         // $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
         $logapi = new LogApi;
+        $logapi->user_id = 1;
+        $logapi->camera_id = 1;
+        $logapi->imei = 'imei';
+        $logapi->iccid = 'iccid';
         $logapi->api = 'ajax_test';
         $logapi->request = json_encode($request->all()); // string
         // $logapi->response = json_encode($response);
