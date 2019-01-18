@@ -551,13 +551,24 @@ $handle .=                 '</tr>';
             $txt .= '<tbody>';
             foreach ($devices as $device) {
                 $device_id = $device->id;
+                if ($device->os == 'android') {
+                    $os = 'Android';
+                } else if ($device->os == 'ios') {
+                    $os = 'iOS';
+                } else {
+                    $os = $device->os;
+                }
+                $device_info = sprintf('%s - %s', $device->name, $device->model);
+                $device_os = sprintf('%s %s', $os, $device->ver);
+                // $device_info = sprintf('%s - %s (%s %s)', $device->name, $device->model, $os, $device->ver);
                 // $notify_checked = ($device->push_notify == 'on') ? 'checked' : '';
                 $hb_checked = ($device->push_hb == 'on') ? 'checked' : '';
                 $upload_checked = ($device->push_upload == 'on') ? 'checked' : '';
 
                 $txt .= '<tr>';
                 $txt .=     '<td colspan=3>';
-                $txt .=         '<i class="fa fa-dot-circle" style="color:lime;"> </i> '.$device->name.'<br/>';
+                $txt .=         '<i class="fa fa-dot-circle" style="color:lime;"> </i> '.$device_info.'<br/>';
+                $txt .=         '<span style="color:yellowgreen;">'.$device_os.'</span>';
                 // $txt .=         '<span style="color:yellowgreen;">'.$device->push_id.'</span>';
                 // $txt .=         '<span style="color:yellowgreen;">Last Active: 2019/01/18 03:02:45</span>';
                 $txt .=     '</td>';

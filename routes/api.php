@@ -69,6 +69,7 @@ $api->version('v1', [
     $api->post('logstatus', 'CamerasController@logstatus')->name('api.camera.logstatus');
     $api->post('uploadlog', 'CamerasController@uploadlog')->name('api.camera.uploadlog');
 
+    $api->post('deviceadd', 'CamerasController@deviceadd')->name('api.camera.deviceadd');
     $api->post('ajax_test', 'CamerasController@ajax_test')->name('api.camera.ajax_test');
 
 });
