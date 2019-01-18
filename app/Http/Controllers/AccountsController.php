@@ -543,6 +543,7 @@ $handle .=                 '</tr>';
         $txt = '';
         foreach ($devices as $device) {
             $device_id = $device->id;
+            // $notify_checked = ($device->push_notify == 'on') ? 'checked' : '';
             $hb_checked = ($device->push_hb == 'on') ? 'checked' : '';
             $upload_checked = ($device->push_upload == 'on') ? 'checked' : '';
 
@@ -557,7 +558,7 @@ $handle .=                 '</tr>';
             $txt .=     '<td>';
             // $txt .=         '<span class="button-checkbox">';
             // $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Send Notifications</button>';
-            // $txt .=             '<input type="checkbox" class="hidden camera-select" name="sepush_notify[]" value="'.$device_id.'" checked /> ';
+            // $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_notify[]" value="'.$device_id.'" '.$notify_checked.' /> ';
             // $txt .=         '</span>';
             $txt .=         '<span class="button-checkbox">';
             $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Heartbeat</button>';
@@ -572,7 +573,7 @@ $handle .=                 '</tr>';
             $txt .=     '<td>';
             // $txt .=         'Yes';
             // $txt .=         '<a href="/account/mobilerevoke/617" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Block now</a> ';
-            $txt .=         '<a href="/account/mobileremove/617" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> Remove</a>';
+            $txt .=         '<a href="/account/deviceremove/'.$device_id.'" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> Remove</a>';
             // $txt .=         '<a href="/account/mobileinstate/617" class="btn btn-xs btn-success"><i class="fa fa-times-circle"> </i> Unblock</a>';
             // $txt .=         '<a href="/account/mobileconfirm/77" class="btn btn-xs btn-success">Confirm now</a>';
             $txt .=     '</td>';
@@ -768,17 +769,29 @@ $handle .=                 '</tr>';
         }
     }
 
-
     public function postDevices(Request $request) {
         // {"_token":"xxxx"}
         // {"_token":"xxxx","push_hb":["1"],"push_upload":["2"]}
         $user = Auth::user();
         $user_id = $user->id;
 
+        // DB::update(
+        //     'update devices set push_notify=?, push_hb=?, push_upload=? where user_id=?',
+        //     ['off', 'off', 'off', $user_id]
+        // );
         DB::update(
             'update devices set push_hb=?, push_upload=? where user_id=?',
             ['off', 'off', $user_id]
         );
+
+        // if (isset($request['push_notify'])) {
+        //     $items = $request['push_notify'];
+        //     foreach ($items as $item) {
+        //         $db = Device::find($item);
+        //         $db->push_notify = 'on';
+        //         $bool = $db->save();
+        //     }
+        // }
 
         if (isset($request['push_hb'])) {
             // $push_hb = $request['push_hb'];
@@ -808,6 +821,13 @@ $handle .=                 '</tr>';
         }
 
         session()->flash('success', 'Success: Account Devices Saved.');
+        return redirect()->back();
+    }
+
+    public function getDeviceRemove($device_id) {
+        $db = Device::find($device_id);
+        $db->delete();
+        session()->flash('success', 'Success: Account Devices Removed.');
         return redirect()->back();
     }
 

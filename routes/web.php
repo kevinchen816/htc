@@ -183,6 +183,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/password/send-reset-email', 'AccountsController@getPasswordSendResetEmail')->name('account.password-send-reset-email');
         //Route::get('/account/password/reset/{id}', 'AccountsController@password_reset')->name('account.password-reset');
 
+        Route::get('/account/deviceremove/{device_id}', 'AccountsController@getDeviceRemove')->name('account.deviceremove');
+
         /*-----------------------------------------------------------*/
         /* Shop */
         /*
