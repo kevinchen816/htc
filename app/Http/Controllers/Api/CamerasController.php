@@ -4718,6 +4718,10 @@ return 'OK';
         return dd($ret);
     }
 
+    public function push_test3() {
+return 'Hello';
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function deviceadd(Request $request) {
         $logapi = new LogApi;
