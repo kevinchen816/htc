@@ -38,14 +38,14 @@
                         </div>
                     </div> -->
 
-                    <div class="row">
+<!--                     <div class="row">
                         <div class="col-md-12">
                             <span class="button-checkbox">
                                 <button type="button" class="btn btn-default btn-xs" data-color="info">{{ $user->email }}</button>
                                 <input type="checkbox" class="hidden" name="noti_email" id="noti_email" {{ ($camera->noti_email == 'on') ? "checked" : "" }} />
                             </span>
                         </div>
-                    </div>
+                    </div> -->
 
                     {!! $cc->html_Settings_Notifications($camera) !!}
                 </div>

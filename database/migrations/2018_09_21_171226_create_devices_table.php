@@ -19,6 +19,9 @@ class CreateDevicesTable extends Migration
             $table->integer('user_id')->index();
             $table->string('push_id')->nullable();
 
+            $table->string('push_hb')->nullable()->default('on');
+            $table->string('push_upload')->nullable()->default('on');
+
             $table->dateTime('last_active')->nullable();
 
             // sendnotify

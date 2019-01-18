@@ -3572,8 +3572,8 @@ class CamerasController extends Controller
 
     public function html_Settings_Notifications($camera) {
         $txt = '';
-        //$txt .= $this->stItemMobilePush($camera);
-        //$txt .= $this->stItemEmailOwner($camera);
+        $txt .= $this->stItemMobilePush($camera);
+        $txt .= $this->stItemEmailOwner($camera);
         //$txt .= $this->stItemCheckbox('54_email[]', null, 'test1@gmail.com', 'checked', 'test1@gmail.com');
         //$txt .= $this->stItemCheckbox('54_email[]', null, 'test2@gmail.com', 'checked', 'test2@gmail.com');
         return $txt;
@@ -4614,32 +4614,35 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     }
 
     public function pushHeartbeat($user_id, $camera) {
-        $devices = DB::table('devices')
-            ->where('user_id', $user_id)
-            ->get();
-
-        foreach ($devices as $device) {
-            $this->pushMessage($device->push_id, $camera->description, 'Heartbeat');
+        if ($camera->noti_mobile == 'on') {
+            $devices = DB::table('devices')->where('user_id', $user_id)->get();
+            foreach ($devices as $device) {
+                if ($device->push_hb == 'on') {
+                    $this->pushMessage($device->push_id, $camera->description, 'Heartbeat');
+                }
+            }
         }
     }
 
     public function pushDownloadSettings($user_id, $camera) {
-        $devices = DB::table('devices')
-            ->where('user_id', $user_id)
-            ->get();
-
-        foreach ($devices as $device) {
-            $this->pushMessage($device->push_id, $camera->description, 'Download Settings');
+        if ($camera->noti_mobile == 'on') {
+            $devices = DB::table('devices')->where('user_id', $user_id)->get();
+            foreach ($devices as $device) {
+                // if ($device->push_notify == 'on') {
+                    $this->pushMessage($device->push_id, $camera->description, 'Download Settings');
+                // }
+            }
         }
     }
 
     public function pushNewFile($user_id, $camera, $body) {
-        $devices = DB::table('devices')
-            ->where('user_id', $user_id)
-            ->get();
-
-        foreach ($devices as $device) {
-            $this->pushMessage($device->push_id, $camera->description, $body);
+        if ($camera->noti_mobile == 'on') {
+            $devices = DB::table('devices')->where('user_id', $user_id)->get();
+            foreach ($devices as $device) {
+                if ($device->push_upload == 'on') {
+                    $this->pushMessage($device->push_id, $camera->description, $body);
+                }
+            }
         }
     }
 

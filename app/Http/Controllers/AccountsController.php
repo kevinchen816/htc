@@ -8,6 +8,7 @@ use Auth;
 use DB;
 
 use App\Models\Camera;
+use App\Models\Device;
 use App\Models\Email;
 use App\Models\PlanProduct;
 use App\Models\PlanProductSku;
@@ -530,6 +531,57 @@ $handle .=                 '</tr>';
     }
 
     /*-----------------------------------------------------------*/
+    // Confirm  -> Success: Mobile Access Approved for ID [617]
+    // Block    -> Success: Mobile Access Blocked for ID [782]
+    // Unblock  -> Success: Mobile Access Allowed for ID [617]
+    public function html_Devices() {
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        $devices = DB::table('devices')->where('user_id', $user_id)->get();
+
+        $txt = '';
+        foreach ($devices as $device) {
+            $device_id = $device->id;
+            $hb_checked = ($device->push_hb == 'on') ? 'checked' : '';
+            $upload_checked = ($device->push_upload == 'on') ? 'checked' : '';
+
+            $txt .= '<tr>';
+            $txt .=     '<td colspan=3>';
+            $txt .=         '<i class="fa fa-dot-circle" style="color:lime;"> </i> '.$device->name.'<br/>';
+            // $txt .=         '<span style="color:yellowgreen;">'.$device->push_id.'</span>';
+            // $txt .=         '<span style="color:yellowgreen;">Last Active: 2019/01/18 03:02:45</span>';
+            $txt .=     '</td>';
+            $txt .= '</tr>';
+            $txt .= '<tr>';
+            $txt .=     '<td>';
+            // $txt .=         '<span class="button-checkbox">';
+            // $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Send Notifications</button>';
+            // $txt .=             '<input type="checkbox" class="hidden camera-select" name="sepush_notify[]" value="'.$device_id.'" checked /> ';
+            // $txt .=         '</span>';
+            $txt .=         '<span class="button-checkbox">';
+            $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Heartbeat</button>';
+            $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_hb[]" value="'.$device_id.'" '.$hb_checked.' /> ';
+            $txt .=         '</span>';
+            $txt .=         '<span class="button-checkbox">';
+            $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Upload</button>';
+            $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_upload[]" value="'.$device_id.'" '.$upload_checked.' /> ';
+            $txt .=         '</span>';
+            $txt .=     '</td>';
+
+            $txt .=     '<td>';
+            // $txt .=         'Yes';
+            // $txt .=         '<a href="/account/mobilerevoke/617" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Block now</a> ';
+            $txt .=         '<a href="/account/mobileremove/617" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> Remove</a>';
+            // $txt .=         '<a href="/account/mobileinstate/617" class="btn btn-xs btn-success"><i class="fa fa-times-circle"> </i> Unblock</a>';
+            // $txt .=         '<a href="/account/mobileconfirm/77" class="btn btn-xs btn-success">Confirm now</a>';
+            $txt .=     '</td>';
+            $txt .= '</tr>';
+        }
+        return $txt;
+    }
+
+    /*-----------------------------------------------------------*/
     public function html_EmailSetup() {
         Debugbar::info(__METHOD__);
 
@@ -716,10 +768,44 @@ $handle .=                 '</tr>';
         }
     }
 
+
     public function postDevices(Request $request) {
-        //$portal = $request->portal;
+        // {"_token":"xxxx"}
+        // {"_token":"xxxx","push_hb":["1"],"push_upload":["2"]}
         $user = Auth::user();
         $user_id = $user->id;
+
+        DB::update(
+            'update devices set push_hb=?, push_upload=? where user_id=?',
+            ['off', 'off', $user_id]
+        );
+
+        if (isset($request['push_hb'])) {
+            // $push_hb = $request['push_hb'];
+            // $count = count($push_hb);
+            // for ($i=0; $i<$count; $i++) {
+            //     echo $push_hb[$i];
+            //     echo '<br/>';
+            // }
+
+            $items = $request['push_hb'];
+            foreach ($items as $item) {
+                // echo $item;
+                // echo '<br/>';
+                $db = Device::find($item);
+                $db->push_hb = 'on';
+                $bool = $db->save();
+            }
+        }
+
+        if (isset($request['push_upload'])) {
+            $items = $request['push_upload'];
+            foreach ($items as $item) {
+                $db = Device::find($item);
+                $db->push_upload = 'on';
+                $bool = $db->save();
+            }
+        }
 
         session()->flash('success', 'Success: Account Devices Saved.');
         return redirect()->back();
