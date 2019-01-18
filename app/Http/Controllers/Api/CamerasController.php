@@ -4738,7 +4738,27 @@ return 'OK';
 
     /*----------------------------------------------------------------------------------*/
     public function ajax_test(Request $request) {
-        return $request;
+        // $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
+        $logapi = new LogApi;
+        $logapi->request = json_encode($request->all()); // string
+        // $logapi->response = json_encode($response);
+        $logapi->save();
+
+        //ret={"result":0,"count":1,"data":[{"push_id":"1a0018970a9271d7fd3"}]}
+        // $ret = array(
+        //     'result' => 0,
+        //     'msg' => 'hello'
+        // );
+
+        // ret={"status":1}, err=""
+        $response['ret'] = array(
+            'result' => 0,
+            'msg' => 'hello',
+        );
+        $response['err'] = '';
+        // return json_encode($ret);
+        return $response;
+
         // $ret['ResultCode'] = 0;
         // // return $ret;
         // echo json_encode($ret);
