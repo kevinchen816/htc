@@ -10,16 +10,16 @@
             <div class="panel-body">
                 <div class="col-md-12">
                     <table class="table table-striped">
-                        <thead>
+<!--                         <thead>
                             <tr>
                                 <th>Device Info</th>
-                                <!-- <th>Confirmed</th> -->
+                                <th>Confirmed</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                        </thead> -->
+                        <!-- <tbody> -->
                             @inject('ac', 'App\Http\Controllers\AccountsController')
                             {!! $ac->html_Devices() !!}
-                        </tbody>
+                        <!-- </tbody> -->
                     </table>
                 </div>
             </div>

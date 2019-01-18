@@ -539,45 +539,55 @@ $handle .=                 '</tr>';
         $user_id = $user->id;
 
         $devices = DB::table('devices')->where('user_id', $user_id)->get();
-
         $txt = '';
-        foreach ($devices as $device) {
-            $device_id = $device->id;
-            // $notify_checked = ($device->push_notify == 'on') ? 'checked' : '';
-            $hb_checked = ($device->push_hb == 'on') ? 'checked' : '';
-            $upload_checked = ($device->push_upload == 'on') ? 'checked' : '';
+        if ($devices->count() > 0) {
+            $txt .= '<thead>';
+            $txt .=     '<tr>';
+            $txt .=         '<th>Device Info</th>';
+            // $txt .=         '<th>Confirmed</th>';
+            $txt .=     '</tr>';
+            $txt .= '</thead>';
 
-            $txt .= '<tr>';
-            $txt .=     '<td colspan=3>';
-            $txt .=         '<i class="fa fa-dot-circle" style="color:lime;"> </i> '.$device->name.'<br/>';
-            // $txt .=         '<span style="color:yellowgreen;">'.$device->push_id.'</span>';
-            // $txt .=         '<span style="color:yellowgreen;">Last Active: 2019/01/18 03:02:45</span>';
-            $txt .=     '</td>';
-            $txt .= '</tr>';
-            $txt .= '<tr>';
-            $txt .=     '<td>';
-            // $txt .=         '<span class="button-checkbox">';
-            // $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Send Notifications</button>';
-            // $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_notify[]" value="'.$device_id.'" '.$notify_checked.' /> ';
-            // $txt .=         '</span>';
-            $txt .=         '<span class="button-checkbox">';
-            $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Heartbeat</button>';
-            $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_hb[]" value="'.$device_id.'" '.$hb_checked.' /> ';
-            $txt .=         '</span>';
-            $txt .=         '<span class="button-checkbox">';
-            $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Upload</button>';
-            $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_upload[]" value="'.$device_id.'" '.$upload_checked.' /> ';
-            $txt .=         '</span>';
-            $txt .=     '</td>';
+            $txt .= '<tbody>';
+            foreach ($devices as $device) {
+                $device_id = $device->id;
+                // $notify_checked = ($device->push_notify == 'on') ? 'checked' : '';
+                $hb_checked = ($device->push_hb == 'on') ? 'checked' : '';
+                $upload_checked = ($device->push_upload == 'on') ? 'checked' : '';
 
-            $txt .=     '<td>';
-            // $txt .=         'Yes';
-            // $txt .=         '<a href="/account/mobilerevoke/617" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Block now</a> ';
-            $txt .=         '<a href="/account/deviceremove/'.$device_id.'" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> Remove</a>';
-            // $txt .=         '<a href="/account/mobileinstate/617" class="btn btn-xs btn-success"><i class="fa fa-times-circle"> </i> Unblock</a>';
-            // $txt .=         '<a href="/account/mobileconfirm/77" class="btn btn-xs btn-success">Confirm now</a>';
-            $txt .=     '</td>';
-            $txt .= '</tr>';
+                $txt .= '<tr>';
+                $txt .=     '<td colspan=3>';
+                $txt .=         '<i class="fa fa-dot-circle" style="color:lime;"> </i> '.$device->name.'<br/>';
+                // $txt .=         '<span style="color:yellowgreen;">'.$device->push_id.'</span>';
+                // $txt .=         '<span style="color:yellowgreen;">Last Active: 2019/01/18 03:02:45</span>';
+                $txt .=     '</td>';
+                $txt .= '</tr>';
+                $txt .= '<tr>';
+                $txt .=     '<td>';
+                // $txt .=         '<span class="button-checkbox">';
+                // $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Send Notifications</button>';
+                // $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_notify[]" value="'.$device_id.'" '.$notify_checked.' /> ';
+                // $txt .=         '</span>';
+                $txt .=         '<span class="button-checkbox">';
+                $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Heartbeat</button>';
+                $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_hb[]" value="'.$device_id.'" '.$hb_checked.' /> ';
+                $txt .=         '</span>';
+                $txt .=         '<span class="button-checkbox">';
+                $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Upload</button>';
+                $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_upload[]" value="'.$device_id.'" '.$upload_checked.' /> ';
+                $txt .=         '</span>';
+                $txt .=     '</td>';
+
+                $txt .=     '<td>';
+                // $txt .=         'Yes';
+                // $txt .=         '<a href="/account/mobilerevoke/617" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Block now</a> ';
+                $txt .=         '<a href="/account/deviceremove/'.$device_id.'" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> Remove</a>';
+                // $txt .=         '<a href="/account/mobileinstate/617" class="btn btn-xs btn-success"><i class="fa fa-times-circle"> </i> Unblock</a>';
+                // $txt .=         '<a href="/account/mobileconfirm/77" class="btn btn-xs btn-success">Confirm now</a>';
+                $txt .=     '</td>';
+                $txt .= '</tr>';
+            }
+            $txt .= '</tbody>';
         }
         return $txt;
     }
