@@ -1,0 +1,18 @@
+
+413-Request Entity Too Large
+
+--> 原因是 nginx 限制了上传文件的大小，在 nginx 中可以配置最大允许的文件大小：
+
+https://www.cnblogs.com/jiaoyiping/p/5638096.html
+
+//------------------------------------------------------------
+修改如下：
+
+/etc/nginx/nginx.conf
+
+http {
+
+    client_max_body_size 100m;    #100M 为允许的文件大小
+
+}
+
