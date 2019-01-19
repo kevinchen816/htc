@@ -24,6 +24,7 @@ use App\Mail\PhotoSend;
 
 use Carbon\Carbon;
 use JPush\Client as JPush;
+use Browser;
 
 /*
 ICCID:
@@ -4521,7 +4522,14 @@ return $request;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function test() {
+    public function kk_test() {
+        $ret = Browser::isMobile();
+        if ($ret) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+        $ret = Browser::isTablet();
+        if ($ret) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+        $ret = Browser::isDesktop();
+        if ($ret) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+return;
         $now = Carbon::now();
         $now->addMonth(1);
 
@@ -4791,11 +4799,6 @@ return 'Hello';
         // $logapi->response = json_encode($response);
         $logapi->save();
 
-// os: api.systemType,          // 系统类型
-// ver: api.systemVersion,    // 系统版本
-// model: api.deviceModel,        // 设备型号
-// name: api.deviceName,          // 设备名称
-
         $user = Auth::user();
 
         $device = new Device;
@@ -4826,4 +4829,51 @@ return 'Hello';
         $ret['status'] = 1;
         return $ret;
     }
+
+    /*----------------------------------------------------------------------------------*/
+    // https://packagist.org/packages/hisorange/browser-detect
+    // composer require hisorange/browser-detect
+    public function html_Footer() {
+        $ret = Browser::isDesktop();
+        if ($ret) {
+            return view('layouts._footer');
+        }
+        // return view('layouts._footer');
+
+        // $txt = '';
+        // $txt .= '<footer id="footer" class="container-fluid">';
+        // $txt .=     '<section id="top-footer" class="row">';
+        // $txt .=         '<div class="col-lg-12 col-md-12 col-xs-12 footer-list">';
+        // $txt .=             '<div class="row">';
+        // $txt .=                 '<div class="col-md-4 col-sm-4 footer-list-item">';
+        // $txt .=                     '<div class="address alert" style="background-color:#444; height: 200px;">';
+        // $txt .=                         '<p><strong>Australia</strong></p>';
+        // $txt .=                         '<p>Unit 11, 189 Anzac Avenue</p>';
+        // $txt .=                         '<p>Toowoomba, Queensland 4350</p>';
+        // $txt .=                         '<p>Tel: 1300 544 249</p>';
+        // $txt .=                         '<p>info@outdoorcameras.com.au</p>';
+        // $txt .=                         '<p></p>';
+        // $txt .=                         '<a>https://outdoorcameras.com.au/</a>';
+        // $txt .=                     '</div>';
+        // $txt .=                 '</div>';
+        // $txt .=                 '<div class="col-md-4 col-sm-4 footer-list-item">';
+        // $txt .=                     '<div class="address alert" style="background-color:#444; height: 200px;">';
+        // //$txt .=                         <!--<p><strong>Contact</strong></p>-->
+        // $txt .=                         '<p>Technical Support</p>';
+        // //$txt .=                         <!--<p><a href="tel:x-xxx-xxx-xxx">x-xxx-xxx-xxx</a></p>-->
+        // $txt .=                         '<p><a href="mailto:xxx@xxx.com">support@kmcampro.com</a></p>';
+        // $txt .=                     '</div>';
+        // $txt .=                 '</div>';
+        // $txt .=             '</div>';
+        // $txt .=         '</div>';
+        // $txt .=     '</section>';
+        // $txt .=     '<section class="row" id="footer-bottom">';
+        // $txt .=         '<div class="col-sm-12 text-center">';
+        // $txt .=             '<p class="copyright">&copy;2018 KMCam Pro All rights reserved.</p>';
+        // $txt .=         '</div>';
+        // $txt .=     '</section>';
+        // $txt .= '</footer>';
+        // return $txt;
+    }
+
 }

@@ -181,6 +181,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Barryvdh\Debugbar\ServiceProvider::class,
+        \hisorange\BrowserDetect\ServiceProvider::class,
 
     ],
 
@@ -231,8 +232,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Browser' => \hisorange\BrowserDetect\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
     ],
 
 ];

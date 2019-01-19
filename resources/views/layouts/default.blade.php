@@ -209,7 +209,12 @@
         </div>
     </div>
 
+    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
+    {!! $cc->html_Footer() !!}
+
+@if (0)
     @include('layouts._footer')
+@endif
 
     <!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

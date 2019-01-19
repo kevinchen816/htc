@@ -274,7 +274,7 @@ Route::get('/email/optout', function() { return '/email/optout'; })->name('email
 /*----------------------------------------------------------------------------------*/
 /* for test */
 // Route::get('/test', function() {return 'OK';});
-// Route::get('/test', 'Api\CamerasController@test');
+Route::get('/test', 'Api\CamerasController@kk_test');
 // Route::get('/email/test', 'MailController@test')->name('email.test');
 // Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
 
