@@ -1,0 +1,29 @@
+
+https://packagist.org/packages/hisorange/browser-detect
+
+composer require hisorange/browser-detect
+
+
+If you are using laravel 5.4 and below
+you have to add the service provider in your config/app.php like this:
+
+'providers' => [
+        \hisorange\BrowserDetect\ServiceProvider::class,
+    ]
+
+'aliases' => [
+        'Browser' => \hisorange\BrowserDetect\Facade::class,
+    ]
+
+//--------------------------------------------------------------
+use Browser;
+
+public function test() {
+    $ret1 = Browser::isMobile();
+    $ret2 = Browser::isTablet();
+    $ret3 = Browser::isDesktop();
+
+    if ($ret1) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+    if ($ret2) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+    if ($ret3) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+}

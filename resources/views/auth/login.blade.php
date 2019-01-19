@@ -50,6 +50,10 @@
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
 
+                    @inject('hc', 'App\Http\Controllers\HtmlController')
+                    {!! $hc->html_LoginExt() !!}
+
+@if (0)
                     <hr>
 
 <!--                     <p>
@@ -70,7 +74,7 @@
                         You already have an account and need to
                         <a href="{{ route('confirm.send') }}">Resend Confirmation Email.</a>
                     </p>
-
+@endif
                 </div>
             </div>
         </div>

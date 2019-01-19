@@ -209,8 +209,8 @@
         </div>
     </div>
 
-    @inject('cc', 'App\Http\Controllers\Api\CamerasController')
-    {!! $cc->html_Footer() !!}
+    @inject('hc', 'App\Http\Controllers\HtmlController')
+    {!! $hc->html_Footer() !!}
 
 @if (0)
     @include('layouts._footer')
