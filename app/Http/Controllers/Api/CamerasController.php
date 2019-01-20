@@ -4829,4 +4829,15 @@ return 'Hello';
         $ret['status'] = 1;
         return $ret;
     }
+
+    public function mobile_home($push_id) {
+        return $push_id;
+        // if (Auth::check()) {
+        //     return $this->route_to_cameras();
+        // } else {
+        //     return redirect()->route('login');
+        // }
+        // public function route($name, $parameters = [], $absolute = true);
+        // return redirect()->route('login', ['push_id' => $push_id]);
+    }
 }

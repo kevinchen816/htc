@@ -1,0 +1,180 @@
+<?php
+
+Laravel 的用户认证系统
+https://laravel-china.org/docs/laravel/5.5/authentication/1308
+    Laravel 在认证过程中引发了各种各样的 事件。你可以在 EventServiceProvider 中对这些事件做监听：
+
+protected $listen = [
+    'Illuminate\Auth\Events\Registered' => [
+        'App\Listeners\LogRegisteredUser',
+    ],
+
+    'Illuminate\Auth\Events\Login' => [
+        'App\Listeners\LogSuccessfulLogin',
+    ],
+
+
+use Illuminate\Auth\Events\Registered;
+use App\Listeners\RegisteredListener;
+        Registered::class => [
+            RegisteredListener::class,
+        ],
+
+//--------------------------------------------------------------------
+https://blog.csdn.net/gu_wen_jie/article/details/77428484
+
+    $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    $this->post('login', 'Auth\LoginController@login');
+
+/vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php
+
+trait AuthenticatesUsers
+{
+    use RedirectsUsers, ThrottlesLogins;
+
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $this->validateLogin($request); // 数据验证
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptLogin($request)) {
+            return $this->sendLoginResponse($request); // 身份验证
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+        ]); // @return void
+    }
+
+
+    protected function attemptLogin(Request $request)
+    {
+        /*
+            这个 attempt 方法指向：
+            vendor/laravel/framework/src/Illuminate/Contracts/Auth/StatefulGuard.php 中的
+            attempt（）方法
+
+            最终指向：
+            vendor/laravel/framework/src/Illuminate/Auth/SessionGuard.php中的attempt方法
+
+        */
+        return $this->guard()->attempt( // 调取 guard 方法，往下找
+            $this->credentials($request), $request->filled('remember')
+        ); // @return bool
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'password'); // @return array
+    }
+
+    public function username() {
+        return 'email';
+    }
+
+    protected function guard() {
+        return Auth::guard();
+    }
+}
+
+//--------------------------------------------------------------------
+/Users/kevin/Code/htc/vendor/laravel/framework/src/Illuminate/Auth/SessionGuard.php
+
+class SessionGuard implements StatefulGuard, SupportsBasicAuth
+{
+    public function attempt(array $credentials = [], $remember = false)
+    {
+        $this->fireAttemptEvent($credentials, $remember);
+
+        $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
+
+        // If an implementation of UserInterface was returned, we'll ask the provider
+        // to validate the user against the given credentials, and if they are in
+        // fact valid we'll log the users into the application and return true.
+        if ($this->hasValidCredentials($user, $credentials)) {
+            $this->login($user, $remember);
+
+            return true;
+        }
+
+        // If the authentication attempt fails we will fire an event so that the user
+        // may be notified of any suspicious attempts to access their account from
+        // an unrecognized user. A developer may listen to this event as needed.
+        $this->fireFailedEvent($user, $credentials);
+
+        return false;
+    }
+
+    protected function hasValidCredentials($user, $credentials)
+    {
+        return ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
+    }
+
+    public function login(AuthenticatableContract $user, $remember = false)
+    {
+        $this->updateSession($user->getAuthIdentifier());
+
+        // If the user should be permanently "remembered" by the application we will
+        // queue a permanent cookie that contains the encrypted copy of the user
+        // identifier. We will then decrypt this later to retrieve the users.
+        if ($remember) {
+            $this->ensureRememberTokenIsSet($user);
+
+            $this->queueRecallerCookie($user);
+        }
+
+        // If we have an event dispatcher instance set we will fire an event so that
+        // any listeners will hook into the authentication events and run actions
+        // based on the login and logout events fired from the guard instances.
+        $this->fireLoginEvent($user, $remember);
+
+        $this->setUser($user);
+    }
+
+    protected function fireLoginEvent($user, $remember = false)
+    {
+        if (isset($this->events)) {
+            $this->events->dispatch(new Events\Login($user, $remember));
+        }
+    }
+
+}
+
+//--------------------------------------------------------------------
+/Users/kevin/Code/htc/vendor/laravel/framework/src/Illuminate/Auth/EloquentUserProvider.php
+
+class EloquentUserProvider implements UserProvider
+{
+    public function validateCredentials(UserContract $user, array $credentials)
+    {
+        $plain = $credentials['password'];
+
+        return $this->hasher->check($plain, $user->getAuthPassword());
+    }
+}
+
+

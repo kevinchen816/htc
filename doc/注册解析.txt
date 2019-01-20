@@ -1,0 +1,139 @@
+<?php
+
+https://blog.csdn.net/gu_wen_jie/article/details/77428484
+
+php artisan make：auth
+php artisan migrate     // php artisan migrate:refresh --seed
+
+//--------------------------------------------------------------
+web.php
+
+Auth::routes();
+- 发现和我们平时写的路由不太一样。
+  它其实是定义在 vendor/laravel/framework/src/Illuminate/Support/Facades/Auth.php 文件中。
+
+    public static function routes() {
+        static::$app->make('router')->auth();
+    }
+
+
+- 这里调用了了 Illuminate\Routing\Router 这个类，再调用里面的 auth() 方法。
+  它存放在 vendor/laravel/framework/src/Illuminate/Routing/Router.php 文件中。
+
+    public function auth() {
+        // Authentication Routes...
+        $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+        $this->post('login', 'Auth\LoginController@login');
+        $this->post('logout', 'Auth\LoginController@logout')->name('logout');
+
+        // 注册：Registration Routes...
+        $this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+        $this->post('register', 'Auth\RegisterController@register');
+
+        // Password Reset Routes...
+        $this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+        $this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+        $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+        $this->post('password/reset', 'Auth\ResetPasswordController@reset');
+    }
+
+【 开始注册 】
+我们看到上方的不管是 get 或者 post 方法注册都走了 Auth\RegisterController 控制器。
+我们可以到 app\Http\Controllers\Auth 的下面打开 RegisterController 控制器
+
+    use Illuminate\Foundation\Auth\RegistersUsers;
+    class RegisterController extends Controller
+    {
+        use RegistersUsers;
+        .....
+    }
+
+这个 RegistersUsers 定义在 vendor\laravel\framework\src\Illuminate\Foundation\Auth\RegistersUsers.php 文件中
+
+    trait RegistersUsers
+    {
+        use RedirectsUsers;
+
+        public function showRegistrationForm() {
+            return view('auth.register');   <-- 注册页面
+        }
+
+        public function register(Request $request) {
+            /*
+                首先调用 validator() 返回一个验证对象， <----- 参考 (A)
+                再调用 validate() 验证表单内容是否被规则允许。
+            */
+            $this->validator($request->all())->validate();
+
+            /*
+                - 等同于 $this->guard()->login($this->create($request->all()));
+                - this->guard() 又会去调用 vendor\laravel\framework\src\Illuminate\Foundation\Auth\RegistersUsers.php 里的 guard() 方法
+                  这里直接 return Auth::guard();
+                  返回一个默认的 guard, 在 config/auth.php 中配置(如下)。
+
+                    'guards' => [
+                        'web' => [
+                            'driver' => 'session',
+                            'provider' => 'users',
+                        ],
+
+                        'api' => [
+                            'driver' => 'token',
+                            'provider' => 'users',
+                        ],
+                    ],
+
+            */
+            event(new Registered($user = $this->create($request->all()))); <----- create() 参考 (B)
+            $this->guard()->login($user);
+
+            /*
+                最后调用一个 redirect() 方法；
+                该方法也在 vendor\laravel\framework\src\Illuminate\Foundation\Auth\ 目录下是，
+                不过在 RedireectsUsers.php 中
+            */
+            return $this->registered($request, $user)
+                            ?: redirect($this->redirectPath()); <----- redirectPath() 参考 (B)
+        }
+
+
+        protected function guard() {
+            return Auth::guard();
+        }
+    }
+
+参考 /app/Http/Controllers/Auth/RegisterController.php
+    protected function validator(array $data) <----- (A)
+    {
+        // 假如你的注册表单中需要加入其他字段，如性别等，需要在这里添加字段规则验证
+        return Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+    }
+
+    protected function create(array $data) <----- (B)
+    {
+        // 同上：假如你的注册表单中需要加入其他字段，如性别等，需要在这里添加字段
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+    }
+
+
+参考 /Users/kevin/Code/htc/vendor/laravel/framework/src/Illuminate/Foundation/Auth/RedirectsUsers.php
+trait RedirectsUsers
+{
+    public function redirectPath() <----- (C)
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+    }
+}
+

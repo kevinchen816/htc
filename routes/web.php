@@ -28,6 +28,8 @@ Route::post('stripe/webhook', 'WebhookController@handleWebhook');
 Route::resource('/users', 'UsersController');
 // Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
+Route::get('/mobile/{id}', 'Api\CamerasController@mobile_home');
+
 /*-----------------------------------------------------------*/
 /*
 //Route::get('/register', 'UsersController@register')->name('register');
