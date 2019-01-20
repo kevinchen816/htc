@@ -2,3 +2,8 @@
 $ git fetch -all
 $ git reset --hard origin/master
 $ git pull
+
+
+** 新建分支
+$ git checkout master
+$ git checkout -b login-logout
