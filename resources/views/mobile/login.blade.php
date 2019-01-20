@@ -12,11 +12,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h5>Login</h5>
+                    {{ $push_id }}
                 </div>
                 <div class="panel-body">
 
                     <form method="POST" action="{{ route('mobile.login') }}">
                         {{ csrf_field() }}
+                        <input name="push_id" type="hidden" value="{{ $push_id }}">
 
                         <div class="form-group">
                             <label for="email">E-Mail Address</label>
