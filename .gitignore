@@ -1,8 +1,8 @@
 /node_modules
 /public/hot
+/public/jpush.log
 /public/storage
 /public/uploads
-/public/jpush.log
 /storage/*.key
 /vendor
 /.idea
