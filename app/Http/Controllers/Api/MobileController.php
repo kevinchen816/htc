@@ -28,7 +28,7 @@ class MobileController extends Controller
         $mobile = DB::table('mobiles')->where('device_id', $device_id)->first();
         if ($mobile) {
             $mobile = Mobile::find($mobile->id);
-            $update = 0;
+            $flag = 0;
 
             $ret['id'] = $mobile->id;
             // $ret['device_id'] = $mobile->device_id;
@@ -36,37 +36,38 @@ class MobileController extends Controller
             if ($mobile->push_id != $request->push_id) {
                 $mobile->push_id = $request->push_id;
                 $mobile->change = $mobile->change+1;
-                $ret['push_id'] = $mobile->push_id;
-                $update = 1;
+                $update['push_id'] = $mobile->push_id;
+                $flag = 1;
             }
 
             if ($mobile->name != $request->name) {      // 设备名称 (KK)
                 $mobile->name = $request->name;
-                $ret['name'] = $mobile->name;
-                $update = 1;
+                $update['name'] = $mobile->name;
+                $flag = 1;
             }
 
             // if ($mobile->model != $request->model) { // 设备型号 (iPhone 4S)
             //     $mobile->model = $request->model;
-            //     $ret['model'] = $mobile->model;
-            //     $update = 1;
+            //     $update['model'] = $mobile->model;
+            //     $flag = 1;
             // }
 
             // if ($mobile->os != $request->os) {       // 系统类型 (ios)
             //     $mobile->os = $request->os;
-            //     $ret['os'] = $mobile->os;
-            //     $update = 1;
+            //     $update['os'] = $mobile->os;
+            //     $flag = 1;
             // }
 
             if ($mobile->ver != $request->ver) {        // 系统版本 (9.2.1)
                 $mobile->ver = $request->ver;
-                $ret['ver'] = $mobile->ver;
-                $update = 1;
+                $update['ver'] = $mobile->ver;
+                $flag = 1;
             }
 
-            if ($update) {
+            if ($flag) {
                 $mobile->save();
                 $ret['status'] = 'update';
+                $ret = array_merge($ret, $update);
             } else {
                 $ret['status'] = 'unchange';
             }
