@@ -29,8 +29,9 @@ Route::resource('/users', 'UsersController');
 // Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
 // Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
-Route::get('/mobile/login/{push_id}', 'MobileController@getLogin')->name('mobile.login');
+Route::get('/mobile/login/{id}', 'MobileController@getLogin')->name('mobile.login');
 Route::post('/mobile/login', 'MobileController@postLogin')->name('mobile.login');
+Route::get('/mobile/add', 'MobileController@mobile_test_add');
 
 /*-----------------------------------------------------------*/
 /*
@@ -294,7 +295,6 @@ Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@downlo
 
 Route::get('/push', 'Api\CamerasController@push_test');
 Route::get('/push2', 'Api\CamerasController@push_test2');
-Route::get('/device/add', 'Api\CamerasController@device_add');
 
 //Route::get('/bootstrap', function () { return view('bootstrap'); });
 //Route::get('/env', function () { return env('APP_ENV'); });

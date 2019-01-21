@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Action;
 use App\Models\Camera;
 use App\Models\Device;
+use App\Models\Mobile;
 use App\Models\Photo;
 use App\Models\Plan;
 use App\Models\Firmware;
@@ -4593,12 +4594,11 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         appKey ="bbe4f8c3aa56d8e61d2fd2fd";
         masterSecret = "c37f1c5cc7a509af1033de9c";
     */
-    public function pushMessage($push_id, $title, $body, $url=null) {
+    public function pushMessageByPID($push_id, $title, $body, $url=null) {
         $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
         $master_secret = 'c37f1c5cc7a509af1033de9c';
 
         $client = new JPush($app_key, $master_secret);
-
         $client->push()
             ->setPlatform(['ios', 'android'])
             ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
@@ -4620,13 +4620,46 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             ))
             ->send();
     }
+    // public function pushMessage($push_id, $title, $body, $url=null) {
+    public function pushMessage($device_id, $title, $body, $url=null) {
+        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
+        $master_secret = 'c37f1c5cc7a509af1033de9c';
+
+        $mobile = DB::table('mobiles')->where('device_id', $device_id)->first();
+        if ($mobile) {
+            $push_id = $mobile->push_id;
+
+            $client = new JPush($app_key, $master_secret);
+            $client->push()
+                ->setPlatform(['ios', 'android'])
+                ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
+                ->addRegistrationId($push_id)
+                ->setNotificationAlert($body)
+                ->androidNotification($body, array(
+                    'title' => $title,
+                    'extras' => array(
+                        'url' => $url,
+                    ),
+                ))
+                ->iosNotification(array(
+                    'title' => $title,
+                    'body' => $body
+                ), array(
+                    'extras' => array(
+                        'url' => $url,
+                    ),
+                ))
+                ->send();
+        }
+    }
 
     public function pushHeartbeat($user_id, $camera) {
         if ($camera->noti_mobile == 'on') {
             $devices = DB::table('devices')->where('user_id', $user_id)->get();
             foreach ($devices as $device) {
                 if ($device->push_hb == 'on') {
-                    $this->pushMessage($device->push_id, $camera->description, 'Heartbeat');
+                    // $this->pushMessage($device->push_id, $camera->description, 'Heartbeat');
+                    $this->pushMessage($device->device_id, $camera->description, 'Heartbeat');
                 }
             }
         }
@@ -4637,7 +4670,8 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             $devices = DB::table('devices')->where('user_id', $user_id)->get();
             foreach ($devices as $device) {
                 // if ($device->push_notify == 'on') {
-                    $this->pushMessage($device->push_id, $camera->description, 'Download Settings');
+                    // $this->pushMessage($device->push_id, $camera->description, 'Download Settings');
+                    $this->pushMessage($device->device_id, $camera->description, 'Download Settings');
                 // }
             }
         }
@@ -4648,7 +4682,8 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             $devices = DB::table('devices')->where('user_id', $user_id)->get();
             foreach ($devices as $device) {
                 if ($device->push_upload == 'on') {
-                    $this->pushMessage($device->push_id, $camera->description, $body);
+                    // $this->pushMessage($device->push_id, $camera->description, $body);
+                    $this->pushMessage($device->device_id, $camera->description, $body);
                 }
             }
         }
@@ -4700,8 +4735,8 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     }
 
     public function push_test2() {
-        $this->pushMessage('190e35f7e005b796d3b', 'Cam#1', 'Heartbeat');
-        $this->pushMessage('13165ffa4e282202377', 'Cam#1', 'Heartbeat');
+        $this->pushMessageByPID('190e35f7e005b796d3b', 'Cam#1', 'Heartbeat');
+        $this->pushMessageByPID('13165ffa4e282202377', 'Cam#1', 'Heartbeat');
 return 'OK';
 
         // Github: https://github.com/jpush/jpush-api-php-client
@@ -4724,29 +4759,5 @@ return 'OK';
 
         $ret = $push->send();
         return dd($ret);
-    }
-
-    public function device_add() {
-        $user = Auth::user();
-
-        $device = new Device;
-        $device->user_id = $user->id;
-        $device->os = 'android';
-        $device->ver = '8.1.0';
-        $device->model = 'MI 8 SE';
-        $device->name = 'Xiaomi';
-        $device->push_id = '190e35f7e005b796d3b';
-        $device->save();
-
-        $device = new Device;
-        $device->user_id = $user->id;
-        $device->os = 'ios';
-        $device->ver = '9.2.1';
-        $device->model = 'iPhone 4S';
-        $device->name = 'KK';
-        $device->push_id = '13165ffa4e282202377';
-        $device->save();
-
-        return 'Add Device OK';
     }
 }

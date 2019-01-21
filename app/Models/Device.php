@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Device extends Model
 {
     protected $fillable = [
-        'user_id', 'os', 'ver', 'name', 'model', 'push_id', 'last_active',
+        'user_id', 'device_id', 'os', 'ver', 'name', 'model', 'push_id', 'last_active',
     ];
 
     public function user() {

@@ -17,6 +17,7 @@ class CreateDevicesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->index();
 
+            $table->string('device_id')->nullable();
             $table->string('os')->nullable();
             $table->string('ver')->nullable();
             $table->string('name')->nullable();
