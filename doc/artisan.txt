@@ -1,3 +1,10 @@
 $ php artisan route:list
 
-$ php artisan make:controller SessionsController
+$ php artisan make:controller MobileController
+
+$ php artisan make:model Models/Mobile -m // 自动产生 xxx_create_mobiles_table.php
+//$ php artisan make:migration create_mobiles_table --create=mobiles
+
+
+$ php artisan migrate
+$ php artisan migrate:rollback

@@ -4726,43 +4726,6 @@ return 'OK';
         return dd($ret);
     }
 
-    public function push_test3() {
-return 'Hello';
-    }
-
-    /*----------------------------------------------------------------------------------*/
-    public function deviceadd(Request $request) {
-        $logapi = new LogApi;
-        $logapi->user_id = 1;
-        $logapi->camera_id = 1;
-        $logapi->imei = 'imei';
-        $logapi->iccid = 'iccid';
-        $logapi->api = 'deviceadd';
-        $logapi->request = json_encode($request->all()); // string
-        // $logapi->response = json_encode($response);
-        $logapi->save();
-
-        // $user = Auth::user();
-
-        $push_id = $request->push_id;
-        $devices = DB::table('devices')->where('push_id', $push_id)->get();
-        if ($devices->count() == 0) {
-            $device = new Device;
-            $device->user_id = 1; //$user->id;
-            $device->os = $request->os;         // 系统类型 (ios)
-            $device->ver = $request->ver;       // 系统版本 (9.2.1)
-            $device->name = $request->name;     // 设备名称 (KK)
-            $device->model = $request->model;   // 设备型号 (iPhone 4S)
-            $device->push_id = $push_id;
-            $device->save();
-
-            $ret['status'] = 1;
-        } else {
-            $ret['status'] = 0;
-        }
-        return $ret;
-    }
-
     public function device_add() {
         $user = Auth::user();
 
@@ -4785,59 +4748,5 @@ return 'Hello';
         $device->save();
 
         return 'Add Device OK';
-    }
-
-    public function ajax_test(Request $request) {
-        // $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
-        $logapi = new LogApi;
-        $logapi->user_id = 1;
-        $logapi->camera_id = 1;
-        $logapi->imei = 'imei';
-        $logapi->iccid = 'iccid';
-        $logapi->api = 'ajax_test';
-        $logapi->request = json_encode($request->all()); // string
-        // $logapi->response = json_encode($response);
-        $logapi->save();
-
-        $user = Auth::user();
-
-        $device = new Device;
-        $device->name = 'Android';
-        $device->user_id = $user->id;
-        $device->push_id = '190e35f7e005b796d3b';
-        $device->save();
-
-        //ret={"result":0,"count":1,"data":[{"push_id":"1a0018970a9271d7fd3"}]}
-        // $ret = array(
-        //     'result' => 0,
-        //     'msg' => 'hello'
-        // );
-
-        // ret={"ret":{"result":0,"msg":"hello"},"err":""}, err=""
-        // $response['ret'] = array(
-        //     'result' => 0,
-        //     'msg' => 'hello',
-        // );
-        // $response['err'] = '';
-        // // return json_encode($ret);
-        // return $response;
-
-        // ret={"status":1}
-        // $ret = array(
-        //     'status' => 1,
-        // );
-        $ret['status'] = 1;
-        return $ret;
-    }
-
-    public function mobile_home($push_id) {
-        return $push_id;
-        // if (Auth::check()) {
-        //     return $this->route_to_cameras();
-        // } else {
-        //     return redirect()->route('login');
-        // }
-        // public function route($name, $parameters = [], $absolute = true);
-        // return redirect()->route('login', ['push_id' => $push_id]);
     }
 }

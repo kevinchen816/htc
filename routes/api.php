@@ -69,9 +69,11 @@ $api->version('v1', [
     $api->post('logstatus', 'CamerasController@logstatus')->name('api.camera.logstatus');
     $api->post('uploadlog', 'CamerasController@uploadlog')->name('api.camera.uploadlog');
 
-    $api->post('deviceadd', 'CamerasController@deviceadd')->name('api.camera.deviceadd');
-    $api->post('ajax_test', 'CamerasController@ajax_test')->name('api.camera.ajax_test');
+    $api->post('uploadlog', 'CamerasController@uploadlog')->name('api.camera.uploadlog');
 
+
+    $api->post('mobileadd', 'MobileController@mobileadd')->name('api.mobile.add');
+    // $api->post('deviceadd', 'MobileController@deviceaddX')->name('api.device.add');
 });
 
 $api->version('v2', function($api) {
