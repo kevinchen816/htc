@@ -47,7 +47,7 @@ class MobileController extends Controller
         if ($devices->count() == 0) {
             $device = new Device;
             $device->user_id = $user->id;
-            $device->device_id = $user->device_id;
+            $device->device_id = $device_id;
             // $device->os = $request->os;         // 系统类型 (ios)
             // $device->ver = $request->ver;       // 系统版本 (9.2.1)
             // $device->name = $request->name;     // 设备名称 (KK)
