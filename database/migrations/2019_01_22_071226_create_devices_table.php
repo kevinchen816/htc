@@ -18,12 +18,13 @@ class CreateDevicesTable extends Migration
             $table->integer('user_id')->index();
 
             $table->string('device_id')->nullable();
-            $table->string('os')->nullable();
-            $table->string('ver')->nullable();
-            $table->string('name')->nullable();
-            $table->string('model')->nullable();
+            // $table->string('os')->nullable();
+            // $table->string('ver')->nullable();
+            // $table->string('name')->nullable();
+            // $table->string('model')->nullable();
+            // $table->string('push_id')->nullable();
 
-            $table->string('push_id')->nullable();
+            $table->string('push_notify')->nullable()->default('on');
             $table->string('push_hb')->nullable()->default('on');
             $table->string('push_upload')->nullable()->default('on');
 

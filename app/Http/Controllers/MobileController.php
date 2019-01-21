@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 
+use App\Models\Mobile;
 use App\Models\Device;
 
 class MobileController extends Controller
@@ -68,6 +69,14 @@ class MobileController extends Controller
             $user_id = 1;
         }
 
+        $mobile = new Mobile;
+        $mobile->device_id = '862860042483507';
+        $mobile->push_id = '190e35f7e005b796d3b';
+        $mobile->name = 'Xiaomi';
+        $mobile->model = 'MI 8 SE';
+        $mobile->os = 'android';
+        $mobile->ver = '8.1.0';
+        $mobile->save();
 
         $device = new Device;
         $device->user_id = $user_id;
@@ -78,6 +87,16 @@ class MobileController extends Controller
         // $device->name = 'Xiaomi';
         // $device->push_id = '190e35f7e005b796d3b';
         $device->save();
+
+
+        $mobile = new Mobile;
+        $mobile->device_id = '48840369-5940-4F7A-B11A-E3CD210BF03C';
+        $mobile->push_id = '13165ffa4e282202377';
+        $mobile->name = 'KK';
+        $mobile->model = 'iPhone 4S';
+        $mobile->os = 'ios';
+        $mobile->ver = '9.2.1';
+        $mobile->save();
 
         $device = new Device;
         $device->user_id = $user_id;
