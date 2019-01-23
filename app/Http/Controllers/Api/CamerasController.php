@@ -3816,7 +3816,14 @@ class CamerasController extends Controller
         if (Auth::check()) {
             return $this->route_to_cameras();
         } else {
-            return redirect()->route('login');
+            if (Browser::isMobile()) {
+                return redirect()->route('mobile.login');
+            } else if (Browser::isTablet()) {
+                return redirect()->route('mobile.login');
+            } else {
+                return redirect()->route('login');
+                // return redirect()->route('mobile.login'); // for test
+            }
         }
     }
 

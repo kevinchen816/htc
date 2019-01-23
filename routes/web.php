@@ -28,8 +28,8 @@ Route::post('stripe/webhook', 'WebhookController@handleWebhook');
 Route::resource('/users', 'UsersController');
 // Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
-// Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
-Route::get('/mobile/login/{id}', 'MobileController@getLogin')->name('mobile.login');
+Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
+Route::get('/mobile/login/{id}', 'MobileController@getLoginEx')->name('mobile.login');
 Route::post('/mobile/login', 'MobileController@postLogin')->name('mobile.login');
 Route::get('/mobile/add', 'MobileController@mobile_test_add');
 

@@ -12,10 +12,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h5>Login</h5>
-                    {{ $device_id }}
                 </div>
                 <div class="panel-body">
-
                     <form method="POST" action="{{ route('mobile.login') }}">
                         {{ csrf_field() }}
                         <input name="device_id" type="hidden" value="{{ $device_id }}">
@@ -53,6 +51,7 @@
                     </form>
                 </div>
             </div>
+            {{ $device_id }}
         </div>
     </div>
 </div>
