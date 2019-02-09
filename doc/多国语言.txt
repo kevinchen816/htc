@@ -1,0 +1,46 @@
+laravel 动态多语言切换功能
+https://blog.csdn.net/weixin_36825982/article/details/80621502
+
+$ php artisan make:middleware SetLocale
+
+//------------------------------------------------------------------
+https://github.com/overtrue/laravel-lang
+
+1. Install
+    $ composer require "overtrue/laravel-lang:~3.0"
+
+    Laraval 5.*
+    After completion of the above, Replace the config/app.php content
+
+    Illuminate\Translation\TranslationServiceProvider::class,
+    with:
+
+    Overtrue\LaravelLang\TranslationServiceProvider::class,
+
+2. Configuration
+    you can change the locale at config/app.php:
+
+        'locale' => 'zh-CN',
+
+3. Usage
+    resources/lang/zh-CN/demo.php:
+
+    <?php
+
+    return [
+        'user_not_exists'    => '用户不存在',
+        'email_has_registed' => '邮箱 :email 已经注册过！',
+    ];
+
+    Used in the template:
+
+    echo trans('demo.user_not_exists'); // 用户不存在
+    echo trans('demo.email_has_registed', ['email' => 'anzhengchao@gmail.com']);
+    // 邮箱 anzhengchao@gmail.com 已经注册过！
+
+
+$ php artisan lang:publish zh-CN,zh-TW,zh-HK,th,tk
+$ php artisan config:cache
+
+?? https://blog.csdn.net/u013724078/article/details/80994190
+ps:如果你用的laravel自带的登录注册，模板上显示的还是英文，需要在lang文件夹下建立一个zh-CN.json文件，文件内容为

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Browser;
 
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
+
 // https://packagist.org/packages/hisorange/browser-detect
 // composer require hisorange/browser-detect
 
@@ -19,6 +22,45 @@ class HtmlController extends Controller
     //         return $this->pc_template_dir;
     //     }
     // }
+
+    public function changeLocale($locale) {
+        if (in_array($locale, ['en', 'zh'])) {
+            session()->put('locale', $locale);
+        }
+        return redirect()
+            ->back()
+            ->withInput();
+    }
+
+    public function getLocale_EN() {
+        session()->put('locale', 'en');
+        return redirect()
+            ->back()
+            ->withInput();
+
+        // App::setLocale('en');
+        // return redirect()->route('home');
+    }
+
+    public function getLocale_CN() {
+        session()->put('locale', 'zh-CN');
+        return redirect()
+            ->back()
+            ->withInput();
+
+        // App::setLocale('zh-CN');
+        // return redirect()->route('home');
+    }
+
+    public function getLocale_TW() {
+        session()->put('locale', 'zh-TW');
+        return redirect()
+            ->back()
+            ->withInput();
+
+        // App::setLocale('zh-TW');
+        // return redirect()->route('home');
+    }
 
     /*----------------------------------------------------------------------------------*/
     public function html_LoginExt() {

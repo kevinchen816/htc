@@ -1,0 +1,9 @@
+https://www.astralweb.com.tw/amazon-web-service/
+如果台灣的朋友想要使用Amazon Web Server雲端主機，根據以上數據測試，
+目前最佳地點為日本，再來是新加坡。
+
+雲端平台怎麼選？比較三大雲端供應商 GCP 與 AWS 與 Azure
+https://blog.gcp.expert/google-cloud-v-aws-v-azure/
+
+您知道買哪一家雲主機最划算嗎?
+https://www.da-vinci.com.tw/tw/blog/detail/48

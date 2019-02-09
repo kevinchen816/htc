@@ -58,5 +58,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'email_confirm' => \App\Http\Middleware\CheckIfEmailConfirm::class,
+        'setLocale' => \App\Http\Middleware\SetLocale::class,
     ];
 }

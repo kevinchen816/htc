@@ -78,7 +78,7 @@
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
-                                    Logout
+                                    {{ trans('htc.logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -88,8 +88,19 @@
                         </ul>
                     </li>
 @else
-                    <li class=""><a href="{{ route('login') }}">Log in</a></li>
+                    <li class=""><a href="{{ route('login') }}">{{ trans('htc.login') }}</a></li>
 @endif
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             {{ trans('htc.language') }} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ route('language.en') }}">English</a></li>
+                            <li><a href="{{ route('language.cn') }}">简体中文</a></li>
+                            <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

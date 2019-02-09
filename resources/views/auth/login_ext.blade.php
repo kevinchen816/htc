@@ -7,15 +7,15 @@
 </p> -->
 
 <p>
-    Don't you have an account yet ?
-    <a href="{{ route('register') }}"> Create New Account</a>
+    {{ trans('htc.dont_you_have_an_account') }}
+    <a href="{{ route('register') }}"> {{ trans('htc.create_new_account') }}</a>
 </p>
 
 <p>
-    Did you <a href="{{ route('password.request') }}">Forget Your Password ?</a>
+    {{ trans('htc.did_you') }} <a href="{{ route('password.request') }}">{{ trans('htc.forget_your_password') }}</a>
 </p>
 
 <p>
-    You already have an account and need to
-    <a href="{{ route('confirm.send') }}">Resend Confirmation Email.</a>
+    {{ trans('htc.you_already_have_an_account_an_need_to') }}
+    <a href="{{ route('confirm.send') }}">{{ trans('htc.resend_confirmation_email') }}</a>
 </p>

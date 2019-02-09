@@ -1,0 +1,92 @@
+https://www.cnblogs.com/vincePp/p/7238669.html
+
+
+一个域名支持多个laravel项目
+https://learnku.com/laravel/t/10292/how-do-i-access-multiple-laravel-projects-under-localhost
+https://zhang.ge/5054.html      <-- 在 Nginx 中可以針對每個二級目錄設不同 root
+
+
+location ^~ /project1/ {
+    alias /var/www/project1/public;
+    try_files $uri $uri/ @laravel
+
+    location ~ \.php {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(.*)$;
+        include /etc/nginx/fastcgi_params;
+    }
+}
+
+location @laravel {
+    rewrite /project1/(.*)$ /project1/index.php?/$1 last;
+}
+
+//-----------------------------------------------------------------------
+https://www.cnblogs.com/fengff/p/8892590.html
+https://www.cnblogs.com/knowledgesea/p/5175711.html
+
+nginx 是一款自由的、开源的、高性能的HTTP服务器和反向代理服务器；
+同时也是一个IMAP、POP3、SMTP代理服务器；...另外nginx可以作为反向代理进行负载均衡的实现。
+
+    $ ps -ef|grep nginx         // 查看nginx进程是否启动
+    $ nginx                     // 启动nginx服务器命令
+    $ nginx -s stop             // 停止nginx服务命令
+    $ service nginx restart     // 重启nginx
+
+在 /usr/sbin/ 目录下是nginx命令所在目录，
+在 /etc/nginx/ 目录下是nginx所有的配置文件，用于配置nginx服务器以及负载均衡等信息
+
+/etc/nginx/nginx.conf   // 配置文件
+
+    http {
+        client_max_body_size 100m;  #100M 为允许的文件大小
+                                    #设定太小会出现 413-Request Entity Too Large
+
+        ##
+        # Virtual Host Configs
+        ##
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+    }
+
+/etc/nginx/sites-enabled/default
+/etc/nginx/sites-available/default
+    root /var/www/htc/public;
+    index index.php index.html index.htm index.nginx-debian.html;
+    server_name 54.252.236.213;     <-- ??
+
+//-----------------------------------------------------------------------
+https://www.cnblogs.com/zhouXX/p/7215316.html
+当在一台主机上部署了多个不同的web服务器，并且需要能在80端口同时访问这些web服务器时，
+可以使用 nginx 的反向代理功能: 用 nginx在80端口监听所有请求，
+并依据转发规则(比较常见的是以 URI 来转发)转发到对应的web服务器上。
+
+例如有 webmail , webcom 以及 webdefault 三个服务器分别运行在 portmail , portcom , portdefault 端口，
+要实现从80端口同时访问这三个web服务器，则可以在80端口运行 nginx，
+然后将 /mail 下的请求转发到 webmail 服务器，
+将 /com下的请求转发到 webcom 服务器，
+将其他所有请求转发到 webdefault 服务器。
+
+    http {
+        server {
+                server_name example.com;
+
+                location /mail/ {
+                    proxy_pass http://example.com:protmail/;
+                }
+
+                location /com/ {
+                    proxy_pass http://example.com:portcom/main/;
+                }
+
+                location / {
+                    proxy_pass http://example.com:portdefault;
+                }
+        }
+    }
+
+https://blog.csdn.net/tujiaw/article/details/80899536
+
+https://www.cnblogs.com/likwo/p/6513117.html
+nginx配置url重写
+url重写是指通过配置conf文件，以让网站的url中达到某种状态时则定向/跳转到某个规则，比如常见的伪静态、301重定向、浏览器定向等

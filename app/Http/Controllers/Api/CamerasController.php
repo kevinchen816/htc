@@ -27,6 +27,9 @@ use Carbon\Carbon;
 use JPush\Client as JPush;
 use Browser;
 
+use Illuminate\Support\Facades\App;
+use Debugbar;
+
 /*
 ICCID:
 UniCOM #1   - 89860117851014783481
@@ -3813,6 +3816,13 @@ class CamerasController extends Controller
     }
 
     public function home() {
+
+// Debugbar::debug('..........A');
+// Debugbar::debug(App::getLocale());
+// App::setLocale('zh-TW');
+// return trans('htc.login');
+// return redirect()->route('confirm.send');
+
         if (Auth::check()) {
             return $this->route_to_cameras();
         } else {
