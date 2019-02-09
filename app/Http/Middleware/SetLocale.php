@@ -11,6 +11,10 @@ use Debugbar;
 
 class SetLocale
 {
+    const SESSION_KEY = 'locale';
+    // const LOCALES = ['en', 'cs'];
+    const LOCALES = ['en', 'zh-CN', 'zh-TW'];
+
     /**
      * Handle an incoming request.
      *
@@ -20,12 +24,20 @@ class SetLocale
      */
     public function handle($request, Closure $next)
     {
+        // $session = $request->getSession();
+        // if (!$session->has(self::SESSION_KEY)) {
+            // $session->put(self::SESSION_KEY, $request->getPreferredLanguage(self::LOCALES));
+
+            // Debugbar::debug($request->getPreferredLanguage(self::LOCALES));
+        // }
 
         // if (Session::has('locale') && in_array(Session::get('locale'), ['en', 'zh'])) {
         //     App::setLocale(Session::get('locale'));
         // } else {
         //     App::setLocale('en');
         // }
+
+Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
 
         if (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
