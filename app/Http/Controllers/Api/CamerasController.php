@@ -683,6 +683,7 @@ class CamerasController extends Controller
         }
 
         $title = $this->ts($title);
+        $value = $this->ts($value);
 
         $txt = '';
         $txt .= '<div class="row">';
@@ -792,6 +793,8 @@ class CamerasController extends Controller
             /*<select class="bs-select form-control input-sm" id="54_cameramode" name="54_cameramode">*/
             $txt .= '<select class="bs-select form-control input-sm" id="'.$zz.'" name="'.$zz.'">';
             foreach ($options as $key => $value) {
+                $key = $this->ts($key);
+
                 /*<option value="p" selected="selected">Photo</option>*/
                 $selected = ($value == $field_value) ? 'selected="selected"' : '';
                 $txt .= '<option value="'.$value.'" '.$selected.'>'.$key.'</option>';
