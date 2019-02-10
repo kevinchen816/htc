@@ -4,10 +4,10 @@
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
                 <div class="panel-title">
-                    <span style="font-size: .70em;" >Request Actions</span>
+                    <span style="font-size: .70em;" >{{ trans('htc.Request Actions') }}</span>
                     <a class="btn btn-xs btn-primary pull-right" id="action-show">
                         <i class="fa fa-angle-up"></i>
-                        Commands
+                        {{ trans('htc.Commands') }}
                     </a>
                 </div>
             </div>
@@ -33,13 +33,13 @@
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
                                     <input name="action" type="hidden" value="FC">
                                     <div class="form-group">
-                                        <label for="password inputSmall" class="control-label">Account Password:</label>
+                                        <label for="password inputSmall" class="control-label">{{ trans('htc.Account Password') }}:</label>
                                         <input id="{{ $camera->id }}_password_format" type="password" class="form-control input-sm" name="password" required>
-                                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-trash"></i> Erase SD Card</button>
+                                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-trash"></i> {{ trans('htc.Erase SD Card') }}</button>
                                     </div>
                                     <div class="alert alert-sm alert-info">
-                                        <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the Erase SD Card button.
-                                            All photos on your SD card will be removed.
+                                        <p><i class="fa fa-info-circle"></i>
+                                            {{ trans('htc.Erase SD Card Note') }}
                                         </p>
                                     </div>
                                 </form>
@@ -55,16 +55,16 @@
     <div class="col-md-9">
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
-                <h4 class="panel-title">Action History</h4>
+                <h4 class="panel-title">{{ trans('htc.Action History') }}</h4>
             </div>
             <div class="panel-body" id="commandhistory-{{ $camera->id }}" style="padding-left: 1px; padding-right: 1px;">
                 <table class="table table-striped table-condensed" style="font-size: .80em; margin-left: 0px;">
                     <thead>
                         <tr>
-                            <th>Action</th>
-                            <th>Status</th>
-                            <th>Requested On</th>
-                            <th>Completed On</th>
+                            <th>{{ trans('htc.Action') }}</th>
+                            <th>{{ trans('htc.Action Status') }}</th>
+                            <th>{{ trans('htc.Requested On') }}</th>
+                            <th>{{ trans('htc.Completed On') }}</th>
                             <th></th>
                         </tr>
                     </thead>

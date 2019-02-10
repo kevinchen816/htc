@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
-                <h4 class="panel-title">Camera Options</h4>
+                <h4 class="panel-title">{{ trans('htc.Camera Options') }}</h4>
             </div>
 
             <div class="panel-body">
@@ -11,7 +11,7 @@
                         <div class="panel panel-default panel-primary custom-settings-panel">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    Delete this Camera
+                                    {{ trans('htc.Delete this Camera') }}
                                 </h4>
                             </div>
                             <div class="panel-body">
@@ -20,15 +20,15 @@
                                     <input name="id" type="hidden" value="{{ $camera->id }}">
 
                                     <div class="form-group">
-                                        <label for="password inputSmall" class="col-md-5 control-label">Account Password</label>
+                                        <label for="password inputSmall" class="col-md-5 control-label">{{ trans('htc.Account Password') }}</label>
                                         <div class="col-md-6">
                                             <input id="{{ $camera->id }}_password_delete" type="password" class="form-control input-sm" name="password" required>
                                             <br>
-                                            <button type="submit" class="btn btn-sm btn-primary">Delete Camera</button>
+                                            <button type="submit" class="btn btn-sm btn-primary">{{ trans('htc.Delete Camera') }}</button>
                                         </div>
                                     </div>
                                     <div class="alert alert-sm alert-info">
-                                        <p><i class="fa fa-info-circle"></i> <strong>Note:</strong> You must input your account password, then click the delete camera button.</p>
+                                        <p><i class="fa fa-info-circle"></i>{{ trans('htc.Delete Camera Note') }}</p>
                                     </div>
                                 </form>
                             </div>

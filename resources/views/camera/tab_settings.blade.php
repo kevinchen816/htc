@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-12">
             <span class="pull-right" style="margin-top:20px;padding-right:10px;padding-bottom:8px;">
-                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save All Changes</button>
+                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> {{ trans('htc.Save All Changes') }}</button>
             </span>
         </div>
     </div>
@@ -15,7 +15,7 @@
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
-                    Camera Identification
+                    {{ trans('htc.Camera Identification') }}
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Identification($camera) !!}
@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
-                    Notifications
+                    {{ trans('htc.Notifications') }}
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Notifications($camera) !!}
@@ -47,8 +47,8 @@
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
-                    Control Settings
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
+                    {{ trans('htc.Control Settings') }}
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Basic($camera) !!}
@@ -59,8 +59,8 @@
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
-                    Trigger Settings
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
+                    {{ trans('htc.Trigger Settings') }}
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Trigger($camera) !!}
@@ -75,7 +75,7 @@
                                 <input type="checkbox" class="hidden" name="{{ $camera->id }}_timelapse" id="{{ $camera->id }}_timelapse"/>
 @endif
                             </span>
-                            Time Lapse
+                            {{ trans('htc.Time Lapse') }}
                         </div>
                         <div class="panel-body" id="panel-{{ $camera->id }}-timelapse">
                             {!! $cc->html_Settings_Timelapse($camera) !!}
@@ -90,8 +90,8 @@
         <div class="col-md-6">
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
-                    Wireless Settings
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
+                    {{ trans('htc.Wireless Settings') }}
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Wireless_Mode($camera) !!}
@@ -104,7 +104,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     Block Mode Settings (Kevin Test)
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> Toggle Help</a>
+                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Block_Mode($camera) !!}
@@ -126,21 +126,21 @@
 @endif
                         <!-- <input type="checkbox" name="54_dutytime" id="54_dutytime"   /> -->
                     </span>
-                    Duty Time/Hours of operation
+                    {{ trans('htc.Duty Time') }}
                 </div>
                 <div class="panel-body">
                     <div id="duty-tabs-{{ $camera->id }}" class="tab-set mobile-nopadding-nomargin" >
-                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton{{ $camera->id }}-on">Check All</a>
-                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton{{ $camera->id }}-off">Check None</a>
+                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton{{ $camera->id }}-on">{{ trans('htc.Check All') }}</a>
+                        <a class="btn btn-xs btn-info duty-time-button" style="color:#fff" id="Togglebutton{{ $camera->id }}-off">{{ trans('htc.Check None') }}</a>
 
                         <ul class="tab-headers" style="font-size: .80em;">
-                            <li><a href="#tabs{{ $camera->id }}-1">Sunday</a></li>
-                            <li><a href="#tabs{{ $camera->id }}-2">Monday</a></li>
-                            <li><a href="#tabs{{ $camera->id }}-3">Tuesday</a></li>
-                            <li><a href="#tabs{{ $camera->id }}-4">Wednesday</a></li>
-                            <li><a href="#tabs{{ $camera->id }}-5">Thursday</a></li>
-                            <li><a href="#tabs{{ $camera->id }}-6">Friday</a></li>
-                            <li><a href="#tabs{{ $camera->id }}-7">Saturday</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-1">{{ trans('htc.Sunday') }}</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-2">{{ trans('htc.Monday') }}</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-3">{{ trans('htc.Tuesday') }}</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-4">{{ trans('htc.Wednesday') }}</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-5">{{ trans('htc.Thursday') }}</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-6">{{ trans('htc.Friday') }}</a></li>
+                            <li><a href="#tabs{{ $camera->id }}-7">{{ trans('htc.Saturday') }}</a></li>
                         </ul>
                         {!! $cc->html_Settings_DutyTime($camera) !!}
                     </div>
@@ -153,7 +153,7 @@
     <div class="row">
         <div class="col-md-12">
             <span class="pull-right" style="margin-top:20px;padding-right:10px;">
-                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save All Changes</button>
+                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> {{ trans('htc.Save All Changes') }}</button>
             </span>
         </div>
     </div>

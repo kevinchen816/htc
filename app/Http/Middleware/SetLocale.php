@@ -37,13 +37,36 @@ class SetLocale
         //     App::setLocale('en');
         // }
 
-Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
+// Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
+Debugbar::debug($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+
+        $langArray = array('en', 'zh-cn', 'zh-tw', 'zh-CN', 'zh-TW');
+        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        } else {
+            $languages[0] = 'en';
+        }
+Debugbar::debug($languages);
 
         if (Session::has('locale')) {
+Debugbar::debug('.........A');
+Debugbar::debug(Session::get('locale'));
             App::setLocale(Session::get('locale'));
         } else {
-            App::setLocale('en');
+Debugbar::debug('.........B');
+            // App::setLocale('en');
+            if (in_array($languages[0], $langArray)) {
+Debugbar::debug('.........C');
+Debugbar::debug($languages[0]);
+                App::setLocale($languages[0]);
+            }
         }
+
+        // if (Session::has('locale')) {
+        //     App::setLocale(Session::get('locale'));
+        // } else {
+        //     App::setLocale('en');
+        // }
 
         // App::setLocale('zh-TW');
 

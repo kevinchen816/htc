@@ -4,7 +4,7 @@
     <div class="panel panel-default panel-primary custom-settings-panel mobile-nopadding-nomargin">
         <div class="panel-heading">
             <h4 class="panel-title">
-                Status
+                {{ trans('htc.Status') }}
                 <span class="pull-right">Plan:
                     <!-- <strong><span class="label label-highlight" style="font-size: 1.0em;">Active</strong> -->
                     {!! $cc->html_OverviewTitle($camera) !!}
@@ -18,7 +18,7 @@
                 <div class="panel panel-default panel-moreinfo">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#identity"><i class="glyphicon glyphicon-expand"></i> More Info</a>
+                            <a data-toggle="collapse" href="#identity"><i class="glyphicon glyphicon-expand"></i> {{ trans('htc.More Info') }}</a>
                         </h4>
                     </div>
                     <div id="identity" class="panel-collapse collapse">
@@ -35,7 +35,7 @@
     <div class="panel panel-default panel-primary custom-settings-panel mobile-nopadding-nomargin">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#live"><i class="glyphicon glyphicon-expand"></i> Live Settings (currently on camera)</a>
+                <a data-toggle="collapse" href="#live"><i class="glyphicon glyphicon-expand"></i> {{ trans('htc.Live Settings') }}</a>
             </h4>
         </div>
 

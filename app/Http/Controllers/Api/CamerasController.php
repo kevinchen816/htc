@@ -431,7 +431,7 @@ class CamerasController extends Controller
     }
 
     public function itemTemperature() {
-        $array['title'] = 'Temperature';
+        $array['title'] = 'Temperature Unit';
         $array['options'] = array(
             'Fahrenheit'    => 'f',
             'Celsius'       => 'c',
@@ -658,10 +658,31 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
+    // function tsX($code, $lang = 'en') {
+    //     $lang = empty($lang) ? 'en' : $lang;
+    //     $code = preg_replace('/[^0-9a-zA-z.-_ ]/', '', $code);
+    //     $trans = trans($code, [], '', $lang);
+    //     if (empty($trans) || $trans == $code) {
+    //         $trans= ucwords(preg_replace('/([0-9a-zA-z-_ ]*[.])*/', '', $code));
+    //     }
+    //     return $trans;
+    // }
+
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
     public function ovItemShow($title, $value, $empty_txt=null) {
         if (empty($value) && $empty_txt) {
             $value = $empty_txt;
         }
+
+        $title = $this->ts($title);
 
         $txt = '';
         $txt .= '<div class="row">';
@@ -702,6 +723,9 @@ class CamerasController extends Controller
 
         $zz = $id.'_'.$field_name;
         $title = ($title) ? : $array['title'];
+
+        $title = $this->ts($title);
+
         if (isset($array['help'])) {
             $help  = $array['help'];
         }
@@ -748,6 +772,9 @@ class CamerasController extends Controller
         if ($type == 'input') {
             $format = $array['format'];
             $placeholder = $array['placeholder'];
+
+            $placeholder = $this->ts($placeholder);
+
             // if (!empty($array['pattern']) {
             //     $pattern = $array['pattern'];
             //     //<input type="text" class="form-control input-sm" id="54_cellularpw" name="54_cellularpw" pattern="[0-9]{6}" value="xxx" placeholder="xxx">
