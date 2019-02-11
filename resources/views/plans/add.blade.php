@@ -12,7 +12,7 @@
 
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        Add Plan
+                        {{ trans('htc.Add Plan') }}
                     </h4>
                 </div>
 
@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="iccid inputSmall">SIM ICCID</label>
                                 <div class="col-md-8">
-                                    <input type="text" value="{{ old('iccid') }}" name="iccid" maxlength="70" id="iccid" class="form-control input-sm" placeholder="Input ICCID">
+                                    <input type="text" value="{{ old('iccid') }}" name="iccid" maxlength="70" id="iccid" class="form-control input-sm" placeholder="{{ trans('htc.Input ICCID') }}">
                                 </div>
                             </div>
 
@@ -35,12 +35,12 @@
                                 </div>
                                 <div class="col-md-7">
                                     <span class="button-checkbox">
-                                        <button type="button" class="btn btn-default btn-xs" data-color="default">I Agree to the Terms and Conditions</button>
+                                        <button type="button" class="btn btn-default btn-xs" data-color="default">{{ trans('htc.agree_Terms') }}</button>
                                         <input type="checkbox" class="hidden" name="agree-terms" id="agree-terms"  />
                                     </span>
                                     <div>
                                         <i class="glyphicon glyphicon-warning-sign"></i>
-                                        <a href="{{ route('help.terms') }}" target="_blank">TERMS AND CONDITIONS</a>
+                                        <a href="{{ route('help.terms') }}" target="_blank">{{ trans('htc.TERMS AND CONDITIONS') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -51,9 +51,9 @@
                                 <div class="col-md-7">
                                     <button type="submit" class="btn btn-primary  btn-sm" name="submit-new-plan" value="update">
                                         <i class="glyphicon glyphicon-plus"></i>
-                                        Create New Plan
+                                        {{ trans('htc.Create New Plan') }}
                                     </button>
-                                    <a href="{{ route('plans.cancel') }}" class="btn btn-sm btn-warning">Cancel</a>
+                                    <a href="{{ route('plans.cancel') }}" class="btn btn-sm btn-warning">{{ trans('htc.Cancel') }}</a>
                                 </div>
                             </div>
                         </form>

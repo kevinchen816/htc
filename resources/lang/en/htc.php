@@ -38,6 +38,10 @@ return [
 'Refresh'                       => 'Refresh',
 
 'Add Plan'                      => 'Add Plan',
+    'Input ICCID'               => 'Input ICCID',
+    'agree_Terms'               => 'I Agree to the Terms and Conditions',
+    'TERMS AND CONDITIONS'      => 'TERMS AND CONDITIONS',
+
     'input_ICCID'               => 'Please input an ICCID.',
     'agree_TERMS'               => 'Please read and agree to the TERMS and CONDITIONS.',
     'ICCID_had_registered'      => 'This ICCID has already been registered.',

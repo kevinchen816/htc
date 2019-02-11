@@ -36,6 +36,10 @@ return [
 'Refresh'                       => '刷新',
 
 'Add Plan'                      => '增加 Plan',
+    'Input ICCID'               => '输入 ICCID',
+    'agree_Terms'               => '同意本协议条款和条件',
+    'TERMS AND CONDITIONS'      => '协议条款和条件',
+
     'input_ICCID'               => '请输入 ICCID',
     'agree_TERMS'               => '请阅读并同意本协议条款和条件',
     'ICCID_had_registered'      => '此 ICCID 已经被使用',
