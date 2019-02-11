@@ -841,7 +841,9 @@ $handle .=                 '</tr>';
         }
 
         // session()->flash('success', 'Success: Your Credit card was updated and attached to your account.');
-        session()->flash('success', 'Success: Update Credit Card Information.');
+        // session()->flash('success', 'Success: Update Credit Card Information.');
+        $txt = $this->ts('update_card_success');
+        session()->flash('success', $txt);
         if ($next == 'cart') {
             if ($user->sel_menu != 'cart') {
                 $user->sel_menu = 'cart';

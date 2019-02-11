@@ -15,7 +15,7 @@ return [
 
     'dont_you_have_an_account'  => "Don't you have an account yet ?",
     'Create New Account'        => 'Create New Account',
-        'check_confirm_email' =>
+        'check_confirm_email'   =>
             'You are now registered, but your account is not yet confirmed.
             Please look in your inbox for a confirmation email and click the Verify link.',
     'did_you'                   => 'Did you',
@@ -122,6 +122,7 @@ return [
         'Plan'                  => 'Plan',
             'Active'            => 'Active',
             'Deactive'          => 'Deactive',
+            'Suspend'           => 'Suspend',
         'Description'           => 'Description',
         'Location'              => 'Location',
         'Signal'                => 'Signal',
