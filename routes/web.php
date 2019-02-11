@@ -80,14 +80,26 @@ Route::group(['middleware' => 'setLocale'], function() {
     Route::get('/', 'Api\CamerasController@home')->name('home');
 
     Auth::routes();
-
     // Route::get('/confirm/email', 'EmailConfirmController@getEmail')->name('confirm.email');
     Route::get('/confirm/send', 'EmailConfirmController@getSend')->name('confirm.send');
     Route::post('/confirm/send', 'EmailConfirmController@postSend')->name('confirm.send');
     Route::get('/confirm/verify', 'EmailConfirmController@getVerify')->name('confirm.verify'); // IMPORTANT !!
     // Route::get('/confirm/success', 'EmailConfirmController@getSuccess')->name('confirm.success'); // IMPORTANT !!
-
     // Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
+
+    // Route::get('/tour/start', function() {return '/tour/plans';})->name('tour.start');
+    Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
+    Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
+    Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick-start');
+    //Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
+
+    // Route::get('/support/emailpolicy', function() {'Api\CamerasController@emailpolicy';})->name('support.emailpolicy');
+    Route::get('/support/contact', function() {return '/support/contact';})->name('support.contact');
+    Route::post('/support/contact', function() {return '/support/contact';})->name('support.contact');
+
+    /* /email/verification */
+    Route::get('/email/optin', function() { return '/email/optin'; })->name('email.optin');
+    Route::get('/email/optout', function() { return '/email/optout'; })->name('email.optout');
 
     Route::group(['middleware' => 'auth'], function() {
         // Route::get('/confirm/notice', 'EmailConfirmController@notice')->name('confirm.notice');
@@ -256,20 +268,6 @@ Route::group(['middleware' => 'setLocale'], function() {
 });
 
 /*----------------------------------------------------------------------------------*/
-// Route::get('/tour/start', function() {return '/tour/plans';})->name('tour.start');
-Route::get('/help/terms', 'HelpsController@terms')->name('help.terms');
-Route::get('/help/plans', 'HelpsController@plans')->name('help.plans');
-Route::get('/help/quick-start', 'HelpsController@quick_start')->name('help.quick-start');
-//Route::get('/help/privacy', function() {return '/help/privacy';})->name('help.privacy');
-
-// Route::get('/support/emailpolicy', function() {'Api\CamerasController@emailpolicy';})->name('support.emailpolicy');
-Route::get('/support/contact', function() {return '/support/contact';})->name('support.contact');
-Route::post('/support/contact', function() {return '/support/contact';})->name('support.contact');
-
-/* /email/verification */
-Route::get('/email/optin', function() { return '/email/optin'; })->name('email.optin');
-Route::get('/email/optout', function() { return '/email/optout'; })->name('email.optout');
-
 /* default.blade.php */
     // $('#show_cameras').click(function() { /* default.blade.php */
     //$.get('/account/showcameralist/open'); // $.get() 方法使用 HTTP GET 请求从服务器加载数据 (JQuery)

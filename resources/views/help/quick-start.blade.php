@@ -112,8 +112,8 @@
         <h4 class="help-heading">Step 6: POWER UP CAMERA & VERIFY CONNECTION:</h4>
         <ul>
             <li>Turn camera switch to SET. Wait and monitor this screen for a cellular connection.</li>
-            <li>On the bottom of the screen, look for ¡°Searching Network¡­¡±.</li>
-            <li>If ¡°Cannot Find Network¡± is displayed, cycle power (turn camera OFF and then back to SETUP) until the camera connects to the network.</li>
+            <li>On the bottom of the screen, look for Â¡Â°Searching NetworkÂ¡Â­Â¡Â±.</li>
+            <li>If Â¡Â°Cannot Find NetworkÂ¡Â± is displayed, cycle power (turn camera OFF and then back to SETUP) until the camera connects to the network.</li>
             <span class="help-block">Note: The SIM activation can take from several seconds to several minutes. So, multiple retries are normal.  Please be patient as this is a network carrier delay and normally occurs.  If the camera does not find a network, it may mean you do not have service in your area. Move to a new area with better service and try again.</span>
             <li>Once the SIM activation is complete and a cellular connection is obtained, the screen will display a network name (the network name depends on model, carrier and location) along with signal strength in up to 5 bars.</li>
             <li>Next, Verify your web and portal connection by performing two diagnostic steps:</li>
@@ -134,9 +134,9 @@
         <ul>
             <li>Login to the Portal and click MY CAMERAS from the main menu. </li>
             <span class="help-block">Note: On mobile devices, portal menus may collapse. Expand the main menu to reveal MY CAMERAS.</span>
-            <li>Click the ¡®Refresh¡¯ button in My Cameras (or in your browser) until your camera displays.</li>
+            <li>Click the Â¡Â®RefreshÂ¡Â¯ button in My Cameras (or in your browser) until your camera displays.</li>
             <li>Select SETTINGS. Update your settings and click Save All Changes.</li>
-            <li>Please read the help under each setting and option to better understand all of your camera¡¯s capabilities.</li>
+            <li>Please read the help under each setting and option to better understand all of your cameraÂ¡Â¯s capabilities.</li>
             <li>Any updated settings will automatically download the next time the camera connects to the portal.</li>
         </ul>
     </div>
@@ -144,7 +144,7 @@
     <div class="alert alert-help">
         <h4 class="help-heading">Step 8: INSTALL MOBILE APP</h4>
         <div style="padding-left: 10px;">
-        <p>Ridgetec supports both Android and iOS Applications.  Please visit the appropriate app store for your device. Search for ¡°Ridgetec¡±.  Install the app. Please complete steps 1 through 7 before continuing.<p>
+        <p>Ridgetec supports both Android and iOS Applications.  Please visit the appropriate app store for your device. Search for Â¡Â°RidgetecÂ¡Â±.  Install the app. Please complete steps 1 through 7 before continuing.<p>
         </div>
 
         <ul>
@@ -167,7 +167,7 @@
         <h4>Thank you for purchasing your RIDGETEC camera.  </h4>
         <div>
         <span class="help-block">Should you experience any problem with your RIDGETEC camera please contact RIDGETEC, NOT the retail store, and we will be happy to assist you.
-            We know that in today¡¯s competitive market place, customers have many choices when purchasing surveillance cameras.  We appreciate that you have chosen our high quality product, and we are confident that you have made the best choice.  It is our commitment to be uniquely better.  Our continued reputation is one of our top priorities and we take great pride in satisfying our customers.</span>
+            We know that in todayÂ¡Â¯s competitive market place, customers have many choices when purchasing surveillance cameras.  We appreciate that you have chosen our high quality product, and we are confident that you have made the best choice.  It is our commitment to be uniquely better.  Our continued reputation is one of our top priorities and we take great pride in satisfying our customers.</span>
             <br />
         </div>
         <h4>You can reach us:</h4>
