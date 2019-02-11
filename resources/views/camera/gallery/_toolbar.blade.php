@@ -31,14 +31,14 @@
                         aria-expanded="false">
                         <span>
                             <i class="fa fa-bolt"></i>
-                                Action <span class="caret"></span>
+                                {{ trans('htc.Action') }} <span class="caret"></span>
                         </span>
                     </button>
 
                     <ul class="dropdown-menu">
                         <li>
                             <a class="btn" data-toggle="modal" data-target="#DeleteModal" data-type="delete">
-                                Delete
+                                {{ trans('htc.Delete') }}
                             </a>
                         </li>
                         <!--<li>
@@ -48,12 +48,12 @@
                         </li>-->
                         <li>
                             <a class="btn" data-toggle="modal" data-target="#OriginalModal" data-type="original">
-                                Request Original
+                                {{ trans('htc.Request Original') }}
                             </a>
                         </li>
                         <li>
                             <a class="btn" data-toggle="modal" data-target="#VideoModal" data-type="video">
-                                Request Video
+                                {{ trans('htc.Request Video') }}
                             </a>
                         </li>
                     </ul>
@@ -79,7 +79,7 @@
                         aria-expanded="false"
                         data-toggle="tooltip"
                         title="Column Layout">
-                        Columns
+                        {{ trans('htc.Columns') }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu layout-grid">
@@ -168,7 +168,7 @@
                         aria-expanded="false"
                         data-toggle="tooltip"
                         title="Thumbs per page">
-                        Thumbs
+                        {{ trans('htc.Thumbs') }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu layout-grid">

@@ -5,11 +5,11 @@
 
         <div class="panel-heading" style="padding-top:4px;padding-bottom:4px;">
             <span class="panel-title">
-                <strong>Cameras</strong>
+                <strong>{{ trans('htc.Cameras') }}</strong>
                 <a class="btn btn-xs btn-default pull-right" data-toggle="tooltip" title="Close" id="close_cameras">
                     <i class="fa fa-window-close"></i>
                 </a>
-                <a id="btn-refresh" class="btn btn-xs btn-primary pull-right">Refresh</a>
+                <a id="btn-refresh" class="btn btn-xs btn-primary pull-right">{{ trans('htc.Refresh') }}</a>
             </span>
         </div>
 

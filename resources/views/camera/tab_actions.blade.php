@@ -18,9 +18,9 @@
                         <tr>
                             <td>
                                 <div class="well well-sm">
-                                    <h4>Remote Control Options</h4>
-                                    <a data-param="snap" class="btn btn-sm btn-success sms-button" camera-id="{{ $camera->id }}"><i class="fa fa-bolt"></i> SMS: Snap Photo</a>
-                                    <a data-param="wake" class="btn btn-sm btn-success sms-button" camera-id="{{ $camera->id }}"><i class="fa fa-bolt"></i> SMS: Wakeup</a>
+                                    <h4>{{ trans('htc.Remote Control Options') }}</h4>
+                                    <a data-param="snap" class="btn btn-sm btn-success sms-button" camera-id="{{ $camera->id }}"><i class="fa fa-bolt"></i> {{ trans('htc.SMS: Snap Photo') }}</a>
+                                    <a data-param="wake" class="btn btn-sm btn-success sms-button" camera-id="{{ $camera->id }}"><i class="fa fa-bolt"></i> {{ trans('htc.SMS: Wakeup') }}</a>
                                     <div id="sms-message"></div>
                                 </div>
                             </td>
@@ -113,15 +113,20 @@ $(document).ready(function () {
         val = $("#commandhistory-{{ $camera->id }}").hasClass('hidden');
         //console.log('action show click ' + val);
 
+        txtCommands = '{{ trans('htc.Commands') }}';
+        console.log('txtCommands='+txtCommands);
+
         if (val) {
             $("#commandhistory-{{ $camera->id }}").show(250);
             $("#commandhistory-{{ $camera->id }}").removeClass('hidden');
-            $('#action-show').html('<i class="fa fa-angle-up"></i> Commands');
+            // $('#action-show').html('<i class="fa fa-angle-up"></i> Commands');
+            $('#action-show').html('<i class="fa fa-angle-up"></i> '+ txtCommands);
         }
         else {
             $("#commandhistory-{{ $camera->id }}").hide(250);
             $("#commandhistory-{{ $camera->id }}").addClass('hidden');
-            $('#action-show').html('<i class="fa fa-angle-down"></i> Commands');
+            // $('#action-show').html('<i class="fa fa-angle-down"></i> Commands');
+            $('#action-show').html('<i class="fa fa-angle-down"></i> '+ txtCommands);
         };
     })
 });

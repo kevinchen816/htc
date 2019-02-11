@@ -1,7 +1,20 @@
+<?php
+
 laravel 动态多语言切换功能
 https://blog.csdn.net/weixin_36825982/article/details/80621502
 
 $ php artisan make:middleware SetLocale
+--> /app/Http/Middleware/SetLocale.php
+
+--> /app/Http/Kernel.php
+    protected $routeMiddleware = [
+        'setLocale' => \App\Http\Middleware\SetLocale::class,
+    ];
+
+--> /routes/web.php
+    Route::group(['middleware' => 'setLocale'], function() {
+        Route::get('/', 'Api\CamerasController@home')->name('home');
+    }
 
 //------------------------------------------------------------------
 https://github.com/overtrue/laravel-lang
@@ -38,7 +51,8 @@ https://github.com/overtrue/laravel-lang
     echo trans('demo.email_has_registed', ['email' => 'anzhengchao@gmail.com']);
     // 邮箱 anzhengchao@gmail.com 已经注册过！
 
-
+//------------------------------------------------------------------
+补充：
 $ php artisan lang:publish zh-CN,zh-TW,zh-HK,th,tk
 $ php artisan config:cache
 

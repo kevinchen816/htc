@@ -159,14 +159,14 @@
     <div class="panel-heading" style="padding-top:6px;">
         <h4 class="panel-title">
             <span style="font-size: .70em; margin-top: 6px; margin-left: 1px;">
-                <i class="fa fa-camera" style="color:lime;"></i> HighRes | <i class="fa fa-hourglass" style="color:#ffd352;"></i> Pending Request
-                <span class="label label-info">*Note: Uploads will automatically purge after 90 days</span>
+                <i class="fa fa-camera" style="color:lime;"></i> {{ trans('htc.Original') }} | <i class="fa fa-hourglass" style="color:#ffd352;"></i> {{ trans('htc.Pending Request') }}
+                <span class="label label-info"> {{ trans('htc.Gallery Note') }}</span>
             </span>
 
-            <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="gallery"><i class="fa fa-question"></i></a>
+            <!-- <a class="btn btn-info btn-xs ToggleHelp pull-right" style="margin-left: 14px;" help-id="gallery"><i class="fa fa-question"></i></a> -->
 
             <span class="pull-right" style="font-size: .70em; margin-top: 6px;">
-                <strong>({{ $photos->count() }} thumbs this page) | Page {{ $photos->currentPage() }} of {{ $photos->lastPage() }}</strong>
+                <strong>({{ $photos->count() }} {{ trans('htc.thumbs this page') }}) | {{ trans('htc.Page') }} {{ $photos->currentPage() }} {{ trans('htc.of') }} {{ $photos->lastPage() }}</strong>
             </span>
         </h4>
     </div> <!-- panel-heading -->

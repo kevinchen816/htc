@@ -8,14 +8,14 @@
 
 <p>
     {{ trans('htc.dont_you_have_an_account') }}
-    <a href="{{ route('register') }}"> {{ trans('htc.create_new_account') }}</a>
+    <a href="{{ route('register') }}"> {{ trans('htc.Create New Account') }}</a>
 </p>
 
 <p>
-    {{ trans('htc.did_you') }} <a href="{{ route('password.request') }}">{{ trans('htc.forget_your_password') }}</a>
+    {{ trans('htc.did_you') }} <a href="{{ route('password.request') }}">{{ trans('htc.Forget Your Password') }}</a>
 </p>
 
 <p>
     {{ trans('htc.you_already_have_an_account_an_need_to') }}
-    <a href="{{ route('confirm.send') }}">{{ trans('htc.resend_confirmation_email') }}</a>
+    <a href="{{ route('confirm.send') }}">{{ trans('htc.Resend Confirmation Email') }}</a>
 </p>

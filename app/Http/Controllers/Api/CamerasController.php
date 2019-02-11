@@ -811,6 +811,8 @@ class CamerasController extends Controller
     }
 
     public function stItemCheckbox($name, $id=null, $value=null, $checked, $title) {
+        $title = $this->ts($title);
+
         $txt  = '<div class="row">';
         $txt .=     '<div class="col-md-12">';
         $txt .=         '<span class="button-checkbox">';

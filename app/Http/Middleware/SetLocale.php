@@ -11,9 +11,8 @@ use Debugbar;
 
 class SetLocale
 {
-    const SESSION_KEY = 'locale';
-    // const LOCALES = ['en', 'cs'];
-    const LOCALES = ['en', 'zh-CN', 'zh-TW'];
+    // const SESSION_KEY = 'locale';
+    // const LOCALES = ['en', 'zh-CN', 'zh-TW'];
 
     /**
      * Handle an incoming request.
@@ -24,56 +23,39 @@ class SetLocale
      */
     public function handle($request, Closure $next)
     {
-        // $session = $request->getSession();
-        // if (!$session->has(self::SESSION_KEY)) {
-            // $session->put(self::SESSION_KEY, $request->getPreferredLanguage(self::LOCALES));
-
-            // Debugbar::debug($request->getPreferredLanguage(self::LOCALES));
-        // }
-
         // if (Session::has('locale') && in_array(Session::get('locale'), ['en', 'zh'])) {
         //     App::setLocale(Session::get('locale'));
         // } else {
         //     App::setLocale('en');
         // }
 
-// Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
-Debugbar::debug($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW');
 
-        $langArray = array('en', 'zh-cn', 'zh-tw', 'zh-CN', 'zh-TW');
+        // Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            // zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6
+            Debugbar::debug($_SERVER['HTTP_ACCEPT_LANGUAGE']);
             $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
         } else {
             $languages[0] = 'en';
         }
-Debugbar::debug($languages);
+        Debugbar::debug($languages);
 
+        // if (Session::has('locale') && in_array(Session::get('locale'), $langArray)) {
         if (Session::has('locale')) {
-Debugbar::debug('.........A');
-Debugbar::debug(Session::get('locale'));
+            Debugbar::debug('locale='.Session::get('locale'));
             App::setLocale(Session::get('locale'));
         } else {
-Debugbar::debug('.........B');
-            // App::setLocale('en');
             if (in_array($languages[0], $langArray)) {
-Debugbar::debug('.........C');
-Debugbar::debug($languages[0]);
+                Debugbar::debug('$languages[0]='.$languages[0]);
                 App::setLocale($languages[0]);
+            } else {
+                Debugbar::debug('use default=en');
+                App::setLocale('en');
             }
         }
 
-        // if (Session::has('locale')) {
-        //     App::setLocale(Session::get('locale'));
-        // } else {
-        //     App::setLocale('en');
-        // }
-
-        // App::setLocale('zh-TW');
-
-Debugbar::debug('.......1');
-Debugbar::debug(App::getLocale());
-Debugbar::debug('.......2');
-
+        Debugbar::debug('getLocale()='.App::getLocale());
         return $next($request);
     }
 }

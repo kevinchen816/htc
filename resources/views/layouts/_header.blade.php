@@ -30,7 +30,7 @@
 
 @if (Auth::check() && isset($user))
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
-                        <a href="{{ route('plans.add') }}"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a>
+                        <a href="{{ route('plans.add') }}"><span class="glyphicon glyphicon-signal"> </span> {{ trans('htc.Add Plan') }}</a>
                     </li>
 
                     @if (count($user->cartItems()->get()) > 0)
@@ -43,27 +43,27 @@
                     @endif
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
-                        <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> My Cameras</a>
+                        <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> {{ trans('htc.My Cameras') }}</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'account') ? "active" : "" }}>
-                        <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> My Account</a>
+                        <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> {{ trans('htc.My Account') }}</a>
                     </li>
 
                     <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
-                        <a href="{{ route('help.plans') }}">PLAN INFO</a>
+                        <a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a>
                     </li>
 @else
-                    <li class=""><a href="{{ route('help.plans') }}">PLAN INFO</a></li>
+                    <li class=""><a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a></li>
 @endif
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                             Support <span class="caret"></span>
+                             {{ trans('htc.Support') }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="{{ route('help.quick-start') }}">Camera Quick Start Guide</a>
+                                <a href="{{ route('help.quick-start') }}">{{ trans('htc.Camera Quick Start Guide') }}</a>
                             </li>
                         </ul>
                     </li>
@@ -78,7 +78,7 @@
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
-                                    {{ trans('htc.logout') }}
+                                    {{ trans('htc.Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -88,12 +88,12 @@
                         </ul>
                     </li>
 @else
-                    <li class=""><a href="{{ route('login') }}">{{ trans('htc.login') }}</a></li>
+                    <li class=""><a href="{{ route('login') }}">{{ trans('htc.Login') }}</a></li>
 @endif
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                             {{ trans('htc.language') }} <span class="caret"></span>
+                             {{ trans('htc.Language') }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>

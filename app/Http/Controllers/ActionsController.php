@@ -55,6 +55,16 @@ class ActionsController extends Controller
     //}
 
     /*-----------------------------------------------------------*/
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
+    /*-----------------------------------------------------------*/
     /*
         <tr>
             <td>Scheduled Update</td>
@@ -142,7 +152,8 @@ class ActionsController extends Controller
             }
 
             if ($action->status == ACTION_REQUESTED) {
-                $status_txt = 'Request';
+                // $status_txt = 'Request';
+                $status_txt = 'Cancel';
             } else if ($action->status == ACTION_COMPLETED) {
                 $status_txt = 'Completed';
             } else if ($action->status == ACTION_CANCELLED) {
@@ -153,7 +164,10 @@ class ActionsController extends Controller
                 $status_txt = 'Pending';
             //} else if ($action->status == ACTION_ABORT) {
             //    $status_txt = 'Abort';
+            } else {
+                $status_txt = 'Unknown';
             }
+            $status_txt = $this->ts($status_txt);
 
             $requested_time = $this->_user_dateformat($user, $action->requested);
             $completed_time = $this->_user_dateformat($user, $action->completed);
@@ -161,7 +175,8 @@ class ActionsController extends Controller
             $txt .= '<tr>';
             $txt .=     '<td>'.$action_txt.'</td>';
             if ($action->status == ACTION_REQUESTED) {
-                $txt .= '<td><a class="btn btn-xs btn-success action-cancel-'.$camera_id.'" data-param="'.$action_id.'">Cancel</a></td>';
+                // $txt .= '<td><a class="btn btn-xs btn-success action-cancel-'.$camera_id.'" data-param="'.$action_id.'">Cancel</a></td>';
+                $txt .= '<td><a class="btn btn-xs btn-success action-cancel-'.$camera_id.'" data-param="'.$action_id.'">'.$status_txt.'</a></td>';
             } else {
                 $txt .= '<td>'.$status_txt.'</td>';
             }
@@ -182,11 +197,14 @@ class ActionsController extends Controller
             ->first();
         if ($firmware) {
             $version = $firmware->version;
-            //$version = '20190101';
+            // $version = '20190101';
+            $zz = $this->ts('Update Firmware to').' ('.$version.')';
+
             if ($version > $camera->dsp_version) {
                 $txt .= '<tr>';
                 $txt .=     '<td>';
-                $txt .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Update Firmware to ('.$version.')</a>';
+                // $txt .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Update Firmware to ('.$version.')</a>';
+                $txt .=         '<a data-param="FW" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">'.$zz.'</a>';
                 $txt .=     '</td>';
                 $txt .= '</tr>';
             }
@@ -197,11 +215,11 @@ class ActionsController extends Controller
             $txt .= '<tr>';
             $txt .=     '<td>';
             if ($camera->log == 1) {
-                $txt .=     '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Disable</a> ';
+                $txt .=     '<a data-param="LD" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">'.$this->ts('Log Disable').'</a> ';
             } else {
-                $txt .=     '<a data-param="LE" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Enable</a> ';
+                $txt .=     '<a data-param="LE" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">'.$this->ts('Log Enable').'</a> ';
             }
-            $txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">Log Upload</a> ';
+            $txt .=         '<a data-param="LU" class="btn btn-sm btn-success action-queue-'.$camera_id.'" camera-id="'.$camera_id.'">'.$this->ts('Log Upload').'</a> ';
             $txt .=     '</td>';
             $txt .= '</tr>';
         }

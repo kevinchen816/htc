@@ -5,7 +5,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 {{ trans('htc.Status') }}
-                <span class="pull-right">Plan:
+                <span class="pull-right">{{ trans('htc.Plan') }}:
                     <!-- <strong><span class="label label-highlight" style="font-size: 1.0em;">Active</strong> -->
                     {!! $cc->html_OverviewTitle($camera) !!}
                 </span>
@@ -51,7 +51,7 @@
 <div class="col-md-6 mobile-nopadding-nomargin">
     <div class="panel panel-default panel-primary custom-settings-panel mobile-nopadding-nomargin">
         <div class="panel-heading">
-            <h4 class="panel-title">Event Data</h4>
+            <h4 class="panel-title">{{ trans('htc.Event Data') }}</h4>
         </div>
         <div class="panel-body">
             {!! $cc->html_OverviewEvent($user, $camera) !!}

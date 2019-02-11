@@ -12,6 +12,15 @@ use Mail;
 
 class EmailConfirmController extends Controller
 {
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
     public function getSend(Request $request) {
         return view('auth.send_confirmation_email');
     }
@@ -38,14 +47,18 @@ class EmailConfirmController extends Controller
 
         if (!$user = User::where('email', $email)->first()) {
             // throw new Exception('The user is not exist.');
-            session()->flash('warning', 'The user is not exist.');
+            // session()->flash('warning', 'The user is not exist.');
+            $txt = $this->ts('user_not_exist');
+            session()->flash('warning', $txt);
             // return redirect(route('login'));
             return redirect()->back();
         }
 
         if ($user->email_verified) {
             // throw new Exception('You have verified your email address.');
-            session()->flash('warning', 'You have confirmed your email address.');
+            // session()->flash('warning', 'You have confirmed your email address.');
+            $txt = $this->ts('email_had_confirmed');
+            session()->flash('warning', $txt);
             // return redirect(route('login'));
             return redirect()->back();
         }
@@ -53,7 +66,9 @@ class EmailConfirmController extends Controller
         // 调用 notify() 方法用来发送我们定义好的通知类
         $user->notify(new EmailConfirmNotification());
 
-        session()->flash('success', 'Send confirmation email success.');
+        // session()->flash('success', 'Send confirmation email success.');
+        $txt = $this->ts('send_confirm_email');
+        session()->flash('success', $txt);
         // return redirect(route('login'));
         return redirect()->back();
         // return view('auth.email_confirm_success', ['msg' => 'Email sent successfully']);
@@ -65,7 +80,9 @@ class EmailConfirmController extends Controller
 
         if (!$email || !$token) {
             // throw new Exception('The link is incorrect.');
-            session()->flash('warning', 'The link is incorrect.');
+            // session()->flash('warning', 'The link is incorrect.');
+            $txt = $this->ts('confirm_email_incorrect');
+            session()->flash('warning', $txt);
             return redirect(route('login'));
         }
 
@@ -73,7 +90,9 @@ class EmailConfirmController extends Controller
         // 如果缓存不存在或者返回的值与 url 中的 `token` 不一致就抛出异常。
         if ($token != Cache::get('email_confirm_'.$email)) {
             // throw new Exception('The link is incorrect or has expired.');
-            session()->flash('warning', 'The link is incorrect or has expired.');
+            // session()->flash('warning', 'The link is incorrect or has expired.');
+            $txt = $this->ts('confirm_email_expired');
+            session()->flash('warning', $txt);
             return redirect(route('login'));
         }
 
@@ -82,7 +101,9 @@ class EmailConfirmController extends Controller
         // 但是为了代码的健壮性我们还是需要做这个判断
         if (!$user = User::where('email', $email)->first()) {
             // throw new Exception('The user is not exist.');
-            session()->flash('warning', 'The user is not exist.');
+            // session()->flash('warning', 'The user is not exist.');
+            $txt = $this->ts('user_not_exist');
+            session()->flash('warning', $txt);
             return redirect(route('login'));
         }
 
@@ -90,11 +111,12 @@ class EmailConfirmController extends Controller
         $user->update(['email_verified' => true]);
 
         // session()->flash('success', 'Account Registration Email Verifecation.');
-        session()->flash('success', 'Account registration email confirmation. You can login now.');
+        // session()->flash('success', 'Account registration email confirmation. You can login now.');
+        $txt = $this->ts('email_confirmed');
+        session()->flash('success', $txt);
         return redirect(route('login'));
         // return redirect(route('home'));
         // return view('auth.email_confirm_success', ['msg' => 'Account Registration Email Verifecation.']);
     }
 
 }
-

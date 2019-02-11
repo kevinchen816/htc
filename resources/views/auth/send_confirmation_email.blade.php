@@ -17,7 +17,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h5>{{ trans('htc.send_confirmation_email') }}</h5>
+                <h5>{{ trans('htc.Send Confirmation Email') }}</h5>
             </div>
 
             <div class="panel-body">
@@ -25,7 +25,7 @@
                     {{ csrf_field() }}
 
                     <div class="form-group">
-                        <label for="email">{{ trans('htc.email_address') }}</label>
+                        <label for="email">{{ trans('htc.E-Mail Address') }}</label>
                         <input type="text" name="email" class="form-control" value="{{ old('email') }}">
 
                         @if ($errors->has('email'))
@@ -35,7 +35,7 @@
                         @endif
                     </div>
 
-                    <button type="submit" class="btn btn-primary">{{ trans('htc.send') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ trans('htc.Send') }}</button>
                 </form>
 
             </div>
