@@ -18,7 +18,7 @@
 
     <div class="row" style="bottom-margin: 8px;">
         <div class="col-sm-12">
-            <h2 class="bold text-uppercase"><strong>Cart</strong>
+            <h2 class="bold text-uppercase"><strong>{{ trans('htc.Cart') }}</strong>
 
                 @if ($user->currency == 'usd')
                     <!-- <img src="/images/usd.png" width="40" style="margin-bottom:10px;"/> -->
@@ -31,7 +31,7 @@
                 @endif
 
 @if (count($user->cartItems()->get()) > 0)
-                <a href="{{ route('shop.cart-clear') }}" class="btn btn-xs btn-info pull-right" id="clear-cart"><i class="fa fa-trash"></i> Clear Cart</a>
+                <a href="{{ route('shop.cart-clear') }}" class="btn btn-xs btn-info pull-right" id="clear-cart"><i class="fa fa-trash"></i> {{ trans('htc.Clear Cart') }}</a>
 @endif
             </h2>
         </div>
@@ -46,13 +46,13 @@
                 <table class="table table-striped table-condensed table-borderless">
                     <thead>
                         <tr>
-                            <th class="col-sm-7">Product</th>
+                            <th class="col-sm-7">{{ trans('htc.Product') }}</th>
                             <th class="col-sm-1">
-                                Quantity
+                                {{ trans('htc.Quantity') }}
                             </th>
-                            <th class="col-sm-2" style="text-align:right">Price</th>
+                            <th class="col-sm-2" style="text-align:right">{{ trans('htc.Price') }}</th>
                             <th class="col-sm-1"  style="text-align:right"></th>
-                            <th class="col-sm-1" style="text-align:right">Subtotal</th>
+                            <th class="col-sm-1" style="text-align:right">{{ trans('htc.Subtotal') }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -69,16 +69,16 @@
                 <!-- <a href="/plans/add-plan" class="btn btn-xs btn-primary" id="add-plan"> -->
                 <a href="{{ route('plans.add') }}" class="btn btn-xs btn-primary" id="add-plan">
                     <span class="glyphicon glyphicon-signal"></span>
-                    Add another Plan
+                    {{ trans('htc.Add another Plan') }}
                 </a>
                 <a href="{{ route('shop.editcard') }}" class="btn btn-xs btn-info" id="edit-card">
                     <i class="fa fa-credit-card"> </i>
-                    Input Credit Card Details
+                    {{ trans('htc.Input Credit Card Details') }}
                 </a>
 @if (($user->stripe_id) && (count($user->cartItems()->get()) > 0))
                 <a class="btn btn-xs btn-success pull-right" id="btn-paynow">
                     <!-- <i class="fa fa-bolt"></i> Pay Now [Visa ****4242,  Expiry 1/2019] -->
-                    <i class="fa fa-bolt"></i> Pay Now [{{ $user->card_brand }} ****{{ $user->card_last_four }}, {{ $user->card_expiry }}]
+                    <i class="fa fa-bolt"></i> {{ trans('htc.Pay Now') }} [{{ $user->card_brand }} ****{{ $user->card_last_four }}, {{ $user->card_expiry }}]
                 </a>
 @endif
             </div>

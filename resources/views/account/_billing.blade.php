@@ -11,12 +11,12 @@
             }
         </style>
 
-        <div class="alert alert-defaulto" style="background-color: #555;">
+<!--         <div class="alert alert-defaulto" style="background-color: #555;">
             <h4>Input and Update Credit Card Information</h4>
             <p>This is the <strong>default credit card</strong> charged for each active <strong>Pay-as-you-go</strong> data plan.
                 Please fill in all values before clicking <strong>Update Card Info</strong>.
             </p>
-        </div>
+        </div> -->
 
         <div class="alert alert-defaulto" style="background-color: #088;">
             <h4>Please Input Test Card Number</h4>
@@ -29,7 +29,7 @@
 @if ($user->stripe_id)
         <div class="alert alert-default" style="background-color: #333;">
             <!--<h4>The Active Card on file is: <span class="label label-highlight" style="font-size: 0.80em"> Visa ***********4242,  Expiry 1 / 2019</span></h4>-->
-            <h4>The Active Card on file is: <span class="label label-highlight" style="font-size: 0.80em"> {{ $user->card_brand }} ***********{{ $user->card_last_four }}, {{ $user->card_expiry }}</span></h4>
+            <h4>{{ trans('htc.active_card') }}: <span class="label label-highlight" style="font-size: 0.80em"> {{ $user->card_brand }} ***********{{ $user->card_last_four }}, {{ $user->card_expiry }}</span></h4>
         </div>
 @endif
 
@@ -43,7 +43,7 @@
             @endif
 
             <div class="form-group">
-                <label class="col-md-3 control-label">Cardholder Name</label>
+                <label class="col-md-3 control-label">{{ trans('htc.Cardholder Name') }}</label>
                 <div class="col-md-6">
                   <input name="cardholder-name" id="cardholder-name" class="field form-control input-sm" placeholder="Name on Card" value="{{ $user->card_name }}" />
                 </div>
@@ -57,7 +57,7 @@
             </div>
  -->
              <div class="form-group">
-                <label class="col-md-3 control-label">Card Number</label>
+                <label class="col-md-3 control-label">{{ trans('htc.Card Number') }}</label>
                 <div class="col-md-6">
                     <span id="card-number" class="form-control input-sm stripe-element-container">
                         <!-- Stripe Card Element -->
@@ -66,7 +66,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-3 control-label">Card Expiry</label>
+                <label class="col-md-3 control-label">{{ trans('htc.Card Expiry') }}</label>
                 <div class="col-md-6">
                     <span id="card-exp" class="form-control input-sm stripe-element-container">
                         <!-- Stripe Card Element -->
@@ -75,7 +75,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-3 control-label">Card CVC</label>
+                <label class="col-md-3 control-label">{{ trans('htc.Card CVC') }}</label>
                 <div class="col-md-6">
                     <span id="card-cvc" class="form-control input-sm stripe-element-container">
                         <!-- Stripe Card Element -->
@@ -85,7 +85,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                    <button type="submit" class="btn btn-primary btn-sm" name="src" value="update" id="btn-update">Update Card Info</button>
+                    <button type="submit" class="btn btn-primary btn-sm" name="src" value="update" id="btn-update">{{ trans('htc.Update Card Info') }}</button>
                 </div>
             </div>
         </form>

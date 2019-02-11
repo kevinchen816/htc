@@ -21,6 +21,15 @@ use Debugbar;
 
 class PlansController extends Controller
 {
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
     public function m2m_put($api, $body) {
         $client = new \GuzzleHttp\Client();
         //$res = $client->request('GET', 'https://api.github.com/repos/guzzle/guzzle');
@@ -86,22 +95,25 @@ class PlansController extends Controller
         //    'iccid' => 'required|unique:plans|max:20',
         // ]);
         if (!$request->iccid) {
-            session()->flash('danger', 'Please input an ICCID.');
+            // session()->flash('danger', 'Please input an ICCID.');
+            session()->flash('danger', $this->ts('input_ICCID'));
             return redirect()->back();
         }
         $iccid = $request->iccid;
 
-        //if (!$request['agree-terms']) {
-        //    session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
-        //    return redirect()->back();
-        //}
+        if (!$request['agree-terms']) {
+           // session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
+           session()->flash('danger', $this->ts('agree_TERMS'));
+           return redirect()->back();
+        }
 
         /* search Plan */
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
             //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
             // session()->flash('danger', 'ICCID had used.');
-            session()->flash('danger', 'This ICCID has already been registered.');
+            // session()->flash('danger', 'This ICCID has already been registered.');
+            session()->flash('danger', $this->ts('ICCID_had_registered'));
             return redirect()->back();
         }
 
@@ -109,6 +121,7 @@ class PlansController extends Controller
         // $sim = DB::table('sims')->where('iccid', $iccid)->first();
         // if (!$sim) {
         //     session()->flash('danger', 'Invalid ICCID.');
+        //     session()->flash('danger', $this->ts('invalid_ICCID'));
         //     return redirect()->back();
         // }
         // $region = $sim->region; // us, ca, eu, au, cn, tw
@@ -186,7 +199,8 @@ class PlansController extends Controller
         // // $plan = Plan::findOrFail($plan_id);
         $plan = Plan::find($plan_id);
         if (!$plan) {
-            session()->flash('danger', 'ICCID not exist.');
+            // session()->flash('danger', 'ICCID not exist.');
+            session()->flash('danger', $this->ts('ICCID not exist'));
             return redirect()->back();
         }
         // $iccid = $plan->iccid;
@@ -207,13 +221,15 @@ class PlansController extends Controller
         /* search Plan */
         $plan = Plan::find($plan_id);
         if (!$plan) {
-            session()->flash('danger', 'Add Cart Fail.');
+            // session()->flash('danger', 'Add Cart Fail.');
+            session()->flash('danger', $this->ts('Add Cart Fail'));
             return redirect()->back();
         }
 
         $sku = PlanProductSku::find($sku_id);
          if (!$sku) {
-            session()->flash('danger', 'Plan not found.');
+            // session()->flash('danger', 'Plan not found.');
+            session()->flash('danger', $this->ts('Plan not found'));
             return redirect()->back();
         }
         // $plan->plan_product_sku_id = $sku_id;

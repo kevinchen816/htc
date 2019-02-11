@@ -21,6 +21,16 @@ use Debugbar;
 
 class CartController extends Controller
 {
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
+    /*----------------------------------------------------------------------------------*/
     // public function postAddCardX(AddCartRequest $request) {
     //     $user   = $request->user();
     //     $skuId  = $request->input('sku_id');
@@ -113,13 +123,16 @@ class CartController extends Controller
             // SILVER - 5000 Points per Month
             // 12.95 per Month
             // $title = $region[$product->region].' '.$product->title;
-            $title = $product->title.' - '.$product->points.' Points per Month';
+            $title = $product->title.' - '.$product->points.' '.$this->ts('Points per Month');
             $title .= ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
             if ($month == 1) {
-                $title2 = $price.' per Month';
+                $txtMonth = 'per Month';
+                // $title2 = $price.' '.$this->ts('per Month');
             } else {
-                $title2 = $price.' for '.$month.' Months';
+                $txtMonth = 'for '.$month.' Months';
+                // $title2 = $price.' for '.$month.' Months';
             }
+            $title2 = $price.' '.$this->ts($txtMonth);
             $title2 = $txt_currency.$title2;
 
             $txt .= '<input name="rowId[]" type="hidden" value="'.$cart_id.'">';
@@ -155,11 +168,12 @@ class CartController extends Controller
             $txt .= '</tr>';
         }
         if ($carts->count() > 0) {
+            $txtTotal = $this->ts('Total');
             $txt .= '<tr>';
             $txt .=     '<td></td>';
             $txt .=     '<td></td>';
             $txt .=     '<td></td>';
-            $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>Total:</strong></td>';
+            $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>'.$txtTotal.':</strong></td>';
             $txt .=     '<td class="col-sm-1" style="text-align:right"><strong>'.$txt_currency.$total.'</strong></td>';
             $txt .=     '<td></td>';
             $txt .= '</tr>';

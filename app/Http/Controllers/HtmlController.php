@@ -42,14 +42,18 @@ class HtmlController extends Controller
         // return redirect()->route('home');
     }
 
+    public function getLocale_DE() {
+        session()->put('locale', 'de');
+        return redirect()
+            ->back()
+            ->withInput();
+    }
+
     public function getLocale_CN() {
         session()->put('locale', 'zh-CN');
         return redirect()
             ->back()
             ->withInput();
-
-        // App::setLocale('zh-CN');
-        // return redirect()->route('home');
     }
 
     public function getLocale_TW() {
@@ -57,9 +61,6 @@ class HtmlController extends Controller
         return redirect()
             ->back()
             ->withInput();
-
-        // App::setLocale('zh-TW');
-        // return redirect()->route('home');
     }
 
     /*----------------------------------------------------------------------------------*/

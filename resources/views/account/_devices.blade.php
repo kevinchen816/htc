@@ -3,8 +3,8 @@
         {{ csrf_field() }}
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
-                <h4 class="panel-title">Mobile Devices
-                    <span class="pull-right"><button class="btn btn-xs btn-primary" type="submit">Save Changes</button></span>
+                <h4 class="panel-title">{{ trans('htc.Mobile Devices') }}
+                    <span class="pull-right"><button class="btn btn-xs btn-primary" type="submit">{{ trans('htc.Save Changes') }}</button></span>
                 </h4>
             </div>
             <div class="panel-body">

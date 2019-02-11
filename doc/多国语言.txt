@@ -53,7 +53,9 @@ https://github.com/overtrue/laravel-lang
 
 //------------------------------------------------------------------
 补充：
-$ php artisan lang:publish zh-CN,zh-TW,zh-HK,th,tk
+$ php artisan lang:publish zh-CN,zh-TW,zh-HK,de
+$ chown -R www-data:www-data de
+
 $ php artisan config:cache
 
 ?? https://blog.csdn.net/u013724078/article/details/80994190

@@ -34,6 +34,7 @@ Route::post('/mobile/login', 'MobileController@postLogin')->name('mobile.login')
 Route::get('/mobile/add', 'MobileController@mobile_test_add');
 
 Route::get('/en', 'HtmlController@getLocale_EN')->name('language.en');
+Route::get('/de', 'HtmlController@getLocale_DE')->name('language.de');
 Route::get('/cn', 'HtmlController@getLocale_CN')->name('language.cn');
 Route::get('/tw', 'HtmlController@getLocale_TW')->name('language.tw');
 

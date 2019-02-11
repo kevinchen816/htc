@@ -34,14 +34,14 @@
                                 <div class="col-md-3">
                                 </div>
                                 <div class="col-md-7">
-                                    <!--<span class="button-checkbox">
+                                    <span class="button-checkbox">
                                         <button type="button" class="btn btn-default btn-xs" data-color="default">I Agree to the Terms and Conditions</button>
                                         <input type="checkbox" class="hidden" name="agree-terms" id="agree-terms"  />
                                     </span>
                                     <div>
                                         <i class="glyphicon glyphicon-warning-sign"></i>
                                         <a href="{{ route('help.terms') }}" target="_blank">TERMS AND CONDITIONS</a>
-                                    </div>-->
+                                    </div>
                                 </div>
                             </div>
 

@@ -5,7 +5,7 @@
 <div class="row">
     <h4>
         <ol class="breadcrumb">
-            <li class="active">My Account ({{ $user->email }})</li>
+            <li class="active">{{ trans('htc.My Account') }} ({{ $user->email }})</li>
         </ol>
     </h4>
 </div>
@@ -37,19 +37,19 @@
                     <ul class="nav nav-tabs" id="account-tabs">
 
                         <li class={{ ($user->sel_account_tab == 'plans') ? "active" : "" }}>
-                            <a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> My Plans</a>
+                            <a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> {{ trans('htc.My Plans') }}</a>
                         </li>
 
                         <li class={{ ($user->sel_account_tab == 'billing') ? "active" : "" }}>
-                            <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> Billing</a>
+                            <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> {{ trans('htc.Billing') }}</a>
                         </li>
 
                         <li class={{ ($user->sel_account_tab == 'remote') ? "active" : "" }}>
-                            <a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> Devices</a>
+                            <a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> {{ trans('htc.Devices') }}</a>
                         </li>
 
                         <li class={{ ($user->sel_account_tab == 'security') ? "active" : "" }}>
-                            <a href="#security" data-toggle="tab" data-tab="security" aria-expanded="false"><span class="glyphicon glyphicon-paperclip"> </span> Options</a>
+                            <a href="#security" data-toggle="tab" data-tab="security" aria-expanded="false"><span class="glyphicon glyphicon-paperclip"> </span> {{ trans('htc.Options') }}</a>
                         </li>
 
 <!--                         <li class={{ ($user->sel_account_tab == 'email') ? "active" : "" }}>

@@ -2,18 +2,18 @@
     <div class="col-md-6">
         <div class="panel panel-default panel-primary custom-settings-panel">
             <div class="panel-heading">
-                <h4 class="panel-title">Account Options</h4>
+                <h4 class="panel-title">{{ trans('htc.Account Options') }}</h4>
             </div>
             <div class="panel-body">
                 <form method="POST" action="{{ route('account.options') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-emailchange-form">
                     {{ csrf_field() }}
-                    <label class="col-md-4 control-label" for="inputSmall">Date Format</label>
+                    <label class="col-md-4 control-label" for="inputSmall">{{ trans('htc.Date Format') }}</label>
                     <div class="col-md-8">
                         <select date_format class="bs-select form-control input-sm" name="date_format">
                             @inject('ac', 'App\Http\Controllers\AccountsController')
                             {!! $ac->html_DateFormat() !!}
                         </select>
-                        <button type="submit" class="btn btn-success btn-xs">Save</button>
+                        <button type="submit" class="btn btn-success btn-xs">{{ trans('htc.Save') }}</button>
                     </div>
                 </form>
             </div>

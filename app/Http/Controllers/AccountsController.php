@@ -35,6 +35,15 @@ class AccountsController extends Controller
     //    //}
     //}
 
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
     /*-----------------------------------------------------------*/
     public function postActiveTab(Request $request) {
         //$portal = $_POST['portal'];
@@ -164,6 +173,13 @@ class AccountsController extends Controller
                 ->get();
         }
 
+        $txtAutoBill = $this->ts('Auto-Bill');
+        $txtCamera = $this->ts('Camera');
+        $txtPlanPoints = $this->ts('Plan Points');
+        $txtPointsUsed = $this->ts('Points Used');
+        $txtPoints = $this->ts('Points');
+        $txtFor = $this->ts('for');
+
         $handle = '';
         foreach ($plans as $plan) {
             $plan_style = $plan->style ? $plan->style : 'test';
@@ -183,7 +199,8 @@ class AccountsController extends Controller
                 //     $txt_plan2 = $sku->price.' for '.$sku->month.' Months';
                 // }
                 // // $txt_plan2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
-                $txt_plan2 = $sku->price.' for '.$product->points*$sku->month.' Points';
+                // $txt_plan2 = $sku->price.' for '.$product->points*$sku->month.' Points';
+                $txt_plan2 = sprintf('%s %s %s %s', $sku->price, $txtFor, $product->points*$sku->month, $txtPoints);
                 $txt_plan2 = $currency_region[$plan->region].$txt_plan2;
 
             } else {
@@ -194,7 +211,8 @@ class AccountsController extends Controller
             $txt_auto_bill = ($plan->auto_bill == 1) ? 'Yes' : 'No';
             $txt_region = ($plan->region) ? $img_region[$plan->region] : '';
 
-            $camera_name = '(No Camera)';
+            // $camera_name = '(No Camera)';
+            $camera_name = sprintf('(%s)', $this->ts('No Camera'));
             if ($plan->camera_id) {
                 $camera = Camera::find($plan->camera_id);
                 if ($camera) {
@@ -232,6 +250,8 @@ class AccountsController extends Controller
                 $action_icon = 'saved';
             }
 
+            $action_name = $this->ts($action_name);
+
             /*
 
             */
@@ -254,9 +274,14 @@ class AccountsController extends Controller
                 // }
 
                 $sku = PlanProductSku::where('sub_plan', $plan->renew_plan)->first();
+
                 $dt = date_create($plan->sub_start);
-                $txt_service_start = date_format($dt, $user->date_format);
+                $txtServiceStart = $this->ts('Service Start at');
+                $timeServiceStart = date_format($dt, $user->date_format);
+
                 $dt = date_create($plan->sub_end);
+                $txtServiceEnd = $this->ts('Service End at');
+                $txtServiceRenew = $this->ts('Service Renew at');
                 $txt_service_end = date_format($dt, $user->date_format);
             }
 
@@ -275,17 +300,18 @@ class AccountsController extends Controller
                 //     $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
                 // }
                 // // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
-                $txt_tier2 = $sku->price.' for '.$product->points*$sku->month.' Points';
+                // $txt_tier2 = $sku->price.' for '.$product->points*$sku->month.' Points';
+                $txt_tier2 = sprintf('%s %s %s %s', $sku->price, $txtFor, $product->points*$sku->month, $txtPoints);
                 $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
             }
 
 // $handle .= '<table class="table">';
 //             $handle .=                          '<tr><td >Service Start at : </td>';
-//             $handle .=                              '<td>'.$txt_service_start.'</td>';
+//             $handle .=                              '<td>'.$timeServiceStart.'</td>';
 //             $handle .=                          '</tr>';
 
 //             $handle .=                          '<tr><td >Service : </td>';
-//             $handle .=                              '<td>'.$txt_service_start.'</td>';
+//             $handle .=                              '<td>'.$timeServiceStart.'</td>';
 //             $handle .=                          '</tr>';
 // $handle .= '</table>';
 
@@ -322,7 +348,7 @@ if ($plan->status == 'active') {
             // // $handle .=                             '<button type="button" class="btn btn-default btn-xs" data-color="info">Auto-Bill (renews after 19/12/2018 8:00:00 am)</button>';
             // // $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
             // // // $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
-            // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$txt_service_start.'</span>';
+            // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$timeServiceStart.'</span>';
             // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$txt_service_end.'</span>';
             // $handle .=                         '</span>';
             // $handle .=                     '</p>';
@@ -330,13 +356,13 @@ if ($plan->status == 'active') {
             $handle .=                     '<p style="margin-top:8px;">';
             $handle .=                     '<table class="table">';
             $handle .=                         '<tbody class="text-warning">';
-            $handle .=                             '<tr><td class="pull-right">Service Start at : </td>';
-            $handle .=                                 '<td>'.$txt_service_start.'</td>';
+            $handle .=                             '<tr><td class="pull-right">'.$txtServiceStart.' : </td>';
+            $handle .=                                 '<td>'.$timeServiceStart.'</td>';
             $handle .=                             '</tr>';
             if ($plan->auto_bill) {
-                $handle .=                         '<tr><td class="pull-right">Service Renew at : </td>';
+                $handle .=                         '<tr><td class="pull-right">'.$txtServiceRenew.' : </td>';
             } else {
-                $handle .=                         '<tr><td class="pull-right">Service End at : </td>';
+                $handle .=                         '<tr><td class="pull-right">'.$txtServiceEnd.' : </td>';
             }
 
             $handle .=                                 '<td>'.$txt_service_end.'</td>';
@@ -393,7 +419,7 @@ if ($plan_style == 'test') {
                 $handle .=                     '</p>';
             }
             $handle .=                         '<p>';
-            $handle .=                             'Auto-Bill: ';
+            $handle .=                             $txtAutoBill.': ';
             $handle .=                             '<strong>';
             $handle .=                                  ' <span class="label" style="font-size: 1.00em;">'.$txt_auto_bill.'</span>';
             $handle .=                             '</strong>';
@@ -418,13 +444,13 @@ if ($plan_style == 'test') {
             $handle .=                     '<td><strong>'.$plan->iccid.'</strong></td>';
             $handle .=                 '</tr>';
             //$handle .=                 '<tr><td class="pull-right"><i class="fa fa-camera"> </i> Camera:</td>';
-            $handle .=                 '<tr><td class="pull-right">Camera:</td>';
+            $handle .=                 '<tr><td class="pull-right">'.$txtCamera.':</td>';
             $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">Plan Points:</td>';
+            $handle .=                 '<tr><td class="pull-right">'.$txtPlanPoints.':</td>';
             $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">Points Used:</td>';
+            $handle .=                 '<tr><td class="pull-right">'.$txtPointsUsed.':</td>';
             $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
             $handle .=                 '</tr>';
             // $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
@@ -521,13 +547,34 @@ $handle .=                 '</tr>';
             $sel_dmY_His = $selected;
         }
 
+        $txtMDY = $this->ts('MM/DD/YYYY');
+        $txtYMD = $this->ts('YYYY/MM/DD');
+        $txtDMY = $this->ts('DD/MM/YYYY');
+        $txtHMS = $this->ts('HH:MM:SS');
+        $txtAMPM = $this->ts('AM/PM');
+        $txt12H = $this->ts('12 hours');
+        $txt24H = $this->ts('24 hours');
+
+        $opt1 = sprintf('%s %s %s (%s)', $txtMDY, $txtHMS, $txtAMPM, $txt12H);
+        $opt2 = sprintf('%s %s (%s)', $txtMDY, $txtHMS, $txt24H);
+        $opt3 = sprintf('%s %s %s (%s)', $txtYMD, $txtHMS, $txtAMPM, $txt12H);
+        $opt4 = sprintf('%s %s (%s)', $txtYMD, $txtHMS, $txt24H);
+        $opt5 = sprintf('%s %s %s (%s)', $txtDMY, $txtHMS, $txtAMPM, $txt12H);
+        $opt6 = sprintf('%s %s (%s)', $txtDMY, $txtHMS, $txt24H);
+
         $txt = '';
-        $txt .= '<option value="m%2Fd%2FY+h%3Ai%3As+a" '.$sel_mdY_his_a.'">MM/DD/YYYY HH:MM:SS AM/PM (12 hours)</option>';
-        $txt .= '<option value="m%2Fd%2FY+H%3Ai%3As" '.$sel_mdY_His.'>MM/DD/YYYY HH:MM:SS (24 hours)</option>';
-        $txt .= '<option value="Y%2Fm%2Fd+h%3Ai%3As+a" '.$sel_Ymd_his_a.'>YYYY/MM/DD HH:MM:SS AM/PM (12 hours)</option>';
-        $txt .= '<option value="Y%2Fm%2Fd+H%3Ai%3As" '.$sel_Ymd_His.'>YYYY/MM/DD HH:MM:SS (24 hours)</option>';
-        $txt .= '<option value="d%2Fm%2FY+h%3Ai%3As+a" '.$sel_dmY_his_a.'>DD/MM/YYYY HH:MM:SS AM/PM (12 hours)</option>';
-        $txt .= '<option value="d%2Fm%2FY+H%3Ai%3As" '.$sel_dmY_His.'>DD/MM/YYYY HH:MM:SS (24 hours)</option>';
+        // $txt .= '<option value="m%2Fd%2FY+h%3Ai%3As+a" '.$sel_mdY_his_a.'">MM/DD/YYYY HH:MM:SS AM/PM (12 hours)</option>';
+        // $txt .= '<option value="m%2Fd%2FY+H%3Ai%3As" '.$sel_mdY_His.'>MM/DD/YYYY HH:MM:SS (24 hours)</option>';
+        // $txt .= '<option value="Y%2Fm%2Fd+h%3Ai%3As+a" '.$sel_Ymd_his_a.'>YYYY/MM/DD HH:MM:SS AM/PM (12 hours)</option>';
+        // $txt .= '<option value="Y%2Fm%2Fd+H%3Ai%3As" '.$sel_Ymd_His.'>YYYY/MM/DD HH:MM:SS (24 hours)</option>';
+        // $txt .= '<option value="d%2Fm%2FY+h%3Ai%3As+a" '.$sel_dmY_his_a.'>DD/MM/YYYY HH:MM:SS AM/PM (12 hours)</option>';
+        // $txt .= '<option value="d%2Fm%2FY+H%3Ai%3As" '.$sel_dmY_His.'>DD/MM/YYYY HH:MM:SS (24 hours)</option>';
+        $txt .= '<option value="m%2Fd%2FY+h%3Ai%3As+a" '.$sel_mdY_his_a.'">'.$opt1.'</option>';
+        $txt .= '<option value="m%2Fd%2FY+H%3Ai%3As" '.$sel_mdY_His.'>'.$opt2.'</option>';
+        $txt .= '<option value="Y%2Fm%2Fd+h%3Ai%3As+a" '.$sel_Ymd_his_a.'>'.$opt3.'</option>';
+        $txt .= '<option value="Y%2Fm%2Fd+H%3Ai%3As" '.$sel_Ymd_His.'>'.$opt4.'</option>';
+        $txt .= '<option value="d%2Fm%2FY+h%3Ai%3As+a" '.$sel_dmY_his_a.'>'.$opt5.'</option>';
+        $txt .= '<option value="d%2Fm%2FY+H%3Ai%3As" '.$sel_dmY_His.'>'.$opt6.'</option>';
         return $txt;
     }
 
@@ -541,10 +588,19 @@ $handle .=                 '</tr>';
 
         $devices = DB::table('devices')->where('user_id', $user_id)->get();
         $txt = '';
+        $txtDeviceInfo = $this->ts('Device Info');
+        // $txtSendNotify = $this->ts('Send Notifications');
+        $txtNotifyHB = $this->ts('Notify on Heartbeat');
+        $txtNotifyUpload = $this->ts('Notify on Upload');
+        // $txtLastActive = $this->ts('Last Active');
+        // $txtBlock = $this->ts('Block now');
+        $txtRemove = $this->ts('Remove');
+
         if ($devices->count() > 0) {
             $txt .= '<thead>';
             $txt .=     '<tr>';
-            $txt .=         '<th>Device Info</th>';
+            // $txt .=         '<th>Device Info</th>';
+            $txt .=         '<th>'.$txtDeviceInfo.'</th>';
             // $txt .=         '<th>Confirmed</th>';
             $txt .=     '</tr>';
             $txt .= '</thead>';
@@ -578,29 +634,29 @@ $handle .=                 '</tr>';
                 $txt .=         '<i class="fa fa-dot-circle" style="color:lime;"> </i> '.$device_info.'<br/>';
                 $txt .=         '<span style="color:yellowgreen;">'.$device_os.'</span>';
                 // $txt .=         '<span style="color:yellowgreen;">'.$device->push_id.'</span>';
-                // $txt .=         '<span style="color:yellowgreen;">Last Active: 2019/01/18 03:02:45</span>';
+                // $txt .=         '<span style="color:yellowgreen;">.'$txtLastActive.': 2019/01/18 03:02:45</span>';
                 $txt .=     '</td>';
                 $txt .= '</tr>';
                 $txt .= '<tr>';
                 $txt .=     '<td>';
                 // $txt .=         '<span class="button-checkbox">';
-                // $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Send Notifications</button>';
+                // $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">'.$txtSendNotify.'</button>';
                 // $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_notify[]" value="'.$id.'" '.$notify_checked.' /> ';
                 // $txt .=         '</span>';
                 $txt .=         '<span class="button-checkbox">';
-                $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Heartbeat</button>';
+                $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">'.$txtNotifyHB.'</button>';
                 $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_hb[]" value="'.$id.'" '.$hb_checked.' /> ';
                 $txt .=         '</span>';
                 $txt .=         '<span class="button-checkbox">';
-                $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">Notify on Upload</button>';
+                $txt .=             '<button type="button" class="btn btn-default btn-xs" data-color="info">'.$txtNotifyUpload.'</button>';
                 $txt .=             '<input type="checkbox" class="hidden camera-select" name="push_upload[]" value="'.$id.'" '.$upload_checked.' /> ';
                 $txt .=         '</span>';
                 $txt .=     '</td>';
 
                 $txt .=     '<td>';
                 // $txt .=         'Yes';
-                // $txt .=         '<a href="/account/mobilerevoke/617" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> Block now</a> ';
-                $txt .=         '<a href="/account/deviceremove/'.$id.'" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> Remove</a>';
+                // $txt .=         '<a href="/account/mobilerevoke/617" class="btn btn-xs btn-warning"><i class="fa fa-times-circle"> </i> '.$txtBlock.'</a> ';
+                $txt .=         '<a href="/account/deviceremove/'.$id.'" class="btn btn-xs btn-danger"><i class="fa fa-trash"> </i> '.$txtRemove.'</a>';
                 // $txt .=         '<a href="/account/mobileinstate/617" class="btn btn-xs btn-success"><i class="fa fa-times-circle"> </i> Unblock</a>';
                 // $txt .=         '<a href="/account/mobileconfirm/77" class="btn btn-xs btn-success">Confirm now</a>';
                 $txt .=     '</td>';
@@ -1479,4 +1535,3 @@ exit();
 */
 
 }
-
