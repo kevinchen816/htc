@@ -1,6 +1,3 @@
-<?php
-
-return [
     'Language'                  => '語言',
 
     'Register'                  => '註冊',
@@ -299,5 +296,3 @@ return [
         'Delete this Camera'    => '刪除這台設備',
         'Delete Camera'         => '刪除設備',
         'Delete Camera Note'    => '注意: 您必須輸入帳戶密碼，然後點擊刪除設備。',
-
-];

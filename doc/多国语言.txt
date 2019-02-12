@@ -16,6 +16,9 @@ $ php artisan make:middleware SetLocale
         Route::get('/', 'Api\CamerasController@home')->name('home');
     }
 
+补充：
+https://blog.csdn.net/yuyan_wang/article/details/80885744
+
 //------------------------------------------------------------------
 https://github.com/overtrue/laravel-lang
 

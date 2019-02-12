@@ -1,0 +1,364 @@
+阿里云
+47.106.33.133
+
+user: root
+password: Kevin816
+
+user: kevin
+password: kevin816
+
+//---------------------------------------------------------------------------------
+[ 参考 ]
+Laravel 部署到阿里云 / 腾讯云
+https://laravel-china.org/articles/8983/laravel-deploys-to-the-ali-cloud-tencent-cloud
+
+Ubuntu 使用 lnmp 部署 laravel
+https://www.jianshu.com/p/fb037caf4fff
+
+    ** 网页目录 /var/www
+
+    $ adduser kevin
+    $ sudo vim /etc/sudoers
+        # User privilege specification
+        root ALL=(ALL:ALL) ALL
+        kevin ALL=(ALL:ALL) ALL
+
+// 以下开始建立 AWS 服务器及部署 -------------------------------------------------------
+
+[ AWS 建立 EC2 ]
+
+    补充：云服务器需要增加适当的安全组
+    HTTP 80
+
+    1. 选择 Ubuntu Server 18.04 LTS
+        - Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-07ad4b1c3af1ea214  64 位 (x86)
+            Ubuntu Server 18.04 LTS (HVM),EBS General Purpose (SSD) Volume Type.
+            Support available from Canonical (http://www.ubuntu.com/cloud/services).
+
+        - Ubuntu Server 16.04 LTS (HVM), SSD Volume Type - ami-06c43a7df16e8213c
+        - Amazon Linux 2 AMI (HVM), SSD Volume Type - ami-0d7ed3ddb85b521a6   64 位 (x86)
+        - Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type - ami-00a5245b4816c38e6   64 位 (x86)
+
+    澳大利亚使用:
+        Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-1031-aws x86_64)
+    日本使用:
+        Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-1021-aws x86_64)
+
+[ 要访问您的实例 ]
+    1. 打开 SSH 客户端。(了解如何使用 PuTTY 连接)
+    2. 查找您的私有密钥文件(mykey.pem)。向导会自动检测您用于启动实例的密钥。
+    3. 您的密钥必须不公开可见，SSH 才能工作。如果需要，请使用此命令：
+
+重要--》  chmod 400 mykey.pem
+
+    4. 通过其 公有 DNS 连接到您的实例:
+        ec2-13-237-165-208.ap-southeast-2.compute.amazonaws.com
+示例：
+    ssh -i "mykey.pem" ubuntu@ec2-13-237-165-208.ap-southeast-2.compute.amazonaws.com
+
+    请注意，在大多数情况下，上述用户名都是正确的，
+    但请确保您已阅读了 AMI 使用说明以确定 AMI 所有人没有更改默认的 AMI 用户名。
+
+示例 2：
+    $ ssh -i "tokyo.pem" ec2-user@ec2-13-115-245-142.ap-northeast-1.compute.amazonaws.com
+    The authenticity of host 'ec2-13-115-245-142.ap-northeast-1.compute.amazonaws.com (13.115.245.142)' can't be established.
+    ECDSA key fingerprint is SHA256:FfiwVJoIavDdAtHmaoukgb24EIXc0GRhZJOKkPC6AHg.
+    Are you sure you want to continue connecting (yes/no)? yes
+    Warning: Permanently added 'ec2-13-115-245-142.ap-northeast-1.compute.amazonaws.com,13.115.245.142' (ECDSA) to the list of known hosts.
+
+           __|  __|_  )
+           _|  (     /   Amazon Linux 2 AMI
+          ___|\___|___|
+
+    https://aws.amazon.com/amazon-linux-2/
+    3 package(s) needed for security, out of 5 available
+    Run "sudo yum update" to apply all updates.
+
+[ 问题处理 ]
+    $ ssh -i "tokyo.pem" ubuntu@13.231.222.113
+    Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+
+[ 补充 ]
+    Amazon Linux AMI (Amazon Machine Image) 是 CentOS
+    CentOS 衍生自 Red Hat Enterprise Linux (RHEL) 的原始碼
+
+    密钥对由 AWS 存储的公有密钥和您存储的私有密钥文件构成。它们共同帮助您安全地连接到您的实例。
+    对于 Windows AMI，需使用私有密钥文件获取登录实例所需的密码。
+    对于 Linux AMI，私有密钥文件让您通过 SSH 安全地登录实例。
+
+//---------------------------------------------------------------------------------
+[ 更新列表 ]
+	$ sudo apt-get update  // 访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。
+
+[ 安装语言包]
+	$ sudo apt-get install -y language-pack-en-base
+
+	$ sudo locale-gen en_US.UTF-8   // 生成需要的 locale 文件,
+                                    // 设定语言编码为 UTF-8 (/etc/default/locale)
+
+    为了解决系统不同语言之间可能发生的冲突，安装之后可以减少许多因语言编码带来的问题。
+    (-y 参数的意思是直接安装无需确认)
+
+    参考 :
+    $ locale
+    LANG=C.UTF-8
+    LANGUAGE=
+    LC_CTYPE="C.UTF-8"
+    LC_NUMERIC="C.UTF-8"
+    LC_TIME="C.UTF-8"
+    LC_COLLATE="C.UTF-8"
+    LC_MONETARY="C.UTF-8"
+    LC_MESSAGES="C.UTF-8"
+    LC_PAPER="C.UTF-8"
+    LC_NAME="C.UTF-8"
+    LC_ADDRESS="C.UTF-8"
+    LC_TELEPHONE="C.UTF-8"
+    LC_MEASUREMENT="C.UTF-8"
+    LC_IDENTIFICATION="C.UTF-8"
+    LC_ALL=
+
+[ 安装常用软件 ]
+	$ sudo apt-get install -y vim git  // 可选 zip unzip
+
+//---------------------------------------------------------------------------------
+[ 安装 PHP7 ]
+	请确保每一步没有出错，如果有报错，可尝试多安装几次
+
+    采用 ppa 方式安装 php7.1
+    (PPA 是 personal package archive 的缩写，即个人包档案。
+     使用 PPA，软件制作者可以轻松地发布软件，并且能够准确地对用户进行升级。
+     Ubuntu 用户使用 PPA 源将更加方便的获得软件的最新版本。）
+
+	$ sudo apt-get install -y software-properties-common
+    (说明：software-properties-common 是 add-apt-repository 所依赖的包)
+
+    $ sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+    (说明：添加 php7 的 ppa，注意 LC_ALL=en_US.UTF-8 参数告诉我们系统语言为 UTF-8，
+     如果没有，可能会出现错误，如阿里云的服务器。)
+
+	$ sudo apt-get update              // 把刚才添加的包拉取下来
+	$ apt-cache search php7.1          // 搜索php7.1开头的包检验是否安装成功
+
+    $ sudo apt-get install -y php7.1        // 安装 php7.1，安装成功后运行 php -v 查看是否安装成功
+	$ sudo apt-get install -y php7.1-mysql  // 这是 php7.1 与 mysql 的通信模块
+	$ sudo apt-get install -y php7.1-fpm    // 这是 Nginx 用来解析 php 文件的
+	$ sudo apt-get install -y php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring
+    （上面为安装其他必备模块）
+
+[ 安装 Mysql ]
+
+	$ sudo apt-get install -y mysql-server
+
+    // 安装完后需建立新用户
+    $ sudo mysql
+    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'kevin816';    // 建立 MySQL 用户
+
+        **** 补充：可选 ****
+        因为上线的应用为laravel 5.5版本开发的，为了之后的兼容性问题，
+        ubuntu14.04 直接安装的 mysql 不是较新版本，因此要升级一下mysql
+        $ cd ~
+        $ wget https://dev.mysql.com/get/mysql-apt-config_0.8.1-1_all.deb
+        $ sudo dpkg -i mysql-apt-config_0.8.1-1_all.deb
+         (注意在添加源的时候，会叫你选择安装 MySQL 哪个应用，这里选择 Server 即可，
+          再选择 MySQL 5.7 后又会回到选择应用的那个界面，此时选择 Apply 即可。)
+
+        解压安装包后会弹出框，选择好 mysql 5.7 版本后选择ok 然后继续
+        $ sudo apt-get update                   // 然后,更新包索引
+        $ sudo apt-get install mysql-server     // 然后,安装 MySQL-server
+        $ sudo mysql_upgrade -u root -p         // 然后,升级全部的 MySQL 数据库
+        $ sudo service mysql restart            // 最后,重启mysql server
+
+        登陆一下mysql看看是否已经升级完毕，成功了进入下一步
+
+[ 安装 Nginx ]
+	// 安装之前需确认是否安装了apache2，如果已经安装了apache2，需要先停止/卸载 apache2
+	// 停止
+	$ sudo service apache2 stop
+	//卸载
+	$ sudo apt-get --purge remove apache2
+	$ sudo apt-get --purge remove apache2.2-common
+	$ sudo apt-get autoremove
+
+	// 安装 nginx
+	$ sudo apt-get install -y nginx
+
+//---------------------------------------------------------------------------------
+[ 配置 PHP7 ]
+	$ sudo vim /etc/php/7.1/fpm/php.ini
+		-> 修改 cgi.fix_pathinfo=0
+
+	$ sudo vim /etc/php/7.1/fpm/pool.d/www.conf
+		-> 修改 listen = /var/run/php/php7.1-fpm.sock
+		（文章错误： listen = /var/run/php7.1-fpm.sock）
+
+[ 配置 Nginx ]
+	$ sudo vim /etc/nginx/sites-available/default
+
+	--> 修改如下，根据自己的项目情况修改对应信息：
+
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        # root /var/www/html;
+        root /var/www/sample/public;            <-- sample 为 Laravel 项目名称
+
+        # index index.html index.htm index.nginx-debian.html;
+        index index.php;                        <-- 修改 (注意：第一个一定是要 index)
+
+        # server_name _;
+        server_name 47.106.33.133;              <-- 替换为你的网站域名或IP地址
+
+        location / {
+            #try_files $uri $uri/ =404;
+            try_files $uri $uri/ /index.php?$query_string;  <-- 修改
+        }
+
+        ** 重要：需加上以下内容，否则浏览器访问时会出现 403 Forbidden
+        location ~ \.php$ {
+            try_files $uri /index.php =404;
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+    }
+
+    补充说明：
+    fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+        - 没有此设定，在浏览器访问会变成下载文件
+        - 路径要正确, 否则会出项 502 Bad Gateway
+
+    include fastcgi_params;
+        - 没有此设定，在浏览器访问会是空白页面
+
+//---------------------------------------------------------------------------------
+[ 拉取代码 ]
+	// 建议先将代码上传到云端代码仓库（github, coding）然后再在服务端上拉取
+	$ cd /var/www
+
+    // $ sudo git clone git@github.com:kevinchen816/sample.git (错误)
+    $ sudo git clone https://github.com/kevinchen816/sample.git
+
+    Cloning into 'sample'...
+    remote: Enumerating objects: 236, done.
+    remote: Total 236 (delta 0), reused 0 (delta 0), pack-reused 236
+    Receiving objects: 100% (236/236), 668.88 KiB | 1.39 MiB/s, done.
+    Resolving deltas: 100% (64/64), done.
+
+[ 安装 Composer 并使用 Composer 安装代码依赖 ]
+
+	// 访问 composer 官网 https://getcomposer.org/download/
+	// 获取下面四行代码最新版，直接粘贴执行安装 Composer
+
+	//$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+	//$ php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+	//$ php composer-setup.php
+	//$ php -r "unlink('composer-setup.php');"
+
+    $ sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    $ sudo php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    $ sudo php composer-setup.php
+    $ sudo php -r "unlink('composer-setup.php');"
+
+	// 然后移动 composer.phar
+	$ sudo mv composer.phar /usr/local/bin/composer
+
+	// 进入项目目录
+	$ cd /var/www/sample
+
+	// 执行 composer install
+	$ sudo composer install
+
+[ 创建 .env 文件 ]
+	$ cd /var/www/sample
+	$ sudo cp .env.example .env
+	$ sudo vim .env
+        // 根据项目实际情况修改 .env 文件
+        DB_DATABASE=sample
+		DB_USERNAME=kevin         // 在安装 MySQL 后，创建用户 kevin
+		DB_PASSWORD=kevin816
+
+[ 生成 laravel key ]
+	$ cd /var/www/sample
+	$ sudo php artisan key:generate
+	Application key [base64:FEId3tpYBlH5eihJqt6Z3lC0Uxnmb3aOpCabuACiIzY=] set successfully.
+
+	// 补充：执行完后会自动将产生的 key 加到 .env 的 APP_KEY
+
+[ 修改 config/database.php ]
+    'mysql' => [
+        'driver' => 'mysql',
+        'host' => env('DB_HOST', '127.0.0.1'),
+        'port' => env('DB_PORT', '3306'),
+        'database' => env('DB_DATABASE', 'forge'),
+        'username' => env('DB_USERNAME', 'forge'),
+        'password' => env('DB_PASSWORD', ''),
+        'unix_socket' => env('DB_SOCKET', ''),
+        'charset' => 'utf8mb4',
+        'collation' => 'utf8mb4_unicode_ci',
+        'prefix' => '',
+        'strict' => false,  <-- 重要：在使用 AWS RDS 需要修改为 false, 否则会出现 SQLSTATE[42000]: Syntax error...
+        'engine' => null,
+    ],
+
+        ** 补充: 详细错误讯息如下：
+        $ sudo php artisan migrate
+
+        In Connection.php line 664:
+          SQLSTATE[42000]: Syntax error or access violation: 1231 Variable 'sql_mode' can't be set to the value
+          of 'NO_AUTO_CREATE_USER' (SQL: select * from information_schema.tables where table_schema = sample and
+           table_name = migrations)
+
+        In MySqlConnector.php line 150:
+          SQLSTATE[42000]: Syntax error or access violation: 1231 Variable 'sql_mode' can't be set to the value
+          of 'NO_AUTO_CREATE_USER'
+
+[ 创建数据库，执行迁移 ]
+
+    // 注意：首先登录 mysql 创建一个对应项目的数据库，名字应该和 .env 文件中的一致
+    $ sudo mysql
+    mysql> CREATE DATABASE sample;                              // 创建数据库名=sample
+    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'kevin816';    // 建立 MySQL 用户
+    mysql> GRANT all privileges ON sample.* TO 'kevin'@'%';
+    mysql> FLUSH PRIVILEGES;
+    mysql> exit
+
+	$ cd /var/www/sample
+	$ sudo php artisan migrate
+
+    ** 补充: 远端数据库测试
+    $ sudo mysql -h htc-db-instance.caieb0likkhe.ap-southeast-2.rds.amazonaws.com -ukevin -pkevin816
+
+[ 修改权限 ]
+    $ sudo chown -R www-data:www-data /var/www/sample
+    $ sudo chmod -R 777 /var/www/sample/storage
+
+[ 重启 Nginx 和 PHP7 fpm ]
+	$ sudo service nginx restart
+	$ sudo service php7.1-fpm restart
+
+搞定！
+
+//---------------------------------------------------------------------------------
+Ubuntu 14/16 下的 Laravel LNMP 线上环境自动部署脚本
+https://laravel-china.org/topics/2814/ubuntu-1416-under-the-laravel-lnmp-online-environment-automatically-deploy-scripts
+
+阿里云 ECS 部署：nginx+MySQL+Laravel+PHP7+Redis+Node.js
+https://laravel-china.org/articles/4715/ali-cloud-ecs-deployment-nginxmysqllaravelphp7redisnodejs
+
+
+使用 Homestead 能解决掉上面讲的开发环境不一致的问题，并且你也可以选择使用 laravel-ubuntu-init 布置服务器，来达到开发环境和线上环境的统一。
+
+	https://github.com/summerblue/laravel-ubuntu-init
+
+
+我在阿里上用centos7部署的小水管，用宝塔面板管理（安装了php7，mysql5.6，nginx1.12），自己安装和git，composer，如果你想还可以安装npm，yarn，注意将库连接改成国内的，然后pull自己代码，也运行成功了，其实那个环境是一个合集，我们能用到的基本就是我说的这些，主要是国内是centos流行啊。。。。
+
+//---------------------------------------------------------------------------------
+在AWS上安装laravel框架
+https://www.cnblogs.com/ImYZF/p/3566295.html
+
+如何在 Amazon Cloud 上安装 Laravel（AWS EC2）
+https://laravel-china.org/articles/5486/how-do-i-install-laravel-aws-ec2-on-amazon-cloud
