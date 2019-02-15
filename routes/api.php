@@ -53,6 +53,8 @@ $api->version('v1', [
     $api->post('uploadvideothumb', 'CamerasController@uploadvideothumb')->name('api.camera.uploadvideothumb');
     $api->post('uploadvideo', 'CamerasController@uploadvideo')->name('api.camera.uploadvideo');
 
+    $api->post('uploads3', 'CamerasController@uploads3')->name('api.camera.uploads3');
+
     $api->post('imagemissing', 'CamerasController@imagemissing')->name('api.camera.imagemissing');
     $api->post('videomissing', 'CamerasController@videomissing')->name('api.camera.videomissing');
 

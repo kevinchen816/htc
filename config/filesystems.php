@@ -57,10 +57,10 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
+            'key' => 'AKIAIE4AHITCYWZ27BBQ',
+            'secret' => '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',
+            'region' => 'ap-northeast-1',
+            'bucket' => '10ware-s3-jp',
         ],
 
     ],

@@ -2440,6 +2440,43 @@ class CamerasController extends Controller
         return $response;
     }
 
+    public function uploads3(Request $request) {
+
+// // $file = $request->Image;
+// $filename = '1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg';
+// $exists = Storage::disk('s3')->exists($filename);
+// $url = Storage::disk('s3')->temporaryUrl(
+//     $filename, now()->addMinutes(1440)
+// );
+
+// $ret['exists'] = $exists;
+// $ret['url'] = $url;
+// return $ret;
+
+    $path = $request->Image->store('1', 's3'); // OK // "path": "1/kUwSIQTB3vwdtzkxAGF0I8ooOhpACgcmSrSvJVmI.jpeg"
+// $path = $request->Image->storeAs(
+//     '1', '12345.JPG', ['disk' => 's3']
+// ); // OK //"path": "1/12345.JPG"
+// $path = $request->Image->storeAs('1', '12345.JPG', 's3'); // OK // "path": "1/12345.JPG"
+$ret['path'] = $path; //"path": "1/DKac57se7SlmJxyo1kF8CtYGrboVyESRy4jVC0g5.jpeg"
+return $ret;
+
+// Storage::delete('file.jpg');
+// Storage::delete(['file1.jpg', 'file2.jpg']);
+// Storage::disk('s3')->delete('folder_path/file_name.jpg');
+
+        $ret = $this->uploadfile($request, 'photo_thumb');
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        $response = $ret['response'];
+        // if ($user_id && $camera) {
+        //     $body = 'New Photo: '.$request->FileName;
+        //     $this->pushNewFile($user_id, $camera, $body);
+        //     $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
+        // }
+        return $response;
+    }
+
     public function upload_check($request, $action) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
