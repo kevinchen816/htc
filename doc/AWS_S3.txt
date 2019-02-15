@@ -3,25 +3,6 @@
 AWS访问密钥（Access Key）
 https://www.cloudbility.com/help/aws/access-key.html
 
-User name
-kmcampro
-
-访问密钥 ID (Access key ID)
-AKIAIRYBW26M2MKFND6A
-
-私有访问密钥 (Secret access key)
-xRwC3VUwets9m0kc23lGKCSKOY9IEfpF03SEhCB8
-
-Note: You cannot retrieve the existing secret key.
-You can see the secret key only once immediately after creating.
-
-
-// 10ware-s3-jp
-AKIAIE4AHITCYWZ27BBQ
-1gYAetjKCy/iU1gjeaavFyC/Z48EE4fWeShVt+3Q
-ap-northeast-1
-10ware-s3-jp
-
 //-------------------------------------------------------------------------
 Use Amazon S3 with Laravel 5
 https://wogan.blog/2017/01/04/use-amazon-s3-with-laravel-5/
@@ -66,68 +47,9 @@ public function uploadFileToS3(Request $request)
     $s3->put($filePath, file_get_contents($image), 'public');
 }
 
-https://s3.ap-northeast-1.amazonaws.com/10ware-s3-jp/1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg?
-response-content-disposition=inline&
-X-Amz-Security-Token=AgoGb3JpZ2luEPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLW5vcnRoZWFzdC0xIoACdOI3%2BMox1%2FENMlQWWYx8rJk9aH4XkkDAj6jcn9GjkemD4jyN6r7YwbqKz7US0%2BPyu5tnHN5Dvakn%2FUwjUaHUZCH6fmK6HQLOZzhhxbf4AWhUye9gIr09FV1O24CfEvMP7BPhKJ50UaLDn9R6rS4V4ozH28mwT%2BnouLd8HQ7xzoOW%2BMKhiHFbpnFTDpzvHz7j3gszLhIsZU7aFiwLPjsmyiJRkhDnC3Gvb6UgO7W7K8y3nRbJC01poeUu7AQhQV2yVIQFoU3ixVLmSrbROyYg18AyuUz2hEWFDcC89TlOyIyBd3yA8LX2QS%2F%2FiB%2BkzzHBgp%2F9BhvNDpg0keS3NjKy0irbAwgbEAAaDDE5NTEwNjEzNjg3NCIM4%2BmVPcdMhDisA81NKrgD%2Bkt%2F0iTCAAldwffeXwHE6JarKr%2FdKgHpU%2FiOSreSWtKjE5SoCaaln9DN45ouKuzvvjMnpI6ea0lP0N1OFJNqP1R8tiKafXRnyJrDgOarXTw1XpVZt6ZzyK3liY%2BeVcHuDcut6fFHELpWZe0wUArxyPSqrs%2BOxGVUGhV%2BSifUusEcI9%2FmU1Oow1kHTDJQuMCuKZkOtFaPYOuBbP39ci%2FHiUkpiogJWP4xhYP30osJr1kW%2BPfrQBt%2BboXASPW%2BPD8HVYQcUtKdY7uSHHzzSu%2BLjOjnKhMg7Gov%2Fv26h4uxtpqgJ%2B96Sm2L%2FDLPkVW7wTVwwDYO8gH5IUbtF1nCIiF3fRRpOIL6e1Ri4bJzdcwGV4utcr5VfGlgcnLb16DLSR5oblFSAQTYHefVLSfZoXO4b183OkIcxPQAPc2MUDAdMGufIDrDpVIESoRZYt3%2FIzOjimMNe6PRL8VmuRByQsHnIqFNF5luqa9VR3C1z0IrregeW%2BZoaFm6qfv8gIyY8SD5diLdIiYoUK9r9%2Fa9HT%2Fo12XAkjhmYRqwm948KuU%2FeWiNuBWFr60yGDrj1ISsKaJ3NU2NJEsUMcQw54Gc4wU%3D&
-X-Amz-Algorithm=AWS4-HMAC-SHA256&
-X-Amz-Date=20190215T200200Z&
-X-Amz-SignedHeaders=host&
-X-Amz-Expires=300&
-X-Amz-Credential=ASIAS23J3MMVFOB726WE%2F20190215%2Fap-northeast-1%2Fs3%2Faws4_request&
-X-Amz-Signature=d66ae20f146ec828cb49656b3891d45afa53ac92376a903da020afa34468dda6
-
 临时 URL
 对于使用 s3 驱动存储文件的系统，可以使用 temporaryUrl 方法创建临时 URL 到给定文件，
 该方法接收一个路径参数和指定 URL 何时过期的 DateTime :
 $url = Storage::disk('s3')->temporaryUrl(
     $filename, now()->addMinutes(5)
 );
-https://10ware-s3-jp.s3.ap-northeast-1.amazonaws.com/1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg?
-X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&
-X-Amz-Algorithm=AWS4-HMAC-SHA256&
-X-Amz-Credential=AKIAIE4AHITCYWZ27BBQ%2F20190215%2Fap-northeast-1%2Fs3%2Faws4_request&
-X-Amz-Date=20190215T200456Z&
-X-Amz-SignedHeaders=host&
-X-Amz-Expires=300&
-X-Amz-Signature=24891f685ca3fd6fdcc3aa5ad10bf03cddab29f129143f77b0d9d769bb49825b
-
-[ portal.ridgetec.com ]
-https://ridgetec-prod.s3.amazonaws.com/camera_media/968395.JPG?
-X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&
-X-Amz-Algorithm=AWS4-HMAC-SHA256&
-X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20190215%2Fus-east-1%2Fs3%2Faws4_request&
-X-Amz-Date=20190215T200920Z&
-X-Amz-SignedHeaders=host&
-X-Amz-Expires=86400&
-X-Amz-Signature=8face1e2dd83c609ce35838d0ebc94c54f0b18aa3b63b60808bb998ca1480c96"
-
-https://s3-ap-northeast-1.amazonaws.com/10ware-s3-jp/1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg
-https://10ware-s3-jp.s3.ap-northeast-1.amazonaws.com/1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg
-
-// 将你的 Amazon S3 的 API Key 和 Secret Key 保存到 .env 文件中
-/config/filesystems.php
-'default' => env('FILESYSTEM_DRIVER', 'local'),
-
-'s3' => [
-    'driver' => 's3',
-    'key'    => env('S3_KEY'),
-    'secret' => env('S3_SECRET'),
-    'region' => env('S3_REGION'),
-    'bucket' => env('S3_BUCKET'),
-],
-
-'s3' => [
-    'driver' => 's3',
-    'key' => 'AKIAIE4AHITCYWZ27BBQ',
-    'secret' => '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',
-    'region' => 'ap-northeast-1',
-    'bucket' => '10ware-s3-jp',
-],
-
-'s3' => [
-    'driver' => 's3',
-    'key' => env('AWS_ACCESS_KEY_ID', 'AKIAIE4AHITCYWZ27BBQ'),
-    'secret' => env('AWS_SECRET_ACCESS_KEY', '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'),
-    'region' => env('AWS_DEFAULT_REGION', 'ap-northeast-1'),
-    'bucket' => env('AWS_BUCKET', '10ware-s3-jp'),
-],
