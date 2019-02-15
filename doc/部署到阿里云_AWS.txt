@@ -56,36 +56,6 @@ https://www.jianshu.com/p/fb037caf4fff
 示例：
     ssh -i "mykey.pem" ubuntu@ec2-13-237-165-208.ap-southeast-2.compute.amazonaws.com
 
-    请注意，在大多数情况下，上述用户名都是正确的，
-    但请确保您已阅读了 AMI 使用说明以确定 AMI 所有人没有更改默认的 AMI 用户名。
-
-示例 2：
-    $ ssh -i "tokyo.pem" ec2-user@ec2-13-115-245-142.ap-northeast-1.compute.amazonaws.com
-    The authenticity of host 'ec2-13-115-245-142.ap-northeast-1.compute.amazonaws.com (13.115.245.142)' can't be established.
-    ECDSA key fingerprint is SHA256:FfiwVJoIavDdAtHmaoukgb24EIXc0GRhZJOKkPC6AHg.
-    Are you sure you want to continue connecting (yes/no)? yes
-    Warning: Permanently added 'ec2-13-115-245-142.ap-northeast-1.compute.amazonaws.com,13.115.245.142' (ECDSA) to the list of known hosts.
-
-           __|  __|_  )
-           _|  (     /   Amazon Linux 2 AMI
-          ___|\___|___|
-
-    https://aws.amazon.com/amazon-linux-2/
-    3 package(s) needed for security, out of 5 available
-    Run "sudo yum update" to apply all updates.
-
-[ 问题处理 ]
-    $ ssh -i "tokyo.pem" ubuntu@13.231.222.113
-    Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
-
-[ 补充 ]
-    Amazon Linux AMI (Amazon Machine Image) 是 CentOS
-    CentOS 衍生自 Red Hat Enterprise Linux (RHEL) 的原始碼
-
-    密钥对由 AWS 存储的公有密钥和您存储的私有密钥文件构成。它们共同帮助您安全地连接到您的实例。
-    对于 Windows AMI，需使用私有密钥文件获取登录实例所需的密码。
-    对于 Linux AMI，私有密钥文件让您通过 SSH 安全地登录实例。
-
 //---------------------------------------------------------------------------------
 [ 更新列表 ]
 	$ sudo apt-get update  // 访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。
@@ -99,26 +69,10 @@ https://www.jianshu.com/p/fb037caf4fff
     为了解决系统不同语言之间可能发生的冲突，安装之后可以减少许多因语言编码带来的问题。
     (-y 参数的意思是直接安装无需确认)
 
-    参考 :
-    $ locale
-    LANG=C.UTF-8
-    LANGUAGE=
-    LC_CTYPE="C.UTF-8"
-    LC_NUMERIC="C.UTF-8"
-    LC_TIME="C.UTF-8"
-    LC_COLLATE="C.UTF-8"
-    LC_MONETARY="C.UTF-8"
-    LC_MESSAGES="C.UTF-8"
-    LC_PAPER="C.UTF-8"
-    LC_NAME="C.UTF-8"
-    LC_ADDRESS="C.UTF-8"
-    LC_TELEPHONE="C.UTF-8"
-    LC_MEASUREMENT="C.UTF-8"
-    LC_IDENTIFICATION="C.UTF-8"
-    LC_ALL=
-
 [ 安装常用软件 ]
-	$ sudo apt-get install -y vim git  // 可选 zip unzip
+	$ sudo apt-get install -y vim git zip unzip
+
+    补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
 
 //---------------------------------------------------------------------------------
 [ 安装 PHP7 ]
@@ -145,13 +99,25 @@ https://www.jianshu.com/p/fb037caf4fff
 	$ sudo apt-get install -y php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring
     （上面为安装其他必备模块）
 
+    $ php --version                     // 确认是否安装成功
+    PHP 7.1.26-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Jan 11 2019 14:13:49) ( NTS )
+
 [ 安装 Mysql ]
 
 	$ sudo apt-get install -y mysql-server
 
-    // 安装完后需建立新用户
+    ** 创建新用户 **
     $ sudo mysql
-    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'kevin816';    // 建立 MySQL 用户
+    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'kevin816';
+    // 参考 https://www.cnblogs.com/xujishou/p/6306765.html
+
+    ** 创建数据库 **
+    $ sudo mysql
+    mysql> CREATE DATABASE sample;  // 数据库名称=sample
+    mysql> GRANT all privileges ON sample.* TO 'kevin'@'%';
+    mysql> FLUSH PRIVILEGES;
+    mysql> exit
+    // 名字应该和 .env 文件中对应的数据库一致，如 DB_DATABASE=sample
 
         **** 补充：可选 ****
         因为上线的应用为laravel 5.5版本开发的，为了之后的兼容性问题，
@@ -182,13 +148,15 @@ https://www.jianshu.com/p/fb037caf4fff
 	// 安装 nginx
 	$ sudo apt-get install -y nginx
 
+    补充：安装后可在浏览器测试是否没问题（注意：需在 EC2 的安全组入站，加上 HTTP 80）
+
 //---------------------------------------------------------------------------------
 [ 配置 PHP7 ]
 	$ sudo vim /etc/php/7.1/fpm/php.ini
 		-> 修改 cgi.fix_pathinfo=0
 
 	$ sudo vim /etc/php/7.1/fpm/pool.d/www.conf
-		-> 修改 listen = /var/run/php/php7.1-fpm.sock
+		-> 修改 listen = /var/run/php/php7.1-fpm.sock   <-- 前面加上 /var
 		（文章错误： listen = /var/run/php7.1-fpm.sock）
 
 [ 配置 Nginx ]
@@ -234,8 +202,23 @@ https://www.jianshu.com/p/fb037caf4fff
         - 没有此设定，在浏览器访问会是空白页面
 
 //---------------------------------------------------------------------------------
-[ 拉取代码 ]
-	// 建议先将代码上传到云端代码仓库（github, coding）然后再在服务端上拉取
+[ 安装 Composer 并使用 Composer 安装代码依赖 ]
+
+    // 访问 composer 官网 https://getcomposer.org/download/
+    // 获取下面四行代码最新版，直接粘贴执行安装 Composer
+    $ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    $ php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    $ php composer-setup.php
+    $ php -r "unlink('composer-setup.php');"
+
+    // 然后移动 composer.phar
+    $ sudo mv composer.phar /usr/local/bin/composer
+
+    补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
+
+//---------------------------------------------------------------------------------
+[ 创建新站点 - 拉取代码 ]
+	** 建议先将代码上传到云端代码仓库（github, coding）然后再在服务端上拉取
 	$ cd /var/www
 
     // $ sudo git clone git@github.com:kevinchen816/sample.git (错误)
@@ -247,46 +230,102 @@ https://www.jianshu.com/p/fb037caf4fff
     Receiving objects: 100% (236/236), 668.88 KiB | 1.39 MiB/s, done.
     Resolving deltas: 100% (64/64), done.
 
-[ 安装 Composer 并使用 Composer 安装代码依赖 ]
-
-	// 访问 composer 官网 https://getcomposer.org/download/
-	// 获取下面四行代码最新版，直接粘贴执行安装 Composer
-
-	//$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-	//$ php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-	//$ php composer-setup.php
-	//$ php -r "unlink('composer-setup.php');"
-
-    $ sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    $ sudo php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    $ sudo php composer-setup.php
-    $ sudo php -r "unlink('composer-setup.php');"
-
-	// 然后移动 composer.phar
-	$ sudo mv composer.phar /usr/local/bin/composer
-
-	// 进入项目目录
+	** 进入项目目录
 	$ cd /var/www/sample
 
-	// 执行 composer install
-	$ sudo composer install
-
-[ 创建 .env 文件 ]
-	$ cd /var/www/sample
-	$ sudo cp .env.example .env
-	$ sudo vim .env
+    $ sudo cp .env.example .env
+    $ sudo vim .env
         // 根据项目实际情况修改 .env 文件
         DB_DATABASE=sample
-		DB_USERNAME=kevin         // 在安装 MySQL 后，创建用户 kevin
-		DB_PASSWORD=kevin816
+        DB_USERNAME=kevin         // 在安装 MySQL 后，创建用户 kevin
+        DB_PASSWORD=kevin816
 
-[ 生成 laravel key ]
-	$ cd /var/www/sample
-	$ sudo php artisan key:generate
-	Application key [base64:FEId3tpYBlH5eihJqt6Z3lC0Uxnmb3aOpCabuACiIzY=] set successfully.
+    [ 创建数据库 ]
+    参考前面说明 (使用 AWS RDS 需要修改 config/database.php，参考后面说明)
 
-	// 补充：执行完后会自动将产生的 key 加到 .env 的 APP_KEY
+	$ sudo composer install
+	$ sudo php artisan key:generate   // 生成密钥，产生的 key 自动加到 .env 的 APP_KEY
+    $ sudo php artisan migrate
 
+    $ sudo php artisan up  <-- 不需要  // 将站点设回可访问状态 (down：将站点设为维护状态)
+
+    [ 修改权限 ]
+    $ sudo chown -R www-data:www-data /var/www/sample
+    $ sudo chmod -R 777 /var/www/sample/storage
+
+    [ 重启 Nginx 和 PHP7 fpm ]
+    $ sudo service nginx restart
+    $ sudo service php7.1-fpm restart
+
+搞定！
+
+//---------------------------------------------------------------------------------
+[ 下载配置 htc ]
+
+    $ cd /var/www
+    $ sudo git clone https://github.com/kevinchen816/htc.git
+    $ cd /var/www/htc
+    $ sudo cp .env.example .env
+    $ sudo vim .env
+        APP_DEBUG=false
+
+        DB_DATABASE=htc
+        DB_USERNAME=kevin         // 在安装 MySQL 后，创建用户 kevin
+        DB_PASSWORD=kevin816
+
+        MAIL_DRIVER=smtp
+        MAIL_HOST=smtp.exmail.qq.com
+        MAIL_PORT=465
+        MAIL_USERNAME=no-reply@10ware.com
+        MAIL_PASSWORD=Caperplus7002
+        MAIL_ENCRYPTION=ssl
+        MAIL_FROM_ADDRESS=no-reply@10ware.com
+        MAIL_FROM_NAME=no-reply
+
+    $ sudo mysql
+    mysql> CREATE DATABASE htc;  // 数据库名称=htc
+    mysql> GRANT all privileges ON htc.* TO 'kevin'@'%';
+    mysql> FLUSH PRIVILEGES;
+    mysql> exit
+
+    $ cd /var/www/htc
+    $ sudo composer install
+    $ sudo php artisan key:generate   // 生成密钥，产生的 key 自动加到 .env 的 APP_KEY
+    $ sudo php artisan migrate
+    $ sudo php artisan up  <-- 不需要  // 将站点设回可访问状态 (down：将站点设为维护状态)
+
+    $ sudo chown -R www-data:www-data /var/www/htc
+    $ sudo chmod -R 777 /var/www/htc/storage
+
+    $ sudo vim /etc/nginx/sites-available/default
+        server {
+            root /var/www/htc/public;   <-- 修改为 htc
+        }
+
+    $ sudo service nginx restart
+    $ sudo service php7.1-fpm restart
+
+[ 配置 laravel-admin ]
+    //$ sudo composer require encore/laravel-admin  // 不需要
+    $ sudo php artisan vendor:publish --provider="Encore\Admin\AdminServiceProvider"
+    Copied Directory [/vendor/encore/laravel-admin/config] To [/config]
+    Copied Directory [/vendor/encore/laravel-admin/resources/lang] To [/resources/lang]
+    Copied Directory [/vendor/encore/laravel-admin/database/migrations] To [/database/migrations]
+    Copied Directory [/vendor/encore/laravel-admin/resources/assets] To [/public/vendor/laravel-admin]
+    Publishing complete.
+    $ php artisan admin:install
+
+[ 创建 plan product ]
+    ** 先登录
+    http://xxx.xxx.xxx.xxx/adminxx
+    Username: admin
+    Password: admin
+
+    ** 创建
+    http://xxx.xxx.xxx.xxx/adminxx/plan/products/build/1   <-- 创建 plan product
+    //http://xxx.xxx.xxx.xxx/adminxx/plan/products/build/2   <-- 创建 plan product for Stripe
+
+//---------------------------------------------------------------------------------
 [ 修改 config/database.php ]
     'mysql' => [
         'driver' => 'mysql',
@@ -303,43 +342,20 @@ https://www.jianshu.com/p/fb037caf4fff
         'engine' => null,
     ],
 
-        ** 补充: 详细错误讯息如下：
-        $ sudo php artisan migrate
+    ** 补充: 详细错误讯息如下：
+    $ sudo php artisan migrate
 
-        In Connection.php line 664:
-          SQLSTATE[42000]: Syntax error or access violation: 1231 Variable 'sql_mode' can't be set to the value
-          of 'NO_AUTO_CREATE_USER' (SQL: select * from information_schema.tables where table_schema = sample and
-           table_name = migrations)
+    In Connection.php line 664:
+      SQLSTATE[42000]: Syntax error or access violation: 1231 Variable 'sql_mode' can't be set to the value
+      of 'NO_AUTO_CREATE_USER' (SQL: select * from information_schema.tables where table_schema = sample and
+       table_name = migrations)
 
-        In MySqlConnector.php line 150:
-          SQLSTATE[42000]: Syntax error or access violation: 1231 Variable 'sql_mode' can't be set to the value
-          of 'NO_AUTO_CREATE_USER'
-
-[ 创建数据库，执行迁移 ]
-
-    // 注意：首先登录 mysql 创建一个对应项目的数据库，名字应该和 .env 文件中的一致
-    $ sudo mysql
-    mysql> CREATE DATABASE sample;                              // 创建数据库名=sample
-    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'kevin816';    // 建立 MySQL 用户
-    mysql> GRANT all privileges ON sample.* TO 'kevin'@'%';
-    mysql> FLUSH PRIVILEGES;
-    mysql> exit
-
-	$ cd /var/www/sample
-	$ sudo php artisan migrate
+    In MySqlConnector.php line 150:
+      SQLSTATE[42000]: Syntax error or access violation: 1231 Variable 'sql_mode' can't be set to the value
+      of 'NO_AUTO_CREATE_USER'
 
     ** 补充: 远端数据库测试
     $ sudo mysql -h htc-db-instance.caieb0likkhe.ap-southeast-2.rds.amazonaws.com -ukevin -pkevin816
-
-[ 修改权限 ]
-    $ sudo chown -R www-data:www-data /var/www/sample
-    $ sudo chmod -R 777 /var/www/sample/storage
-
-[ 重启 Nginx 和 PHP7 fpm ]
-	$ sudo service nginx restart
-	$ sudo service php7.1-fpm restart
-
-搞定！
 
 //---------------------------------------------------------------------------------
 Ubuntu 14/16 下的 Laravel LNMP 线上环境自动部署脚本

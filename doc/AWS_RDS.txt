@@ -1,0 +1,53 @@
+AWS RDS 使用笔记
+https://www.cnblogs.com/edward2013/p/5496531.html
+
+mysql -h <endpoint> -P 3306 -u <mymasteruser> -p
+
+mysql -h db-tokyo.c83nj3hylmp3.ap-northeast-1.rds.amazonaws.com
+mysql -h 52.192.110.218 -P 3306 -ukevin -pkevin816
+
+//-----------------------------------------------------------------------
+Mysql8.0&Mysql5.7&Mysql5.6&Mysql5.5特性对比
+https://blog.csdn.net/liang_0609/article/details/77334959
+
+//-----------------------------------------------------------------------
+今天遇到的mysql8.0的新特性（坑）和解决办法
+https://blog.csdn.net/huangyuehong914/article/details/80503195
+
+一、创建用户和授权
+在 mysql8.0 创建用户和授权和之前不太一样了，其实严格上来讲，也不能说是不一样,
+只能说是更严格,mysql8.0需要先创建用户和设置密码,然后才能授权。
+
+#先创建一个用户
+create user 'hong'@'%' identified by '123123';
+
+#再进行授权
+grant all privileges on *.* to 'hong'@'%' with grant option;
+
+如果还是用原来5.7的那种方式，会报错误：
+grant all privileges on *.* to 'sroot'@'%' identified by '123123';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to
+your MySQL server version for the right syntax to use near 'identified by '123123'' at line 1
+
+二、MySQL8.0 的远程链接
+MySQL8.0 安装完成后出现无法远程链接的现象，这是因为MySQL8.0 只支持 localhost 访问，
+我们必须设置一下才可以远程访问。
+
+具体设置步骤如下：
+① 登录MySQL
+执行命令为：mysql -u root -p 
+回车后输入密码
+
+② 选择 mysql 数据库
+执行命令为：use mysql;
+查看mysql 数据库中存储的用户信息的 user 表。
+
+③ 查看mysql 数据库的 user 表中当前 root 用户的相关信息
+执行命令为：select host,user,authentication_string,plugin from user;
+执行完命令后显示一个表格， root 用户的 host默认显示的 localhost，说明只支持本地访问，不允许远程访问。
+
+④ 更改 host 的默认配置
+执行命令为：update user set host='%' where user='root';
+
+⑤ 刷新
+执行命令为：flush privileges;
