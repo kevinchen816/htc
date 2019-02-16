@@ -2340,7 +2340,9 @@ class CamerasController extends Controller
         $ret['err'] = ($result) ? 0 : 1;
         // $ret['savename'] = $fileName;
         $ret['savename'] = $photo_id;
-        $ret['filesize'] = $file->getClientSize();
+
+        $ret['imagename'] = $file->getClientOriginalName(); // TODO uploadoriginal (del)
+        $ret['filesize'] = $file->getClientSize(); // TODO uploadoriginal (del)
         return $ret;
     }
 
