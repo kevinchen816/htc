@@ -2275,32 +2275,98 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    /*
-        $request = {
-            "iccid": "89860117851014783481",
-            "module_id": "861107032685597",
-            "model_id": "lookout-na",
+    public function db_photo_new($camera_id, $request, $api) {
+        $db = new Photo;
+        $db->camera_id  = $camera_id;
+        $db->filename   = $request->FileName;   // PICT0001.MP4
+        $db->resolution = $request->upload_resolution;
+        $db->source     = $request->Source;
+        $db->datetime   = $request->DateTime;
 
-            "FileName": "PICT0436.JPG",
-            "upload_resolution": "2",
-            "photo_quality": "1",
-            "photo_compression": "29",
-            "Source": "tl",
-            "DateTime": "20181001172018",
+        ////$db->imagename    = $imagename; //$ret['imagename'];    // PICT0001.JPG -> PICT0001.MP4
+        ////$db->thumb_name   = $savename;  // 1543683105_PICT0001.JPG
+        ////// $db->original_name  = ;      // 1543658475_PICT0001.MP4
+        // $db->filesize   = $filesize;
+        // $db->points     = $points;
 
-            "Battery": "f",
-            "SignalValue": "25",
-            "Cardspace": "30041MB",
-            "Cardsize": "30432MB",
-            "Temperature": "27C",
-            "mcu": "4.36",
-            "FirmwareVersion": "20180912",
-            "cellular": "4G LTE",
-            "Image": {}
+        // filetype  : 1=photo, 2=video
+        // uploadtype: 1=photo_thumb, 2=photo_original
+        //             3=video_thumb, 4=video_original
+        if ($api == 'video_thumb') {
+            $db->filetype           = 2;
+            $db->uploadtype         = 3;
+            $db->video_length       = (integer) ($request->video_length); // 5s->5
+            $db->video_sound        = $request->video_sound;
+            $db->video_rate         = $request->video_rate;
+            $db->video_bitrate      = $request->video_bitrate;
+        } else {
+            $db->filetype           = 1;
+            $db->uploadtype         = 1;
+            $db->photo_quality      = $request->photo_quality;
+            $db->photo_compression  = $request->photo_compression;
         }
-    */
+        $db->save();
+        return $db;
+    }
+
+    public function s3_file_url($filename) {
+        // $url = '';
+        $s3 = \Storage::disk('s3');
+        // $exists = Storage::disk('s3')->exists($filename);
+        // $url = Storage::disk('s3')->temporaryUrl(
+        //     $filename, now()->addMinutes(1440)
+        // );
+
+        // $exists = $s3->exists($filename);
+        // if ($exists) {
+            $url = $s3->temporaryUrl(
+                $filename, now()->addMinutes(1440)
+            );
+        // }
+        return $url;
+    }
+
+    public function s3_save_file($file, $photo_id) {
+        $s3 = \Storage::disk('s3');
+        // $file = $request->file('Image');
+        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+        // $fileName = time().'_'.str_random(10).'.'.$extension;
+        $fileName = $photo_id.'.'.$extension;
+        // $fileName = $photo_id.'_thumb.'.$extension;
+        $filePath = '/media/'.$fileName;
+        // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
+        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+
+        $ret['err'] = ($result) ? 0 : 1;
+        $ret['savename'] = $fileName;
+        return $ret;
+    }
+
+    // for test
+    public function uploads3(Request $request) {
+        // $ret['s3'] = env('S3_ENABLE') ? '1' : '0';
+        $savePath = 'media/80.JPG';
+        $ret['exist'] = Storage::disk('s3')->exists($savePath);
+return $ret;
+        // $file = $request->file('Image');
+        // $path = $file->store('media', 's3');
+        // // $path = $file->storeAs('1', '12345.JPG', 's3');
+        // $ret['path'] = $path;
+
+        $s3 = \Storage::disk('s3');
+        $file = $request->file('Image');
+        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+        $fileName = time().'_'.str_random(10).'.'.$extension;
+        $filePath = '/media/'.$fileName;
+        // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
+        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+        $ret['result'] = $result;
+        $ret['savename'] = $fileName;
+return $ret;
+    }
+
     //public function uploadfile(Request $request, ImageUploadHandler $uploader) {
-    public function uploadfile($request, $api) {
+    public function uploadfile_EBS($request, $api) {
         //$camera = $camera->find(1);
         //return $camera;
 
@@ -2427,41 +2493,9 @@ class CamerasController extends Controller
         return $ret;
     }
 
-    public function uploadthumb(Request $request) {
-        $ret = $this->uploadfile($request, 'photo_thumb');
-        $user_id = $ret['user_id'];
-        $camera = $ret['camera'];
-        $response = $ret['response'];
-        if ($user_id && $camera) {
-            $body = 'New Photo: '.$request->FileName;
-            $this->pushNewFile($user_id, $camera, $body);
-            $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
-        }
-        return $response;
-    }
-
-    public function uploads3(Request $request) {
-        // // $file = $request->Image;
-        // $filename = '1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg';
-        // $exists = Storage::disk('s3')->exists($filename);
-        // $url = Storage::disk('s3')->temporaryUrl(
-        //     $filename, now()->addMinutes(1440)
-        // );
-        // $ret['exists'] = $exists;
-        // $ret['url'] = $url;
-        // return $ret;
-
-        $path = $request->Image->store('media', 's3'); // OK // "path": "1/kUwSIQTB3vwdtzkxAGF0I8ooOhpACgcmSrSvJVmI.jpeg"
-        // $path = $request->Image->storeAs('1', '12345.JPG', 's3'); // OK // "path": "1/12345.JPG"
-        $ret['path'] = $path; //"path": "1/DKac57se7SlmJxyo1kF8CtYGrboVyESRy4jVC0g5.jpeg"
-        return $ret;
-
-        // Storage::delete('file.jpg');
-        // Storage::delete(['file1.jpg', 'file2.jpg']);
-        // Storage::disk('s3')->delete('folder_path/file_name.jpg');
-    }
-
-    public function upload_check($request, $action) {
+    public function uploadfile_S3($request, $api) {
+        // $uploader = new ImageUploadHandler;
+        $camera_id = null;
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $user_id = $ret['user_id'];
@@ -2469,52 +2503,177 @@ class CamerasController extends Controller
         if ($err == 0) {
             $camera_id = $camera->id;
 
-            if (isset($request->RequestID)) {
-                /* search Action by RequestID */
-                $query = array(
-                    'id' => $request->RequestID,
-                    'camera_id' => $camera_id,
-                    'action' => $action, //'UO',
-                    'status' => ACTION_REQUESTED,
-                );
-                $actions = DB::table('actions')->where($query);
-                $action  = $actions->first();
-                if ($action) {
-                    $photo_id = $action->photo_id;
+            $photo = $this->db_photo_new($camera_id, $request, $api);
 
-                    /* search Photo */
-                    $query = array(
-                        'id' => $photo_id,
-                        'camera_id' => $camera_id,
-                    );
-                    $photos = DB::table('photos')->where($query);
-                    $photo = $photos->first();
-                    if (!$photo) {
-                        //return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
-                        $response = $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
-                        $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
-                        return $response;
-                    }
-
-                } else {
-                    //return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
-                    $response = $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
-                    $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
-                    return $response;
-                }
+            if (isset($request->blockid)) {
+            //     $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                $err = $ret['err'];
+                $imagename = $ret['imagename'];
+                $filesize = $ret['filesize'];
+                // $savename = $ret['savename'];
 
             } else {
-                $err = ERR_NO_REQUEST_ID;
+                $file = $request->Image;
+                if ($file && $file->isValid()) {
+                    // $ret = $uploader->save_file($camera_id, $file);
+                    $ret = $this->s3_save_file($file, $photo->id);
+                    $err = $ret['err'];
+
+                    $imagename = $file->getClientOriginalName();
+                    $filesize = $file->getClientSize();
+                    $savename = $ret['savename'];
+                } else {
+                    $err = ERR_NO_UPLOAD_FILE;
+                }
             }
 
+            if ($err == 0) {
+//                $filesize = $ret['filesize'];
+//                $savename = $ret['savename'];
 
+                $param = $request;
+                $param['savename'] = $savename; //$ret['savename']; // last_savename
+                $param['filesize'] = $filesize; //$ret['filesize'];
+                $points = $this->Plan_Update($param);
+                $param['points'] = $points;
+
+                $photo->imagename   = $imagename;   // PICT0001.JPG -> PICT0001.MP4
+                // $photo->thumb_name  = $savename; // 80_thumb.JPG
+                $photo->filesize    = $filesize;
+                $photo->points      = $points;
+                $photo->save();
+
+                if ($api == 'video_thumb') {
+                   $this->Camera_Status_Update($param, 'upload_video'); // s3
+                } else {
+                   $this->Camera_Status_Update($param, 'upload_photo'); // s3
+                }
+
+/*
+                if ($request->RequestID) {
+                    $request_id = $request->RequestID;
+                    $actions = DB::table('actions')->where('id', $request_id);
+                    $action  = $actions->first();
+                    if ($action) {
+                        if ($action->camera_id == $camera_id) {
+                            if ($action->action == 'PS') {
+                                $data['filename'] = $request->FileName;
+                                $data['photo_id'] = $photo->id;
+                                $data['photo_cnt'] = 1;
+                                $data['status'] = ACTION_COMPLETED;
+
+                            } else if ($action->action == 'SC') {
+                                $data['filename'] = $request->FileName;
+                                $data['photo_id'] = $photo->id;
+                                if ($request->FileName != $action->filename) {
+                                    $data['photo_cnt'] = $action->photo_cnt + 1;
+                                }
+                            }
+                            // $data['completed'] = date('Y-m-d H:i:s');
+                            $data['completed'] = $this->_datetime_get($camera);
+                            $actions->update($data);
+                        }
+                    }
+                }
+*/
+//                $this->email_Photo_Send($user_id, $camera, $savename); // TODO
+            }
         }
-        //$ret = [];
-        $ret['err'] = $err;
-        //$ret['user_id'] = $user_id;
-        //$ret['camera'] = $camera;
+
+        if ($err == ERR_CRC32_FAIL) {
+            //$crc32 = $ret['CRC32'];
+            $response = $this->Response_Result($err, $camera);
+            $response['CRC32'] = $ret['CRC32'];
+        } else {
+            $response = $this->Response_Result($err, $camera);
+        }
+
+        $ret = [];
+        $ret['user_id'] = $user_id;
+        $ret['camera'] = $camera;
+        $ret['response'] = $response;
         return $ret;
     }
+
+    public function uploadfile($request, $api) {
+        if (env('S3_ENABLE')) {
+            $ret = $this->uploadfile_S3($request, 'photo_thumb');
+        } else {
+            $ret = $this->uploadfile_EBS($request, 'photo_thumb');
+        }
+        return $ret;
+    }
+
+    public function uploadthumb(Request $request) {
+        $ret = $this->uploadfile($request, 'photo_thumb');
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        $response = $ret['response'];
+
+        // TODO (del for S3 test)
+        // if ($user_id && $camera) {
+        //     $body = 'New Photo: '.$request->FileName;
+        //     $this->pushNewFile($user_id, $camera, $body);
+        //     $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
+        // }
+        return $response;
+    }
+
+    // // for uploadoriginal() & uploadvideothumb()
+    // public function upload_check($request, $action) {
+    //     $ret = $this->Camera_Check($request);
+    //     $err = $ret['err'];
+    //     $user_id = $ret['user_id'];
+    //     $camera = $ret['camera'];
+    //     if ($err == 0) {
+    //         $camera_id = $camera->id;
+
+    //         if (isset($request->RequestID)) {
+    //             // search Action by RequestID
+    //             $query = array(
+    //                 'id' => $request->RequestID,
+    //                 'camera_id' => $camera_id,
+    //                 'action' => $action, //'UO',
+    //                 'status' => ACTION_REQUESTED,
+    //             );
+    //             $actions = DB::table('actions')->where($query);
+    //             $action  = $actions->first();
+    //             if ($action) {
+    //                 $photo_id = $action->photo_id;
+
+    //                 // search Photo
+    //                 $query = array(
+    //                     'id' => $photo_id,
+    //                     'camera_id' => $camera_id,
+    //                 );
+    //                 $photos = DB::table('photos')->where($query);
+    //                 $photo = $photos->first();
+    //                 if (!$photo) {
+    //                     //return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
+    //                     $response = $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
+    //                     $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+    //                     return $response;
+    //                 }
+
+    //             } else {
+    //                 //return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
+    //                 $response = $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
+    //                 $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+    //                 return $response;
+    //             }
+
+    //         } else {
+    //             $err = ERR_NO_REQUEST_ID;
+    //         }
+
+
+    //     }
+    //     //$ret = [];
+    //     $ret['err'] = $err;
+    //     //$ret['user_id'] = $user_id;
+    //     //$ret['camera'] = $camera;
+    //     return $ret;
+    // }
 
     public function uploadoriginal(Request $request, ImageUploadHandler $uploader) {
         $ret = $this->Camera_Check($request);
@@ -3484,7 +3643,8 @@ class CamerasController extends Controller
     }
 
     public function html_GalleryPhoto($user, $camera, $photos) {
-        $txt = '';
+        // $txt = '';
+        $txt = PHP_EOL;
         $camera_id = $camera->id;
         $column = 1;
         $col = 12/$camera->columns;
@@ -3504,8 +3664,20 @@ class CamerasController extends Controller
                 $caption = sprintf('%s | %s | %s | %s (Q=%s) | Points: %.2f', $photo->filename, $photo_datetime, $source, $resolution, $quality, $photo->points);
             }
             $title = sprintf('%s (%d)', $photo->filename, $photo->id); // PICT0001.JPG (1)
-//            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
-            $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
+
+            if (env('S3_ENABLE')) {
+                $filename = 'media/'.$photo_id.'.JPG';
+                // $url = Storage::disk('s3')->temporaryUrl(
+                //     $filename, now()->addMinutes(1440)
+                // );
+                $url = $this->s3_file_url($filename);
+                $filepath = $url;
+
+            } else {
+                //$filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
+                $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
+            }
+
             $download = sprintf('/cameras/download/%d/%d', $camera_id, $photo_id);
 
             $txt .= '<div class="col-xs-'.$col.' custom-thumbnail-grid-column column-number-'.$column.'">';
@@ -3541,6 +3713,9 @@ class CamerasController extends Controller
                 }
             }
 
+            // filetype  : 1=photo, 2=video
+            // uploadtype: 1=photo_thumb, 2=photo_original
+            //             3=video_thumb, 4=video_original
             if ($photo->uploadtype == 4) { /* original video */
                 $videopath = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
 
@@ -3569,6 +3744,7 @@ class CamerasController extends Controller
                     $photo_path = $filepath;
                 }
 
+// $txt .= PHP_EOL;
                 $txt .= '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
                 //$txt .=     'href="'.$filepath.'" ';
                 $txt .=     'href="'.$photo_path.'" ';
@@ -3577,13 +3753,16 @@ class CamerasController extends Controller
                 $txt .=     'data-id="'.$photo_id.'" ';
                 $txt .=     'data-highres="0" ';
                 $txt .=     'data-pending="0">';
+                // $txt .=     PHP_EOL;
 
-                $txt .=     '<img src="'.$filepath.'"';
+                $txt .=  '  <img src="'.$filepath.'"';
                 $txt .=         'class="img-responsive custom-thumb"';
                 $txt .=         'title="'.$title.'" ';
                 $txt .=         'alt="'.$photo->filename.'" ';
                 $txt .=         'data-description="'.$photo->filename.'">';
+                // $txt .=     PHP_EOL;
                 $txt .= '</a>';
+// $txt .= PHP_EOL;
             }
 
             $txt .=     '<p class="thumbnail-timestamp pull-right" style="font-size: .70em">';
@@ -3591,6 +3770,8 @@ class CamerasController extends Controller
             $txt .=          $photo_datetime;
             $txt .=     '</p>';
             $txt .= '</div>';
+$txt .= PHP_EOL;
+$txt .= PHP_EOL;
 
             if ($column == $camera->columns) {
                 $column = 1;
@@ -3813,7 +3994,8 @@ class CamerasController extends Controller
         }
 
         $style  = 'padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;';
-        $txt = '';
+        // $txt = '';
+        $txt = PHP_EOL;
         foreach ($cameras as $camera) {
             $camera_id    = $camera->id;
             $description  = $camera->description;
@@ -3821,10 +4003,23 @@ class CamerasController extends Controller
             $last_contact = $this->_user_dateformat($user, $camera->last_contact);
 
             if (!empty($camera->last_savename)) {
-                //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;
-                //$url = url('/uploads/images/').$camera->last_filename; // NG
-                // $url = url('/uploads/images/').'/'.$camera->last_filename;
-                $url = url('/uploads/'.$camera_id.'/').'/'.$camera->last_savename;
+
+                if (env('S3_ENABLE')) {
+                    // $filename = 'media/'.$photo_id.'.JPG';
+                    $filename = 'media/'.$camera->last_savename;
+                    // $url = Storage::disk('s3')->temporaryUrl(
+                    //     $filename, now()->addMinutes(1440)
+                    // );
+                    $url = $this->s3_file_url($filename);
+                    // $filepath = $url;
+
+                } else {
+                    //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;
+                    //$url = url('/uploads/images/').$camera->last_filename; // NG
+                    // $url = url('/uploads/images/').'/'.$camera->last_filename;
+                    $url = url('/uploads/'.$camera_id.'/').'/'.$camera->last_savename;
+                }
+
             } else {
                 $url = '';
             }
@@ -3858,6 +4053,9 @@ class CamerasController extends Controller
             }
             $txt .=     '</td>';
             $txt .= '</tr>';
+
+            $txt .= PHP_EOL;
+            $txt .= PHP_EOL;
         }
         return $txt;
     }
@@ -3986,16 +4184,66 @@ class CamerasController extends Controller
         $photo  = $photos->first();
 
         /* /uploads/camera_id/1539695099_2Q7NJJh7ur.ZIP */
-        // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
-        // if (($photo->uploadtype == 2)||($photo->uploadtype == 4)) {
-        if ($photo->original_name) {
-            $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->original_name;
-        } else {
-            $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->thumb_name;
-        }
+        // 1=photo_thumb, 2=photo_original,
+        // 3=video_thumb, 4=video_original
+        if (env('S3_ENABLE')) {
+            if ($photo->uploadtype == 1) {
+                $filename = $photo->filename;
+                $savePath = 'media/'.$photo_id.'.JPG';
 
-        // TODO: check file exist
-        return response()->download($pathToFile, $photo->imagename);
+            } else if ($photo->uploadtype == 2) {
+                $filename = $photo->filename;
+                $savePath = 'media/'.$photo_id.'.JPG';
+
+            } else if ($photo->uploadtype == 3) {
+                $filename = $photo->imagename;
+                $savePath = 'media/'.$photo_id.'.JPG';
+
+            } else if ($photo->uploadtype == 4) {
+                $filename = $photo->filename;
+                $savePath = 'media/'.$photo_id.'.MP4';
+            }
+
+            //// $url = $this->s3_file_url($filename);
+            //// $pathToFile = $url;
+
+            // $exists = Storage::disk('s3')->exists($savePath);
+            // if (!$exists) {
+            //     $error = new MessageBag([
+            //         'title' => '文件不存在',
+            //     ]);
+            //     return redirect('admin/task/create')->with(compact('error'));
+            // }
+
+            $fileSize = Storage::disk('s3')->size($savePath);
+            $content = Storage::disk('s3')->get($savePath);
+
+            //告诉浏览器这是一个文件流格式的文件
+            Header("Content-type: application/octet-stream");
+
+            //请求范围的度量单位
+            Header("Accept-Ranges: bytes");
+
+            //Content-Length是指定包含于请求或响应中数据的字节长度
+            Header("Accept-Length: ".$fileSize);
+
+            //用来告诉浏览器，文件是可以当做附件被下载，下载后的文件名称为$file_name该变量的值。
+            Header("Content-Disposition: attachment; filename=".$filename);
+
+            echo $content;
+            exit();
+
+        } else {
+            // if (($photo->uploadtype == 2)||($photo->uploadtype == 4)) {
+            if ($photo->original_name) {
+                $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->original_name;
+            } else {
+                $pathToFile = public_path().'/uploads/'.$camera_id.'/'.$photo->thumb_name;
+            }
+
+            // TODO: check file exist
+            return response()->download($pathToFile, $photo->imagename);
+        }
     }
 
     /* /cameras/getdetail/{camera_id} */

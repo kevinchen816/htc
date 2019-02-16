@@ -4,7 +4,7 @@ AWS访问密钥（Access Key）
 https://www.cloudbility.com/help/aws/access-key.html
 
 //-------------------------------------------------------------------------
-Use Amazon S3 with Laravel 5
+[ Use Amazon S3 with Laravel 5 ]
 https://wogan.blog/2017/01/04/use-amazon-s3-with-laravel-5/
 
     ** 在使用 Amazon S3 驱动之前，需要通过Composer 安装相应的包：
@@ -30,7 +30,7 @@ https://stackoverflow.com/questions/49257926/laravel-5-6-and-amazon-s3-invalidar
     .....'
 
 //-------------------------------------------------------------------------
-使用Laravel上传文件到AWS S3
+[ 使用Laravel上传文件到AWS S3 ]
 https://www.sgphp.com/blog/58df5cef185485314833a803.html
 
 use Illuminate\Http\Request;
@@ -38,18 +38,67 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 
 public function uploadFileToS3(Request $request)
 {
-    $image = $request->file('image');
-
-    $imageFileName = time() . '.' . $image->getClientOriginalExtension();
+    $file = $request->file('Image');
 
     $s3 = \Storage::disk('s3');
-    $filePath = '/support-tickets/' . $imageFileName;
-    $s3->put($filePath, file_get_contents($image), 'public');
+    $fileName = time().'.'.$file->getClientOriginalExtension();
+    $filePath = '/media/'.$fileName;
+    // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
+    $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+    $ret['result'] = $result;
+    return $ret;
 }
 
+public function uploads3(Request $request) {
+    $file = $request->file('Image');
+
+    // "path": "media/1PkYNk37JeAjmZF1NlnwXT1cYyd9e46vwhrYromh.jpeg",
+    $path = $file->store('media', 's3');
+    // $path = $file->storeAs('media', '12345.JPG', 's3');
+    $ret['path'] = $path;
+    $ret['ext'] = $file->getClientOriginalExtension();
+    return $ret;
+}
+
+//-------------------------------------------------------------------------
 临时 URL
 对于使用 s3 驱动存储文件的系统，可以使用 temporaryUrl 方法创建临时 URL 到给定文件，
 该方法接收一个路径参数和指定 URL 何时过期的 DateTime :
+
+$filename = '1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg';
 $url = Storage::disk('s3')->temporaryUrl(
-    $filename, now()->addMinutes(5)
+    $filename, now()->addMinutes(1440)
 );
+https://10ware-s3-jp.s3.ap-northeast-1.amazonaws.com/1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg?
+X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&
+X-Amz-Algorithm=AWS4-HMAC-SHA256&
+X-Amz-Credential=AKIAIE4AHITCYWZ27BBQ%2F20190215%2Fap-northeast-1%2Fs3%2Faws4_request&
+X-Amz-Date=20190215T200456Z&
+X-Amz-SignedHeaders=host&
+X-Amz-Expires=300&
+X-Amz-Signature=24891f685ca3fd6fdcc3aa5ad10bf03cddab29f129143f77b0d9d769bb49825b
+
+[ portal.ridgetec.com ]
+https://ridgetec-prod.s3.amazonaws.com/camera_media/968395.JPG?
+X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&
+X-Amz-Algorithm=AWS4-HMAC-SHA256&
+X-Amz-Credential=AKIAJDYHALJC3XEXZNWA%2F20190215%2Fus-east-1%2Fs3%2Faws4_request&
+X-Amz-Date=20190215T200920Z&
+X-Amz-SignedHeaders=host&
+X-Amz-Expires=86400&
+X-Amz-Signature=8face1e2dd83c609ce35838d0ebc94c54f0b18aa3b63b60808bb998ca1480c96
+
+//-------------------------------------------------------------------------
+Laravel:从亚马逊s3上下载文件
+https://blog.csdn.net/PerfectUrl/article/details/84302470
+
+//-------------------------------------------------------------------------
+$filename = '1/K4zyGfg9v4CZ97loYHubl22WXMos6Lee6R0tohkJ.jpeg';
+$exists = Storage::disk('s3')->exists($filename);
+
+Storage::disk('s3')->delete('folder_path/file_name.jpg');
+
+Storage::delete('file.jpg');
+Storage::delete(['file1.jpg', 'file2.jpg']);
+
+//-------------------------------------------------------------------------
