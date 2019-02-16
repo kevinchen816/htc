@@ -2310,23 +2310,18 @@ class CamerasController extends Controller
     }
 
     public function s3_file_url($filename) {
-        // $url = '';
         $s3 = \Storage::disk('s3');
-        // $exists = Storage::disk('s3')->exists($filename);
-        // $url = Storage::disk('s3')->temporaryUrl(
-        //     $filename, now()->addMinutes(1440)
-        // );
-
-        // $exists = $s3->exists($filename);
-        // if ($exists) {
+        // if ($s3->exists($filename)) {
             $url = $s3->temporaryUrl(
                 $filename, now()->addMinutes(1440)
             );
+        // } else {
+            // $url = '';
         // }
         return $url;
     }
 
-    public function s3_save_file($file, $photo_id) {
+    public function s3_save_file($file, $photo_id, $thumb=0) {
         $s3 = \Storage::disk('s3');
         // $file = $request->file('Image');
         $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
@@ -2335,6 +2330,25 @@ class CamerasController extends Controller
         // $fileName = $photo_id.'_thumb.'.$extension;
         $filePath = '/media/'.$fileName;
         // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
+        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+
+        // if ($thumb) {
+        //     $thumbPath = '/media/'.$photo_id.'_thumb.'.$extension;
+        //     $s3->copy($filePath, $thumbPath);
+        // }
+
+        $ret['err'] = ($result) ? 0 : 1;
+        // $ret['savename'] = $fileName;
+        $ret['savename'] = $photo_id;
+        return $ret;
+    }
+
+    public function s3_save_thumb_file($file, $photo_id) {
+        $s3 = \Storage::disk('s3');
+        $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
+        // $fileName = $photo_id.'.'.$extension;
+        $fileName = $photo_id.'_thumb.'.$extension;
+        $filePath = '/media/'.$fileName;
         $result = $s3->put($filePath, file_get_contents($file)); // "result": true
 
         $ret['err'] = ($result) ? 0 : 1;
@@ -2517,6 +2531,7 @@ return $ret;
                 if ($file && $file->isValid()) {
                     // $ret = $uploader->save_file($camera_id, $file);
                     $ret = $this->s3_save_file($file, $photo->id);
+                    $this->s3_save_thumb_file($file, $photo->id);
                     $err = $ret['err'];
 
                     $imagename = $file->getClientOriginalName();
@@ -2610,12 +2625,11 @@ return $ret;
         $camera = $ret['camera'];
         $response = $ret['response'];
 
-        // TODO (del for S3 test)
-        // if ($user_id && $camera) {
-        //     $body = 'New Photo: '.$request->FileName;
-        //     $this->pushNewFile($user_id, $camera, $body);
-        //     $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
-        // }
+        if ($user_id && $camera) {
+            $body = 'New Photo: '.$request->FileName;
+            $this->pushNewFile($user_id, $camera, $body);
+            $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
+        }
         return $response;
     }
 
@@ -3665,17 +3679,19 @@ return $ret;
             }
             $title = sprintf('%s (%d)', $photo->filename, $photo->id); // PICT0001.JPG (1)
 
+// 修改 $filepath -> $url_img
+// $url_href
             if (env('S3_ENABLE')) {
                 $filename = 'media/'.$photo_id.'.JPG';
-                // $url = Storage::disk('s3')->temporaryUrl(
-                //     $filename, now()->addMinutes(1440)
-                // );
                 $url = $this->s3_file_url($filename);
                 $filepath = $url;
+
+                $url_img = $this->s3_file_url('media/'.$photo_id.'_thumb.JPG');
 
             } else {
                 //$filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
                 $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
+                $url_img = $filepath;
             }
 
             $download = sprintf('/cameras/download/%d/%d', $camera_id, $photo_id);
@@ -3746,7 +3762,6 @@ return $ret;
 
 // $txt .= PHP_EOL;
                 $txt .= '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
-                //$txt .=     'href="'.$filepath.'" ';
                 $txt .=     'href="'.$photo_path.'" ';
                 $txt .=     'data-caption="'. $caption.'"';
                 $txt .=     'data-camera="'.$camera_id.'" ';
@@ -3755,7 +3770,8 @@ return $ret;
                 $txt .=     'data-pending="0">';
                 // $txt .=     PHP_EOL;
 
-                $txt .=  '  <img src="'.$filepath.'"';
+                // $txt .=  '  <img src="'.$filepath.'"';
+                $txt .=  '  <img src="'.$url_img.'"';
                 $txt .=         'class="img-responsive custom-thumb"';
                 $txt .=         'title="'.$title.'" ';
                 $txt .=         'alt="'.$photo->filename.'" ';
@@ -4005,13 +4021,11 @@ $txt .= PHP_EOL;
             if (!empty($camera->last_savename)) {
 
                 if (env('S3_ENABLE')) {
-                    // $filename = 'media/'.$photo_id.'.JPG';
-                    $filename = 'media/'.$camera->last_savename;
-                    // $url = Storage::disk('s3')->temporaryUrl(
-                    //     $filename, now()->addMinutes(1440)
-                    // );
-                    $url = $this->s3_file_url($filename);
-                    // $filepath = $url;
+                    // // $filename = 'media/'.$photo_id.'.JPG';
+                    // $filename = 'media/'.$camera->last_savename;
+                    // $url = $this->s3_file_url($filename);
+
+                    $url = $this->s3_file_url('media/'.$camera->last_savename.'_thumb.JPG');
 
                 } else {
                     //$url = 'http://sample.test/uploads/images/'.$camera->last_filename;
