@@ -2379,7 +2379,6 @@ return $ret;
 return $ret;
     }
 
-    //public function uploadfile(Request $request, ImageUploadHandler $uploader) {
     public function uploadfile_EBS($request, $api) {
         //$camera = $camera->find(1);
         //return $camera;
@@ -2612,9 +2611,9 @@ return $ret;
 
     public function uploadfile($request, $api) {
         if (env('S3_ENABLE')) {
-            $ret = $this->uploadfile_S3($request, 'photo_thumb');
+            $ret = $this->uploadfile_S3($request, $api);
         } else {
-            $ret = $this->uploadfile_EBS($request, 'photo_thumb');
+            $ret = $this->uploadfile_EBS($request, $api);
         }
         return $ret;
     }
