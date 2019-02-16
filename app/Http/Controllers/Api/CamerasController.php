@@ -3687,17 +3687,34 @@ return $ret;
 
 // 修改 $filepath -> $url_img
 // $url_href
+            // filetype  : 1=photo, 2=video
+            // uploadtype: 1=photo_thumb, 2=photo_original
+            //             3=video_thumb, 4=video_original
             if (env('S3_ENABLE')) {
-                $filename = 'media/'.$photo_id.'.JPG';
-                $url = $this->s3_file_url($filename);
-                $filepath = $url;
+                // $filename = 'media/'.$photo_id.'.JPG';
+                // $url = $this->s3_file_url($filename);
+                // $filepath = $url;
 
+                // $url_href = $this->s3_file_url('media/'.$photo_id.'.JPG');
                 $url_img = $this->s3_file_url('media/'.$photo_id.'_thumb.JPG');
 
+                if ($photo->uploadtype == 4) { /* original video */
+                    $url_href = $this->s3_file_url('media/'.$photo_id.'.MP4');
+                } else {
+                    $url_href = $this->s3_file_url('media/'.$photo_id.'.JPG');
+                }
+
             } else {
-                //$filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->savename);
                 $filepath = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
                 $url_img = $filepath;
+
+                if ($photo->uploadtype == 2) {
+                    $url_href = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
+                } else if ($photo->uploadtype == 4) { /* original video */
+                    $url_href = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
+                } else {
+                    $url_href = $url_img;
+                }
             }
 
             $download = sprintf('/cameras/download/%d/%d', $camera_id, $photo_id);
@@ -3739,17 +3756,19 @@ return $ret;
             // uploadtype: 1=photo_thumb, 2=photo_original
             //             3=video_thumb, 4=video_original
             if ($photo->uploadtype == 4) { /* original video */
-                $videopath = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
+                // $videopath = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
 
                 $txt .= '<div class="thumb-anchor">';
-                $txt .=     '<img src="'.$filepath.'"';
+                // $txt .=     '<img src="'.$filepath.'"';
+                $txt .=     '<img src="'.$url_img.'"';
                 $txt .= '        class="img-responsive custom-thumb"';
                 $txt .=         'title="'.$title.'" ';
                 $txt .=         'alt="'.$photo->filename.'" ';
                 $txt .=         'data-description="'.$photo->filename.'">';
                 $txt .= '</div>';
 
-                $txt .= '<div class="popup-video" video-url="'.$videopath.'"';
+                // $txt .= '<div class="popup-video" video-url="'.$videopath.'"';
+                $txt .= '<div class="popup-video" video-url="'.$url_href.'"';
                 //$txt .=     'data-caption="PICT0003.MP4 | 10/26/2018 12:26:44 am | Motion | Standard Low | Points: 24.00" ';
                 $txt .=     'data-caption="'. $caption.'"';
                 $txt .=     'data-camera="'.$camera_id.'" ';
@@ -3760,15 +3779,16 @@ return $ret;
                 $txt .= '</div>';
 
             } else {
-                if ($photo->uploadtype == 2) {
-                    $photo_path = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
-                } else {
-                    $photo_path = $filepath;
-                }
+                // if ($photo->uploadtype == 2) {
+                //     $photo_path = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
+                // } else {
+                //     $photo_path = $filepath;
+                // }
 
 // $txt .= PHP_EOL;
                 $txt .= '<a class="thumb-anchor" data-fancybox="gallery-'.$camera_id.'" ';
-                $txt .=     'href="'.$photo_path.'" ';
+                // $txt .=     'href="'.$photo_path.'" ';
+                $txt .=     'href="'.$url_href.'" ';
                 $txt .=     'data-caption="'. $caption.'"';
                 $txt .=     'data-camera="'.$camera_id.'" ';
                 $txt .=     'data-id="'.$photo_id.'" ';
