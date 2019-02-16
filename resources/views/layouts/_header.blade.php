@@ -10,7 +10,12 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <h2>KMCam Pro</h2>
+                <!-- <h2>KMCam Pro</h2> -->
+
+                <!-- Branding Image -->
+                <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="VigilMax Home">
+                    <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" />
+                </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
