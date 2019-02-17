@@ -3,6 +3,7 @@
 namespace App\Handlers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 /* reference vendor/symfony/http-foundation/File/UploadedFile.php */
 
@@ -80,6 +81,7 @@ class ImageUploadHandler
         return $ret;
     }
 
+    /*----------------------------------------------------------------------------------*/
     public function save_file($camera_id, $file)
     {
         //$ret['OriginalName'] = $file->getClientOriginalName();        // PICT0001.JPG
@@ -106,15 +108,46 @@ class ImageUploadHandler
         $savename = time() . '_' . str_random(10) . '.' . $extension;
         $savepath = $file->move($path_upload, $savename);
 
+        $ret['err'] = 0;
         $ret['imagename'] = $file->getClientOriginalName(); // PICT0001.JPG
         $ret['filesize'] = $file->getClientSize();          // 7032
         $ret['savename'] = $savename;                       // 1538422239_Cf7PQK04w4.JPG
         // $ret['savepath'] = "$savepath";
         // $ret['extension'] = "$extension";
-        $ret['err'] = 0;
         return $ret;
     }
 
+    public function s3_save_file($file, $photo_id, $thumb=0) {
+        $s3 = \Storage::disk('s3');
+        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+        $fileName = $photo_id.'.'.$extension;
+        $filePath = '/media/'.$fileName;
+        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+        // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
+
+        // if ($thumb) {
+        //     $thumbPath = '/media/'.$photo_id.'_thumb.'.$extension;
+        //     $s3->copy($filePath, $thumbPath);
+        // }
+
+        $ret['err'] = ($result) ? 0 : 1;
+        $ret['imagename'] = $file->getClientOriginalName(); // TODO uploadoriginal (del)
+        $ret['filesize'] = $file->getClientSize(); // TODO uploadoriginal (del)
+        $ret['savename'] = $photo_id;
+        // $ret['savename'] = $fileName;
+        return $ret;
+    }
+
+    public function s3_save_thumb_file($file, $photo_id) {
+        $s3 = \Storage::disk('s3');
+        $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
+        $fileName = $photo_id.'_thumb.'.$extension;
+        $filePath = '/media/'.$fileName;
+        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+        return $result;
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function save_buffer($camera_id, $file, $blockid, $blocknbr) {
         $ClientOriginalName = $file->getClientOriginalName();
 
@@ -156,7 +189,8 @@ class ImageUploadHandler
         return $files;
     }
 
-    public function merge($camera_id, $filename, $blockid, $crc32) {
+    // public function merge($camera_id, $filename, $blockid, $crc32) {
+    public function merge($camera_id, $photo_id, $blockid, $crc32) {
         $err = 0;
         $to_file = '';
         //return storage_path();
@@ -170,10 +204,10 @@ class ImageUploadHandler
         }
 
         $temp = $path_block.'/filename.txt';
-        $ClientOriginalName = file_get_contents($temp);
-        unlink($temp);
+        $imagename = file_get_contents($temp);
+//        unlink($temp);
 
-        $tagert_name =  $path_block .'/'. $ClientOriginalName;
+        $tagert_name =  $path_block.'/'.$imagename;
         if (file_exists($tagert_name)) {
             unlink($tagert_name);
         }
@@ -194,17 +228,31 @@ class ImageUploadHandler
         /* https://www.cnblogs.com/mslagee/p/6223140.html */
         $crc32_check = hexdec(hash_file('crc32b', $tagert_name));
         if ($crc32_check == $crc32) {
-            ////$extension = strtoupper($file->getClientOriginalExtension()); // JPG
-            //$extension = 'JPG';
-            //$savename = time() . '_' . str_random(10) . '.' . $extension;
 
-            $savename = time().'_'.$ClientOriginalName;
-            $to_file = public_path().'/uploads/'.$camera_id.'/'.$savename;
-            $ret = copy($tagert_name, $to_file);
-            if($ret == true) {
-                $err = 0;
+            if (env('S3_ENABLE')) {
+                /*
+                    uploadtype: 1=photo_thumb, 2=photo_original
+                                3=video_thumb, 4=video_original
+
+                    1 -> 1234.JPG + 1234_thumb.JPG
+                    2 -> 1234.JPG + 1234_thumb.JPG
+                    3 -> 1234.JPG + 1234_thumb.JPG
+                    4 -> 1234.MP4
+                */
+                $photo_id = 1234;
+                $savename = $photo_id.'.JPG';
+                $ret = Storage::disk('s3')->putFileAs('media', new File($tagert_name), $savename); // storage/app/media/photo.jpg
+
             } else {
+                $savename = time().'_'.$imagename; // 1550417684_PICT0001.JPG
+                $to_file = public_path().'/uploads/'.$camera_id.'/'.$savename;
+                $ret = copy($tagert_name, $to_file);
+            }
+
+            if ($ret == false) {
                 $err = 3/*2*/;
+            } else {
+                $err = 0;
             }
         } else {
             $err = 2/*1*/;
@@ -214,24 +262,20 @@ class ImageUploadHandler
         $ret['err'] = $err;
         $ret['CRC32'] = $crc32_check;
         if ($err == 0) {
-            foreach ($files as $file) {
-                unlink($file);
-            }
-            unlink($tagert_name);
-            rmdir($path_block);
-
-            //$ret['path'] = "$tagert_name";
-            //$ret['to_file'] = "$to_file";
-//            $ret['filename'] = $filename;   // 1538422239_Cf7PQK04w4.JPG
-
-            $ret['imagename'] = $ClientOriginalName;
+            $ret['filesize'] = filesize($tagert_name);; //filesize($to_file);
+            $ret['imagename'] = $imagename;
             $ret['savename'] = $savename;
-            //$ret['savepath'] = $savepath;
-            $ret['filesize'] = filesize($to_file);
+
+//            foreach ($files as $file) {
+//                unlink($file);
+//            }
+//            unlink($tagert_name);
+//            rmdir($path_block);
         }
         return $ret;
     }
 
+    /*----------------------------------------------------------------------------------*/
     //public function save_log($camera_id, $file)
     public function save_log($camera, $file)
     {

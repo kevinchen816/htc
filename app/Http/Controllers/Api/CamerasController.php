@@ -2181,10 +2181,12 @@ class CamerasController extends Controller
     //     return $ret;
     // }
 
-    public function uploadblock_merge($camera, $filename, $blockid, $crc32) {
+    // public function uploadblock_merge($camera, $filename, $blockid, $crc32) {
+    public function uploadblock_merge($camera, $photo_id, $blockid, $crc32) {
         $uploader = new ImageUploadHandler;
         $camera_id = $camera->id;
-        $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
+        // $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
+        $ret = $uploader->merge($camera_id, $photo_id, $blockid, $crc32);
         $err = $ret['err'];
         if ($err == 0) {
             $ret['err'] = 0;
@@ -2309,53 +2311,12 @@ class CamerasController extends Controller
         return $db;
     }
 
-    public function s3_file_url($filename) {
-        $s3 = \Storage::disk('s3');
-        // if ($s3->exists($filename)) {
-            $url = $s3->temporaryUrl(
-                $filename, now()->addMinutes(1440)
-            );
-        // } else {
-            // $url = '';
-        // }
-        return $url;
-    }
-
-    public function s3_save_file($file, $photo_id, $thumb=0) {
-        $s3 = \Storage::disk('s3');
-        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
-        $fileName = $photo_id.'.'.$extension;
-        $filePath = '/media/'.$fileName;
-        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
-        // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
-
-        // if ($thumb) {
-        //     $thumbPath = '/media/'.$photo_id.'_thumb.'.$extension;
-        //     $s3->copy($filePath, $thumbPath);
-        // }
-
-        $ret['err'] = ($result) ? 0 : 1;
-        $ret['imagename'] = $file->getClientOriginalName(); // TODO uploadoriginal (del)
-        $ret['filesize'] = $file->getClientSize(); // TODO uploadoriginal (del)
-        $ret['savename'] = $photo_id;
-        // $ret['savename'] = $fileName;
-        return $ret;
-    }
-
-    public function s3_save_thumb_file($file, $photo_id) {
-        $s3 = \Storage::disk('s3');
-        $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
-        $fileName = $photo_id.'_thumb.'.$extension;
-        $filePath = '/media/'.$fileName;
-        $result = $s3->put($filePath, file_get_contents($file)); // "result": true
-        return $result;
-    }
-
+    /*----------------------------------------------------------------------------------*/
     // for test
-    public function uploads3(Request $request) {
-        // $ret['s3'] = env('S3_ENABLE') ? '1' : '0';
-        $savePath = 'media/80.JPG';
-        $ret['exist'] = Storage::disk('s3')->exists($savePath);
+    public function s3_test(Request $request) {
+        $ret['s3'] = env('S3_ENABLE') ? '1' : '0';
+        // $savePath = 'media/80.JPG';
+        // $ret['exist'] = Storage::disk('s3')->exists($savePath);
 return $ret;
         // $file = $request->file('Image');
         // $path = $file->store('media', 's3');
@@ -2374,6 +2335,49 @@ return $ret;
 return $ret;
     }
 
+    public function s3_file_url($filename) {
+        $s3 = \Storage::disk('s3');
+        // if ($s3->exists($filename)) {
+            $url = $s3->temporaryUrl(
+                $filename, now()->addMinutes(1440)
+            );
+        // } else {
+            // $url = '';
+        // }
+        return $url;
+    }
+
+    // public function s3_save_file($file, $photo_id, $thumb=0) {
+    //     $s3 = \Storage::disk('s3');
+    //     $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+    //     $fileName = $photo_id.'.'.$extension;
+    //     $filePath = '/media/'.$fileName;
+    //     $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+    //     // $result = $s3->put($filePath, file_get_contents($file), 'public'); // NG
+
+    //     // if ($thumb) {
+    //     //     $thumbPath = '/media/'.$photo_id.'_thumb.'.$extension;
+    //     //     $s3->copy($filePath, $thumbPath);
+    //     // }
+
+    //     $ret['err'] = ($result) ? 0 : 1;
+    //     $ret['imagename'] = $file->getClientOriginalName(); // TODO uploadoriginal (del)
+    //     $ret['filesize'] = $file->getClientSize(); // TODO uploadoriginal (del)
+    //     $ret['savename'] = $photo_id;
+    //     // $ret['savename'] = $fileName;
+    //     return $ret;
+    // }
+
+    // public function s3_save_thumb_file($file, $photo_id) {
+    //     $s3 = \Storage::disk('s3');
+    //     $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
+    //     $fileName = $photo_id.'_thumb.'.$extension;
+    //     $filePath = '/media/'.$fileName;
+    //     $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+    //     return $result;
+    // }
+
+    /*----------------------------------------------------------------------------------*/
     public function uploadfile_EBS($request, $api) {
         //$camera = $camera->find(1);
         //return $camera;
@@ -2502,6 +2506,9 @@ return $ret;
     }
 
     public function uploadfile_S3($request, $api) {
+
+        $uploader = new ImageUploadHandler;
+
         $camera_id = null;
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -2513,14 +2520,14 @@ return $ret;
             $photo = $this->db_photo_new($camera_id, $request, $api);
 
             if (isset($request->blockid)) {
-            //     $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                $ret =$this->uploadblock_merge($camera, $photo->id, $request->blockid, $request->crc32, 1);
                 $err = $ret['err'];
 
             } else {
                 $file = $request->Image;
                 if ($file && $file->isValid()) {
-                    $ret = $this->s3_save_file($file, $photo->id);
-                    $this->s3_save_thumb_file($file, $photo->id);
+                    $ret = $uploader->s3_save_file($file, $photo->id);
+                    $uploader->s3_save_thumb_file($file, $photo->id);
                     $err = $ret['err'];
 
                     // $imagename = $file->getClientOriginalName();
@@ -2709,7 +2716,7 @@ return $ret;
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
                                 if (env('S3_ENABLE')) {
-                                    $ret = $this->s3_save_file($file, $photo->id);
+                                    $ret = $uploader->s3_save_file($file, $photo->id);
                                 } else {
                                     $ret = $uploader->save_file($camera_id, $file);
                                 }
@@ -2860,7 +2867,7 @@ return $ret;
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
                                 if (env('S3_ENABLE')) {
-                                    $ret = $this->s3_save_file($file, $photo->id);
+                                    $ret = $uploader->s3_save_file($file, $photo->id);
                                 } else {
                                     $ret = $uploader->save_file($camera_id, $file);
                                 }
