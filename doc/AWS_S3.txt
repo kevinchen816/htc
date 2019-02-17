@@ -102,3 +102,25 @@ Storage::delete('file.jpg');
 Storage::delete(['file1.jpg', 'file2.jpg']);
 
 //-------------------------------------------------------------------------
+[ nginx 504 Gateway Time-out错误解决办法 ]
+https://www.cnblogs.com/xiamidong/p/4105583.html
+
+/etc/php/7.1/fpm/php-fpm.conf
+
+LNMP的朋友试试这个 (以512内存的vps为例)
+1.调整php-fpm.conf的相关设置/www/wdlinux/etc/:
+    <value name=”max_children”>32</value>
+    <value name=”request_terminate_timeout”>30s</value>
+
+22.调整nginx.conf的相关设置/www/wdlinux/nginx-1.0.12/conf:
+    fastcgi_connect_timeout 300;
+    fastcgi_send_timeout 300;
+    fastcgi_read_timeout 300;
+    fastcgi_buffer_size 64k;
+    fastcgi_buffers 4 64k;
+    fastcgi_busy_buffers_size 128k;
+    fastcgi_temp_file_write_size 256k;
+
+ 如果没有以上数值，直接在里面添加即可。对了修改了这些参数，内存消耗有所增加。如果不能接受的，建议不要修改。
+
+//-------------------------------------------------------------------------
