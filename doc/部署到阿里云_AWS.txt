@@ -160,46 +160,54 @@ https://www.jianshu.com/p/fb037caf4fff
 		（文章错误： listen = /var/run/php7.1-fpm.sock）
 
 [ 配置 Nginx ]
+    $ sudo vim /etc/nginx/nginx.conf
+
+        --> 解决 413-Request Entity Too Large
+        http {
+            # server_tokens off;
+
+            client_max_body_size 100m;    #100M 为允许的文件大小
+        }
+
 	$ sudo vim /etc/nginx/sites-available/default
 
-	--> 修改如下，根据自己的项目情况修改对应信息：
+    	--> 修改如下，根据自己的项目情况修改对应信息：
+        server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
 
-    server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
+            # root /var/www/html;
+            root /var/www/sample/public;            <-- sample 为 Laravel 项目名称
 
-        # root /var/www/html;
-        root /var/www/sample/public;            <-- sample 为 Laravel 项目名称
+            # index index.html index.htm index.nginx-debian.html;
+            index index.php;                        <-- 修改 (注意：第一个一定是要 index)
 
-        # index index.html index.htm index.nginx-debian.html;
-        index index.php;                        <-- 修改 (注意：第一个一定是要 index)
+            # server_name _;
+            server_name 47.106.33.133;              <-- 替换为你的网站域名或IP地址
 
-        # server_name _;
-        server_name 47.106.33.133;              <-- 替换为你的网站域名或IP地址
+            location / {
+                #try_files $uri $uri/ =404;
+                try_files $uri $uri/ /index.php?$query_string;  <-- 修改
+            }
 
-        location / {
-            #try_files $uri $uri/ =404;
-            try_files $uri $uri/ /index.php?$query_string;  <-- 修改
+            ** 重要：需加上以下内容，否则浏览器访问时会出现 403 Forbidden
+            location ~ \.php$ {
+                try_files $uri /index.php =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+            }
         }
 
-        ** 重要：需加上以下内容，否则浏览器访问时会出现 403 Forbidden
-        location ~ \.php$ {
-            try_files $uri /index.php =404;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
-            fastcgi_index index.php;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            include fastcgi_params;
-        }
-    }
+        补充说明：
+        fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+            - 没有此设定，在浏览器访问会变成下载文件
+            - 路径要正确, 否则会出项 502 Bad Gateway
 
-    补充说明：
-    fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
-        - 没有此设定，在浏览器访问会变成下载文件
-        - 路径要正确, 否则会出项 502 Bad Gateway
-
-    include fastcgi_params;
-        - 没有此设定，在浏览器访问会是空白页面
+        include fastcgi_params;
+            - 没有此设定，在浏览器访问会是空白页面
 
 //---------------------------------------------------------------------------------
 [ 安装 Composer 并使用 Composer 安装代码依赖 ]

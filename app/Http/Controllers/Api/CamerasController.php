@@ -2859,7 +2859,11 @@ return $ret;
                         } else {
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
-                                $ret = $uploader->save_file($camera_id, $file);
+                                if (env('S3_ENABLE')) {
+                                    $ret = $this->s3_save_file($file, $photo->id);
+                                } else {
+                                    $ret = $uploader->save_file($camera_id, $file);
+                                }
                                 $err = $ret['err'];
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
