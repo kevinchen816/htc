@@ -14,7 +14,8 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="VigilMax Home">
-                    <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" />
+                    <!-- <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" /> -->
+                    <img class="main-logo" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" />
                 </a>
             </div>
 
