@@ -88,6 +88,16 @@ X-Amz-SignedHeaders=host&
 X-Amz-Expires=86400&
 X-Amz-Signature=8face1e2dd83c609ce35838d0ebc94c54f0b18aa3b63b60808bb998ca1480c96
 
+https://10ware-tw.s3.ap-northeast-1.amazonaws.com/media/21.MP4?
+X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&
+X-Amz-Algorithm=AWS4-HMAC-SHA256&
+X-Amz-Credential=AKIAIE4AHITCYWZ27BBQ%2F20190220%2Fap-northeast-1%2Fs3%2Faws4_request&
+X-Amz-Date=20190220T211935Z&
+X-Amz-SignedHeaders=host&
+X-Amz-Expires=86400&
+X-Amz-Signature=9fb9018e5e290ad2736e6d6433d97d8b48335d980925fe236d432399223ecfee
+
+
 //-------------------------------------------------------------------------
 Laravel:从亚马逊s3上下载文件
 https://blog.csdn.net/PerfectUrl/article/details/84302470
