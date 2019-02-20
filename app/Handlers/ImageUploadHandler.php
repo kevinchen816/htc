@@ -194,7 +194,7 @@ class ImageUploadHandler
     }
 
     // public function merge($camera_id, $filename, $blockid, $crc32) {
-    public function merge($camera_id, $photo_id, $blockid, $crc32) {
+    public function merge($api, $camera_id, $photo_id, $blockid, $crc32) {
         $err = 0;
         $to_file = '';
         //return storage_path();
@@ -208,8 +208,13 @@ class ImageUploadHandler
         }
 
         $tempFilename = $path_block.'/filename.txt';
-        $imagename = file_get_contents($tempFilename);
-        unlink($tempFilename); // must delete filename.txt before merge files
+        if (file_exists($tempFilename)) {
+            $imagename = file_get_contents($tempFilename);
+//            unlink($tempFilename); // must delete filename.txt before merge files
+        } else {
+            $ret['err'] = 4;
+            return $ret;
+        }
 
         $tagert_name =  $path_block.'/'.$imagename;
         if (file_exists($tagert_name)) {
@@ -225,7 +230,7 @@ class ImageUploadHandler
             fwrite($fp, fread($handle, filesize($file)));
             fclose($handle);
             unset($handle);
-            unlink($file);
+//            unlink($file);
         }
         fclose($fp);
 
@@ -243,9 +248,18 @@ class ImageUploadHandler
                     3 -> 1234.JPG + 1234_thumb.JPG
                     4 -> 1234.MP4
                 */
-                $photo_id = 1234;
-                $savename = $photo_id.'.JPG';
-                $ret = Storage::disk('s3')->putFileAs('media', new File($tagert_name), $savename); // storage/app/media/photo.jpg
+                // $photo_id = 1234;
+                $savename = $photo_id;
+                if ($api == 'uploadvideo') {
+                    $ret = Storage::disk('s3')->putFileAs('media', new File($tagert_name), $photo_id.'.MP4');
+                } else {
+                    $ret = Storage::disk('s3')->putFileAs('media', new File($tagert_name), $photo_id.'.JPG');
+                }
+
+                if ($api == 'photo_thumb' || $api == 'video_thumb') {
+                    $ret = Storage::disk('s3')->putFileAs('media', new File($tagert_name), $photo_id.'_thumb.JPG');
+                }
+                // $ret = Storage::putFileAs('media', new File($tagert_name), $savename); // storage/app/media/photo.jpg
 
             } else {
                 $savename = time().'_'.$imagename; // 1550417684_PICT0001.JPG
@@ -273,8 +287,9 @@ class ImageUploadHandler
 //            foreach ($files as $file) {
 //                unlink($file);
 //            }
-           unlink($tagert_name);
-           rmdir($path_block);
+
+//           unlink($tagert_name);
+//           rmdir($path_block);
         }
         return $ret;
     }

@@ -60,6 +60,7 @@ const ERR_CRC32_FAIL                = 824;
 const ERR_INVALID_BLOCK_NUMBER      = 825;
 const ERR_INVALID_BLOCK_ID          = 826;
 const ERR_COPY_MERGE_FILE_FAIL      = 827;
+const ERR_NO_MERGE_FILENAME         = 828;
 
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
@@ -169,6 +170,7 @@ class CamerasController extends Controller
             ERR_INVALID_BLOCK_NUMBER => 'Invalid blocknbr',
             ERR_INVALID_BLOCK_ID => 'Invalid blockid',
             ERR_COPY_MERGE_FILE_FAIL => 'Copy merge file failure',
+            ERR_NO_MERGE_FILENAME => 'Missinf merge filename',
 
             //900 => 'Invalid or Missing camera Module',
             //901 => 'Invalid SIM card',
@@ -2196,11 +2198,11 @@ class CamerasController extends Controller
     // }
 
     // public function uploadblock_merge($camera, $filename, $blockid, $crc32) {
-    public function uploadblock_merge($camera, $photo_id, $blockid, $crc32) {
+    public function uploadblock_merge($api, $camera, $photo_id, $blockid, $crc32) {
         $uploader = new ImageUploadHandler;
         $camera_id = $camera->id;
         // $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
-        $ret = $uploader->merge($camera_id, $photo_id, $blockid, $crc32);
+        $ret = $uploader->merge($api, $camera_id, $photo_id, $blockid, $crc32);
         $err = $ret['err'];
         if ($err == 0) {
             $ret['err'] = 0;
@@ -2210,6 +2212,8 @@ class CamerasController extends Controller
             $ret['err'] = ERR_CRC32_FAIL;
         } else if ($err == 3) {
             $ret['err'] = ERR_COPY_MERGE_FILE_FAIL;
+        } else if ($err == 4) {
+            $ret['err'] = ERR_NO_MERGE_FILENAME;
         }
         return $ret;
     }
@@ -2291,7 +2295,7 @@ class CamerasController extends Controller
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function db_photo_new($camera_id, $request, $api) {
+    public function db_photo_new($api, $camera_id, $request) {
         $db = new Photo;
         $db->camera_id  = $camera_id;
         $db->filename   = $request->FileName;   // PICT0001.MP4
@@ -2420,7 +2424,7 @@ return $ret;
             $camera_id = $camera->id;
 
             if (isset($request->blockid)) {
-                $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                $ret =$this->uploadblock_merge($api, $camera, $request->FileName, $request->blockid, $request->crc32);
                 $err = $ret['err'];
             } else {
                 $file = $request->Image;
@@ -2512,15 +2516,17 @@ return $ret;
             }
         }
 
+        $response = $this->Response_Result($err, $camera);
         if ($err == ERR_CRC32_FAIL) {
-            //$crc32 = $ret['CRC32'];
-            $response = $this->Response_Result($err, $camera);
+            ////$crc32 = $ret['CRC32'];
+            // $response = $this->Response_Result($err, $camera);
             $response['CRC32'] = $ret['CRC32'];
-        } else {
-            $response = $this->Response_Result($err, $camera);
+        // } else {
+            // $response = $this->Response_Result($err, $camera);
         }
 
         $ret = [];
+        $ret['err'] = $err;
         $ret['user_id'] = $user_id;
         $ret['camera'] = $camera;
         $ret['response'] = $response;
@@ -2539,10 +2545,10 @@ return $ret;
         if ($err == 0) {
             $camera_id = $camera->id;
 
-            $photo = $this->db_photo_new($camera_id, $request, $api);
+            $photo = $this->db_photo_new($api, $camera_id, $request);
 
             if (isset($request->blockid)) {
-                $ret =$this->uploadblock_merge($camera, $photo->id, $request->blockid, $request->crc32, 1);
+                $ret =$this->uploadblock_merge($api, $camera, $photo->id, $request->blockid, $request->crc32, 1);
                 $err = $ret['err'];
 
             } else {
@@ -2611,15 +2617,17 @@ return $ret;
             }
         }
 
+        $response = $this->Response_Result($err, $camera);
         if ($err == ERR_CRC32_FAIL) {
-            //$crc32 = $ret['CRC32'];
-            $response = $this->Response_Result($err, $camera);
+            ////$crc32 = $ret['CRC32'];
+            // $response = $this->Response_Result($err, $camera);
             $response['CRC32'] = $ret['CRC32'];
-        } else {
-            $response = $this->Response_Result($err, $camera);
+        // } else {
+            // $response = $this->Response_Result($err, $camera);
         }
 
         $ret = [];
+        $ret['err'] = $err;
         $ret['user_id'] = $user_id;
         $ret['camera'] = $camera;
         $ret['response'] = $response;
@@ -2641,77 +2649,25 @@ return $ret;
         $camera = $ret['camera'];
         $response = $ret['response'];
 
-        if ($user_id && $camera) {
-            $body = 'New Photo: '.$request->FileName;
-            $this->pushNewFile($user_id, $camera, $body);
-            $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
+        if ($ret['err'] == 0) {
+            if ($user_id && $camera) {
+                $body = 'New Photo: '.$request->FileName;
+                $this->pushNewFile($user_id, $camera, $body);
+                $this->LogApi_Add('uploadthumb', 1, $user_id, $camera->id, $request, $response);
+            }
         }
         return $response;
     }
 
-    // // for uploadoriginal() & uploadvideothumb()
-    // public function upload_check($request, $action) {
-    //     $ret = $this->Camera_Check($request);
-    //     $err = $ret['err'];
-    //     $user_id = $ret['user_id'];
-    //     $camera = $ret['camera'];
-    //     if ($err == 0) {
-    //         $camera_id = $camera->id;
-
-    //         if (isset($request->RequestID)) {
-    //             // search Action by RequestID
-    //             $query = array(
-    //                 'id' => $request->RequestID,
-    //                 'camera_id' => $camera_id,
-    //                 'action' => $action, //'UO',
-    //                 'status' => ACTION_REQUESTED,
-    //             );
-    //             $actions = DB::table('actions')->where($query);
-    //             $action  = $actions->first();
-    //             if ($action) {
-    //                 $photo_id = $action->photo_id;
-
-    //                 // search Photo
-    //                 $query = array(
-    //                     'id' => $photo_id,
-    //                     'camera_id' => $camera_id,
-    //                 );
-    //                 $photos = DB::table('photos')->where($query);
-    //                 $photo = $photos->first();
-    //                 if (!$photo) {
-    //                     //return $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
-    //                     $response = $this->Response_Result(ERR_INVALID_PHOTO_ID, $camera);
-    //                     $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
-    //                     return $response;
-    //                 }
-
-    //             } else {
-    //                 //return $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
-    //                 $response = $this->Response_Result(ERR_INVALID_REQUEST_ID, $camera);
-    //                 $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
-    //                 return $response;
-    //             }
-
-    //         } else {
-    //             $err = ERR_NO_REQUEST_ID;
-    //         }
-
-
-    //     }
-    //     //$ret = [];
-    //     $ret['err'] = $err;
-    //     //$ret['user_id'] = $user_id;
-    //     //$ret['camera'] = $camera;
-    //     return $ret;
-    // }
-
-    public function uploadoriginal(Request $request, ImageUploadHandler $uploader) {
+    // public function uploadoriginal(Request $request, ImageUploadHandler $uploader) {
+    public function uploadoriginal(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
             $camera_id = $camera->id;
+
             if (isset($request->RequestID)) {
                 /* search Action */
                 $query = array(
@@ -2732,11 +2688,14 @@ return $ret;
                     $photo = $photos->first();
                     if ($photo) {
                         if (isset($request->blockid)) {
-                            $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                            // $ret =$this->uploadblock_merge('uploadoriginal', $camera, $request->FileName, $request->blockid, $request->crc32);
+                            $ret =$this->uploadblock_merge('uploadoriginal', $camera, $photo->id, $request->blockid, $request->crc32);
                             $err = $ret['err'];
+
                         } else {
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
+                                $uploader = new ImageUploadHandler;
                                 if (env('S3_ENABLE')) {
                                     $ret = $uploader->s3_save_file($file, $photo->id);
                                 } else {
@@ -2806,10 +2765,18 @@ return $ret;
         }
 
         $response = $this->Response_Result($err, $camera);
-        if ($user_id && $camera) {
-            $body = 'New Original Photo: '.$request->FileName;
-            $this->pushNewFile($user_id, $camera, $body);
-            $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+        if ($err == 0) {
+            if ($user_id && $camera) {
+                $body = 'New Original Photo: '.$request->FileName;
+                $this->pushNewFile($user_id, $camera, $body);
+                $this->LogApi_Add('uploadoriginal', 1, $user_id, $camera->id, $request, $response);
+            }
+        } else if ($err == ERR_CRC32_FAIL) {
+            ////$crc32 = $ret['CRC32'];
+            // $response = $this->Response_Result($err, $camera);
+            $response['CRC32'] = $ret['CRC32'];
+        // } else {
+            // $response = $this->Response_Result($err, $camera);
         }
         return $response;
     }
@@ -2848,15 +2815,18 @@ return $ret;
         $camera = $ret['camera'];
         $response = $ret['response'];
 
-        if ($user_id && $camera) {
-            $body = 'New Video Photo: '.$request->FileName;
-            $this->pushNewFile($user_id, $camera, $body);
-            $this->LogApi_Add('uploadvideothumb', 1, $user_id, $camera->id, $request, $response);
+        if ($ret['err'] == 0) {
+            if ($user_id && $camera) {
+                $body = 'New Video Photo: '.$request->FileName;
+                $this->pushNewFile($user_id, $camera, $body);
+                $this->LogApi_Add('uploadvideothumb', 1, $user_id, $camera->id, $request, $response);
+            }
         }
         return $response;
     }
 
-    public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
+    // public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
+    public function uploadvideo(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $user_id = $ret['user_id'];
@@ -2883,11 +2853,14 @@ return $ret;
                     $photo = $photos->first();
                     if ($photo) {
                         if (isset($request->blockid)) {
-                            $ret =$this->uploadblock_merge($camera, $request->FileName, $request->blockid, $request->crc32);
+                            // $ret =$this->uploadblock_merge('uploadvideo', $camera, $request->FileName, $request->blockid, $request->crc32);
+                            $ret =$this->uploadblock_merge('uploadvideo', $camera, $photo->id, $request->blockid, $request->crc32);
                             $err = $ret['err'];
+
                         } else {
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
+                                $uploader = new ImageUploadHandler;
                                 if (env('S3_ENABLE')) {
                                     $ret = $uploader->s3_save_file($file, $photo->id);
                                 } else {
@@ -2956,10 +2929,18 @@ return $ret;
         }
 
         $response = $this->Response_Result($err, $camera);
-        if ($user_id && $camera) {
-            $body = 'New Video: '.$request->FileName;
-            $this->pushNewFile($user_id, $camera, $body);
-            $this->LogApi_Add('uploadvideo', 1, $user_id, $camera->id, $request, $response);
+        if ($err == 0) {
+            if ($user_id && $camera) {
+                $body = 'New Video: '.$request->FileName;
+                $this->pushNewFile($user_id, $camera, $body);
+                $this->LogApi_Add('uploadvideo', 1, $user_id, $camera->id, $request, $response);
+            }
+        } else if ($err == ERR_CRC32_FAIL) {
+            ////$crc32 = $ret['CRC32'];
+            // $response = $this->Response_Result($err, $camera);
+            $response['CRC32'] = $ret['CRC32'];
+        // } else {
+            // $response = $this->Response_Result($err, $camera);
         }
         return $response;
     }
@@ -3361,7 +3342,7 @@ return $ret;
                     //if ($photo) {
                         $filename = 'LOG.TXT';
                         if (isset($request->blockid)) {
-                            $ret =$this->uploadblock_merge($camera, $filename, $request->blockid, $request->crc32);
+                            $ret =$this->uploadblock_merge('uploadlog', $camera, $filename, $request->blockid, $request->crc32);
                             $err = $ret['err'];
                         } else {
                             //$file = $request->Image;
