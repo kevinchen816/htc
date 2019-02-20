@@ -273,8 +273,8 @@ class ImageUploadHandler
 //            foreach ($files as $file) {
 //                unlink($file);
 //            }
-//            unlink($tagert_name);
-//            rmdir($path_block);
+           unlink($tagert_name);
+           rmdir($path_block);
         }
         return $ret;
     }
