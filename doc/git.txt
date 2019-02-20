@@ -3,6 +3,32 @@ $ git fetch --all
 $ git reset --hard origin/master
 $ git pull
 
+//----------------------------------------------------------
+$ git config --list
+$ git config --global user.name "Kevin Chen"
+$ git config --global user.email "kevin@10ware.com"
+$ git config --global push.default simple
+
+//----------------------------------------------------------
+$ cd ~/Code/sample
+$ git init
+$ git add -A
+$ git status
+$git commit -m "Initial commit"
+$git log
+
+** 新建 GitHub 仓库
+$ cd ~/Code/sample
+$ git remote add origin git@github.com:kevinchen816/xxxx
+$ git push -u origin master
+
+** 代码改动，更新到 GitHub
+$ git add -A
+$ git commit -m "xxxx"
+$ git push
+
+//----------------------------------------------------------
+$ git checkout -f
 
 ** 新建分支
 $ git checkout master
