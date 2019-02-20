@@ -220,11 +220,13 @@ class CamerasController extends Controller
     public function itemCameraRegion() {
         $array['title'] = 'Camera Region';
         $array['options'] = array(
-            'United States' => 'USA',
-            'Canada'        => 'CA',
             'Australia'     => 'AU',
+            'Canada'        => 'CA',
             'China'         => 'CN',
             'Europe'        => 'EU',
+            'Japan'         => 'JP',
+            'Taiwan'        => 'TW',
+            'United States' => 'USA',
         );
         $array['help'] = 'Select the country where the camera is located.';
         return $array;
@@ -879,7 +881,19 @@ class CamerasController extends Controller
             'CN' => array(
                 'title' => 'China',
                 'options' => array(
-                    'Hong_Kong' => 'Asia/Hong_Kong',
+                    'Beijing' => 'Asia/Shanghai',
+                ),
+            ),
+            'TW' => array(
+                'title' => 'Taiwan',
+                'options' => array(
+                    'Taipei' => 'Asia/Taipei',
+                ),
+            ),
+            'JP' => array(
+                'title' => 'Japan',
+                'options' => array(
+                    'Tokyo' => 'Asia/Tokyo',
                 ),
             ),
             'EU' => array(

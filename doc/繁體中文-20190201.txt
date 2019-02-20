@@ -1,6 +1,3 @@
-<?php
-
-return [
     'Language'                  => '語言',
 
     'Register'                  => '註冊',
@@ -178,7 +175,7 @@ return [
         'Input Camera Description' => '輸入設備名稱',
         'Camera Location'       => '設備位置',
         'Input Camera Location' => '輸入設備位置',
-        'Camera Region'         => '區域',
+        'Camera Region'         => '國家/區域',
         'Time Zone'             => '時區',
 
     'Notifications'             => '郵件/手機推送通知設定',
@@ -225,7 +222,7 @@ return [
         'Video Length'          => '影片長度',
         'Video Sound'           => '影片聲音',
 
-    'Trigger Settings'          => '觸發/定時拍照設定',
+    'Trigger Settings'          => '觸發/定時設定',
         'Quiet Time'            => '觸發間隔',
         'Time Lapse'            => '定時拍照',
             'Timelapse Start Time'  => '開始時間',
@@ -267,7 +264,7 @@ return [
     'Save All Changes'          => '儲存設定',
     'Toggle Help'               => '說明',
 
-'Actions'                       => '指令任務',
+'Actions'                       => '任務記錄',
     'Request Actions'           => '下達指令任務',
     'Commands'                  => '',
         'Account Password'      => '帳號密碼',
@@ -299,5 +296,3 @@ return [
         'Delete this Camera'    => '刪除這台設備',
         'Delete Camera'         => '刪除設備',
         'Delete Camera Note'    => '注意: 您必須輸入帳戶密碼，然後點擊刪除設備。',
-
-];
