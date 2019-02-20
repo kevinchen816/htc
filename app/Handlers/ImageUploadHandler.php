@@ -5,6 +5,8 @@ namespace App\Handlers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 
+// use Debugbar;
+
 /* reference vendor/symfony/http-foundation/File/UploadedFile.php */
 
 class ImageUploadHandler
@@ -174,7 +176,9 @@ class ImageUploadHandler
         $files = [];
         $dir = opendir($path);
         while($file = readdir($dir)) {
-            if($file == '.' || $file == '..') continue;
+            // if($file == '.' || $file == '..') continue;
+            if($file == '.' || $file == '..' || $file == 'filename.txt') continue;
+
             //$new_path = trim($path, '/').'/'.trim($file, '/');
             $new_path = $path.'/'.trim($file, '/');
             //$new_path = trim($file, '/');
@@ -203,9 +207,9 @@ class ImageUploadHandler
             return $ret;
         }
 
-        $temp = $path_block.'/filename.txt';
-        $imagename = file_get_contents($temp);
-//        unlink($temp);
+        $tempFilename = $path_block.'/filename.txt';
+        $imagename = file_get_contents($tempFilename);
+        unlink($tempFilename); // must delete filename.txt before merge files
 
         $tagert_name =  $path_block.'/'.$imagename;
         if (file_exists($tagert_name)) {
@@ -221,7 +225,7 @@ class ImageUploadHandler
             fwrite($fp, fread($handle, filesize($file)));
             fclose($handle);
             unset($handle);
-            //unlink($file);
+            unlink($file);
         }
         fclose($fp);
 

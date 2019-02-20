@@ -2314,6 +2314,14 @@ class CamerasController extends Controller
     /*----------------------------------------------------------------------------------*/
     // for test
     public function s3_test(Request $request) {
+        $blockid = '7_190220093847';
+        $path_block = public_path().'/uploads/block/'.$blockid;
+
+        $ret['path_block'] = $path_block;
+return $ret;
+
+        // basename($uriString, $extString)
+
         $ret['s3'] = env('S3_ENABLE') ? '1' : '0';
         // $savePath = 'media/80.JPG';
         // $ret['exist'] = Storage::disk('s3')->exists($savePath);
