@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'KMCam Portal')</title>
+    <title>@yield('title', 'VigilMax Portal')</title>
 
     <!-- Styles -->
     <!-- <link href="https://portal.ridgetec.com/css/app.css" rel="stylesheet"> -->

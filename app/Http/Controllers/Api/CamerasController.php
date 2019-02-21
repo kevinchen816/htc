@@ -378,15 +378,15 @@ class CamerasController extends Controller
     public function itemVideoLength() {
         $array['title'] = 'Video Length';
         $array['options'] = array(
-            '2s'    => '2',
-            '3s'    => '3',
-            '4s'    => '4',
-            '5s'    => '5',
-            '6s'    => '6',
-            '7s'    => '7',
-            '8s'    => '8',
-            '9s'    => '9',
-            '10s'   => '10',
+            '2s'    => '2s',
+            '3s'    => '3s',
+            '4s'    => '4s',
+            '5s'    => '5s',
+            '6s'    => '6s',
+            '7s'    => '7s',
+            '8s'    => '8s',
+            '9s'    => '9s',
+            '10s'   => '10s',
         );
         $array['help'] = 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.';
         return $array;

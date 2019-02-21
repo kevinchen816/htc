@@ -64,7 +64,7 @@ class CreateCamerasTable extends Migration
             $table->integer('video_bitrate9')->default(500);
             $table->integer('video_bitrate10')->default(500);
             $table->integer('video_bitrate11')->default(500);
-            $table->integer('video_length')->default(5);        // 2-10s
+            $table->string('video_length')->default('5s');      // 5s
             $table->string('video_sound')->default('on');       // off, on
 
             $table->integer('upload_resolution')->default(1);
