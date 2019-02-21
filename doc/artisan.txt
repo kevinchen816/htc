@@ -8,3 +8,10 @@ $ php artisan make:model Models/Mobile -m // 自动产生 xxx_create_mobiles_tab
 
 $ php artisan migrate
 $ php artisan migrate:rollback
+
+$ php artisan migrate:fresh
+$ php artisan migrate:refresh
+
+refresh 和 fresh 命令的区别在于：
+fresh 命令不按照 migrations 表里的记录逐步回滚，而是通过删除数据库里所有表来跳过还原和回滚的步骤，
+然后在空数据库上执行每个 migration 文件里的 up 方法。

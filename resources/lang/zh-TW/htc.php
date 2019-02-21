@@ -188,7 +188,7 @@ return [
         'Camera Mode'           => '模式',
             'Photo'                 => '照片',
             'Video'                 => '影片',
-        'Photo Resolution'      => '拍照尺寸',
+        'Photo Resolution'      => '拍照解析度',
         'Flash'                 => '曝光時間',
             'Bright'                => 'Bright',
             'Balanced'              => 'Balanced',
