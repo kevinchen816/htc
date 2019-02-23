@@ -13,7 +13,8 @@
                 <!-- <h2>KMCam Pro</h2> -->
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="VigilMax Home">
+                <!-- <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="VigilMax Home"> -->
+                <a class="navbar-brand" href="http://portal.vigilmax.de" target="_blank" title="VigilMax Home">
                     <!-- <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" /> -->
                     <img class="main-logo" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" />
                 </a>
@@ -103,7 +104,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>
-                            <!-- <li><a href="{{ route('language.de') }}">German</a></li> -->
+                            <li><a href="{{ route('language.de') }}">German</a></li>
                             <li><a href="{{ route('language.cn') }}">简体中文</a></li>
                             <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
                         </ul>

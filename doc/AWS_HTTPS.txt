@@ -1,0 +1,63 @@
+//--------------------------------------------------------------------
+AWS 创建 HTTPS 功能，必须透过 ELB，步骤如下：
+1. 创建证书
+2. 设置 ELB
+
+参考邮件：如何在 AWS 创建 HTTPS
+
+AWS 负载均衡服务
+https://wenku.baidu.com/view/ed4d69eeb04e852458fb770bf78a6529647d3588.html
+
+本课时讲解如何正确配置基于 http/httpsS 流量的 Application ELB
+https://www.jikexueyuan.com/course/3742_1.html?ss=1
+
+[ 域名解析设置 ]
+
+记录类型：CNAME
+主机记录：_0b776cc70c787ceb0be39f9741acff70.portal   《-- 注意要加上 .portal
+记录值：_5d089415640485c310c68bf24f383a1d.hkvuiqjoua.acm-validations.aws
+解析线路：默认
+
+记录类型：CNAME
+主机记录：_0b776cc70c787ceb0be39f9741acff70.portal   《-- 注意要加上 .portal
+记录值：_5d089415640485c310c68bf24f383a1d.hkvuiqjoua.acm-validations.aws
+解析线路：境外
+
+//--------------------------------------------------------------------
+/* .env */
+APP_ENV=localX
+
+/* /app/Providers/AppServiceProvider.php */
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        if (env('APP_ENV') != 'local') {
+            \URL::forceScheme('https'); // 5.4
+        }
+    }
+}
+
+//--------------------------------------------------------------------
+[ 补充 ]
+如何在AWS中为自己的S3托管站点添加SSL/TSL证书（https）
+https://www.cnblogs.com/gaoyunpeng/p/7047935.html
+
+AWS EC2服务器的HTTPS负载均衡器配置过程
+https://www.cnblogs.com/mrchige/p/5916324.html
+
+//--------------------------------------------------------------------
+补充：註冊網域名稱
+使用 Amazon Route 53
+https://aws.amazon.com/tw/getting-started/tutorials/get-a-domain/?nc2=type_a
+
+
+//--------------------------------------------------------------------
+[ AWS EC2服务器的HTTPS负载均衡器配置过程 ]
+https://www.cnblogs.com/mrchige/p/5916324.html
+
+AWS Certificate Manager (ACM) 讓您可輕鬆地在 AWS 平台上佈建、管理、部署及續約 SSL/TLS 憑證。
+https://us-east-2.console.aws.amazon.com/acm/home?region=us-east-2#/firstrun/
+
+
+//--------------------------------------------------------------------

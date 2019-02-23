@@ -15,3 +15,19 @@ https://www.cnblogs.com/ImYZF/p/3566295.html
 
 Amazon AWS 實戰筆記與心得 (15 MAY 2012)
 https://blog.hinablue.me/aws-working-with-amazon-aws/
+
+//---------------------------------------------------------
+[ JP ]
+Account Id:     195106136874
+Seller:         AWS Inc.
+Account Name:   Kevin Chen
+Password:       *****
+
+
+//---------------------------------------------------------
+Elastic Load Balancing 定價
+https://aws.amazon.com/tw/elasticloadbalancing/pricing/
+
+
+
+//---------------------------------------------------------

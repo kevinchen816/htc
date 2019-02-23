@@ -15,9 +15,7 @@ return [
 
     'dont_you_have_an_account'  => "Don't you have an account yet ?",
     'Create New Account'        => 'Create New Account',
-        'check_confirm_email'   =>
-            'You are now registered, but your account is not yet confirmed.
-            Please look in your inbox for a confirmation email and click the Verify link.',
+        'check_confirm_email'   => 'You are now registered, but your account is not yet confirmed. Please look in your inbox for a confirmation email and click the Verify link.',
     'did_you'                   => 'Did you',
     'Forget Your Password'      => 'Forget Your Password ?',
     'you_already_have_an_account_an_need_to' => 'You already have an account and need to ',
@@ -301,5 +299,8 @@ return [
         'Delete this Camera'    => 'Delete this Camera',
         'Delete Camera'         => 'Delete Camera',
         'Delete Camera Note'    => 'Note: You must input your account password, then click the delete camera button.',
+
+'Cancel'                        => 'Cancel',
+'Confirm'                       => 'Confirm',
 
 ];
