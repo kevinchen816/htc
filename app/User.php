@@ -25,6 +25,8 @@ use App\Models\CartItem;
 
 use App\Notifications\EmailConfirmNotification;
 
+use Illuminate\Notifications\Messages\MailMessage;
+
 //class User extends Model
 class User extends Authenticatable
 {
@@ -73,5 +75,33 @@ class User extends Authenticatable
 
     public function cartItems() {
         return $this->hasMany(CartItem::class);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        // // 模板变量
+        // $data = [
+        //     'url' => url('password/reset', $token), //这个地址是Illuminate\Auth\Notifications\ResetPassword 中方法toMail 里的url,复制过来就可以
+        //     'name'=>$this->name,
+        // ];
+        // $template = new SendCloudTemplate( 'zhihu_app_register', $data );
+
+        // Mail::raw( $template, function ( $message ) {
+        //     $message->from( 'xxxx@qq.com', 'xxxx'  );
+        //     $message->to( $this->email );
+        // } );
+
+        // return (new MailMessage)
+        //     ->line('You are receiving this email because we received a password reset request for your account.')
+        //     ->action('Reset Password', url(config('app.url').route('password.reset', $this->token, false)))
+        //     ->line('If you did not request a password reset, no further action is required.');
+        // return (new MailMessage)
+        //     ->line('You are receiving this email because we received a password reset request for your account.')
+        //     ->action('Reset Password', url(config('app.url').route('password.reset', $token, false)))
+        //     ->line('If you did not request a password reset, no further action is required.');
+
+        // $this->notify(new ResetPasswordNotification($token));
+        $this->notify(new EmailConfirmNotification($token)); // for test
+
     }
 }

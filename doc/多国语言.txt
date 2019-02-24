@@ -18,6 +18,8 @@ $ php artisan make:middleware SetLocale
 
 补充：
 https://blog.csdn.net/yuyan_wang/article/details/80885744
+https://www.jianshu.com/p/c831c7960201
+https://www.bbsmax.com/A/lk5anNMNd1/
 
 //------------------------------------------------------------------
 https://github.com/overtrue/laravel-lang

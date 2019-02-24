@@ -10,6 +10,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Str;
 use Cache;
 
+use Illuminate\Support\Facades\App;
+// use Debugbar;
+
 // class EmailConfirmNotification extends Notification
 class EmailConfirmNotification extends Notification implements ShouldQueue
 {
@@ -36,6 +39,15 @@ class EmailConfirmNotification extends Notification implements ShouldQueue
         return ['mail'];
     }
 
+    function ts($code) {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
     /**
      * Get the mail representation of the notification.
      *
@@ -52,16 +64,35 @@ class EmailConfirmNotification extends Notification implements ShouldQueue
         */
         $url = route('confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
 
+        $language = strtolower(App::getLocale());
+        if (($language == 'zh-cn') || ($language == 'zh-tw')) {
+            $greeting = sprintf('%s %s，', $this->ts('Hello'), $notifiable->name); // Hello Kevin,
+        } else {
+            $greeting = sprintf('%s %s,', $this->ts('Hello'), $notifiable->name); // Hello Kevin,
+        }
+
+        // $greeting = sprintf('%s %s,', $this->ts('Hello'), $notifiable->name); // Hello Kevin,
+        $subject = $this->ts('Verify Email Address');
+        $line1 = $this->ts('Please click the button below to verify your email address.');
+        $action = $this->ts('Verify Email Address');
+        $line2 = $this->ts('If you did not create an account, no further action is required.');
+
         return (new MailMessage)
-                ->greeting('Hello '.$notifiable->name.',')
-                // ->subject('Email Verification')
-                ->subject('Verify Email Address')
-                // ->line('Click on the below button to verify your email address and confirm your account registration.')
-                ->line('Please click the button below to verify your email address.')
-                // ->action('Verify', $url)
-                ->action('Verify Email Address', $url)
-                ->line('If you did not create an account, no further action is required.');
-                // ->line('Thank you');
+                    ->greeting($greeting)
+                    ->subject($subject)
+                    ->line($line1)
+                    ->action($action, $url)
+                    ->line($line2);
+
+        // return (new MailMessage)
+        //         ->greeting('Hello '.$notifiable->name.',')
+        //         ->subject('Verify Email Address') // 'Email Verification'
+        //         // ->line('Click on the below button to verify your email address and confirm your account registration.')
+        //         ->line('Please click the button below to verify your email address.')
+        //         ->action('Verify Email Address', $url) // 'Verify', $url
+        //         ->line('If you did not create an account, no further action is required.');
+        //         // ->line('Thank you');
+
 
         // return (new MailMessage)
         //             ->greeting('Hello '.$notifiable->name.',')

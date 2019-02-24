@@ -29,7 +29,7 @@ class SetLocale
         //     App::setLocale('en');
         // }
 
-        $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW');
+        $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW', 'de');
 
         // Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {

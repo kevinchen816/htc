@@ -1,0 +1,102 @@
+<?php
+
+https://segmentfault.com/a/1190000009192706
+https://learnku.com/laravel/t/5591/the-principle-analysis-of-laravel-sending-reset-password-mail
+
+
+由于重置密码需要发送邮件，而laravel默认使用国外的驱动，所以需要改成国内的驱动，使用sendcloud
+
+[ 第一步：忘记密码 ]
+
+    首先看到的是App\Http\Controllers\Auth\ForgotPasswordController.php 的代码
+
+    use SendsPasswordResetEmails;
+
+        public function __construct()
+        {
+            $this->middleware('guest');
+        }
+
+[ 第二部：发送邮件 ]
+
+    // /vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php
+    public function sendResetLinkEmail(Request $request)
+    {
+        // 验证邮箱地址是否有效
+        $this->validateEmail($request);
+
+        // 发送邮件  sendResetLink 是 PasswordBroker 里面的一个方法
+        $response = $this->broker()->sendResetLink(
+            $request->only('email')
+        );
+
+        // 根据发送邮件返回状态 返回相应
+        return $response == Password::RESET_LINK_SENT
+                    ? $this->sendResetLinkResponse($response)
+                    : $this->sendResetLinkFailedResponse($request, $response);
+    }
+
+    public function broker()
+    {
+        return Password::broker();
+    }
+
+
+可以看到 \Illuminate\Contracts\Auth\PasswordBroker
+这个接口实例是 Illuminate\Auth\PasswordBroker.php 这个文件,
+找到上面发送邮件使用的一个方法 sendResetLink, 如下
+
+    // /vendor/laravel/framework/src/Illuminate/Auth/Passwords/PasswordBroker.php
+    public function sendResetLink(array $credentials)
+    {
+        // 查找用户信息
+        user = $this->getUser($credentials);
+
+        if (is_null($user)) {
+            return static::INVALID_USER;
+        }
+
+        // 真正发送邮件的地方,发现调用的 User.php 里的方法
+        $user->sendPasswordResetNotification(
+            $this->tokens->create($user)
+        );
+
+        return static::RESET_LINK_SENT;
+    }
+
+
+[ 第三步：用户数据模型 ]
+    上一步看到发送邮件使用的是 User.php 这个 model 里的
+    sendPasswordResetNotification 方法
+
+    class User extends Authenticatable      《-- 在 User 上按右键选 Goto Definition
+
+    /vendor/laravel/framework/src/Illuminate/Foundation/Auth/User.php
+    class User extends Model implements
+        AuthenticatableContract,
+        AuthorizableContract,
+        CanResetPasswordContract
+    {
+        use Authenticatable, Authorizable, CanResetPassword;
+    }
+
+    --》发现了重大新闻，这个地方用了个 trait CanResetPassword，看下代码：
+
+    /vendor/laravel/framework/src/Illuminate/Auth/Passwords/CanResetPassword.php
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /vendor/laravel/framework/src/Illuminate/Auth/Notifications/ResetPassword.php
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->line('You are receiving this email because we received a password reset request for your account.')
+            ->action('Reset Password', url(config('app.url').route('password.reset', $this->token, false)))
+            ->line('If you did not request a password reset, no further action is required.');
+    }
+
+--》遂知默认重置密码邮件的模板位于：resources/views/vendor/notifications/email.blade.php。
+
+//---------------------------------------------------------------
