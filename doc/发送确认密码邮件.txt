@@ -1,5 +1,8 @@
 <?php
 
+[ 3.5. 邮箱认证 ]
+https://learnku.com/courses/laravel-intermediate-training/5.7/email-verify/2914
+
 /*
     **** 监听用户注册事件 ****
     /app/Providers/EventServiceProvider.php
@@ -29,6 +32,8 @@ class RegisteredListener
     **** 发送邮件 ****
     /app/Notifications/EmailConfirmNotification.php
 */
+$ php artisan make:notification EmailConfirmNotification
+
 class EmailConfirmNotification extends Notification
 {
     use Queueable;
@@ -151,4 +156,3 @@ class EmailConfirmController extends Controller
 想要汉化剩下的内容很容易。
 只需要运行 php artisan vendor:publish --tag=laravel-notifications
 将邮件模板发布到 resources/views 下。
-

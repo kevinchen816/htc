@@ -18,6 +18,16 @@ class EmailConfirmNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public function ts($code)
+    {
+        $txt = 'htc.'.$code;
+        $trans = trans($txt);
+        if (empty($trans) || $trans == $txt) {
+            $trans = $code;
+        }
+        return $trans;
+    }
+
     /**
      * Create a new notification instance.
      *
@@ -39,15 +49,6 @@ class EmailConfirmNotification extends Notification implements ShouldQueue
         return ['mail'];
     }
 
-    function ts($code) {
-        $txt = 'htc.'.$code;
-        $trans = trans($txt);
-        if (empty($trans) || $trans == $txt) {
-            $trans = $code;
-        }
-        return $trans;
-    }
-
     /**
      * Get the mail representation of the notification.
      *
@@ -64,14 +65,17 @@ class EmailConfirmNotification extends Notification implements ShouldQueue
         */
         $url = route('confirm.verify', ['email' => $notifiable->email, 'token' => $token]);
 
-        $language = strtolower(App::getLocale());
-        if (($language == 'zh-cn') || ($language == 'zh-tw')) {
-            $greeting = sprintf('%s %s，', $this->ts('Hello'), $notifiable->name); // Hello Kevin,
-        } else {
-            $greeting = sprintf('%s %s,', $this->ts('Hello'), $notifiable->name); // Hello Kevin,
-        }
+        // $language = strtolower(App::getLocale());
+        // if (($language == 'zh-cn') || ($language == 'zh-tw')) {
+        //     $greeting = sprintf('%s %s，', $this->ts('Hello,'), $notifiable->name); // Hello Kevin,
+        // } else {
+        //     $greeting = sprintf('%s %s,', $this->ts('Hello,'), $notifiable->name); // Hello Kevin,
+        // }
 
+        // $greeting = sprintf('%s%s,', $this->ts('Hello, '), $notifiable->name); // Hello Kevin,
         // $greeting = sprintf('%s %s,', $this->ts('Hello'), $notifiable->name); // Hello Kevin,
+
+        $greeting = sprintf($this->ts('Hello,'));
         $subject = $this->ts('Verify Email Address');
         $line1 = $this->ts('Please click the button below to verify your email address.');
         $action = $this->ts('Verify Email Address');

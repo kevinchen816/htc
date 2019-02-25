@@ -3,8 +3,7 @@
 https://segmentfault.com/a/1190000009192706
 https://learnku.com/laravel/t/5591/the-principle-analysis-of-laravel-sending-reset-password-mail
 
-
-由于重置密码需要发送邮件，而laravel默认使用国外的驱动，所以需要改成国内的驱动，使用sendcloud
+由于重置密码需要发送邮件，而 laravel 默认使用国外的驱动，所以需要改成国内的驱动，使用sendcloud
 
 [ 第一步：忘记密码 ]
 
@@ -97,6 +96,54 @@ https://learnku.com/laravel/t/5591/the-principle-analysis-of-laravel-sending-res
             ->line('If you did not request a password reset, no further action is required.');
     }
 
---》遂知默认重置密码邮件的模板位于：resources/views/vendor/notifications/email.blade.php。
+[ ]
+    $ php artisan make:notification ResetPasswordNotification
+
+    class ResetPasswordNotification extends Notification
+    {
+        use Queueable;
+
+        public function ts($code)
+        {
+            $txt = 'htc.'.$code;
+            $trans = trans($txt);
+            if (empty($trans) || $trans == $txt) {
+                $trans = $code;
+            }
+            return $trans;
+        }
+
+        public function __construct($token)
+        {
+            $this->token = $token;
+        }
+
+        public function via($notifiable)
+        {
+            return ['mail'];
+        }
+
+        public function toMail($notifiable)
+        {
+            $greeting = sprintf($this->ts('Hello,'));
+            $subject = $this->ts('Reset Password');
+            $line1 = $this->ts('You are receiving this email because we received a password reset request for your account.');
+            $action = $this->ts('Reset Password');
+            $url = url(config('app.url').route('password.reset', $this->token, false));
+            $line2 = $this->ts('If you did not request a password reset, no further action is required.');
+
+            return (new MailMessage)
+                        ->greeting($greeting)
+                        ->subject($subject)
+                        ->line($line1)
+                        ->action($action, $url)
+                        ->line($line2);
+        }
+    }
+
+--》 默认重置密码邮件的模板位于：resources/views/vendor/notifications/email.blade.php。
+
+//---------------------------------------------------------------
+$ php artisan make:notification ResetPasswordNotification
 
 //---------------------------------------------------------------

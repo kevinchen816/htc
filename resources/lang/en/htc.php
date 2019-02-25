@@ -303,7 +303,7 @@ return [
 'Cancel'                        => 'Cancel',
 'Confirm'                       => 'Confirm',
 
-'Hello'                         => 'Hello',
+'Hello,'                        => 'Hello,',
 'Regards'                       => 'Regards',
 'All rights reserved'           => 'All rights reserved',
 
