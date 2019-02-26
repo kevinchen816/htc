@@ -3843,7 +3843,9 @@ return $ret;
         $name = $id = 'noti_email';
         $value = null;
         $checked = ($camera[$name] == 'on') ? 'checked' : '';
-        return $this->stItemCheckbox($name, $id, $value, $checked, 'kevin@10ware.com');
+
+        $user    = Auth::user();
+        return $this->stItemCheckbox($name, $id, $value, $checked, $user->email);
     }
 
     public function html_Settings_Notifications($camera) {
