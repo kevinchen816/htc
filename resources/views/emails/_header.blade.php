@@ -1,7 +1,7 @@
 <tr>
     <td class="header">
         <a href="{{ route('home') }} ">
-            KMCam Pro
+            {{ env('APP_NAME') }}
         </a>
     </td>
 </tr>

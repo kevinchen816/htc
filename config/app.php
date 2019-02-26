@@ -82,7 +82,8 @@ return [
     // 'locale' => 'en',
     // 'locale' => 'de',
     // 'locale' => 'zh-CN',
-    'locale' => 'zh-TW',
+    // 'locale' => 'zh-TW',
+    'locale' => env('APP_LANG', 'en'),
 
     /*
     |--------------------------------------------------------------------------
