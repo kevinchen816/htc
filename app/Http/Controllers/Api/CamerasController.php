@@ -4148,11 +4148,18 @@ return $ret;
                 ->orderBy('created_at', 'desc')
                 ->paginate($camera->thumbs);
 
+// $photos->withPath('custom/url');
+$photos->withPath('/');
+
             if (($user->sel_menu != 'camera')||($user->sel_camera != $camera_id)) {
                 $data['sel_menu'] = 'camera';
                 $data['sel_camera'] = $camera_id;
                 $user->update($data);
             }
+
+//此处是为了解决分页地址使用https问题
+// $photos['list']=$photos['list']->withPath('/'.$request->route()->uri);
+// return $photos['list'];
 
             return view('cameras', compact('user', 'cameras', 'camera', 'photos'));
         } else {
