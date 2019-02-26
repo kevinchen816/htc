@@ -118,8 +118,11 @@
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>
                             <li><a href="{{ route('language.de') }}">German</a></li>
+@if (env('APP_REGION') == 'tw')
                             <li><a href="{{ route('language.cn') }}">简体中文</a></li>
+@elseif (env('APP_REGION') == 'cn')
                             <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
+@endif
                         </ul>
                     </li>
                 </ul>
