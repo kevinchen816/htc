@@ -1,31 +1,86 @@
 service mysqld start
 service mysqld stop
 
+mysql -h 52.192.110.218 -P 3306 -ukevin -pkevin816
+
 //------------------------------------------------------------
-mysql数据库myi索引文件损坏修复
-https://www.724001.com/705.html
+[ 问题处理 ] ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes
 
-首先删除损坏的 MYI 文件
+    https://www.cnblogs.com/kerrycode/p/9680881.html
 
-mysql -uroot -proot3306
-mysql> use dbname;
-Database changed
-mysql> REPAIR TABLE tablename USE_FRM;
+    启用系统变量 innodb_large_prefix (注意：光有这个系统变量开启是不够的。)
+    必须满足下面几个条件：
 
-这样就可以通过frm文件来重建索引了
+    (1) 系统变量 innodb_large_prefix 为 ON           <-- 阿里云默认值为 OFF
 
-REPAIR TABLE tbl_name[,tbl_name] ... [QUICK] [EXTENDED] [USE_FRM]
+        mysql> show variables like '%innodb_large_prefix%';
+        +---------------------+-------+
+        | Variable_name       | Value |
+        +---------------------+-------+
+        | innodb_large_prefix | ON    |
+        +---------------------+-------+
 
-QUICK 用在数据表还没被修改的情况下,速度最快
-EXTENDED 试图去恢复每个数据行,会产生一些垃圾数据行,万般无奈的情况下用
-USE_FRM 用在 .MYI 文件丢失或者头部受到破坏的情况下。利用 .frm 的定义来重建索引
+        mysql> set global innodb_large_prefix=on;
 
-多数情况下,简单得用”repair table tablename”不加选项就可以搞定问题。
-但是当.MYI文件丢失或者头部受到破坏时,这样的方式不管用。
+    (2) 系统变量 innodb_file_format 为 Barracuda
 
-*.frm 是描述了表的结构
-*.MYD 保存了表的数据记录
-*.MYI 则是表的索引
+        mysql> show variables like '%innodb_file_format%';
+        +--------------------------+-----------+
+        | Variable_name            | Value     |
+        +--------------------------+-----------+
+        | innodb_file_format       | Barracuda |
+        | innodb_file_format_check | ON        |
+        | innodb_file_format_max   | Barracuda |
+        +--------------------------+-----------+
+
+        mysql> set global innodb_file_format=Barracuda;
+
+    (3) ROW_FORMAT 为 DYNAMIC 或 COMPRESSED
+
+        mysql> show table status from htc where name='users'\G;
+        *************************** 1. row ***************************
+                   Name: users
+                 Engine: InnoDB
+                Version: 10
+             Row_format: Dynamic
+        .....
+
+        mysql>  ALTER TABLE users ROW_FORMAT=DYNAMIC;
+
+    补充：
+        如果启用了系统变量 innodb_large_prefix（MySQL 5.7 默认开启），
+        则对于使用 DYNAMIC 或 COMPRESSED 行格式的 InnoDB 表，索引键前缀限制为 3072 字节。
+        如果禁用 innodb_large_prefix，则对于任何行格式的表，索引键前缀限制为 767 字节。
+
+        注意：上面是 767个 字节，而不是字符，具体到字符数量，这就跟字符集有关。
+             GBK是双字节的，UTF-8是三字节的
+
+//------------------------------------------------------------
+[ 问题处理 ] MySQL 数据库 myi 索引文件损坏修复
+
+    https://www.724001.com/705.html
+
+    首先删除损坏的 MYI 文件
+
+    mysql -uroot -proot3306
+    mysql> use dbname;
+    Database changed
+    mysql> REPAIR TABLE tablename USE_FRM;
+
+    这样就可以通过frm文件来重建索引了
+
+    REPAIR TABLE tbl_name[,tbl_name] ... [QUICK] [EXTENDED] [USE_FRM]
+
+    QUICK 用在数据表还没被修改的情况下,速度最快
+    EXTENDED 试图去恢复每个数据行,会产生一些垃圾数据行,万般无奈的情况下用
+    USE_FRM 用在 .MYI 文件丢失或者头部受到破坏的情况下。利用 .frm 的定义来重建索引
+
+    多数情况下,简单得用”repair table tablename”不加选项就可以搞定问题。
+    但是当.MYI文件丢失或者头部受到破坏时,这样的方式不管用。
+
+    *.frm 是描述了表的结构
+    *.MYD 保存了表的数据记录
+    *.MYI 则是表的索引
 
 //------------------------------------------------------------
 myisamchk -r /home/data/mysql/c1/q1_history.MYI

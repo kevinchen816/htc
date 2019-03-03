@@ -118,6 +118,7 @@ https://www.jianshu.com/p/fb037caf4fff
     mysql> FLUSH PRIVILEGES;
     mysql> exit
     // 名字应该和 .env 文件中对应的数据库一致，如 DB_DATABASE=sample
+    // Laravel 5.4默认使用utf8mb4字符编码，而不是之前的utf8编码。
 
         **** 补充：可选 ****
         因为上线的应用为laravel 5.5版本开发的，为了之后的兼容性问题，
@@ -155,7 +156,7 @@ https://www.jianshu.com/p/fb037caf4fff
 	$ sudo vim /etc/php/7.1/fpm/php.ini
 		-> 修改 cgi.fix_pathinfo=0
 
-	$ sudo vim /etc/php/7.1/fpm/pool.d/www.conf
+	$ c
 		-> 修改 listen = /var/run/php/php7.1-fpm.sock   <-- 前面加上 /var
 		（文章错误： listen = /var/run/php7.1-fpm.sock）
 

@@ -161,7 +161,7 @@ return [
     'HighRes'                   => '高解析度',
     'Original'                  => '原始照片',
     'Pending Request'           => '等待下達指令',
-    'Gallery Note'              => '注意: 上傳檔案將在 90 天後自動刪除',
+    'Gallery Note'              => '注意: 上傳檔案將在 30 天後自動刪除',
     'Delete'                    => '删除',
     'Request Original'          => '上傳原始照片',
     'Request Video'             => '上傳原始视频',
@@ -304,7 +304,7 @@ return [
 'Confirm'                       => '確認',
 
 'Hello,'                        => '您好，',
-'Regards'                       => 'Regards',
+'Regards'                       => '謝謝',
 'All rights reserved'           => 'All rights reserved',
 
 'Verify Email Address'          => '驗證電子郵件地址',

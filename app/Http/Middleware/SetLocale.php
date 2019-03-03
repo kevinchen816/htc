@@ -23,6 +23,10 @@ class SetLocale
      */
     public function handle($request, Closure $next)
     {
+        if (env('APP_REGION') == 'cn') {
+            return $next($request);
+        }
+
         // if (Session::has('locale') && in_array(Session::get('locale'), ['en', 'zh'])) {
         //     App::setLocale(Session::get('locale'));
         // } else {

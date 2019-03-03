@@ -101,10 +101,12 @@ class PlansController extends Controller
         }
         $iccid = $request->iccid;
 
-        if (!$request['agree-terms']) {
-           // session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
-           session()->flash('danger', $this->ts('agree_TERMS'));
-           return redirect()->back();
+        if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de') {
+            if (!$request['agree-terms']) {
+               // session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
+               session()->flash('danger', $this->ts('agree_TERMS'));
+               return redirect()->back();
+            }
         }
 
         /* search Plan */

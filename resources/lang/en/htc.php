@@ -161,7 +161,7 @@ return [
     'HighRes'                   => 'HighRes',
     'Original'                  => 'Original',
     'Pending Request'           => 'Pending Request',
-    'Gallery Note'              => 'Note: Uploads will automatically purge after 90 days',
+    'Gallery Note'              => 'Note: Uploads will automatically purge after 30 days',
     'Delete'                    => 'Delete',
     'Request Original'          => 'Request Original',
     'Request Video'             => 'Request Video',

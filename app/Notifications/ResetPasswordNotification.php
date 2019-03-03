@@ -77,9 +77,11 @@ class ResetPasswordNotification extends Notification
         $url = url(config('app.url').route('password.reset', $this->token, false));
         $line2 = $this->ts('If you did not request a password reset, no further action is required.');
 
+        /* 默认重置密码邮件的模板位于：resources/views/vendor/notifications/email.blade.php */
         return (new MailMessage)
                     ->greeting($greeting)
                     ->subject($subject)
+                    // ->salutation('Regards,<br>'.config('app.name'))
                     ->line($line1)
                     ->action($action, $url)
                     ->line($line2);

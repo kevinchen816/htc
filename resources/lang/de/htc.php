@@ -161,7 +161,7 @@ return [
     'HighRes'                   => 'Hohe Auflösung',
     'Original'                  => 'Original',
     'Pending Request'           => 'ausstehende Anfrage',
-    'Gallery Note'              => 'Hinweis: Uploads werden automatisch nach 90 Tagen gelöscht',
+    'Gallery Note'              => 'Hinweis: Uploads werden automatisch nach 30 Tagen gelöscht',
     'Delete'                    => 'Löschen',
     'Request Original'          => 'Original anfordern',
     'Request Video'             => 'Video anfordern',

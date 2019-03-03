@@ -33,8 +33,19 @@ class CreateCamerasTable extends Migration
             <option value="CN" selected="selected">China</option>
             <option value="EU">Europe</option>
             */
-            $table->string('region')->nullable()->default('EU');
-            $table->string('timezone')->nullable()->default('Europe/Berlin');
+            if (env('APP_REGION') == 'tw') {
+                $table->string('region')->nullable()->default('TW');
+                $table->string('timezone')->nullable()->default('Asia/Taipei');
+            } else if (env('APP_REGION') == 'cn') {
+                $table->string('region')->nullable()->default('CN');
+                $table->string('timezone')->nullable()->default('Asia/Shanghai');
+            } else if (env('APP_REGION') == 'de') {
+                $table->string('region')->nullable()->default('EU');
+                $table->string('timezone')->nullable()->default('Europe/Berlin');
+            } else {
+                $table->string('region')->nullable()->default('USA');
+                $table->string('timezone')->nullable()->default('America/Los_Angeles');
+            }
 
             $table->integer('points')->default(0); // del
             $table->integer('points_used')->default(0); // del
@@ -89,7 +100,7 @@ class CreateCamerasTable extends Migration
 
             $table->string('hb_interval')->default('1h');       // 1h
 
-            $table->integer('online_max_time')->default(2);     // 2
+            $table->integer('online_max_time')->default(5);     // 5
             $table->string('cellularpw')->nullable();           //
             $table->string('remotecontrol')->default('off');    // off, 24h
             $table->string('remotecurrent')->default('off');    // off, 24h

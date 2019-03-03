@@ -70,13 +70,18 @@
                         <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> {{ trans('htc.My Account') }}</a>
                     </li>
 
+    @if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
                     <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
                         <a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a>
                     </li>
+    @endif
 @else
+    @if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
                     <li class=""><a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a></li>
+    @endif
 @endif
 
+@if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                              {{ trans('htc.Support') }} <span class="caret"></span>
@@ -87,6 +92,7 @@
                             </li>
                         </ul>
                     </li>
+@endif
 
 @if (Auth::check() && isset($user))
                     <li class="{{ ($user->sel_menu == 'user') ? 'dropdown active' : 'dropdown' }}">
@@ -111,20 +117,26 @@
                     <li class=""><a href="{{ route('login') }}">{{ trans('htc.Login') }}</a></li>
 @endif
 
+@if (env('APP_REGION') == 'cn')
+
+@else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                              {{ trans('htc.Language') }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>
+    @if (env('APP_REGION') == 'de')
                             <li><a href="{{ route('language.de') }}">German</a></li>
-@if (env('APP_REGION') == 'tw')
+    @elseif (env('APP_REGION') == 'tw')
                             <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
-@elseif (env('APP_REGION') == 'cn')
+    @elseif (env('APP_REGION') == 'cn')
                             <li><a href="{{ route('language.cn') }}">简体中文</a></li>
+    @endif
 @endif
                         </ul>
                     </li>
+
                 </ul>
             </div>
         </div>
