@@ -1,0 +1,44 @@
+[ Laravel 运用 OSS ]
+https://learnku.com/articles/2938/laravel-using-oss
+
+
+$ composer require "johnlui/aliyun-oss"
+
+组件下载完成之后, 作者的 GitHub 上面说需要在 app/config/app.php 中增加四项配置,
+我建议在 app/config 下面新建一个 alioss.php 文件然后在添加配置:
+
+<?php
+return [
+    'ossServer' => env('ALIOSS_SERVER', null),                      // 外网
+    'ossServerInternal' => env('ALIOSS_SERVERINTERNAL', null),      // 内网
+    'AccessKeyId' => env('ALIOSS_KEYID', null),                     // key
+    'AccessKeySecret' => env('ALIOSS_KEYSECRET', null),             // secret
+    'BucketName' => env('ALIOSS_BUCKETNAME', null)                  // bucket
+];
+
+LTAIoC6OoEoO46cW
+h6yfN1gTbl1ch2pzUfJRr9XRbvcJEr
+
+[ Laravel 阿里云OSS图片上传 ]
+https://blog.csdn.net/qq292913477/article/details/80896402
+
+
+[ laravel下使用阿里云oss上传图片 ]
+https://www.cnblogs.com/lsm19870508/p/5846680.html
+
+//-----------------------------------------------------------
+[ 使用限制 ]
+https://help.aliyun.com/document_detail/54464.html?spm=a2c4g.11186623.2.12.46c51c62F6ICcx#concept-pzk-crg-tdb
+
+对于原图：
+    图片格式只能是：jpg、png、bmp、gif、webp、tiff。
+    文件大小不能超过 20MB。
+    使用图片旋转或裁剪时图片的宽或者高不能超过 4096。
+    原图单边大小不能超过30,000。
+
+对于缩略后的图：
+    宽与高的乘积不能超过 4096x4096。
+    单边长度不能超过 4096。
+
+
+//-----------------------------------------------------------
