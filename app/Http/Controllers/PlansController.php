@@ -184,14 +184,24 @@ if ($user->permission == 1) {
 ////$ret = $this->m2m_iccid_deactive('89610185002185155463');
 //$ret = $this->m2m_iccid_active($iccid);
 
-        if ($user->permission == 2) {
-            $mode = 'create';
-            return view('plans.create', compact('user', 'plan', 'mode'));
-        } else {
+        // if ($user->permission == 2) {
+        //     $mode = 'create';
+        //     return view('plans.create', compact('user', 'plan', 'mode'));
+        // } else {
+        //     $data['sel_account_tab'] = 'plans';
+        //     Auth::user()->update($data);
+        //     session()->flash('success', 'Create Success');
+        //     return redirect()->route('account.profile');
+        // }
+
+        if ($style == 'test') {
             $data['sel_account_tab'] = 'plans';
             Auth::user()->update($data);
             session()->flash('success', 'Create Success');
             return redirect()->route('account.profile');
+        } else {
+            $mode = 'create';
+            return view('plans.create', compact('user', 'plan', 'mode'));
         }
     }
 

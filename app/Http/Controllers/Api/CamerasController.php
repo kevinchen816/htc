@@ -4015,7 +4015,7 @@ return $ret;
     </tr>
     */
     public function html_CameraList($user, $active_camera_id) {
-        if ($user->permission == 1) {
+        if ($user->permission == 99) {
             $cameras = DB::table('cameras')
                 ->orderBy('description', 'asc')
                 ->get();
@@ -4121,7 +4121,7 @@ return $ret;
         $user_id = $user->id;
 
         // $cameras = DB::table('cameras')->where('user_id', $user_id);
-        if ($user->permission == 1) {
+        if ($user->permission == 99) {
             // $cameras = DB::table('cameras');
             $cameras = Camera::get();
         } else {
