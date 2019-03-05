@@ -70,14 +70,14 @@
                         <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> {{ trans('htc.My Account') }}</a>
                     </li>
 
-    @if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
-                    <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
+    @if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de' || env('APP_REGION') == 'au')
+<!--                     <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
                         <a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a>
-                    </li>
+                    </li> -->
     @endif
 @else
-    @if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
-                    <li class=""><a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a></li>
+    @if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de' || env('APP_REGION') == 'au')
+                    <!-- <li class=""><a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a></li> -->
     @endif
 @endif
 

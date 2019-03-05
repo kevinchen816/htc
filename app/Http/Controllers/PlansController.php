@@ -130,18 +130,19 @@ class PlansController extends Controller
         // $style = $sim->style; // demo, normal
 
 // for test
-// if ($user->permission == 1) {
+if ($user->permission == 1) {
     $region = 'au'; // for test
     $style = 'normal'; // for test
-// } else {
-//     $region = 'au'; // for test
-//     $style = 'test'; // for test
-// }
+    // $style = 'test'; // for test
+} else {
+    $region = 'au'; // for test
+    $style = 'test'; // for test
+}
 //+
 
         if ($style == 'test') {
             $status = 'active';
-            $points = 50000;
+            $points = 100000;
         } else {
             $status = 'deactive';
             $points = 0;
@@ -183,15 +184,15 @@ class PlansController extends Controller
 ////$ret = $this->m2m_iccid_deactive('89610185002185155463');
 //$ret = $this->m2m_iccid_active($iccid);
 
-        // if ($user->permission == 1) {
+        if ($user->permission == 2) {
             $mode = 'create';
             return view('plans.create', compact('user', 'plan', 'mode'));
-        // } else {
-        //     $data['sel_account_tab'] = 'plans';
-        //     Auth::user()->update($data);
-        //     session()->flash('success', 'Create Success');
-        //     return redirect()->route('account.profile');
-        // }
+        } else {
+            $data['sel_account_tab'] = 'plans';
+            Auth::user()->update($data);
+            session()->flash('success', 'Create Success');
+            return redirect()->route('account.profile');
+        }
     }
 
     /*----------------------------------------------------------------------------------*/
