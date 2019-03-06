@@ -163,7 +163,7 @@ return [
     'Pending Request'           => '等待任务请求',
     'Gallery Note'              => '注意: 上传文件将在 30 天后自动删除',
     'Delete'                    => '删除',
-    'Request Original'          => '请求原始照片',
+    'Request Original'          => '请求原始文件',
     'Request Video'             => '请求原始视频',
     'Columns'                   => '每列张数',
     'Thumbs'                    => '每页张数',

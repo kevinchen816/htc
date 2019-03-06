@@ -51,11 +51,11 @@
                                 {{ trans('htc.Request Original') }}
                             </a>
                         </li>
-                        <li>
+<!--                         <li>
                             <a class="btn" data-toggle="modal" data-target="#VideoModal" data-type="video">
                                 {{ trans('htc.Request Video') }}
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
 

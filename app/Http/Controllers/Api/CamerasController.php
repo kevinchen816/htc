@@ -4324,6 +4324,21 @@ $photos->withPath(url('/cameras'));
                         $photo->update($data);
                     }
 
+                // 2019-03-06 modify
+                // } else if ($action == 'o') {
+                //     //if ($photo->filetype == 1) {
+                //     // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                //     if ($photo->uploadtype == 1) {
+                //         $param['action_code'] = 'UO';
+                //         $param['photo_id'] = $photo_id;
+                //         $param['filename'] = $filename;
+                //         $param['image_size'] = 6;
+                //         $this->Action_Add($param);
+
+                //         $data['action'] = 1;
+                //         $photo->update($data);
+                //     }
+
                 } else if ($action == 'o') {
                     //if ($photo->filetype == 1) {
                     // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
@@ -4336,7 +4351,17 @@ $photos->withPath(url('/cameras'));
 
                         $data['action'] = 1;
                         $photo->update($data);
+
+                    } else if ($photo->uploadtype == 3) {
+                        $param['action_code'] = 'UV';
+                        $param['photo_id'] = $photo_id;
+                        $param['filename'] = $filename;
+                        $this->Action_Add($param);
+
+                        $data['action'] = 1;
+                        $photo->update($data);
                     }
+                //+
 
                 } else if ($action == 'v') {
                     //if ($photo->filetype == 2) {
