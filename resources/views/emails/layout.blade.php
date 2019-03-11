@@ -42,7 +42,7 @@
                                 <tr>
                                     <td style="">
                                         <p style="margin-top: 0; color: #74787E; font-size: 12px; line-height: 1.5em;">
-                                            &copy; 2018
+                                            &copy; 2019
                                             <a style="color: #3869D4;"  href="{{ route('home') }}"  target="_blank">{{ config('app.name') }}</a>.
                                             All rights reserved.
                                         </p>

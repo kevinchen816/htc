@@ -22,6 +22,7 @@ use Schema;
 use Mail;
 use App\Http\Controllers\MailController;
 use App\Mail\PhotoSend;
+use App\Mail\NotificationSend;
 
 use Carbon\Carbon;
 use JPush\Client as JPush;
@@ -69,6 +70,17 @@ const ACTION_CANCELLED              = 3;
 const ACTION_FAILED                 = 4;
 const ACTION_PENDING                = 5;
 //const ACTION_ABORT                = 6;
+
+const NOTI_PLAN_NOT_ACTIVE          = 1;
+const NOTI_PLAN_DEACTIVE            = 2;
+const NOTI_PLAN_SUSPEND             = 3;
+const NOTI_PLAN_EMPTY               = 4;
+const NOTI_PLAN_EXPIRE              = 5;
+const NOTI_PLAN_WILL_EXPIRE         = 6;
+const NOTI_BATTERY_EMPTY            = 7;
+const NOTI_CARD_FULL                = 8;
+const NOTI_CARD_ERROR               = 9;
+const NOTI_CARD_FORMAT_DONE         = 10;
 
 class CamerasController extends Controller
 {
@@ -153,7 +165,7 @@ class CamerasController extends Controller
             ERR_PLAN_SUSPEND => 'Plan is suspend',
             ERR_PLAN_DEACTIVE => 'Plan is deactive',
             ERR_PLAN_NOT_ACTIVE => 'Plan not active',
-            ERR_PLAN_EXPIRE => 'Plan is expire',
+            ERR_PLAN_EXPIRE => 'Plan is expired',
             ERR_PLAN_EMPTY => 'Plan points empty',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
@@ -541,7 +553,17 @@ class CamerasController extends Controller
 
     public function itemTimelapseInterval() {
         $array['title'] = 'Timelapse Interval';
-        $array['options'] = array(
+        // $array['options'] = array(
+        //     '5m'=>'5m',
+        //     '10m'=>'10m', '15m'=>'15m',
+        //     '20m'=>'20m', '25m'=>'25m',
+        //     '30m'=>'30m', '35m'=>'35m',
+        //     '40m'=>'40m', '45m'=>'45m',
+        //     '50m'=>'50m', '55m'=>'55m',
+        //     '1h'=>'1h', '2h'=>'2h', '4h'=>'4h', '6h'=>'6h', '8h'=>'8h', '10h'=>'10h', '12h'=>'12h',
+        // );
+
+        $items = array(
             '5m'=>'5m',
             '10m'=>'10m', '15m'=>'15m',
             '20m'=>'20m', '25m'=>'25m',
@@ -550,6 +572,15 @@ class CamerasController extends Controller
             '50m'=>'50m', '55m'=>'55m',
             '1h'=>'1h', '2h'=>'2h', '4h'=>'4h', '6h'=>'6h', '8h'=>'8h', '10h'=>'10h', '12h'=>'12h',
         );
+        if (env('APP_REGION') == 'tw') {
+            $items_tw = array(
+                '30s'=>'30s', '1m'=>'1m',
+            );
+            $array['options'] = array_merge($items_tw, $items);;
+        } else {
+            $array['options'] = $items;
+        }
+
         $array['help'] = '';
         return $array;
     }
@@ -1192,6 +1223,12 @@ class CamerasController extends Controller
                 $response_type = 0;
                 $show = 1;
 
+            } else if ($log_api->api == 'carderror') {
+                $api = 'Card Error';
+                $request_type = 1;
+                $response_type = 0;
+                $show = 1;
+
             } else if ($log_api->api == 'formatdone') {
                 $api = 'Format Done';
                 $request_type = 1;
@@ -1732,27 +1769,40 @@ class CamerasController extends Controller
     public function Plan_Check($iccid) {
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
+            $user_id = $plan->user_id;
+            $ret['user_id'] = $user_id;
+
             if ($plan->status == 'active') {
 
-                $now = Carbon::now()->subDays(1);
-                // if (Carbon::now()->gt($plan->sub_end) && ($plan->style == 'normal')) {
-                if ($now->gt($plan->sub_end) && ($plan->style == 'normal')) {
-                    $ret['err'] = ERR_PLAN_EXPIRE;
+                if ($plan->style == 'test') {
+                    $ret['err'] = 0;
                 } else {
-                    if ($plan->points_used < $plan->points) {
-                        $ret['err'] = 0;
-                        $ret['user_id'] = $plan->user_id;
+                    if (Carbon::now()->gt($plan->sub_end)) {
+                        $ret['err'] = ERR_PLAN_EXPIRE;
+                        $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_EXPIRE);
+                    // } else if (Carbon::now()->addDays(1)->gt($plan->sub_end)) {
+                    //     $ret['err'] = 0;
+                    //     $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_WILL_EXPIRE);
                     } else {
-                        $ret['err'] = ERR_PLAN_EMPTY;
+                        if ($plan->points_used < $plan->points) {
+                            $ret['err'] = 0;
+                            // $ret['user_id'] = $plan->user_id;
+                        } else {
+                            $ret['err'] = ERR_PLAN_EMPTY;
+                            $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_EMPTY);
+                        }
                     }
                 }
 
             } else if ($plan->status == 'deactive') {
                 $ret['err'] = ERR_PLAN_DEACTIVE;
+                // $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_DEACTIVE);
             } else if ($plan->status == 'suspend') {
                 $ret['err'] = ERR_PLAN_SUSPEND;
+                // $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_SUSPEND);
             } else {
                 $ret['err'] = ERR_PLAN_NOT_ACTIVE;
+                // $this->NotificationMessage_Plan($user_id, $iccid, ERR_PLAN_NOT_ACTIVE);
             }
 
         } else {
@@ -1858,7 +1908,8 @@ class CamerasController extends Controller
         return 0;
     }
 
-    public function Camera_Status_Update($param, $api_type = null, $upload_original = 0) {
+    // public function Camera_Status_Update($param, $api_type = null, $upload_original = 0) {
+    public function Camera_Status_Update($user_id, $param, $api_type = null, $upload_original = 0) {
         $module_id = $param->module_id;
         $cameras = DB::table('cameras')->where('module_id', $module_id);
         $camera = $cameras->first();
@@ -1941,6 +1992,18 @@ class CamerasController extends Controller
 
         $cameras->update($data);
         // $camera->update($data); // NG
+
+        if (isset($data['battery']) && $data['battery'] == 'e') {
+            $this->NotificationMessage($user_id, $camera, NOTI_BATTERY_EMPTY);
+        }
+
+        if (isset($data['card_space'])) {
+            $free = intval($data['card_space']);
+            if ($free < 10) {
+                // $this->pushMessageNotification($user_id, $camera, 'SD Card Full (available '.$data['card_space'].')');
+                $this->NotificationMessage($user_id, $camera, NOTI_CARD_FULL);
+            }
+        }
         return 0;
     }
 
@@ -2025,7 +2088,7 @@ class CamerasController extends Controller
         }
 
         if ($err == 0) {
-            $this->Camera_Status_Update($request, 'report');
+            $this->Camera_Status_Update($user_id, $request, 'report');
         }
 
         $response = $this->Response_Result($err, $camera);
@@ -2067,9 +2130,9 @@ class CamerasController extends Controller
                 $param['action_code'] = 'PS';
                 $this->Action_Add($param);
 
-                $this->Camera_Status_Update($request, 'arm');
+                $this->Camera_Status_Update($user_id, $request, 'arm');
             } else {
-                $this->Camera_Status_Update($request);
+                $this->Camera_Status_Update($user_id, $request);
             }
 
             //if ($request->RequestID) {
@@ -2097,7 +2160,7 @@ class CamerasController extends Controller
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request, 'settings');
+            $this->Camera_Status_Update($user_id, $request, 'settings');
 
             $datalist['cameramode']        = (string) $camera->camera_mode;
             $datalist['photoresolution']   = (string) $camera->photo_resolution;
@@ -2473,7 +2536,7 @@ return $ret;
                     $photo->video_bitrate       = $param->video_bitrate;
                     $photo->save();
 
-                    $this->Camera_Status_Update($param, 'upload_video');
+                    $this->Camera_Status_Update($user_id, $param, 'upload_video');
                 } else {
                     $photo->filetype   = 1;
                     $photo->uploadtype = 1;
@@ -2483,7 +2546,7 @@ return $ret;
                     $photo->photo_compression   = $param->photo_compression;
                     $photo->save();
 
-                    $this->Camera_Status_Update($param, 'upload_photo');
+                    $this->Camera_Status_Update($user_id, $param, 'upload_photo');
                 }
 
                 if ($request->RequestID) {
@@ -2583,9 +2646,9 @@ return $ret;
                 $param['savename'] = $savename; //$ret['savename']; // last_savename
                 $param['points'] = $points;
                 if ($api == 'video_thumb') {
-                   $this->Camera_Status_Update($param, 'upload_video'); // s3
+                   $this->Camera_Status_Update($user_id, $param, 'upload_video'); // s3
                 } else {
-                   $this->Camera_Status_Update($param, 'upload_photo'); // s3
+                   $this->Camera_Status_Update($user_id, $param, 'upload_photo'); // s3
                 }
 
                 if ($request->RequestID) {
@@ -2750,7 +2813,7 @@ return $ret;
                 $photos->update($data);
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'upload_photo', 1);
+                $this->Camera_Status_Update($user_id, $param, 'upload_photo', 1);
 
                 /* update Action */
                 $data = [];
@@ -2913,7 +2976,7 @@ return $ret;
                 $photos->update($data);
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param, 'upload_video', 1);
+                $this->Camera_Status_Update($user_id, $param, 'upload_video', 1);
 
                 /* update Action */
                 $data = [];
@@ -2952,7 +3015,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             if ($request->RequestID) {
                 $param = array(
@@ -2977,7 +3040,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             if ($request->RequestID) {
                 $param = array(
@@ -3008,7 +3071,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             //$version = '20180816'; // TODO
             $firmware = DB::table('firmwares')
@@ -3077,7 +3140,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             if ($request->RequestID) {
                 $param = array(
@@ -3104,7 +3167,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             if ($request->RequestID) {
                 $param = array(
@@ -3131,7 +3194,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             /* send email */
 
@@ -3139,7 +3202,25 @@ return $ret;
 
         $response = $this->Response_Result($err, $camera);
         if ($user_id && $camera) {
+            $this->NotificationMessage($user_id, $camera, NOTI_CARD_FULL);
             $this->LogApi_Add('cardfull', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
+    }
+
+    public function carderror(Request $request) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $this->Camera_Status_Update($user_id, $request);
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->NotificationMessage($user_id, $camera, NOTI_CARD_ERROR);
+            $this->LogApi_Add('carderror', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
     }
@@ -3151,7 +3232,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request);
+            $this->Camera_Status_Update($user_id, $request);
 
             if ($request->RequestID) {
                 $param = array(
@@ -3165,6 +3246,7 @@ return $ret;
 
         $response = $this->Response_Result($err, $camera);
         if ($user_id && $camera) {
+            $this->NotificationMessage($user_id, $camera, NOTI_CARD_FORMAT_DONE);
             $this->LogApi_Add('formatdone', 1, $user_id, $camera->id, $request, $response);
         }
         return $response;
@@ -3248,7 +3330,7 @@ return $ret;
                 $response = $this->Response_Result($err, $camera);
             }
 
-            $this->Camera_Status_Update($request, $api_type);
+            $this->Camera_Status_Update($user_id, $request, $api_type);
             if ($user_id && $camera) {
                 $this->LogApi_Add($api_type, 1, $user_id, $camera->id, $request, $response);
             }
@@ -3264,7 +3346,7 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
-            $this->Camera_Status_Update($request, 'log');
+            $this->Camera_Status_Update($user_id, $request, 'log');
 
             if ($request->RequestID) {
                 $param = array(
@@ -3378,7 +3460,7 @@ return $ret;
                 $param['filesize'] = $ret['filesize'];
 
                 /* update Camera Status */
-                $this->Camera_Status_Update($param);
+                $this->Camera_Status_Update($user_id, $param);
 
                 /* update Action */
                 if ($request->RequestID) {
@@ -5041,7 +5123,6 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             $devices = DB::table('devices')->where('user_id', $user_id)->get();
             foreach ($devices as $device) {
                 // if ($device->push_notify == 'on') {
-                    // $this->pushMessage($device->push_id, $camera->description, 'Download Settings');
                     $this->pushMessage($device->device_id, $camera->description, 'Download Settings');
                 // }
             }
@@ -5053,13 +5134,96 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             $devices = DB::table('devices')->where('user_id', $user_id)->get();
             foreach ($devices as $device) {
                 if ($device->push_upload == 'on') {
-                    // $this->pushMessage($device->push_id, $camera->description, $body);
                     $this->pushMessage($device->device_id, $camera->description, $body);
                 }
             }
         }
     }
 
+    /*----------------------------------------------------------------------------------*/
+    public function email_Notification_Send($user_id, $camera, $message) {
+        // if ($camera->noti_email == 'on') {
+            $user = DB::table('users')->where('id', $user_id)->first();
+            if ($user) {
+                Mail::to($user->email) // Kevin<kevin@10ware.com>
+                    ->queue(new NotificationSend($user->name, $camera->description, $message));
+            }
+        // }
+    }
+
+
+    public function NotificationMessage($user_id, $camera, $noti_id) {
+        //if ($camera->noti_mobile == 'on') {
+            if ($noti_id == NOTI_BATTERY_EMPTY) {
+                $message = 'Battery Empty';
+            } else if ($noti_id == NOTI_CARD_FULL) {
+                $message = 'SD Card Full';
+            } else if ($noti_id == NOTI_CARD_ERROR) {
+                // SD Card Error (read/write) - replace rhis sd card!
+                $message = 'SD Card Error';
+            } else if ($noti_id == NOTI_CARD_FORMAT_DONE) {
+                $message = 'SD Card Format Done';
+            } else {
+                $message = 'Unknown Notification';
+            }
+
+            $devices = DB::table('devices')->where('user_id', $user_id)->get();
+            foreach ($devices as $device) {
+                $this->pushMessage($device->device_id, $camera->description, $message);
+            }
+        //}
+
+        // $this->email_Notification_Send($user_id, $camera, 'Please note '.$message.' !');
+        // if ($camera->noti_email == 'on') {
+            $user = DB::table('users')->where('id', $user_id)->first();
+            if ($user) {
+                $object = 'camera '.$camera->description;
+                $message = 'Please note '.$message.' !';
+                Mail::to($user->email)
+                    ->queue(new NotificationSend($user->name, $object, $message));
+            }
+        // }
+
+    }
+
+    // public function pushMessagePlan($user_id, $iccid, $message) {
+    //     $devices = DB::table('devices')->where('user_id', $user_id)->get();
+    //     foreach ($devices as $device) {
+    //         $this->pushMessage($device->device_id, $iccid, $message);
+    //     }
+    // }
+
+
+    // public function pushMessagePlan($user_id, $iccid, $message) {
+    public function NotificationMessage_Plan($user_id, $iccid, $noti_id) {
+        if ($noti_id == NOTI_PLAN_EXPIRE) {
+            $message = 'Plan Expired';
+        } else if ($noti_id == NOTI_PLAN_WILL_EXPIRE) {
+            $message = 'Plan Will Expire';
+        } else if ($noti_id == NOTI_PLAN_EMPTY) {
+            $message = 'Plan Empty';
+        } else {
+            $message = 'Unknown Plan Notification';
+        }
+
+        $devices = DB::table('devices')->where('user_id', $user_id)->get();
+        foreach ($devices as $device) {
+            $this->pushMessage($device->device_id, $iccid, $message);
+        }
+
+        // $this->email_Notification_Send($user_id, $camera, 'Please note '.$message.' !');
+        // if ($camera->noti_email == 'on') {
+            $user = DB::table('users')->where('id', $user_id)->first();
+            if ($user) {
+                $object = 'ICCID '.$iccid;
+                $message = 'Please note '.$message.' !';
+                Mail::to($user->email)
+                    ->queue(new NotificationSend($user->name, $object, $message));
+            }
+        // }
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function push_test() {
         $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
         $master_secret = 'c37f1c5cc7a509af1033de9c';
