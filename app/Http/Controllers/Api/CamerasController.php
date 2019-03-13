@@ -5075,7 +5075,7 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         $mobile = DB::table('mobiles')->where('device_id', $device_id)->first();
         if ($mobile) {
             // $push_id = $mobile->push_id;
-            pushMessageByPID($mobile->push_id, $title, $body, $url);
+            $this->pushMessageByPID($mobile->push_id, $title, $body, $url);
 
         //     $client = new JPush($app_key, $master_secret);
         //     $client->push()
