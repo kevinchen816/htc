@@ -5042,14 +5042,9 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     /*----------------------------------------------------------------------------------*/
     // https://laravel-china.org/topics/2697/laravel-uses-aurora-push-basic-introduction
     // https://community.jiguang.cn/t/ios/17810/13 (iOS 自定义标题)
-    /*
-        // 光特亿
-        appKey ="bbe4f8c3aa56d8e61d2fd2fd";
-        masterSecret = "c37f1c5cc7a509af1033de9c";
-    */
     public function pushMessageByPID($push_id, $title, $body, $url=null) {
-        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
-        $master_secret = 'c37f1c5cc7a509af1033de9c';
+        $app_key = env('JPUSH_KEY');
+        $master_secret = env('JPUSH_SECRET');
 
         $client = new JPush($app_key, $master_secret);
         $client->push()
@@ -5075,35 +5070,35 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     }
     // public function pushMessage($push_id, $title, $body, $url=null) {
     public function pushMessage($device_id, $title, $body, $url=null) {
-        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
-        $master_secret = 'c37f1c5cc7a509af1033de9c';
-
+        // $app_key = env('JPUSH_KEY');
+        // $master_secret = env('JPUSH_SECRET');
         $mobile = DB::table('mobiles')->where('device_id', $device_id)->first();
         if ($mobile) {
-            $push_id = $mobile->push_id;
+            // $push_id = $mobile->push_id;
+            pushMessageByPID($mobile->push_id, $title, $body, $url);
 
-            $client = new JPush($app_key, $master_secret);
-            $client->push()
-                ->setPlatform(['ios', 'android'])
-                ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
-                ->addRegistrationId($push_id)
-                ->setNotificationAlert($body)
-                ->androidNotification($body, array(
-                    'title' => $title,
-                    'extras' => array(
-                        'url' => $url,
-                    ),
-                ))
-                ->iosNotification(array(
-                    'title' => $title,
-                    'body' => $body
-                ), array(
-                    'extras' => array(
-                        'url' => $url,
-                    ),
-                ))
-                ->send();
-        }
+        //     $client = new JPush($app_key, $master_secret);
+        //     $client->push()
+        //         ->setPlatform(['ios', 'android'])
+        //         ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
+        //         ->addRegistrationId($push_id)
+        //         ->setNotificationAlert($body)
+        //         ->androidNotification($body, array(
+        //             'title' => $title,
+        //             'extras' => array(
+        //                 'url' => $url,
+        //             ),
+        //         ))
+        //         ->iosNotification(array(
+        //             'title' => $title,
+        //             'body' => $body
+        //         ), array(
+        //             'extras' => array(
+        //                 'url' => $url,
+        //             ),
+        //         ))
+        //         ->send();
+        // }
     }
 
     public function pushHeartbeat($user_id, $camera) {
@@ -5111,7 +5106,7 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
             $devices = DB::table('devices')->where('user_id', $user_id)->get();
             foreach ($devices as $device) {
                 if ($device->push_hb == 'on') {
-                    // $this->pushMessage($device->push_id, $camera->description, 'Heartbeat');
+                    // $this->pushMessageByPID($device->push_id, $camera->description, 'Heartbeat');
                     $this->pushMessage($device->device_id, $camera->description, 'Heartbeat');
                 }
             }
@@ -5224,24 +5219,29 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     }
 
     /*----------------------------------------------------------------------------------*/
+    // Github: https://github.com/jpush/jpush-api-php-client
+    // 极光文档：http://docs.jiguang.cn/server/server_overview/
     public function push_test() {
-        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
-        $master_secret = 'c37f1c5cc7a509af1033de9c';
+        // $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
+        // $master_secret = 'c37f1c5cc7a509af1033de9c';
+        // $android_push_id = '190e35f7e005b796d3b';
+        // $ios_push_id = '13165ffa4e282202377';
+        $app_key = env('JPUSH_KEY');
+        $master_secret = env('JPUSH_SECRET');
+        $android_push_id = env('JPUSH_TESTID'); // 190e35f7e005b796d3b
+        // $ios_push_id = '13165ffa4e282202377';
         $url = 'http://portal.kmcampro.com/uploads/7/1547295213_xLuPXhn5fe.JPG';
-        // $url = 'http://www.caperplus.com';
 
         $client = new JPush($app_key, $master_secret);
-
-        $ret =
-        $client->push()
+        $ret = $client->push()
             // ->setPlatform('all')
             ->setPlatform(['ios', 'android'])
             ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
             // ->addAllAudience()
             // ->addAlias('alias')
             // ->addTag(array('tag1', 'tag2'))
-            ->addRegistrationId('190e35f7e005b796d3b') // Android
-            ->addRegistrationId('13165ffa4e282202377') // iOS
+            ->addRegistrationId($android_push_id)
+            // ->addRegistrationId($ios_push_id)
             ->setNotificationAlert('Hello')
             ->androidNotification('body', array(
                 'title' => 'title',
@@ -5270,14 +5270,14 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
     }
 
     public function push_test2() {
-        $this->pushMessageByPID('190e35f7e005b796d3b', 'Cam#1', 'Heartbeat');
-        $this->pushMessageByPID('13165ffa4e282202377', 'Cam#1', 'Heartbeat');
+        $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), 'Heartbeat');
+        // $this->pushMessageByPID('13165ffa4e282202377', env('APP_NAME'), 'Heartbeat');
 return 'OK';
 
-        // Github: https://github.com/jpush/jpush-api-php-client
-        // 极光文档：http://docs.jiguang.cn/server/server_overview/
-        $app_key = 'bbe4f8c3aa56d8e61d2fd2fd'; // 光特亿
-        $master_secret = 'c37f1c5cc7a509af1033de9c';
+        $app_key = env('JPUSH_KEY');
+        $master_secret = env('JPUSH_SECRET');
+        $android_push_id = env('JPUSH_TESTID'); // 190e35f7e005b796d3b
+        $ios_push_id = '13165ffa4e282202377';
 
         // $client = new JPush($app_key, $master_secret);
         $client = new JPush($app_key, $master_secret, null);
@@ -5286,12 +5286,11 @@ return 'OK';
         // $push->setPlatform('all');
         // $push->setPlatform('ios', 'android');
         $push->setPlatform(['ios', 'android']);
-        $push->addRegistrationId('190e35f7e005b796d3b'); // Android
-        $push->addRegistrationId('13165ffa4e282202377'); // iOS
+        $push->addRegistrationId($android_push_id);
+        // $push->addRegistrationId($ios_push_id);
         $push->setNotificationAlert('ALERT'); // 细分可以为 iOS Notification 、 Android Notification
         $push->addAndroidNotification('alert', 'title');
         $push->message('Hello JPush');
-
         $ret = $push->send();
         return dd($ret);
     }
