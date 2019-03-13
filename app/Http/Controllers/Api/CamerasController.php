@@ -5098,7 +5098,7 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         //             ),
         //         ))
         //         ->send();
-        // }
+        }
     }
 
     public function pushHeartbeat($user_id, $camera) {
