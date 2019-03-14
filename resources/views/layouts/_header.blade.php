@@ -24,7 +24,7 @@
                     <h2>{{ env('APP_NAME') }}</h2>
 @elseif (env('APP_REGION') == 'tw')
                     <!-- <img class="main-logo" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" /> -->
-                    <img class="main-logo" height="60" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
+                    <img class="main-logo" height="50" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
                     <!-- <img class="main-logo" height="60" src="{{ route('home') }}/images/logo_eztoview-2.bmp" alt="logo" /> -->
                     <!-- <h2>{{ env('APP_NAME') }}</h2> -->
 @elseif (env('APP_REGION') == 'cn')
