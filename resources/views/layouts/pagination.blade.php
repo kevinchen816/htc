@@ -13,7 +13,7 @@
             </li>
         @endif
 
-        <li class="page-item disabled"><span class="page-link">{{ $paginator->currentPage() }}/{{ $paginator->total() }}</span></li>
+        <li class="page-item disabled"><span class="page-link">{{ $paginator->currentPage() }}/{{ $paginator->lastPage() }}</span></li>
 
         {{-- Pagination Elements --}}
 @if (0)

@@ -158,6 +158,15 @@
 <div class="panel panel-default panel-primary custom-settings-panel">
     <div class="panel-heading" style="padding-top:6px;">
         <h4 class="panel-title">
+@if (Browser::isMobile())
+            <span style="font-size: .70em; margin-top: 6px; margin-left: 1px;">
+                <i class="fa fa-camera" style="color:lime;"></i> {{ trans('htc.Original') }} | <i class="fa fa-hourglass" style="color:#ffd352;"></i> {{ trans('htc.Pending Request') }}
+            </span>
+
+            <span class="pull-right" style="font-size: .70em; margin-top: 6px;">
+                <strong>({{ $photos->count() }} {{ trans('htc.thumbs this page') }})</strong>
+            </span>
+@else
             <span style="font-size: .70em; margin-top: 6px; margin-left: 1px;">
                 <i class="fa fa-camera" style="color:lime;"></i> {{ trans('htc.Original') }} | <i class="fa fa-hourglass" style="color:#ffd352;"></i> {{ trans('htc.Pending Request') }}
                 <span class="label label-info"> {{ trans('htc.Gallery Note') }}</span>
@@ -168,6 +177,7 @@
             <span class="pull-right" style="font-size: .70em; margin-top: 6px;">
                 <strong>({{ $photos->count() }} {{ trans('htc.thumbs this page') }}) | {{ trans('htc.Page') }} {{ $photos->currentPage() }} {{ trans('htc.of') }} {{ $photos->lastPage() }}</strong>
             </span>
+@endif
         </h4>
     </div> <!-- panel-heading -->
 
