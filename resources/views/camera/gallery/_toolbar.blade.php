@@ -32,7 +32,7 @@
                         <span>
                             @if (Browser::isMobile())
                             <i class="fa fa-bolt"></i><span class="caret"></span>
-                            @esle
+                            @else
                             <i class="fa fa-bolt"></i>{{ trans('htc.Action') }}<span class="caret"></span>
                             @endif
                         </span>
