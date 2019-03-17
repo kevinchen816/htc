@@ -107,14 +107,14 @@
                         </a>
                     </li>
 
-                    <li class={{ ($user->sel_camera_tab == 'options') ? "active" : "" }}>
+<!--                     <li class={{ ($user->sel_camera_tab == 'options') ? "active" : "" }}>
                         <a href="#options-{{ $camera->id }}" data-toggle="tab" data-tab="options" aria-expanded="false">
                             <div align="center">
                                 <span class="glyphicon glyphicon-cog"> </span>
                                 <div>{{ trans('htc.Options') }}</div>
                             </div>
                         </a>
-                    </li>
+                    </li> -->
 @else
                     <li class={{ ($user->sel_camera_tab == 'overview') ? "active" : "" }}>
                         <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">

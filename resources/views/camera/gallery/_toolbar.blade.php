@@ -30,11 +30,11 @@
                         data-multiple="1"
                         aria-expanded="false">
                         <span>
-                            <i class="fa fa-bolt"></i>
-                                @if (!Browser::isMobile())
-                                {{ trans('htc.Action') }}
-                                @endif
-                                <span class="caret"></span>
+                            @if (Browser::isMobile())
+                            <i class="fa fa-bolt"></i><span class="caret"></span>
+                            @esle
+                            <i class="fa fa-bolt"></i>{{ trans('htc.Action') }}<span class="caret"></span>
+                            @endif
                         </span>
                     </button>
 
