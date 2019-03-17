@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- Select None -->
-                <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-none-{{ $camera->id }}" data-action="select-none" data-toggle="tooltip" title="Select None"><i class="far fa-square"></i></a>
+                <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-none-{{ $camera->id }}" data-action="select-none" data-toggle="tooltip" title="Select None"><i class="fa fa-square-o"></i></a>
 
                 <!-- Select All -->
                 <a class="btn btn-default disabled hidden" style="padding-top:2px;padding-bottom:2px;" id="select-all-{{ $camera->id }}" data-action="select-all" data-toggle="tooltip" title="Select All"><i class="fa fa-th"></i></a>
