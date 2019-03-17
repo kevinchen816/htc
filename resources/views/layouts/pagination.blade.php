@@ -47,7 +47,7 @@
                 <a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next"><i class="fa fa-chevron-right"></i></a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="{{ $paginator->url($paginator->total()) }}" rel="next"><i class="fa fa-step-forward"></i></a>
+                <a class="page-link" href="{{ $paginator->url($paginator->lastPage()) }}" rel="next"><i class="fa fa-step-forward"></i></a>
             </li>
         @else
             <li class="page-item disabled"><span class="page-link"><i class="fa fa-chevron-right"></i></span></li>
