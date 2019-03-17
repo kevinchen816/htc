@@ -70,6 +70,52 @@
             <div id="tabs-{{ $camera->id}}" class="tab-container">
 
                 <ul class="nav nav-tabs" id="cameratabs-{{ $camera->id }}">
+@if (Browser::isMobile())
+                    <li class={{ ($user->sel_camera_tab == 'overview') ? "active" : "" }}>
+                        <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">
+                            <div align="center">
+                                <span class="glyphicon glyphicon-list-alt"> </span>
+                                <div>{{ trans('htc.Overview') }}</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class={{ ($user->sel_camera_tab == 'gallery') ? "active" : "" }}>
+                        <a href="#gallery-{{ $camera->id }}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
+                            <div align="center">
+                                <span class="glyphicon glyphicon-picture"> </span>
+                                <div>{{ trans('htc.Gallery') }}</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class={{ ($user->sel_camera_tab == 'settings') ? "active" : "" }}>
+                        <a href="#settings-{{ $camera->id }}" data-toggle="tab" data-tab="settings" aria-expanded="false">
+                            <div align="center">
+                                <span class="glyphicon glyphicon-edit"> </span>
+                                <div>{{ trans('htc.Settings') }}</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class={{ ($user->sel_camera_tab == 'commands') ? "active" : "" }}>
+                        <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions', $camera->id) }}" aria-expanded="false">
+                            <div align="center">
+                                <span class="glyphicon glyphicon-tasks"> </span>
+                                <div>{{ trans('htc.Actions') }}</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class={{ ($user->sel_camera_tab == 'options') ? "active" : "" }}>
+                        <a href="#options-{{ $camera->id }}" data-toggle="tab" data-tab="options" aria-expanded="false">
+                            <div align="center">
+                                <span class="glyphicon glyphicon-cog"> </span>
+                                <div>{{ trans('htc.Options') }}</div>
+                            </div>
+                        </a>
+                    </li>
+@else
                     <li class={{ ($user->sel_camera_tab == 'overview') ? "active" : "" }}>
                         <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">
                             <span class="glyphicon glyphicon-list-alt"> </span> {{ trans('htc.Overview') }}
@@ -99,6 +145,7 @@
                             <span class="glyphicon glyphicon-cog"> </span> {{ trans('htc.Options') }}
                         </a>
                     </li>
+@endif
                 </ul>
 
                 <div class="tab-content" id="myTabContent-{{ $camera->id }}">

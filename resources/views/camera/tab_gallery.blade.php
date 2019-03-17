@@ -723,6 +723,11 @@
             document.getElementById('itemAmount').innerHTML = getbadge(items.length);
         });
 
+        /* Refresh */
+        $('#refresh-all-{{ $camera->id }}').click(function () {
+            console.log('==> click #refresh-all-{{ $camera->id }}'); // kk-debug
+            window.location.reload(true);
+        });
 
         $('.popup-video').click(function () {
 //alert('==> .popup-video'); // kk-debug

@@ -23,7 +23,10 @@
 
     <!-- <link href="https://portal.ridgetec.com/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet"> -->
     <link href="/css/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet"> <!-- kevin -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"> -->
+<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- <link href="https://portal.ridgetec.com/css/styles.css" rel="stylesheet"> -->
     <link href="/css/styles.css" rel="stylesheet"> <!-- kevin -->
@@ -37,7 +40,7 @@
     <!-- <script src="https://use.fontawesome.com/9712be8772.js"></script> -->
     <!--<script src="https://use.fontawesome.com/f473850af3.js"></script>-->
     <!--<script src="/js/9712be8772.js"></script>--> <!-- kevin -->
-    <script src="/js/f473850af3..js"></script> <!-- kevin -->
+<!--<script src="/js/f473850af3..js"></script>--> <!--FontAwesome--> <!-- kevin -->
 
     <style>
         @media (max-width: 1100px) {

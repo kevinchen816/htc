@@ -3757,7 +3757,12 @@ return $ret;
         $txt = PHP_EOL;
         $camera_id = $camera->id;
         $column = 1;
-        $col = 12/$camera->columns;
+        if (Browser::isMobile()) {
+            $col = env('APP_GALLERY_COLUMNS');
+        } else {
+            $col = 12/$camera->columns;
+        }
+
         foreach ($photos as $photo) {
             $photo_id = $photo->id;
 
@@ -4226,9 +4231,15 @@ return $ret;
             //$camera = Camera::findOrFail($camera_id);
 
             //$photos = DB::table('photos')->where('camera_id', $camera_id)
-            $photos = $camera->photos()
-                ->orderBy('created_at', 'desc')
-                ->paginate($camera->thumbs);
+            if (Browser::isMobile()) {
+                $photos = $camera->photos()
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(env('APP_GALLERY_THUMBS'));
+            } else {
+                $photos = $camera->photos()
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($camera->thumbs);
+            }
 
 // $photos->withPath('custom/url');
 // $photos->withPath('/cameras');

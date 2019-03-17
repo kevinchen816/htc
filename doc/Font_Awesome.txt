@@ -1,0 +1,11 @@
+Font Awesome 字体在laravel的使用
+https://blog.csdn.net/monta_/article/details/87277705
+
+$ yarn add @fortawesome/fontawesome-free
+
+//-----------------------------------------------------------
+http://www.runoob.com/font-awesome/fontawesome-tutorial.html
+
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"> -->
+<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
