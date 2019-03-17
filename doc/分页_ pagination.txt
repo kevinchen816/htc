@@ -1,0 +1,54 @@
+<?php
+
+//-------------------------------------------------------------------
+https://blog.51cto.com/11760810/2120453
+laravel自带的分页样式有点丑，laravel支持自定义样式的，想把上一页和下一页显示成汉字而不是<<和>>
+百度了一下都是去重写分页的函数render，于是打开了laravel分页的源码；
+render()和links()方法是支持传递视图的；
+
+在views视图目录下创建 common/pagination.blade.php 文件；
+代码如下，只需要把 laravel 自带的 default 改一下
+
+    参考 /resources/views/layouts/pagination.blade.php
+
+array:3 [▼
+  0 => array:8 [▼
+    1 => "http://sample.test/cameras?page=1"
+    2 => "http://sample.test/cameras?page=2"
+    3 => "http://sample.test/cameras?page=3"
+    4 => "http://sample.test/cameras?page=4"
+    5 => "http://sample.test/cameras?page=5"
+    6 => "http://sample.test/cameras?page=6"
+    7 => "http://sample.test/cameras?page=7"
+    8 => "http://sample.test/cameras?page=8"
+  ]
+  3 => "..."
+  4 => array:2 [▼
+    13 => "http://sample.test/cameras?page=13"
+    14 => "http://sample.test/cameras?page=14"
+  ]
+]
+
+想要改成其他的样式只需要自己去写一些css就行；
+然后在视图中调用
+
+{{$lists->links('common.pagination')}}
+
+//-------------------------------------------------------------------
+Laravel5.3分页以及样式——从未如此简单
+https://segmentfault.com/a/1190000008744951
+
+//-------------------------------------------------------------------
+https://learnku.com/docs/laravel/5.5/pagination/1328#customizing-the-pagination-view
+
+$results->count()
+$results->currentPage()
+$results->firstItem()
+$results->hasMorePages()
+$results->lastItem()
+$results->lastPage() （使用 simplePaginate 时不可用）
+$results->nextPageUrl()
+$results->perPage()
+$results->previousPageUrl()
+$results->total() （使用 simplePaginate 时不可用）
+$results->url($page)

@@ -2,7 +2,11 @@
     <div class="col-sm-12 clearfix">
         <div class="pull-left" style="margin-top: 1px; margin-bottom:1px; padding-top:0px; padding-bottom: 0px;">
             @if (count($photos) > 0)
+                @if (Browser::isMobile())
+                {!! $photos->links('layouts.pagination') !!}
+                @else
                 {!! $photos->render() !!}
+                @endif
             @endif
         </div>
 

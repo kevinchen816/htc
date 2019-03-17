@@ -209,7 +209,11 @@
         <div class="col-md-12">
             <div class="well well-sm" style="padding-left:2px;margin-left:2px;">
                 @if (count($photos) > 0)
+                    @if (Browser::isMobile())
+                    {!! $photos->links('layouts.pagination') !!}
+                    @else
                     {!! $photos->render() !!}
+                    @endif
                 @endif
 
                 <!-- kevin test -->
