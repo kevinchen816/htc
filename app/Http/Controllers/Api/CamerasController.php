@@ -3758,7 +3758,7 @@ return $ret;
         $camera_id = $camera->id;
         $column = 1;
         if (Browser::isMobile()) {
-            $col = env('APP_GALLERY_COLUMNS');
+            $col = 12/env('APP_GALLERY_COLUMNS');
         } else {
             $col = 12/$camera->columns;
         }
