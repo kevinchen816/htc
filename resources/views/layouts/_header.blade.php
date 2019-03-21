@@ -49,6 +49,7 @@
                     <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
 @if (Auth::check() && isset($user))
+    @if (!Browser::isMobile())
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
                         <a href="{{ route('plans.add') }}"><span class="glyphicon glyphicon-signal"> </span> {{ trans('htc.Add Plan') }}</a>
                     </li>
@@ -61,6 +62,7 @@
                         </a>
                     </li>
                     @endif
+    @endif
 
                     <li class={{ ($user->sel_menu == 'camera') ? "active" : "" }}>
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> {{ trans('htc.My Cameras') }}</a>
@@ -81,7 +83,7 @@
     @endif
 @endif
 
-@if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
+@if (!Browser::isMobile())
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                              {{ trans('htc.Support') }} <span class="caret"></span>
