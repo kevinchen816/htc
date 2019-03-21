@@ -40,9 +40,7 @@
                             <a href="#data-plans" data-toggle="tab" data-tab="plans" aria-expanded="true"><span class="glyphicon glyphicon-signal"> </span> {{ trans('htc.My Plans') }}</a>
                         </li>
 
-@if (env('APP_REGION') == 'tw' || env('APP_REGION') == 'cn')
-
-@else
+@if (!Browser::isMobile())
                         <li class={{ ($user->sel_account_tab == 'billing') ? "active" : "" }}>
                             <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> {{ trans('htc.Billing') }}</a>
                         </li>
