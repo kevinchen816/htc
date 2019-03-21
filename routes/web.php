@@ -28,11 +28,6 @@ Route::post('stripe/webhook', 'WebhookController@handleWebhook');
 Route::resource('/users', 'UsersController');
 // Route::resource('/cameras', 'CameraController', ['only' => ['store', 'destroy']]);
 
-Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
-Route::get('/mobile/login/{id}', 'MobileController@getLoginEx')->name('mobile.login');
-Route::post('/mobile/login', 'MobileController@postLogin')->name('mobile.login');
-Route::get('/mobile/add', 'MobileController@mobile_test_add');
-
 Route::get('/en', 'HtmlController@getLocale_EN')->name('language.en');
 Route::get('/de', 'HtmlController@getLocale_DE')->name('language.de');
 Route::get('/cn', 'HtmlController@getLocale_CN')->name('language.cn');
@@ -79,6 +74,11 @@ Route::post('/de/logout', 'SessionsController@destroy_germany')->name('logout.de
 Route::group(['middleware' => 'setLocale'], function() {
     //Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/', 'Api\CamerasController@home')->name('home');
+
+    // Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
+    Route::get('/mobile/login/{id}', 'MobileController@getLoginEx')->name('mobile.login');
+    Route::post('/mobile/login', 'MobileController@postLogin')->name('mobile.login');
+    // Route::get('/mobile/add', 'MobileController@mobile_test_add');
 
     Auth::routes();
     // Route::get('/confirm/email', 'EmailConfirmController@getEmail')->name('confirm.email');
