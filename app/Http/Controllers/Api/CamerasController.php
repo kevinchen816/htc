@@ -4241,9 +4241,8 @@ return $ret;
                     ->paginate($camera->thumbs);
             }
 
-// $photos->withPath('custom/url');
-// $photos->withPath('/cameras');
-$photos->withPath(url('/cameras'));
+            // $photos->withPath('/cameras');
+            $photos->withPath(url('/cameras'));
 
             if (($user->sel_menu != 'camera')||($user->sel_camera != $camera_id)) {
                 $data['sel_menu'] = 'camera';

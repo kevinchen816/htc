@@ -23,9 +23,9 @@ class SetLocale
      */
     public function handle($request, Closure $next)
     {
-        if (env('APP_REGION') == 'cn') {
-            return $next($request);
-        }
+        // if (env('APP_REGION') == 'cn') {
+        //     return $next($request);
+        // }
 
         // if (Session::has('locale') && in_array(Session::get('locale'), ['en', 'zh'])) {
         //     App::setLocale(Session::get('locale'));
@@ -33,7 +33,16 @@ class SetLocale
         //     App::setLocale('en');
         // }
 
-        $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW', 'de');
+        // $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW', 'de');
+        if (env('APP_REGION') == 'de') {
+            $langArray = array('en', 'de');
+        } else if (env('APP_REGION') == 'au') {
+            $langArray = array('en');
+        } else if (env('APP_REGION') == 'tw') {
+            $langArray = array('en', 'zh-tw', 'zh-TW');
+        } else if (env('APP_REGION') == 'cn') {
+            $langArray = array('en', 'zh-cn', 'zh-CN');
+        }
 
         // Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
