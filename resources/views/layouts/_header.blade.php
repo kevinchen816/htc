@@ -19,17 +19,15 @@
                     <!-- <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" /> -->
 
 @if (env('APP_REGION') == 'de')
-                    <img class="main-logo" src="{{ route('home') }}/images/logo.png" alt="logo" />
+                    <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo.png" alt="logo" />
 @elseif (env('APP_REGION') == 'au')
                     <h2>{{ env('APP_NAME') }}</h2>
 @elseif (env('APP_REGION') == 'tw')
                     <!-- <img class="main-logo" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" /> -->
-                    <img class="main-logo" style="padding-top: 8px;" width="300"  src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
+                    <img class="main-logo" style="padding-top: 8px;" width="300" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
                     <!-- <img class="main-logo" height="60" src="{{ route('home') }}/images/logo_eztoview-2.bmp" alt="logo" /> -->
                     <!-- <h2>{{ env('APP_NAME') }}</h2> -->
 @elseif (env('APP_REGION') == 'cn')
-                    <h2>{{ env('APP_NAME') }}</h2>
-@else
                     <h2>{{ env('APP_NAME') }}</h2>
 @endif
                 </a>
