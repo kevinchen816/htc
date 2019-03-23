@@ -75,7 +75,7 @@ Route::group(['middleware' => 'setLocale'], function() {
     //Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/', 'Api\CamerasController@home')->name('home');
 
-    // Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
+    Route::get('/mobile/login', 'MobileController@getLogin')->name('mobile.login');
     Route::get('/mobile/login/{id}', 'MobileController@getLoginEx')->name('mobile.login');
     Route::post('/mobile/login', 'MobileController@postLogin')->name('mobile.login');
     // Route::get('/mobile/add', 'MobileController@mobile_test_add');

@@ -11,10 +11,10 @@ use App\Models\Device;
 
 class MobileController extends Controller
 {
-    // public function getLogin() {
-    //     $device_id = '';
-    //     return view('mobile.login', ['device_id' => $device_id]);
-    // }
+    public function getLogin() {
+        $device_id = '';
+        return view('mobile.login', ['device_id' => $device_id]);
+    }
 
     public function getLoginEx($device_id) {
         return view('mobile.login', ['device_id' => $device_id]);

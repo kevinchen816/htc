@@ -52,7 +52,9 @@
                     </form>
                 </div>
             </div>
+@if (0)
             {{ $device_id }}
+@endif
         </div>
     </div>
 </div>
