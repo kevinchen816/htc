@@ -11,7 +11,7 @@
                     </div>-->
 
 @if (env('APP_REGION') == 'de')
-                    <div class="col-md-4 col-sm-4 footer-list-item">
+<!--                     <div class="col-md-4 col-sm-4 footer-list-item">
                         <div class="address alert" style="background-color:#444; height: 200px;">
                             <p><strong>Vigilmax GmbH</strong></p>
                             <p>Koelner Str. 58a</p>
@@ -21,7 +21,7 @@
                             <p></p>
                             <a></a>
                         </div>
-                    </div>
+                    </div> -->
 @elseif (env('APP_REGION') == 'au')
                     <div class="col-md-4 col-sm-4 footer-list-item">
                         <div class="address alert" style="background-color:#444; height: 200px;">

@@ -4,18 +4,23 @@ AWS访问密钥（Access Key）
 https://www.cloudbility.com/help/aws/access-key.html
 
 第一步
-    在IAM页面中，先创建组，再创建一个s3的用户，最好把用户的权限控制了小一点。
-    注意有几个概念，生成用户后，最后会给出用户的“访问密钥 ID”，“私有访问密钥”，
-    这两个相当于临时的用户名和访问密码，需要把页面内的CSV下载下来保存好。
-    给用户“添加权限”，选择“直接附加现有策略”，在搜索框内输入“AmazonS3FullAccess”，
-    就给用户赋予了S3的全部访问权限。
+    1. 在 IAM 页面中，先创建组，例如
+           Group: S3
+           Attached policies: AmazonS3FullAccess
+    2. 再创建一个 s3 的用户，最好把用户的权限控制了小一点。
+    3. 注意有几个概念，生成用户后，最后会给出用户的 “访问密钥 ID”，“私有访问密钥”，
+       这两个相当于临时的用户名和访问密码，需要把页面内的CSV下载下来保存好。
+    4. 给用户“添加权限”，选择“直接附加现有策略”，在搜索框内输入“AmazonS3FullAccess”，
+       就给用户赋予了S3的全部访问权限。
+
+AKIAIYXSP7446MRZMQAQ
+bsXIN2rwu6wvfntz/yO9WL+ZzUo9a1kfaFP2sEgl
 
 第二步
-    创建S3 Bucket。
-    这个很好操作，注意选择好所在region的代码和bucket的名字，
-    选择访问速度最快的区域us-west-1(加利福尼亚北)，
-    比如说你起名字myBucket，
-    将来对外公开的url就是 https://s3-us-west-1.amazonaws.com/myBucket/。
+    1. 创建S3 Bucket。
+       这个很好操作，注意选择好所在 region 的代码和 bucket 的名字，
+       选择访问速度最快的区域us-west-1(加利福尼亚北)，比如说你起名字 myBucket，
+    2. 将来对外公开的url就是 https://s3-us-west-1.amazonaws.com/myBucket/。
 
 //-------------------------------------------------------------------------
 [ Use Amazon S3 with Laravel 5 ]
