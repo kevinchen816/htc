@@ -83,6 +83,8 @@
     @endif
 @endif
 
+{{--TODO--}}
+@if (0)
 @if (!Browser::isMobile())
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -94,6 +96,7 @@
                             </li>
                         </ul>
                     </li>
+@endif
 @endif
 
 @if (Auth::check() && isset($user))

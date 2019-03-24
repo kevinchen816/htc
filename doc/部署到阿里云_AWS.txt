@@ -323,7 +323,10 @@ https://www.jianshu.com/p/fb037caf4fff
     Copied Directory [/vendor/encore/laravel-admin/database/migrations] To [/database/migrations]
     Copied Directory [/vendor/encore/laravel-admin/resources/assets] To [/public/vendor/laravel-admin]
     Publishing complete.
+
     $ php artisan admin:install
+    Nothing to migrate.
+    /var/www/htc/app/Admin directory already exists !
 
 [ 创建 plan product ]
     ** 先登录
