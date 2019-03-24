@@ -30,7 +30,7 @@
                                 </div>
                             </div>
 
-@if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de')
+@if (env('APP_TERMS'))
                             <div class="form-group">
                                 <div class="col-md-3">
                                 </div>

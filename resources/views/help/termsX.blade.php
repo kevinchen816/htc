@@ -13,13 +13,13 @@
 @section('content')
 <div class="container">
     <div id="legal_doc" class="legal_doc">
-        <h1>{{ env('APP_NAME') }} Terms and Conditions of your account</h1>
+        <h1>RidgeTec Portal Terms and Conditions of your account</h1>
 
         <p>Last Updated: September 10, 2018</p>
 
         <p>
-            These policies may be amended from time to time without notice. Registering an account on {{ env('APP_DOMAIN') }} constitutes an acceptance of these Terms and Conditions
-            which describe the policies for the {{ env('APP_DOMAIN') }} website and mobile applications (collectively "software and services").
+            These policies may be amended from time to time without notice. Registering an account on Ridgetec.com constitutes an acceptance of these Terms and Conditions
+            which describe the policies for the Ridgetec.com website and mobile applications (collectively "software and services").
         </p>
 
         <hr>
@@ -31,17 +31,17 @@
                 A billing cycle will run through the end of day on the day prior to the billing cycle day.  Billing cycles will be assigned a value from 1 to 28.
             </p>
             <p><strong>Services: </strong> Data Plans, Storage Plans, Memberships or other services which require the initial purchase and/or service payments.</p>
-            <p><strong>Devices: </strong> Primarily {{ env('APP_NAME') }} cameras that may be activated using the {{ env('APP_NAME') }} account.</p>
-            <p><strong>End User: </strong> Any and all users which use a login to gain access to the {{ env('APP_NAME') }} website and/or mobile applications, whether direct login is entered or
+            <p><strong>Devices: </strong> Primarily RidgeTec cameras that may be activated using the RidgeTec account.</p>
+            <p><strong>End User: </strong> Any and all users which use a login to gain access to the RidgeTec website and/or mobile applications, whether direct login is entered or
                 associated with another Social account such as Facebook or Google, whether person or business entity.</p>
-            <p><strong>Payment Method: </strong> Any credit card, PayPal account or other acceptable payment option by {{ env('APP_NAME') }} which the End User is legally authorized to use.</p>
-            <p><strong>Wireless Carrier: </strong> Any company that provides wireless service to {{ env('APP_NAME') }} for the use of allowing IoT devices to communicate to {{ env('APP_NAME') }} servers.</p>
+            <p><strong>Payment Method: </strong> Any credit card, PayPal account or other acceptable payment option by RidgeTec which the End User is legally authorized to use.</p>
+            <p><strong>Wireless Carrier: </strong> Any company that provides wireless service to RidgeTec for the use of allowing IoT devices to communicate to RidgeTec servers.</p>
             <p><strong>Legal Notice: </strong> Written communication between one party to the other that advises of termination of this agreement
                 or otherwise required by this agreement.</p>
-            <p><strong>Notifications: </strong>Notifications from {{ env('APP_NAME') }} will be sent to the Email address associated with the End User's {{ env('APP_NAME') }} login.
-                It is the End Users responsibility to verify that emails from {{ env('APP_NAME') }} do not get put in a Spam or Trash folder in the End Users email client.
-                End User is also responsible for verifying and checking the provided Email address for notifications from {{ env('APP_NAME') }}.
-                All emails from {{ env('APP_NAME') }} will originate from the {{ env('APP_DOMAIN') }} domain.</p>
+            <p><strong>Notifications: </strong>Notifications from RidgeTec will be sent to the Email address associated with the End User's RidgeTec login.
+                It is the End Users responsibility to verify that emails from RidgeTec do not get put in a Spam or Trash folder in the End Users email client.
+                End User is also responsible for verifying and checking the provided Email address for notifications from RidgeTec.
+                All emails from RidgeTec will originate from the RidgeTec.com domain.</p>
         </div>
 
         <h4>2. Term of Agreement</h4>
@@ -52,18 +52,18 @@
 
         <h4>3. Acknowledgment</h4>
         <div class="para40">
-            <p>The End User acknowledges and agrees that prior to subscribing to any wireless service from {{ env('APP_NAME') }} that End User has had the opportunity
+            <p>The End User acknowledges and agrees that prior to subscribing to any wireless service from RidgeTec that End User has had the opportunity
                 to independently investigate the wireless service provided in the area intended to be used in connection with the Device and its
-                authorized use and is not relying on any representation, guarantee or statement from {{ env('APP_NAME') }}.</p>
-            <p>End User expressly understands and agrees that the services purchased through {{ env('APP_NAME') }} does not create any sort of contractual
+                authorized use and is not relying on any representation, guarantee or statement from RidgeTec.</p>
+            <p>End User expressly understands and agrees that the services purchased through RidgeTec does not create any sort of contractual
                 relationship whatsoever with the underlying wireless service provider or its affiliates or contractors and that End User
-                is not a third party beneficiary of any agreement between {{ env('APP_NAME') }} and the underlying carrier.
+                is not a third party beneficiary of any agreement between RidgeTec and the underlying carrier.
                 End User hereby waives any and all claims or demands therefor.</p>
         </div>
 
         <h4>4. Equipment</h4>
         <div class="para40">
-            <p>The End User agrees that the operation of any Device activated through {{ env('APP_NAME') }} is the sole responsibility of End User.</p>
+            <p>The End User agrees that the operation of any Device activated through RidgeTec is the sole responsibility of End User.</p>
             <p>End User is responsible for verifying the Data Usage of all Devices activated by End User or on End User's behalf which is
                 accessible with End User's login and agrees to pay for any/all additional charges for overages within the following
                 billing cycle.</p>
@@ -71,10 +71,10 @@
 
         <h4>5. Billing and Payments</h4>
         <div class="para40">
-            <p>{{ env('APP_NAME') }} does not require a contract for any of its Data Plans or other services.</p>
+            <p>RidgeTec does not require a contract for any of its Data Plans or other services.</p>
 
             <p>All Services purchased may be automatically renewed until the End User turns off the Auto-Bill option for that service. when End User elects to use
-                the Auto-Bill feature, then End User authorizes the {{ env('APP_NAME') }} portal to automatically charge the Credit Card on file for End User's account the full
+                the Auto-Bill feature, then End User authorizes the RidgeTec portal to automatically charge the Credit Card on file for End User's account the full
                 amount for the plan chosen for the full duration.</p>
 
             <p>
@@ -89,9 +89,9 @@
                 full price and the free month applies only to the very first month.
             </p>
 
-            <p>End User agrees to use either a Credit Card, PayPal or other allowable payment method when purchasing a Service and agrees to authorize {{ env('APP_NAME') }} portal to
+            <p>End User agrees to use either a Credit Card, PayPal or other allowable payment method when purchasing a Service and agrees to authorize RidgeTec portal to
                 automatically charge such payment method for future renewals and/or overages. End User further agrees to keep a valid Payment Method
-                on file with {{ env('APP_NAME') }} at all times so such services may be billed for without declines. End User also agrees that End User will
+                on file with RidgeTec at all times so such services may be billed for without declines. End User also agrees that End User will
                 only utilize Payment Methods for which End User is legally authorize to use.
             </p>
 
@@ -100,30 +100,30 @@
                 then a Billing cycle is assigned and there is no proration on subsequent recurring billings/renewals for this data plan.</p>
 
             <p>
-                All media file uploads to the {{ env('APP_NAME') }} portal will consume data in the form of Image Points from end User's Data Plan points or Points Reserve. For more
+                All media file uploads to the RidgeTec portal will consume data in the form of Image Points from end User's Data Plan points or Points Reserve. For more
                 information on Image Points, please read: <a href="/help/plans" target="_blank">PLAN INFO</a>
             </p>
 
             <p>
-                As End User's device sends media files to the {{ env('APP_NAME') }} portal, data usage in the form of Image Points will be deducted from the plan's initial points.
+                As End User's device sends media files to the RidgeTec portal, data usage in the form of Image Points will be deducted from the plan's initial points.
                 When/if a data plan is renewed, then the plan's Initial points will be reset and any remaining points are not carried forth or retained.
             </p>
 
             <p>
                 End User may elect, at any time, to manually purchase a Points Reserve.  The value of the Points Reserve does not expire.  At any time data plan
                 Points are exhausted, subsequent Device uploads, as Image Points, will be deducted from the Points Reserve.
-                Should End User elect to use the <strong>Auto-Reserve</strong> feature then, End User authorizes {{ env('APP_NAME') }} Portal to automatically charge the Credit Card
+                Should End User elect to use the <strong>Auto-Reserve</strong> feature then, End User authorizes RidgeTec Portal to automatically charge the Credit Card
                 associated with the account for the Points Reserve amount specified under My Account | My Camera Data Plans, when/if the Points Reserve is exhausted (its value is 0).
             </p>
 
             <p>If at anytime during the plan period, plan points are exhausted, data usage as Image Points will continue to be deducted from the plan's Points Reserve.
                 If there is no Points Reserve or the Points Reserve is exhausted then the plan associated with the Device will be suspended.  End User agrees
-                and authorizes {{ env('APP_NAME') }} to suspend service for any plan which has used its period Image Points and Points reserve in entirety.
+                and authorizes RidgeTec to suspend service for any plan which has used its period Image Points and Points reserve in entirety.
             </p>
 
             <p>
                 End User may re-activate a suspended data plan during its plan period by clicking the buy Reserve button and completing the purchase of the
-                Points Reserve.  The {{ env('APP_NAME') }} portal will at that time, re-activate the plan associated with the Device.  If a data plan has been suspened,
+                Points Reserve.  The RidgeTec portal will at that time, re-activate the plan associated with the Device.  If a data plan has been suspened,
                 End User will not be able to re-activate by purchasing a Points Reserve if today is beyond the plan's Service End Date.
             </p>
 
@@ -135,30 +135,30 @@
             </p>
 
             <p>
-                End User understands that by electing to uncheck both the Auto-Bill and Auto-Reserve options for their data plan, the {{ env('APP_NAME') }} portal will not be able to charge his credit
+                End User understands that by electing to uncheck both the Auto-Bill and Auto-Reserve options for their data plan, the RidgeTec portal will not be able to charge his credit
                 card on file in any automated fashion.
             </p>
 
             <p>
                 A Dormant Data Plan is considered to be any Pay as you Go data plan in a non active state for over 12 consecutive months.  A Dormant Account
-                is a user account where all associated Data Plans are now in a dormant state.  {{ env('APP_NAME') }} reserves the right to close any Accounts which have been
+                is a user account where all associated Data Plans are now in a dormant state.  RidgeTec reserves the right to close any Accounts which have been
                 dormant for over 90 consecutive days.  Any Closed Accounts may forfiet remaining Points Reserve amounts.
             </p>
         </div>
 
         <h4>6. Disclaimer of Warranties</h4>
         <div class="para40">
-            <p>{{ env('APP_NAME') }} makes no representations or warranties whatsoever, directly or indirectly,
+            <p>RidgeTec makes no representations or warranties whatsoever, directly or indirectly,
                 express or implied, as to the suitability, durability, fitness for use, merchantability, condition,
                 quality, performance or non-infringement of service from website, mobile application or wireless service from third party carriers.
                 All software and services are provided "As-Is".</p>
-            <p>{{ env('APP_NAME') }} will make it's best efforts to correct any discovered defects which are deemed correctable by {{ env('APP_NAME') }} but shall not give any
+            <p>RidgeTec will make it's best efforts to correct any discovered defects which are deemed correctable by RidgeTec but shall not give any
                 express or implied timeframe or resolve to having it corrected.</p>
         </div>
 
         <h4>7. Limitation of Liability</h4>
         <div class="para40">
-            <p>{{ env('APP_NAME') }} will have no liability to End User:
+            <p>RidgeTec will have no liability to End User:
                 For any causes of action, losses or damages of any kind whatsoever arising out of mistakes, omissions,
                 interruptions, error or defects in furnishing software or services.</p>
 
@@ -168,11 +168,11 @@
         <h4>8. System Availability</h4>
         <div class="para40">
             <p>As with all systems, software and hardware alike, constant changes are made in an attempt to improve such systems and
-                add additional functionality. {{ env('APP_NAME') }} reserves the right to modify all aspects of it's systems and cannot guarantee the compatibility,
+                add additional functionality. RidgeTec reserves the right to modify all aspects of it's systems and cannot guarantee the compatibility,
                 functionality or usability of features for future updates.</p>
 
-            <p>{{ env('APP_NAME') }} reserves the right to bring the system down and to make it unavailable from time-to-time, at any time and for any duration whether this time is for
-                applying updates, updating servers or any other reason deemed necessary by {{ env('APP_NAME') }}.</p>
+            <p>RidgeTec reserves the right to bring the system down and to make it unavailable from time-to-time, at any time and for any duration whether this time is for
+                applying updates, updating servers or any other reason deemed necessary by RidgeTec.</p>
         </div>
 
         <h4>9. Wireless Service Availability</h4>
@@ -188,38 +188,38 @@
 
         <h4>10. Compliance with Laws</h4>
         <div class="para40">
-            <p>End User shall use {{ env('APP_NAME') }} only in manners which comply with all Federal, State and local laws, rules, regulations and ordinances,
+            <p>End User shall use RidgeTec only in manners which comply with all Federal, State and local laws, rules, regulations and ordinances,
                 including but not limited to, all Federal Communications Commission rules and regulations, all privacy and security requirments.</p>
         </div>
 
         <h4>11. Usage Rules</h4>
         <div class="para40">
             <p>
-                {{ env('APP_NAME') }} Administration retains the right, at it's sole discretion, to immediately terminate and decline future service to anyone it deems is mis-using the system or abusing its intended use.
+                RidgeTec Administration retains the right, at it's sole discretion, to immediately terminate and decline future service to anyone it deems is mis-using the system or abusing its intended use.
             </p>
 
-            <p>No one under the age of 13 shall use the {{ env('APP_NAME') }} system.</p>
+            <p>No one under the age of 13 shall use the RidgeTec system.</p>
 
             <p>
                 End User also agrees photos taken by cameras which are uploaded and shared with others or posted to "public" areas within the website
                 shall not include any nudity or other inappropriate material.<br />
-                {{ env('APP_NAME') }} PORTAL ADMINISTRATION RESERVES THE RIGHT TO REMOVE ANY MEDIA IT DEEMS INAPPROPRIATE.</p>
+                RIDGETEC PORTAL ADMINISTRATION RESERVES THE RIGHT TO REMOVE ANY MEDIA IT DEEMS INAPPROPRIATE.</p>
 
             <!--
             <p>NO SPAMMING:
-                {{ env('APP_NAME') }} allows End Users to locate other End Users and submit "follow" request. End User agrees to not "spam"
+                RidgeTec allows End Users to locate other End Users and submit "follow" request. End User agrees to not "spam"
                 other End Users by repeatedly sending "follow" requests.
                 End User also agrees not to spam any public feeds by repeatedly submitting "Post" over and over again.</p>
             <p>NO ADVERTISING:
-                End Users are not allowed to "Post" anything that would be considered advertising of another product or service without the express written permission from {{ env('APP_NAME') }}.</p>
+                End Users are not allowed to "Post" anything that would be considered advertising of another product or service without the express written permission from RidgeTec.</p>
             -->
             <p>NO TAMPERING:
                 Any attempt to tamper with, decode programs or otherwise use the system in a manner to avoid fees, capture unauthorized data,
                 send unsolicited data, simulate users or cameras or perform any other unauthorized activity will result in the immediate termination of End Users account.</p>
 
-            <p>In addition {{ env('APP_NAME') }} Administration reserves the right to ban End User due to unwanted activity.</p>
+            <p>In addition RidgeTec Administration reserves the right to ban End User due to unwanted activity.</p>
 
-            <p>{{ env('APP_NAME') }} Administration reserves the right to limit End Users activities as well as change the limitations at any time.
+            <p>RidgeTec Administration reserves the right to limit End Users activities as well as change the limitations at any time.
             </p>
         </div>
 

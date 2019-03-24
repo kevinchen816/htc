@@ -101,7 +101,8 @@ class PlansController extends Controller
         }
         $iccid = $request->iccid;
 
-        if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de') {
+        // if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de') {
+        if (env('APP_TERMS')){
             if (!$request['agree-terms']) {
                // session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
                session()->flash('danger', $this->ts('agree_TERMS'));
@@ -129,16 +130,20 @@ class PlansController extends Controller
         // $region = $sim->region; // us, ca, eu, au, cn, tw
         // $style = $sim->style; // demo, normal
 
-// for test
-if ($user->permission == 1) {
-    $region = 'au'; // for test
-    $style = 'normal'; // for test
-    // $style = 'test'; // for test
-} else {
-    $region = 'au'; // for test
-    $style = 'test'; // for test
-}
-//+
+        if (env('APP_REGION') == 'au' || env('APP_REGION') == 'de') {
+            $region = env('APP_REGION');
+            $style = 'normal';
+        } else {
+            // for test
+            if ($user->permission == 1) {
+                $region = 'au'; // for test
+                $style = 'normal'; // for test
+                // $style = 'test'; // for test
+            } else {
+                $region = 'au'; // for test
+                $style = 'test'; // for test
+            }
+        }
 
         if ($style == 'test') {
             $status = 'active';
