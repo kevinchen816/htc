@@ -121,6 +121,8 @@
 
 @if (env('APP_REGION') == 'cn')
 
+@elseif (env('APP_REGION') == 'au')
+
 @else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
