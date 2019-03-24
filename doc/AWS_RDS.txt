@@ -7,7 +7,7 @@ https://www.cnblogs.com/edward2013/p/5496531.html
     mysql -h 52.192.110.218 -P 3306 -ukevin -pkevin816
 
 //-----------------------------------------------------------------------
-Mysql8.0 & Mysql5.7&  Mysql5.6 & Mysql5.5 特性对比
+Mysql8.0 & Mysql5.7 &  Mysql5.6 & Mysql5.5 特性对比
 https://blog.csdn.net/liang_0609/article/details/77334959
 
 //-----------------------------------------------------------------------

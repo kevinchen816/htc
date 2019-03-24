@@ -13,9 +13,6 @@ https://www.cloudbility.com/help/aws/access-key.html
     4. 给用户“添加权限”，选择“直接附加现有策略”，在搜索框内输入“AmazonS3FullAccess”，
        就给用户赋予了S3的全部访问权限。
 
-AKIAIYXSP7446MRZMQAQ
-bsXIN2rwu6wvfntz/yO9WL+ZzUo9a1kfaFP2sEgl
-
 第二步
     1. 创建S3 Bucket。
        这个很好操作，注意选择好所在 region 的代码和 bucket 的名字，
