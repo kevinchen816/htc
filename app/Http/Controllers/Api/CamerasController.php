@@ -2616,19 +2616,14 @@ return $ret;
 
             } else {
                 $file = $request->Image;
-                // if ($file && $file->isValid()) {
-                if ($file) {
-                    if ($file->isValid()) {
-                        $ret = $uploader->s3_save_file($file, $photo->id);
-                        $uploader->s3_save_thumb_file($file, $photo->id);
-                        $err = $ret['err'];
+                if ($file && $file->isValid()) {
+                    $ret = $uploader->s3_save_file($file, $photo->id);
+                    $uploader->s3_save_thumb_file($file, $photo->id);
+                    $err = $ret['err'];
 
-                        // $imagename = $file->getClientOriginalName();
-                        // $filesize = $file->getClientSize();
-                        // $savename = $ret['savename'];
-                    } else {
-                        $err = 999;
-                    }
+                    // $imagename = $file->getClientOriginalName();
+                    // $filesize = $file->getClientSize();
+                    // $savename = $ret['savename'];
                 } else {
                     $err = ERR_NO_UPLOAD_FILE;
                 }
@@ -2895,6 +2890,10 @@ return $ret;
 
     // public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
     public function uploadvideo(Request $request) {
+// $file = $request->Image;
+// $file = $request->file('Image');
+// return dd($file);
+
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $user_id = $ret['user_id'];
@@ -2927,14 +2926,31 @@ return $ret;
 
                         } else {
                             $file = $request->Image;
-                            if ($file && $file->isValid()) {
-                                $uploader = new ImageUploadHandler;
-                                if (env('S3_ENABLE')) {
-                                    $ret = $uploader->s3_save_file($file, $photo->id);
+                            // if ($file && $file->isValid()) {
+                            //     $uploader = new ImageUploadHandler;
+                            //     if (env('S3_ENABLE')) {
+                            //         $ret = $uploader->s3_save_file($file, $photo->id);
+                            //     } else {
+                            //         $ret = $uploader->save_file($camera_id, $file);
+                            //     }
+                            //     $err = $ret['err'];
+                            // } else {
+                            //     $err = ERR_NO_UPLOAD_FILE;
+                            // }
+
+                            if ($file) {
+                                if ($file->isValid()) {
+                                    $uploader = new ImageUploadHandler;
+                                    if (env('S3_ENABLE')) {
+                                        $ret = $uploader->s3_save_file($file, $photo->id);
+                                    } else {
+                                        $ret = $uploader->save_file($camera_id, $file);
+                                    }
+                                    $err = $ret['err'];
                                 } else {
-                                    $ret = $uploader->save_file($camera_id, $file);
+                                    $err = 999;
                                 }
-                                $err = $ret['err'];
+
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
                             }
