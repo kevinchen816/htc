@@ -2616,14 +2616,19 @@ return $ret;
 
             } else {
                 $file = $request->Image;
-                if ($file && $file->isValid()) {
-                    $ret = $uploader->s3_save_file($file, $photo->id);
-                    $uploader->s3_save_thumb_file($file, $photo->id);
-                    $err = $ret['err'];
+                // if ($file && $file->isValid()) {
+                if ($file) {
+                    if ($file->isValid()) {
+                        $ret = $uploader->s3_save_file($file, $photo->id);
+                        $uploader->s3_save_thumb_file($file, $photo->id);
+                        $err = $ret['err'];
 
-                    // $imagename = $file->getClientOriginalName();
-                    // $filesize = $file->getClientSize();
-                    // $savename = $ret['savename'];
+                        // $imagename = $file->getClientOriginalName();
+                        // $filesize = $file->getClientSize();
+                        // $savename = $ret['savename'];
+                    } else {
+                        $err = 999;
+                    }
                 } else {
                     $err = ERR_NO_UPLOAD_FILE;
                 }
