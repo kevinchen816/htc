@@ -2926,34 +2926,35 @@ return $ret;
 
                         } else {
                             $file = $request->Image;
-                            // if ($file && $file->isValid()) {
-                            //     $uploader = new ImageUploadHandler;
-                            //     if (env('S3_ENABLE')) {
-                            //         $ret = $uploader->s3_save_file($file, $photo->id);
-                            //     } else {
-                            //         $ret = $uploader->save_file($camera_id, $file);
-                            //     }
-                            //     $err = $ret['err'];
-                            // } else {
-                            //     $err = ERR_NO_UPLOAD_FILE;
-                            // }
-
-                            if ($file) {
-                                if ($file->isValid()) {
-                                    $uploader = new ImageUploadHandler;
-                                    if (env('S3_ENABLE')) {
-                                        $ret = $uploader->s3_save_file($file, $photo->id);
-                                    } else {
-                                        $ret = $uploader->save_file($camera_id, $file);
-                                    }
-                                    $err = $ret['err'];
+                            if ($file && $file->isValid()) {
+                                $uploader = new ImageUploadHandler;
+                                if (env('S3_ENABLE')) {
+                                    $ret = $uploader->s3_save_file($file, $photo->id);
                                 } else {
-                                    $err = 999;
+                                    $ret = $uploader->save_file($camera_id, $file);
                                 }
-
+                                $err = $ret['err'];
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
                             }
+
+                            // // for test
+                            // if ($file) {
+                            //     if ($file->isValid()) {
+                            //         $uploader = new ImageUploadHandler;
+                            //         if (env('S3_ENABLE')) {
+                            //             $ret = $uploader->s3_save_file($file, $photo->id);
+                            //         } else {
+                            //             $ret = $uploader->save_file($camera_id, $file);
+                            //         }
+                            //         $err = $ret['err'];
+                            //     } else {
+                            //         $err = 999;
+                            //     }
+
+                            // } else {
+                            //     $err = ERR_NO_UPLOAD_FILE;
+                            // }
                         }
                     } else {
                         $err = ERR_INVALID_PHOTO_ID;
@@ -3027,8 +3028,10 @@ return $ret;
             // $response = $this->Response_Result($err, $camera);
         }
 
-$response['imagename'] = $file->getClientOriginalName(); // PICT0001.JPG
-$response['filesize'] = $file->getClientSize();          // 7032
+// for test
+// $response['imagename'] = $file->getClientOriginalName(); // PICT0001.JPG
+// $response['filesize'] = $file->getClientSize();          // 7032
+//+
 
         return $response;
     }
