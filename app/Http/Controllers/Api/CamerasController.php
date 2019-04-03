@@ -3026,6 +3026,10 @@ return $ret;
         // } else {
             // $response = $this->Response_Result($err, $camera);
         }
+
+$response['imagename'] = $file->getClientOriginalName(); // PICT0001.JPG
+$response['filesize'] = $file->getClientSize();          // 7032
+
         return $response;
     }
 
