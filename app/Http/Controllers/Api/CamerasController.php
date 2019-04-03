@@ -4987,6 +4987,8 @@ return $request;
 
     /*----------------------------------------------------------------------------------*/
     public function kk_test() {
+return ini_get('post_max_size');
+
         $ret1 = Browser::isMobile();
         $ret2 = Browser::isTablet();
         $ret3 = Browser::isDesktop();
