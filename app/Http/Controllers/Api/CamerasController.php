@@ -2890,6 +2890,10 @@ return $ret;
 
     // public function uploadvideo(Request $request, ImageUploadHandler $uploader) {
     public function uploadvideo(Request $request) {
+// $file = $request->Image;
+// $file = $request->file('Image');
+// return dd($file);
+
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
         $user_id = $ret['user_id'];
@@ -2933,6 +2937,24 @@ return $ret;
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
                             }
+
+                            // // for test
+                            // if ($file) {
+                            //     if ($file->isValid()) {
+                            //         $uploader = new ImageUploadHandler;
+                            //         if (env('S3_ENABLE')) {
+                            //             $ret = $uploader->s3_save_file($file, $photo->id);
+                            //         } else {
+                            //             $ret = $uploader->save_file($camera_id, $file);
+                            //         }
+                            //         $err = $ret['err'];
+                            //     } else {
+                            //         $err = 999;
+                            //     }
+
+                            // } else {
+                            //     $err = ERR_NO_UPLOAD_FILE;
+                            // }
                         }
                     } else {
                         $err = ERR_INVALID_PHOTO_ID;
@@ -3005,6 +3027,12 @@ return $ret;
         // } else {
             // $response = $this->Response_Result($err, $camera);
         }
+
+// for test
+// $response['imagename'] = $file->getClientOriginalName(); // PICT0001.JPG
+// $response['filesize'] = $file->getClientSize();          // 7032
+//+
+
         return $response;
     }
 
@@ -4987,6 +5015,8 @@ return $request;
 
     /*----------------------------------------------------------------------------------*/
     public function kk_test() {
+return ini_get('post_max_size');
+
         $ret1 = Browser::isMobile();
         $ret2 = Browser::isTablet();
         $ret3 = Browser::isDesktop();
