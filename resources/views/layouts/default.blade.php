@@ -185,7 +185,6 @@
     color: lime;
 }
 </style>
-
 </head>
 <body>
     <div id="app">
