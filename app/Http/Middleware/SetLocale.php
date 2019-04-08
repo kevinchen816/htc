@@ -37,7 +37,8 @@ class SetLocale
         if (env('APP_REGION') == 'de') {
             $langArray = array('en', 'de');
         } else if (env('APP_REGION') == 'au') {
-            $langArray = array('en');
+            // $langArray = array('en');
+            $langArray = array('en', 'zh-cn', 'zh-CN');
         } else if (env('APP_REGION') == 'tw') {
             $langArray = array('en', 'zh-tw', 'zh-TW');
         } else if (env('APP_REGION') == 'cn') {

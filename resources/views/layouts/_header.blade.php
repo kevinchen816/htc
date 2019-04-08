@@ -123,24 +123,18 @@
                     <li class=""><a href="{{ route('login') }}">{{ trans('htc.Login') }}</a></li>
 @endif
 
-@if (env('APP_REGION') == 'cn')
-
-@elseif (env('APP_REGION') == 'au')
-
-@else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                              {{ trans('htc.Language') }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>
-    @if (env('APP_REGION') == 'de')
+@if (env('APP_REGION') == 'de')
                             <li><a href="{{ route('language.de') }}">German</a></li>
-    @elseif (env('APP_REGION') == 'tw' || env('APP_REGION') == 'au')
+@elseif (env('APP_REGION') == 'tw')
                             <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
-    @elseif (env('APP_REGION') == 'cn')
+@elseif (env('APP_REGION') == 'cn' || env('APP_REGION') == 'au')
                             <li><a href="{{ route('language.cn') }}">简体中文</a></li>
-    @endif
 @endif
                         </ul>
                     </li>
