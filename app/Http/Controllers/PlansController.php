@@ -621,6 +621,55 @@ class PlansController extends Controller
     //     return $txt;
     // }
 
+    public function html_PlanInfo() {
+        $region = env('APP_REGION');
+        $products = DB::table("plan_products")
+            // ->where('region', $region)
+            ->whereRaw('region = ? and active = ?', [$region, 1])
+            ->orderBy('points','asc') // asc, desc
+            ->get();
+
+        $txt = '';
+        foreach ($products as $product) {
+            $product_id = $product->id;
+            $points = $product->points;
+            // $description = $points.' Points per Month';
+            $description = $product->description;
+
+            $skus = DB::table("plan_product_skus")
+                // ->where('plan_product_id', $product_id)
+                ->whereRaw('plan_product_id = ? and active = ?', [$product_id, 1])
+                ->orderBy('price','asc') // asc, desc
+                ->get();
+
+            $txt .= '<div class="alert alert-default alert-ratetier">';
+            $txt .=     '<div class="row">';
+            $txt .=         '<div class="col-md-5">';
+            $txt .=             '<div class="label-tier">'.$product->title.'</div>';
+            $txt .=             '<p class="tier-desc">'.$description.'</p>';
+            $txt .=         '</div>';
+            $txt .=         '<div class="col-md-7">';
+            foreach ($skus as $sku) {
+                if ($sku->month == 1) {
+                    $sku_month = 'per Month';
+                } else {
+                    $sku_month = 'for '.$sku->month.' Month';
+                }
+                // $cpp = '[cpp: '.($sku->price/$points).']'; //'[cpp: 0.00259]';
+
+                $txt .= '<p>';
+                $txt .=     '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
+                $txt .=     '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
+                // $txt .=  '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                $txt .= '</p>';
+            }
+            $txt .=         '</div>';
+            $txt .=     '</div>';
+            $txt .= '</div>';
+        }
+        return $txt;
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function pause(Plan $plan) {
         $user = Auth::user();

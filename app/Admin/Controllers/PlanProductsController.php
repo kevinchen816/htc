@@ -588,15 +588,18 @@ class PlanProductsController extends Controller
             // $this->build_product($product_au_gold);
             // $this->build_product($product_au_platinum);
 
-            $this->build_product2($product_au_basic);
-            $this->build_product2($product_au_bronze);
-            $this->build_product2($product_au_silver);
-            $this->build_product2($product_au_gold);
+            if (env('APP_REGION') == 'au') {
+                $this->build_product2($product_au_basic);
+                $this->build_product2($product_au_bronze);
+                $this->build_product2($product_au_silver);
+                $this->build_product2($product_au_gold);
 
-            $this->build_product2($product_eu_basic);
-            $this->build_product2($product_eu_bronze);
-            $this->build_product2($product_eu_silver);
-            $this->build_product2($product_eu_gold);
+            } else if (env('APP_REGION') == 'eu') {
+                $this->build_product2($product_eu_basic);
+                $this->build_product2($product_eu_bronze);
+                $this->build_product2($product_eu_silver);
+                $this->build_product2($product_eu_gold);
+            }
 
         } if ($type == 2) {
             /* eu */

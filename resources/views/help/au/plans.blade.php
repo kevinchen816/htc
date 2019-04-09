@@ -28,10 +28,10 @@
                                 All SIM cards and data plans must be obtained through Ridgetec.  Your camera
                                 will ship with a SIM card in the package.</p>-->
 
-                            <h4><strong>We offer the following, no contract, Pay as you go data plans:</strong></h4>
+                            <!-- <h4><strong>We offer the following, no contract, Pay as you go data plans:</strong></h4> -->
                             <!--<p>
                                 <strong>Please Note:</strong>  </p>-->
-                            <p><span style="color:lime"><strong>**Our cameras ship with a FREE first month's service (5000 points).**</strong></span></p>
+                            <!-- <p><span style="color:lime"><strong>**Our cameras ship with a FREE first month's service (5000 points).**</strong></span></p> -->
                             <!--
                             <p>
                                 The site will require a credit card for purchasing a Points Reserve and
@@ -45,20 +45,26 @@
 
                             <!--<h4><strong>Pay as you go Plan Pricing</strong></h4>-->
 
-                            @include('help.au.plans-australia')
+                            @inject('pc', 'App\Http\Controllers\PlansController')
+                            {!! $pc->html_PlanInfo() !!}
 
-@if (1)
+@if (0)
+                            @include('help.plans-australia')
+@endif
+
+@if (0)
                             @include('help.plans_tier-info')
 @endif
-@if (1)
+
+@if (0)
                             @include('help.plans_features')
 @endif
                             <hr>
                         </div>
 
                         <div class="col-md-6">
-@if (1)
-                            @include('help.points')
+@if (0)
+                            @include('help.au.points')
 @endif
                         </div>
                     </div>
