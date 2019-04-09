@@ -134,7 +134,8 @@ class CreateCamerasTable extends Migration
             $table->dateTime('last_contact')->nullable();       // 1000-01-01 00:00:00 ~ 9999-12-31 23:59:59
             $table->dateTime('last_armed')->nullable();
             $table->integer('arm_photos')->default(0);          // Photos since armed
-            $table->float('arm_points')->default(0);            // Points since armed
+            // $table->float('arm_points')->default(0);         // Points since armed
+            $table->decimal('arm_points', 14, 2)->default(0);
             $table->string('last_filename')->nullable();
             $table->string('last_savename')->nullable();
 

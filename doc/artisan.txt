@@ -9,7 +9,7 @@ $ php artisan make:model Models/Mobile -m // 自动产生 xxx_create_mobiles_tab
 $ php artisan migrate
 $ php artisan migrate:rollback
 
-$ php artisan migrate:fresh
+$ php artisan migrate:fresh         <-- 使用这个
 $ php artisan migrate:refresh
 
 refresh 和 fresh 命令的区别在于：

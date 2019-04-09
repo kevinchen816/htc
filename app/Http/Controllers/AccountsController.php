@@ -175,14 +175,27 @@ class AccountsController extends Controller
 
         $txtAutoBill = $this->ts('Auto-Bill');
         $txtCamera = $this->ts('Camera');
-        $txtPlanPoints = $this->ts('Plan Points');
-        $txtPointsUsed = $this->ts('Points Used');
+        // $txtPlanPoints = $this->ts('Plan Points');
+        // $txtPointsUsed = $this->ts('Points Used');
         $txtPoints = $this->ts('Points');
         $txtFor = $this->ts('for');
 
+        $txtPlanTotal = $this->ts('Plan Total');
+        $txtPlanUsed = $this->ts('Plan Used');
+
         $handle = '';
+        $txt_plan = '';
+        $txt_plan2 = '';
         foreach ($plans as $plan) {
             $plan_style = $plan->style ? $plan->style : 'test';
+
+            $plan_total = sprintf('%d MB', $plan->points);
+
+            $plan_used_mb = round($plan->points_used/(1024*1024), 2);
+            $percent = round(($plan_used_mb/$plan->points)*100, 2);
+            $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
+
+            // $plan_used = sprintf('%.2f MB', $plan_used_mb);
 
             // $sku = PlanProductSku::find($plan->plan_product_sku_id);
             $sku = PlanProductSku::where('sub_plan', $plan->sub_plan)->first(); // au_5000_1m
@@ -192,20 +205,12 @@ class AccountsController extends Controller
                 // Silver - 3 Months
                 $txt_plan = $product->title.' - '.$sku->month.' Month'.(($sku->month>1)?'s':'');
 
-                // $12.95 per Month
-                // if ($sku->month == 1) {
-                //     $txt_plan2 = $sku->price.' per Month';
-                // } else {
-                //     $txt_plan2 = $sku->price.' for '.$sku->month.' Months';
-                // }
-                // // $txt_plan2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
-                // $txt_plan2 = $sku->price.' for '.$product->points*$sku->month.' Points';
-                $txt_plan2 = sprintf('%s %s %s %s', $sku->price, $txtFor, $product->points*$sku->month, $txtPoints);
-                $txt_plan2 = $currency_region[$plan->region].$txt_plan2;
+                // // $9.00 for 1000 Points
+                // $txt_plan2 = sprintf('%s %s %s %s', $sku->price, $txtFor, $product->points*$sku->month, $txtPoints);
+                // $txt_plan2 = $currency_region[$plan->region].$txt_plan2;
 
             } else {
                 Debugbar::error('plan product sku not found - '.$plan->sub_plan);
-                $txt_plan = $txt_plan2 = '';
             }
             $txt_status = ucwords($plan->status);
             $txt_auto_bill = ($plan->auto_bill == 1) ? 'Yes' : 'No';
@@ -293,16 +298,8 @@ class AccountsController extends Controller
                 // $txt_tier = $product->title.' - '.$product->points.' Points per Month';
                 $txt_tier = $product->title.' - '.$sku->month.' Month'.(($sku->month>1)?'s':'');
 
-                // $155.95 for 15000 Points
-                // if ($sku->month == 1) {
-                //     $txt_tier2 = $sku->price.' per Month';
-                // } else {
-                //     $txt_tier2 = $sku->price.' for '.$sku->month.' Months';
-                // }
-                // // $txt_tier2 = '<i class="fa fa-dollar-sign"></i>'.$txt_tier2;
-                // $txt_tier2 = $sku->price.' for '.$product->points*$sku->month.' Points';
-                $txt_tier2 = sprintf('%s %s %s %s', $sku->price, $txtFor, $product->points*$sku->month, $txtPoints);
-                $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
+                // $txt_tier2 = sprintf('%s %s %s %s', $sku->price, $txtFor, $product->points*$sku->month, $txtPoints);
+                // $txt_tier2 = $currency_region[$plan->region].$txt_tier2;
             }
 
 // $handle .= '<table class="table">';
@@ -329,8 +326,8 @@ if ($plan->status == 'active') {
                 $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.'TEST'.'</span>';
     } else {
                 $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.$txt_plan.'</span>';
-                $handle .=                     ' <span style="color:lime;">'.$txt_plan2.'</span>';
-                $handle .=                     ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
+                // $handle .=                     ' <span style="color:lime;">'.$txt_plan2.'</span>';
+                // $handle .=                     ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
 
             // $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
 
@@ -410,13 +407,13 @@ if ($plan_style == 'test') {
                 $handle .=                         '<strong>'.$txt_tier.'</strong>';
                 $handle .=                     '</p>';
 
-                $handle .=                     '<p>';
-                // $handle .=                         'Tier:';
-                $handle .=                         '<strong>';
-                // $handle .=                              ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
-                $handle .=                              ' <span style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
-                $handle .=                         '</strong>';
-                $handle .=                     '</p>';
+                // $handle .=                     '<p>';
+                // // $handle .=                         'Tier:';
+                // $handle .=                         '<strong>';
+                // // $handle .=                              ' <span class="label" style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
+                // $handle .=                              ' <span style="font-size: 1.00em; color:lime;">'.$txt_tier2.'</span>';
+                // $handle .=                         '</strong>';
+                // $handle .=                     '</p>';
             }
             $handle .=                         '<p>';
             $handle .=                             $txtAutoBill.': ';
@@ -447,11 +444,15 @@ if ($plan_style == 'test') {
             $handle .=                 '<tr><td class="pull-right">'.$txtCamera.':</td>';
             $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">'.$txtPlanPoints.':</td>';
-            $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
+            // $handle .=                 '<tr><td class="pull-right">'.$txtPlanPoints.':</td>';
+            // $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
+            $handle .=                 '<tr><td class="pull-right">'.$txtPlanTotal.':</td>';
+            $handle .=                     '<td><strong>'.$plan_total.'</strong></td>';
             $handle .=                 '</tr>';
-            $handle .=                 '<tr><td class="pull-right">'.$txtPointsUsed.':</td>';
-            $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
+            // $handle .=                 '<tr><td class="pull-right">'.$txtPointsUsed.':</td>';
+            // $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
+            $handle .=                 '<tr><td class="pull-right">'.$txtPlanUsed.':</td>';
+            $handle .=                     '<td><strong>'.$plan_used.'</strong></td>';
             $handle .=                 '</tr>';
             // $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
             // $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';

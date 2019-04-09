@@ -130,28 +130,46 @@ class PlansController extends Controller
         // $region = $sim->region; // us, ca, eu, au, cn, tw
         // $style = $sim->style; // demo, normal
 
-        if (env('APP_REGION') == 'au' || env('APP_REGION') == 'de') {
-            $region = env('APP_REGION');
+        $region = env('APP_REGION');
+        if ($region == 'au') {
             $style = 'normal';
-        } else {
-            // for test
-            if ($user->permission == 1) {
-                $region = 'au'; // for test
-                $style = 'normal'; // for test
-                // $style = 'test'; // for test
-            } else {
-                $region = 'au'; // for test
-                $style = 'test'; // for test
-            }
-        }
-
-        if ($style == 'test') {
+            $status = 'deactive';
+            $points = 0;
+        } else if ($region == 'de') {
+            $style = 'normal';
+            $status = 'deactive';
+            $points = 0;
+        } else if ($region == 'tw') {
+            $style = 'test';
+            $status = 'active';
+            $points = 100000;
+        } else if ($region == 'cn') {
+            $style = 'test';
             $status = 'active';
             $points = 100000;
         } else {
+            $style = 'normal';
             $status = 'deactive';
             $points = 0;
+
+            // // for test
+            // if ($user->permission == 1) {
+            //     $region = 'au';
+            //     $style = 'normal';
+            //     // $style = 'test';
+            // } else {
+            //     $region = 'au';
+            //     $style = 'test';
+            // }
         }
+
+        // if ($style == 'test') {
+        //     $status = 'active';
+        //     $points = 100000;
+        // } else {
+        //     $status = 'deactive';
+        //     $points = 0;
+        // }
 
         /* Stripe - create customer id */
 //        if ($request->mode == 'new') {
@@ -492,7 +510,8 @@ class PlansController extends Controller
         foreach ($products as $product) {
             $product_id = $product->id;
             $points = $product->points;
-            $description = $points.' Points per Month';
+            // $description = $points.' Points per Month';
+            $description = $product->description;
 
             $skus = DB::table("plan_product_skus")
                 // ->where('plan_product_id', $product_id)
@@ -518,7 +537,7 @@ class PlansController extends Controller
                 } else {
                     $sku_month = 'for '.$sku->month.' Month';
                 }
-                $cpp = '[cpp: '.($sku->price/$points).']'; //'[cpp: 0.00259]';
+                // $cpp = '[cpp: '.($sku->price/$points).']'; //'[cpp: 0.00259]';
 
                 // $txt .=             '<div class="radio">';
                 // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
@@ -528,7 +547,7 @@ class PlansController extends Controller
                 $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku->id.'" >';
                 $txt .=                         '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
                 $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
-                $txt .=                         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                // $txt .=                         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
                 $txt .=                 '</label>';
                 $txt .=             '</div>';
 

@@ -28,7 +28,13 @@ class CreateUsersTable extends Migration
             $table->string('card_expiry')->nullable();
             $table->string('card_name')->nullable();
             $table->string('card_phone')->nullable();
-            $table->string('currency')->nullable()->default('usd');
+
+            if (env('APP_CURRENCY')) {
+                $table->string('currency')->nullable()->default(env('APP_CURRENCY'));
+            } else {
+                $table->string('currency')->nullable()->default('usd');
+            }
+
             // https://stripe.com/docs/currencies
             // usd, eur, gbp, aud, twd, cny, hkd, jpy
 

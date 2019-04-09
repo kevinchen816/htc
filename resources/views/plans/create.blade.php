@@ -26,6 +26,7 @@
                 <div class="panel-body">
 
                     <div class="col-md-6">
+                    <!-- <div class="col-md-12"> -->
                         @if ($mode == 'create')
                             <form method="POST" action="{{ route('plans.create') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
                         @elseif ($mode == 'reactive')
@@ -59,7 +60,9 @@
                                     @inject('pc', 'App\Http\Controllers\PlansController')
                                     {!! $pc->html_CreatePlan($plan, $mode) !!}
 
+@if (0)
                                     @include('plans._help')
+@endif
                                 </div>
                             </div>
 
@@ -102,9 +105,11 @@
                         </form>
                     </div>
 
+@if (0)
                     <div class="col-md-6">
                         @include('help.points')
                     </div>
+@endif
                 </div>
             </div>
         </div>

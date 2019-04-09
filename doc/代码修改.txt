@@ -1,0 +1,6 @@
+\database\migrations\2018_09_10_043732_create_cameras_table.php
+$table->decimal('arm_points', 14, 2)->default(0);
+
+\database\migrations\2018_09_21_170056_create_plans_table.php
+$table->decimal('points', 14, 2)->default(0);
+$table->decimal('points_used', 14, 2)->default(0);

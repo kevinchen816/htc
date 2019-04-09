@@ -238,11 +238,36 @@ class PlanProductsController extends Controller
         }
     }
 
+    public function build_stripe2($p) {
+        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        \Stripe\Product::create([
+          'id' => $p['id'],     //'eu_silver_5000',
+          'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
+          'type' => 'service',
+        ]);
+
+        foreach ($p['plans'] as $plan) {
+            // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
+            $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+            \Stripe\Plan::create([
+                'product' => $p['id'],
+                'id' => $plan_id,
+                'interval' => 'month',
+                'interval_count' => $plan['month'], // 1,
+                'currency' => $p['currency'],       // 'usd',
+                'amount' => $plan['amount'],        // 1295,
+            ]);
+        }
+    }
+
     public function build_product($p) {
         $plan_product_id = DB::table("plan_products")->insertGetId([
             'region' => $p['region'],
             'currency' => $p['currency'],
             'title' => $p['name'],
+            'description' => $p['description'],
             'points' => $p['points'],
             'active' => $p['active']
         ]);
@@ -269,160 +294,333 @@ class PlanProductsController extends Controller
         }
     }
 
+    public function build_product2($p) {
+        $plan_product_id = DB::table("plan_products")->insertGetId([
+            'region' => $p['region'],
+            'currency' => $p['currency'],
+            'title' => $p['name'],
+            'description' => $p['description'],
+            'points' => $p['points'],
+            'active' => $p['active']
+        ]);
+
+        foreach ($p['plans'] as $plan) {
+            // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
+            $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+            DB::table('plan_product_skus')->insert([
+                'plan_product_id' => $plan_product_id,
+                'sub_plan' => $plan_id,
+                'month' => $plan['month'],
+                'price' => $plan['amount']/100,
+                'active' => $plan['active']
+            ]);
+        }
+    }
+
     public function build($type) {
         /* eu */
-        $product_eu_bronze = array(
-            'id' => 'eu_bronze_2500',
-            'name' => 'BRONZE',
-            'points' => 2500,
+        // $product_eu_bronze = array(
+        //     'id' => 'eu_bronze_2500',
+        //     'name' => 'BRONZE',
+        //     'points' => 2500,
+        //     'region' => 'eu',
+        //     'currency' => 'eur',
+        //     'active' => 0,
+        //     'plans' => [
+        //         // ['id'=>'eu_2500_1m', 'interval'=>'month', 'interval_count'=>1, 'amount'=>895, 'active'=>1],
+        //         // ['id'=>'eu_2500_3m', 'interval'=>'month', 'interval_count'=>3, 'amount'=>2495, 'active'=>1],
+        //         // ['id'=>'eu_2500_6m', 'interval'=>'month', 'interval_count'=>6, 'amount'=>4895, 'active'=>1],
+        //         // ['id'=>'eu_2500_12m', 'interval'=>'month', 'interval_count'=>12, 'amount'=>9695, 'active'=>0],
+        //         ['month'=>1, 'amount'=>895, 'active'=>1],
+        //         ['month'=>3, 'amount'=>2495, 'active'=>1],
+        //         ['month'=>6, 'amount'=>4895, 'active'=>1],
+        //         ['month'=>12, 'amount'=>9695, 'active'=>0],
+        //     ]
+        // );
+
+        // $product_eu_silver = array(
+        //     'id' => 'eu_silver_5000',
+        //     'name' => 'SILVER',
+        //     'points' => 5000,
+        //     'region' => 'eu',
+        //     'currency' => 'eur',
+        //     'active' => 1,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>1295, 'active'=>1],
+        //         ['month'=>3, 'amount'=>3695, 'active'=>1],
+        //         ['month'=>6, 'amount'=>7295, 'active'=>1],
+        //         ['month'=>12, 'amount'=>14495, 'active'=>0],
+        //     ]
+        // );
+
+        //  $product_eu_gold = array(
+        //     'id' => 'eu_gold_10000',
+        //     'name' => 'GOLD',
+        //     'points' => 10000,
+        //     'region' => 'eu',
+        //     'currency' => 'eur',
+        //     'active' => 1,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>1995, 'active'=>1],
+        //         ['month'=>3, 'amount'=>5795, 'active'=>1],
+        //         ['month'=>6, 'amount'=>11495, 'active'=>1],
+        //         ['month'=>12, 'amount'=>22895, 'active'=>0],
+        //     ]
+        // );
+
+        //  $product_eu_platinum = array(
+        //     'id' => 'eu_platinum_20000',
+        //     'name' => 'PLATINUM PRO',
+        //     'points' => 20000,
+        //     'region' => 'eu',
+        //     'currency' => 'eur',
+        //     'active' => 1,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>2695, 'active'=>1],
+        //         ['month'=>3, 'amount'=>7795, 'active'=>1],
+        //         ['month'=>6, 'amount'=>25595, 'active'=>1],
+        //         ['month'=>12, 'amount'=>31095, 'active'=>0],
+        //     ]
+        // );
+
+        $product_eu_basic = array(
+            'id' => 'eu_basic',
+            'name' => 'BASIC',
+            'description' => '5MB / per month',
+            'points' => 5,
             'region' => 'eu',
             'currency' => 'eur',
-            'active' => 0,
+            'active' => 1,
             'plans' => [
-                // ['id'=>'eu_2500_1m', 'interval'=>'month', 'interval_count'=>1, 'amount'=>895, 'active'=>1],
-                // ['id'=>'eu_2500_3m', 'interval'=>'month', 'interval_count'=>3, 'amount'=>2495, 'active'=>1],
-                // ['id'=>'eu_2500_6m', 'interval'=>'month', 'interval_count'=>6, 'amount'=>4895, 'active'=>1],
-                // ['id'=>'eu_2500_12m', 'interval'=>'month', 'interval_count'=>12, 'amount'=>9695, 'active'=>0],
-                ['month'=>1, 'amount'=>895, 'active'=>1],
-                ['month'=>3, 'amount'=>2495, 'active'=>1],
-                ['month'=>6, 'amount'=>4895, 'active'=>1],
-                ['month'=>12, 'amount'=>9695, 'active'=>0],
+                ['month'=>1, 'amount'=>900, 'active'=>1],
+                ['month'=>3, 'amount'=>900*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>900*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>900*12*0.94, 'active'=>1],
+            ]
+        );
+
+        $product_eu_bronze = array(
+            'id' => 'eu_bronze',
+            'name' => 'BRONZE',
+            'description' => '500MB / per month',
+            'points' => 500,
+            'region' => 'eu',
+            'currency' => 'eur',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1900, 'active'=>1],
+                ['month'=>3, 'amount'=>1900*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>1900*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>1900*12*0.94, 'active'=>1],
             ]
         );
 
         $product_eu_silver = array(
-            'id' => 'eu_silver_5000',
+            'id' => 'eu_silver',
             'name' => 'SILVER',
-            'points' => 5000,
+            'description' => '1GB / per month',
+            'points' => 1024,
             'region' => 'eu',
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1295, 'active'=>1],
-                ['month'=>3, 'amount'=>3695, 'active'=>1],
-                ['month'=>6, 'amount'=>7295, 'active'=>1],
-                ['month'=>12, 'amount'=>14495, 'active'=>0],
+                ['month'=>1, 'amount'=>2300, 'active'=>1],
+                ['month'=>3, 'amount'=>2300*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>2300*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>2300*12*0.94, 'active'=>1],
             ]
         );
 
-         $product_eu_gold = array(
-            'id' => 'eu_gold_10000',
+        $product_eu_gold = array(
+            'id' => 'eu_gold',
             'name' => 'GOLD',
-            'points' => 10000,
+            'description' => '3GB / per month',
+            'points' => 3072,
             'region' => 'eu',
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1995, 'active'=>1],
-                ['month'=>3, 'amount'=>5795, 'active'=>1],
-                ['month'=>6, 'amount'=>11495, 'active'=>1],
-                ['month'=>12, 'amount'=>22895, 'active'=>0],
+                ['month'=>1, 'amount'=>3600, 'active'=>1],
+                ['month'=>3, 'amount'=>3600*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>3600*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>3600*12*0.94, 'active'=>1],
             ]
         );
 
-         $product_eu_platinum = array(
-            'id' => 'eu_platinum_20000',
-            'name' => 'PLATINUM PRO',
-            'points' => 20000,
-            'region' => 'eu',
-            'currency' => 'eur',
-            'active' => 1,
-            'plans' => [
-                ['month'=>1, 'amount'=>2695, 'active'=>1],
-                ['month'=>3, 'amount'=>7795, 'active'=>1],
-                ['month'=>6, 'amount'=>25595, 'active'=>1],
-                ['month'=>12, 'amount'=>31095, 'active'=>0],
-            ]
-        );
 
         /*------------------------------------------------------------------*/
         /* au */
-        $product_au_bronze = array(
-            'id' => 'au_bronze_2500',
-            'name' => 'BRONZE',
-            'points' => 2500,
+        // $product_au_bronze = array(
+        //     'id' => 'au_bronze_2500',
+        //     'name' => 'BRONZE',
+        //     'points' => 2500,
+        //     'region' => 'au',
+        //     'currency' => 'aud',
+        //     'active' => 0,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>895, 'active'=>1],
+        //         ['month'=>3, 'amount'=>2495, 'active'=>1],
+        //         ['month'=>6, 'amount'=>4895, 'active'=>1],
+        //         ['month'=>12, 'amount'=>9695, 'active'=>0],
+        //     ]
+        // );
+
+        // $product_au_silver = array(
+        //     'id' => 'au_silver_5000',
+        //     'name' => 'SILVER',
+        //     'points' => 5000,
+        //     'region' => 'au',
+        //     'currency' => 'aud',
+        //     'active' => 1,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>1295, 'active'=>1],
+        //         ['month'=>3, 'amount'=>3695, 'active'=>1],
+        //         ['month'=>6, 'amount'=>7295, 'active'=>1],
+        //         ['month'=>12, 'amount'=>14495, 'active'=>0],
+        //     ]
+        // );
+
+        // $product_au_gold = array(
+        //     'id' => 'au_gold_10000',
+        //     'name' => 'GOLD',
+        //     'points' => 10000,
+        //     'region' => 'au',
+        //     'currency' => 'aud',
+        //     'active' => 1,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>1995, 'active'=>1],
+        //         ['month'=>3, 'amount'=>5795, 'active'=>1],
+        //         ['month'=>6, 'amount'=>11495, 'active'=>1],
+        //         ['month'=>12, 'amount'=>22895, 'active'=>0],
+        //     ]
+        // );
+
+        // $product_au_platinum = array(
+        //     'id' => 'au_platinum_20000',
+        //     'name' => 'PLATINUM PRO',
+        //     'points' => 20000,
+        //     'region' => 'au',
+        //     'currency' => 'aud',
+        //     'active' => 1,
+        //     'plans' => [
+        //         ['month'=>1, 'amount'=>2695, 'active'=>1],
+        //         ['month'=>3, 'amount'=>7795, 'active'=>1],
+        //         ['month'=>6, 'amount'=>25595, 'active'=>1],
+        //         ['month'=>12, 'amount'=>31095, 'active'=>0],
+        //     ]
+        // );
+
+        $product_au_basic = array(
+            // 'id' => 'au_bronze_5m',
+            'id' => 'au_basic',
+            'name' => 'BASIC',
+            'description' => '5MB / per month',
+            'points' => 5,
             'region' => 'au',
             'currency' => 'aud',
-            'active' => 0,
+            'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>895, 'active'=>1],
-                ['month'=>3, 'amount'=>2495, 'active'=>1],
-                ['month'=>6, 'amount'=>4895, 'active'=>1],
-                ['month'=>12, 'amount'=>9695, 'active'=>0],
+                ['month'=>1, 'amount'=>900, 'active'=>1],
+                ['month'=>3, 'amount'=>900*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>900*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>900*12*0.94, 'active'=>1],
+            ]
+        );
+
+        $product_au_bronze = array(
+            'id' => 'au_bronze',
+            'name' => 'BRONZE',
+            'description' => '500MB / per month',
+            'points' => 500,
+            'region' => 'au',
+            'currency' => 'aud',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1900, 'active'=>1],
+                ['month'=>3, 'amount'=>1900*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>1900*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>1900*12*0.94, 'active'=>1],
             ]
         );
 
         $product_au_silver = array(
-            'id' => 'au_silver_5000',
+            'id' => 'au_silver',
             'name' => 'SILVER',
-            'points' => 5000,
+            'description' => '1GB / per month',
+            'points' => 1024,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1295, 'active'=>1],
-                ['month'=>3, 'amount'=>3695, 'active'=>1],
-                ['month'=>6, 'amount'=>7295, 'active'=>1],
-                ['month'=>12, 'amount'=>14495, 'active'=>0],
+                ['month'=>1, 'amount'=>2300, 'active'=>1],
+                ['month'=>3, 'amount'=>2300*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>2300*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>2300*12*0.94, 'active'=>1],
             ]
         );
 
-         $product_au_gold = array(
-            'id' => 'au_gold_10000',
+        $product_au_gold = array(
+            'id' => 'au_gold',
             'name' => 'GOLD',
-            'points' => 10000,
+            'description' => '3GB / per month',
+            'points' => 3072,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1995, 'active'=>1],
-                ['month'=>3, 'amount'=>5795, 'active'=>1],
-                ['month'=>6, 'amount'=>11495, 'active'=>1],
-                ['month'=>12, 'amount'=>22895, 'active'=>0],
+                ['month'=>1, 'amount'=>3600, 'active'=>1],
+                ['month'=>3, 'amount'=>3600*3*0.98, 'active'=>1],
+                ['month'=>6, 'amount'=>3600*6*0.96, 'active'=>1],
+                ['month'=>12, 'amount'=>3600*12*0.94, 'active'=>1],
             ]
         );
 
-         $product_au_platinum = array(
-            'id' => 'au_platinum_20000',
-            'name' => 'PLATINUM PRO',
-            'points' => 20000,
-            'region' => 'au',
-            'currency' => 'aud',
-            'active' => 1,
-            'plans' => [
-                ['month'=>1, 'amount'=>2695, 'active'=>1],
-                ['month'=>3, 'amount'=>7795, 'active'=>1],
-                ['month'=>6, 'amount'=>25595, 'active'=>1],
-                ['month'=>12, 'amount'=>31095, 'active'=>0],
-            ]
-        );
-
-         if ($type == 1) {
+        if ($type == 1) {
             /* eu */
-            $this->build_product($product_eu_bronze);
-            $this->build_product($product_eu_silver);
-            $this->build_product($product_eu_gold);
-            $this->build_product($product_eu_platinum);
+            // $this->build_product($product_eu_bronze);
+            // $this->build_product($product_eu_silver);
+            // $this->build_product($product_eu_gold);
+            // $this->build_product($product_eu_platinum);
 
             /* au */
-            $this->build_product($product_au_bronze);
-            $this->build_product($product_au_silver);
-            $this->build_product($product_au_gold);
-            $this->build_product($product_au_platinum);
+            // $this->build_product($product_au_bronze);
+            // $this->build_product($product_au_silver);
+            // $this->build_product($product_au_gold);
+            // $this->build_product($product_au_platinum);
 
-         } if ($type == 2) {
+            $this->build_product2($product_au_basic);
+            $this->build_product2($product_au_bronze);
+            $this->build_product2($product_au_silver);
+            $this->build_product2($product_au_gold);
+
+            $this->build_product2($product_eu_basic);
+            $this->build_product2($product_eu_bronze);
+            $this->build_product2($product_eu_silver);
+            $this->build_product2($product_eu_gold);
+
+        } if ($type == 2) {
             /* eu */
-            $this->build_stripe($product_eu_bronze);
-            $this->build_stripe($product_eu_silver);
-            $this->build_stripe($product_eu_gold);
-            $this->build_stripe($product_eu_platinum);
+            // $this->build_stripe($product_eu_bronze);
+            // $this->build_stripe($product_eu_silver);
+            // $this->build_stripe($product_eu_gold);
+            // $this->build_stripe($product_eu_platinum);
 
             /* au */
-            $this->build_stripe($product_au_bronze);
-            $this->build_stripe($product_au_silver);
-            $this->build_stripe($product_au_gold);
-            $this->build_stripe($product_au_platinum);
-         }
+            // $this->build_stripe($product_au_bronze);
+            // $this->build_stripe($product_au_silver);
+            // $this->build_stripe($product_au_gold);
+            // $this->build_stripe($product_au_platinum);
+
+            $this->build_stripe2($product_au_basic);
+            $this->build_stripe2($product_au_bronze);
+            $this->build_stripe2($product_au_silver);
+            $this->build_stripe2($product_au_gold);
+
+            $this->build_stripe2($product_eu_basic);
+            $this->build_stripe2($product_eu_bronze);
+            $this->build_stripe2($product_eu_silver);
+            $this->build_stripe2($product_eu_gold);
+        }
 
 return 'build...OK #'.$type;
 

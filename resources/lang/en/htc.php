@@ -132,6 +132,7 @@ return [
         'SD Card'               => 'SD Card',
         'Temperature'           => 'Temperature',
         'Plan Points'           => 'Plan Points',
+        'Plan Total'            => 'Plan Total',
 
     'More Info'                 => 'More Info',
         'Module ID'             => 'Module ID',
@@ -142,6 +143,7 @@ return [
         'MCU'                   => 'MCU',
         'Last Connection'       => 'Last Connection',
         'Points Used'           => 'Points Used',
+        'Plan Used'             => 'Plan Used',
 
     'Live Settings'             => 'Live Settings (currently on camera)',
         'Last Downloaded'       => 'Last Downloaded',

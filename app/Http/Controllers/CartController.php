@@ -122,8 +122,9 @@ class CartController extends Controller
 
             // SILVER - 5000 Points per Month
             // 12.95 per Month
-            // $title = $region[$product->region].' '.$product->title;
-            $title = $product->title.' - '.$product->points.' '.$this->ts('Points per Month');
+            // // $title = $region[$product->region].' '.$product->title;
+            // $title = $product->title.' - '.$product->points.' '.$this->ts('Points per Month');
+            $title = $product->title.' - '.$product->description;
             $title .= ' <img src="'.$txt_region.'" width="30" style="margin-bottom:10px;"/>';
             if ($month == 1) {
                 $txtMonth = 'per Month';

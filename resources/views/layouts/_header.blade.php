@@ -22,8 +22,7 @@
                     <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo.png" alt="logo" />
 @elseif (env('APP_REGION') == 'au')
                     <!-- <h2><span style="color: #E65A06;">RT</span>BaseControl</h2> -->
-                    <!-- <h2><span style="color: #E65A06;">RT</span><span style="color: #636161;">BaseControl</span></h2> -->
-                    <h2>{{ env('APP_NAME') }}</h2>
+                    <h2><span style="color: #E65A06;">RT</span><span style="color: #636161;">BaseControl</span></h2>
 @elseif (env('APP_REGION') == 'tw')
                     <!-- <img class="main-logo" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" /> -->
                     <img class="main-logo" style="padding-top: 8px;" width="300" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
@@ -124,18 +123,22 @@
                     <li class=""><a href="{{ route('login') }}">{{ trans('htc.Login') }}</a></li>
 @endif
 
+@if (env('APP_REGION') == 'au')
+
+@else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                              {{ trans('htc.Language') }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>
-@if (env('APP_REGION') == 'de')
+                            @if (env('APP_REGION') == 'de')
                             <li><a href="{{ route('language.de') }}">German</a></li>
-@elseif (env('APP_REGION') == 'tw')
+                            @elseif (env('APP_REGION') == 'tw')
                             <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
-@elseif (env('APP_REGION') == 'cn' || env('APP_REGION') == 'au')
+                            @elseif (env('APP_REGION') == 'cn')
                             <li><a href="{{ route('language.cn') }}">简体中文</a></li>
+                            @endif
 @endif
                         </ul>
                     </li>

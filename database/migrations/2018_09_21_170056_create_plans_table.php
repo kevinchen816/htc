@@ -37,8 +37,8 @@ class CreatePlansTable extends Migration
 
             // $table->float('points')->default(0);
             // $table->float('points_used')->default(0);
-            $table->decimal('points', 10, 2)->default(0);
-            $table->decimal('points_used', 10, 2)->default(0);
+            $table->decimal('points', 14, 2)->default(0);
+            $table->decimal('points_used', 14, 2)->default(0);
 
             // $table->integer('sms')->default(0);
             $table->integer('sms_sent')->default(0);
