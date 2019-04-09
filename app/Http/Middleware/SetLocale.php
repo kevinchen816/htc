@@ -34,7 +34,7 @@ class SetLocale
         // }
 
         // $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW', 'de');
-        if (env('APP_REGION') == 'de') {
+        if (env('APP_REGION') == 'eu') {
             $langArray = array('en', 'de');
         } else if (env('APP_REGION') == 'au') {
             $langArray = array('en');

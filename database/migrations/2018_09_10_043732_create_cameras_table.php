@@ -39,9 +39,12 @@ class CreateCamerasTable extends Migration
             } else if (env('APP_REGION') == 'cn') {
                 $table->string('region')->nullable()->default('CN');
                 $table->string('timezone')->nullable()->default('Asia/Shanghai');
-            } else if (env('APP_REGION') == 'de') {
+            } else if (env('APP_REGION') == 'eu') {
                 $table->string('region')->nullable()->default('EU');
                 $table->string('timezone')->nullable()->default('Europe/Berlin');
+            } else if (env('APP_REGION') == 'au') {
+                $table->string('region')->nullable()->default('AU');
+                $table->string('timezone')->nullable()->default('Australia/Sydney');
             } else {
                 $table->string('region')->nullable()->default('USA');
                 $table->string('timezone')->nullable()->default('America/Los_Angeles');

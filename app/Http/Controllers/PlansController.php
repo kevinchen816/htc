@@ -101,7 +101,6 @@ class PlansController extends Controller
         }
         $iccid = $request->iccid;
 
-        // if (env('APP_REGION') == 'en' || env('APP_REGION') == 'de') {
         if (env('APP_TERMS')){
             if (!$request['agree-terms']) {
                // session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');

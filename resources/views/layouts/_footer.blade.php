@@ -10,7 +10,7 @@
                         </div>
                     </div>-->
 
-@if (env('APP_REGION') == 'de')
+@if (env('APP_REGION') == 'eu')
 <!--                     <div class="col-md-4 col-sm-4 footer-list-item">
                         <div class="address alert" style="background-color:#444; height: 200px;">
                             <p><strong>Vigilmax GmbH</strong></p>

@@ -18,7 +18,7 @@
                 <!-- <a class="navbar-brand" href="http://portal.vigilmax.de" target="_blank" title="VigilMax Home"> -->
                     <!-- <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" /> -->
 
-@if (env('APP_REGION') == 'de')
+@if (env('APP_REGION') == 'eu')
                     <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo.png" alt="logo" />
 @elseif (env('APP_REGION') == 'au')
                     <!-- <h2><span style="color: #E65A06;">RT</span>BaseControl</h2> -->
@@ -132,7 +132,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('language.en') }}">English</a></li>
-                            @if (env('APP_REGION') == 'de')
+                            @if (env('APP_REGION') == 'eu')
                             <li><a href="{{ route('language.de') }}">German</a></li>
                             @elseif (env('APP_REGION') == 'tw')
                             <li><a href="{{ route('language.tw') }}">繁體中文</a></li>
