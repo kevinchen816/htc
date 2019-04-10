@@ -1784,12 +1784,12 @@ class CamerasController extends Controller
                     //     $ret['err'] = 0;
                     //     $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_WILL_EXPIRE);
                     } else {
-                        if (env('APP_POINTS')) {
+                        if (env('APP_USE_POINTS')) {
                             $plan_total = $plan->points;
                             $plan_used = $plan->points_used;
                         } else {
-                            $plan_total = $plan->points*1024*1024;
-                            $plan_used = $plan->points_used;
+                            $plan_total = $plan->plans*1024*1024;
+                            $plan_used = $plan->plans_used;
                         }
 
                         // if ($plan->points_used < $plan->points) {
@@ -1822,50 +1822,52 @@ class CamerasController extends Controller
 
     public function Plan_Update($param, $original = 0) {
         $points = 0;
-
-        if (env('APP_POINTS')) {
-            $point_photo_thumb = array(
-                array( 1.0,  1.5 ,  2.0 ),  // 1
-                array( 2.5,  3.25,  4.25),  // 2
-                array( 4.0,  6.75,  8.25),  // 3
-                array( 7.0, 10.0 , 14.5 ),  // 4
-                array(13.0, 15.5 , 19.5 ),  // 5
-            );
-
-            $point_video_thumb = array(1.0, 2.0, 3.0, 6.0, 10.0);
-
-            $resolution = (integer) ($param->upload_resolution);
-            if (isset($param->photo_quality)) {
-                $quality = (integer) ($param->photo_quality);
-            } else {
-                $quality = 1;
-            }
-            // $points = 0;
-
-            if ($original) {
-                $points = $param->filesize/(30*1024);
-            } else {
-                if ($resolution >= 8) {
-                    $resolution -= 8;
-                    $points = $point_video_thumb[$resolution];
-                } else if ($resolution == 6) {
-                    $points = $param->filesize/(30*1024);
-                } else {
-                    $resolution -= 1;
-                    $quality -= 1;
-                    $points = $point_photo_thumb[$resolution][$quality];
-                }
-            }
-
-        } else {
-            $points = $param->filesize;
-        }
-
         $plans = DB::table('plans')->where('iccid', $param['iccid']);
         $plan = $plans->first();
         if ($plan) {
-            $data['points_used'] = $plan->points_used + $points;
-            $plans->update($data);
+            // if (env('APP_USE_POINTS')) {
+                $point_photo_thumb = array(
+                    array( 1.0,  1.5 ,  2.0 ),  // 1
+                    array( 2.5,  3.25,  4.25),  // 2
+                    array( 4.0,  6.75,  8.25),  // 3
+                    array( 7.0, 10.0 , 14.5 ),  // 4
+                    array(13.0, 15.5 , 19.5 ),  // 5
+                );
+
+                $point_video_thumb = array(1.0, 2.0, 3.0, 6.0, 10.0);
+
+                $resolution = (integer) ($param->upload_resolution);
+                if (isset($param->photo_quality)) {
+                    $quality = (integer) ($param->photo_quality);
+                } else {
+                    $quality = 1;
+                }
+                // $points = 0;
+
+                if ($original) {
+                    $points = $param->filesize/(30*1024);
+                } else {
+                    if ($resolution >= 8) {
+                        $resolution -= 8;
+                        $points = $point_video_thumb[$resolution];
+                    } else if ($resolution == 6) {
+                        $points = $param->filesize/(30*1024);
+                    } else {
+                        $resolution -= 1;
+                        $quality -= 1;
+                        $points = $point_photo_thumb[$resolution][$quality];
+                    }
+                }
+
+                $data['points_used'] = $plan->points_used + $points;
+                $data['plans_used'] = $plan->plans_used + $param->filesize;
+                $plans->update($data);
+
+            // } else {
+            //    $points = $param->filesize;
+            //    $data['plans_used'] = $plan->plans_used + $points;
+            //    $plans->update($data);
+            // }
         }
 
         //return $plan;
@@ -1961,6 +1963,7 @@ class CamerasController extends Controller
             if ($param->Source != 'setup') {
                 $data['arm_photos'] = $camera->arm_photos+1;
                 $data['arm_points'] = $camera->arm_points + $param->points;
+                $data['arm_plans'] = $camera->arm_plans + $param->filesize;
             }
 
         } else {
@@ -1984,6 +1987,7 @@ class CamerasController extends Controller
             $data['last_armed'] = $datetime;
             $data['arm_photos'] = 0;
             $data['arm_points'] = 0;
+            $data['arm_plans'] = 0;
             $data['log'] = 0;
 
         } else if ($api_type == 'report') {
@@ -3579,17 +3583,18 @@ return $ret;
             $txt .= $this->ovItemShow('SD Card', 'unknown');
         }
 
-
         $txt .= $this->ovItemShow('Temperature', $camera->temperature);
         //$txt .= $this->ovItemShow('Temperature', '&#176;C');
 
         $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
         if ($plan->points > 0) {
-            // $percent_plan_used = round(($plan->points_used/$plan->points)*100, 4);
-
-            // $plan_used_mb = $plan->points_used/(1024*1024);
-            $plan_used_mb = round($plan->points_used/(1024*1024), 2);
-            $percent_plan_used = round(($plan_used_mb/$plan->points)*100, 2);
+            if (env('APP_USE_POINTS')) {
+                $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+            } else {
+                // $plan_used_mb = $plan->points_used/(1024*1024);
+                $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+            }
 
             $percent_plan_avail = 100-$percent_plan_used;
 
@@ -3603,7 +3608,11 @@ return $ret;
             $plan_points .=     '</div>';
             $plan_points .= '</div>';
 
-            $txt .= $this->ovItemShow('Plan Points', $plan_points);
+            if (env('APP_USE_POINTS')) {
+                $txt .= $this->ovItemShow('Plan Points', $plan_points);
+            } else {
+                $txt .= $this->ovItemShow('Data Plan', $plan_points);
+            }
         }
         //$points_reserve  = '30.00 (20000.00 points)';
         //$points_reserve .= '<br /><a href="/plans/buy-reserve/7" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Buy Reserve (<i class="fa fa-dollar-sign"></i>10)</a>';
@@ -3620,15 +3629,15 @@ return $ret;
 
         $plan_total = $plan_used = 0;
         if ($plan->points > 0) {
-            if (env('APP_POINTS')) {
-                $plan_total = $plan->points;
+            if (env('APP_USE_POINTS')) {
+                $point_total = $plan->points;
                 $percent = round(($plan->points_used/$plan->points)*100, 4);
-                $plan_used = $plan->points_used.' ('.$percent.'%)';
+                $point_used = $plan->points_used.' ('.$percent.'%)';
             } else {
-                $plan_total = sprintf('%d MB', $plan->points);
+                $plan_total = sprintf('%d MB', $plan->plans);
 
-                $plan_used_mb = round($plan->points_used/(1024*1024), 2);
-                $percent = round(($plan_used_mb/$plan->points)*100, 2);
+                $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                $percent = round(($plan_used_mb/$plan->plans)*100, 2);
                 $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
             }
         }
@@ -3640,12 +3649,12 @@ return $ret;
         $txt .= $this->ovItemShow('Firmware', $camera->dsp_version);
         $txt .= $this->ovItemShow('MCU', $camera->mcu_version);
         $txt .= $this->ovItemShow('Last Connection', $camera->cellular);
-        if (env('APP_POINTS')) {
-            $txt .= $this->ovItemShow('Plan Points', $plan_total);
-            $txt .= $this->ovItemShow('Points Used', $plan_used);
+        if (env('APP_USE_POINTS')) {
+            $txt .= $this->ovItemShow('Plan Points', $point_total);
+            $txt .= $this->ovItemShow('Points Used', $point_used);
         } else {
-            $txt .= $this->ovItemShow('Plan Total', $plan_total);
-            $txt .= $this->ovItemShow('Plan Used', $plan_used);
+            $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
+            $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
         }
         return $txt;
     }
@@ -3760,11 +3769,11 @@ return $ret;
         $txt .= $this->ovItemShow('Last Armed', $this->_user_dateformat($user, $camera->last_armed));
         $txt .= $this->ovItemShow('Uploads since armed', $camera->arm_photos);
 
-        if (env('APP_POINTS')) {
+        if (env('APP_USE_POINTS')) {
             $txt .= $this->ovItemShow('Points since armed', $camera->arm_points);
         } else {
-            $armed_used_mb = round($camera->arm_points/(1024*1024), 2).' MB';
-            $txt .= $this->ovItemShow('Size since armed', $armed_used_mb);
+            $armed_used_mb = round($camera->arm_plans/(1024*1024), 2).' MB';
+            $txt .= $this->ovItemShow('Data since armed', $armed_used_mb);
         }
         $txt .= $this->ovItemShow('Last Heartbeat', $this->_user_dateformat($user, $camera->last_hb));
         $txt .= $this->ovItemShow('Last Photo', $this->_user_dateformat($user, $camera->last_photo));
@@ -3841,7 +3850,7 @@ return $ret;
 
             if ($photo->filetype == 2) {
                 // PICT0004.MP4 | 10/16/2018 9:13:31 am | Time Lapse | Standard Low | Points: 2.00 (Video Cost: 0 pts)
-                if (env('APP_POINTS')) {
+                if (env('APP_USE_POINTS')) {
                     $caption = sprintf('%s | %s | %s | %s | Points: %.2f', $photo->filename, $photo_datetime, $source, $resolution, $photo->points);
                 } else {
                     $file_size_mb = round($photo->filesize/(1024*1024), 2);
@@ -3849,7 +3858,7 @@ return $ret;
                 }
             } else {
                 // PICT0055.JPG | 10/15/2018 6:14:02 am | Menu       | Standard Low (Q=Standard) | Points: 1.00
-                if (env('APP_POINTS')) {
+                if (env('APP_USE_POINTS')) {
                     $caption = sprintf('%s | %s | %s | %s (Q=%s) | Points: %.2f', $photo->filename, $photo_datetime, $source, $resolution, $quality, $photo->points);
                 } else {
                     $file_size_mb = round($photo->filesize/(1024*1024), 2);

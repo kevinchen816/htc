@@ -262,6 +262,28 @@ class PlanProductsController extends Controller
         }
     }
 
+    public function build_stripe_test($p) {
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        \Stripe\Product::create([
+          'id' => $p['id'],     //'eu_silver_5000',
+          'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
+          'type' => 'service',
+        ]);
+
+        foreach ($p['plans'] as $plan) {
+            $plan_id = $p['id'].'_'.$plan['month'].'d'; // 'au_basic_1m'
+            \Stripe\Plan::create([
+                'product' => $p['id'],
+                'id' => $plan_id,
+                'interval' => 'day',
+                'interval_count' => $plan['month'], // 1,
+                'currency' => $p['currency'],       // 'usd',
+                'amount' => $plan['amount'],        // 1295,
+            ]);
+        }
+    }
+
     public function build_product($p) {
         $plan_product_id = DB::table("plan_products")->insertGetId([
             'region' => $p['region'],
@@ -301,12 +323,36 @@ class PlanProductsController extends Controller
             'title' => $p['name'],
             'description' => $p['description'],
             'points' => $p['points'],
+            'data_plans' => $p['data_plans'],
             'active' => $p['active']
         ]);
 
         foreach ($p['plans'] as $plan) {
             // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
             $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+            DB::table('plan_product_skus')->insert([
+                'plan_product_id' => $plan_product_id,
+                'sub_plan' => $plan_id,
+                'month' => $plan['month'],
+                'price' => $plan['amount']/100,
+                'active' => $plan['active']
+            ]);
+        }
+    }
+
+    public function build_product_test($p) {
+        $plan_product_id = DB::table("plan_products")->insertGetId([
+            'region' => $p['region'],
+            'currency' => $p['currency'],
+            'title' => $p['name'],
+            'description' => $p['description'],
+            'points' => $p['points'],
+            'data_plans' => $p['data_plans'],
+            'active' => $p['active']
+        ]);
+
+        foreach ($p['plans'] as $plan) {
+            $plan_id = $p['id'].'_'.$plan['month'].'d'; // 'au_basic_1m'
             DB::table('plan_product_skus')->insert([
                 'plan_product_id' => $plan_product_id,
                 'sub_plan' => $plan_id,
@@ -387,7 +433,8 @@ class PlanProductsController extends Controller
             'id' => 'eu_basic',
             'name' => 'BASIC',
             'description' => '5MB / per month',
-            'points' => 5,
+            'points' => 100,
+            'data_plans' => 5,
             'region' => 'eu',
             'currency' => 'eur',
             'active' => 1,
@@ -403,7 +450,8 @@ class PlanProductsController extends Controller
             'id' => 'eu_bronze',
             'name' => 'BRONZE',
             'description' => '500MB / per month',
-            'points' => 500,
+            'points' => 10000,
+            'data_plans' => 500,
             'region' => 'eu',
             'currency' => 'eur',
             'active' => 1,
@@ -419,7 +467,8 @@ class PlanProductsController extends Controller
             'id' => 'eu_silver',
             'name' => 'SILVER',
             'description' => '1GB / per month',
-            'points' => 1024,
+            'points' => 20000,
+            'data_plans' => 1024,
             'region' => 'eu',
             'currency' => 'eur',
             'active' => 1,
@@ -435,7 +484,8 @@ class PlanProductsController extends Controller
             'id' => 'eu_gold',
             'name' => 'GOLD',
             'description' => '3GB / per month',
-            'points' => 3072,
+            'points' => 60000,
+            'data_plans' => 3072,
             'region' => 'eu',
             'currency' => 'eur',
             'active' => 1,
@@ -447,6 +497,22 @@ class PlanProductsController extends Controller
             ]
         );
 
+        $product_eu_test = array(
+            'id' => 'eu_test',
+            'name' => 'TEST',
+            'description' => '5GB / per day',
+            'points' => 100000,
+            'data_plans' => 5000,
+            'region' => 'eu',
+            'currency' => 'eur',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1, 'active'=>1],
+                ['month'=>2, 'amount'=>2, 'active'=>1],
+                ['month'=>3, 'amount'=>3, 'active'=>1],
+                ['month'=>7, 'amount'=>7, 'active'=>1],
+            ]
+        );
 
         /*------------------------------------------------------------------*/
         /* au */
@@ -515,7 +581,8 @@ class PlanProductsController extends Controller
             'id' => 'au_basic',
             'name' => 'BASIC',
             'description' => '5MB / per month',
-            'points' => 5,
+            'points' => 100,
+            'data_plans' => 5,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
@@ -531,7 +598,8 @@ class PlanProductsController extends Controller
             'id' => 'au_bronze',
             'name' => 'BRONZE',
             'description' => '500MB / per month',
-            'points' => 500,
+            'points' => 10000,
+            'data_plans' => 500,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
@@ -547,7 +615,8 @@ class PlanProductsController extends Controller
             'id' => 'au_silver',
             'name' => 'SILVER',
             'description' => '1GB / per month',
-            'points' => 1024,
+            'points' => 20000,
+            'data_plans' => 1024,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
@@ -563,7 +632,8 @@ class PlanProductsController extends Controller
             'id' => 'au_gold',
             'name' => 'GOLD',
             'description' => '3GB / per month',
-            'points' => 3072,
+            'points' => 60000,
+            'data_plans' => 3072,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
@@ -572,6 +642,23 @@ class PlanProductsController extends Controller
                 ['month'=>3, 'amount'=>3600*3*0.98, 'active'=>1],
                 ['month'=>6, 'amount'=>3600*6*0.96, 'active'=>1],
                 ['month'=>12, 'amount'=>3600*12*0.94, 'active'=>1],
+            ]
+        );
+
+        $product_au_test = array(
+            'id' => 'au_test',
+            'name' => 'TEST',
+            'description' => '5GB / per day',
+            'points' => 100000,
+            'data_plans' => 5000,
+            'region' => 'au',
+            'currency' => 'aud',
+            'active' => 1,
+            'plans' => [
+                ['month'=>1, 'amount'=>1, 'active'=>1],
+                ['month'=>2, 'amount'=>2, 'active'=>1],
+                ['month'=>3, 'amount'=>3, 'active'=>1],
+                ['month'=>7, 'amount'=>7, 'active'=>1],
             ]
         );
 
@@ -601,7 +688,7 @@ class PlanProductsController extends Controller
                 $this->build_product2($product_eu_gold);
             }
 
-        } if ($type == 2) {
+        } else if ($type == 2) {
             /* eu */
             // $this->build_stripe($product_eu_bronze);
             // $this->build_stripe($product_eu_silver);
@@ -623,6 +710,17 @@ class PlanProductsController extends Controller
             $this->build_stripe2($product_eu_bronze);
             $this->build_stripe2($product_eu_silver);
             $this->build_stripe2($product_eu_gold);
+
+        } else if ($type == 3) {
+            if (env('APP_REGION') == 'au') {
+                $this->build_product_test($product_au_test);
+            } else if (env('APP_REGION') == 'eu') {
+                $this->build_product_test($product_eu_test);
+            }
+
+        } else if ($type == 4) {
+            $this->build_stripe_test($product_au_test);
+            $this->build_stripe_test($product_eu_test);
         }
 
 return 'build...OK #'.$type;

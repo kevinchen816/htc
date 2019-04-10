@@ -34,6 +34,7 @@ class CreateOrderItemsTable extends Migration
             $table->string('iccid')->nullable();
             $table->string('sub_plan')->nullable();
             $table->integer('points')->default(0);
+            $table->integer('data_plans')->default(0);
             $table->integer('month')->default(0);
 
             // $table->timestamps();

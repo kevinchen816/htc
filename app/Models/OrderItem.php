@@ -12,7 +12,7 @@ class OrderItem extends Model
 {
     protected $fillable = [
         'quantity', 'price',
-        'iccid', 'sub_plan', 'points', 'month',
+        'iccid', 'sub_plan', 'points', 'data_plans', 'month',
         // 'rating', 'review', 'reviewed_at'
     ];
     // protected $dates = ['reviewed_at'];

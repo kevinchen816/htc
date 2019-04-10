@@ -33,7 +33,8 @@ class CreatePhotosTable extends Migration
             $table->integer('filesize')->nullable();
 
             $table->integer('resolution')->nullable(); //$table->string('upload_resolution');
-            $table->float('points')->default(0);
+            // $table->float('points')->default(0);
+            $table->decimal('points', 10, 2)->default(0);
 
             /* photo */
             $table->integer('photo_quality')->nullable();

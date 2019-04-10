@@ -138,7 +138,9 @@ class CreateCamerasTable extends Migration
             $table->dateTime('last_armed')->nullable();
             $table->integer('arm_photos')->default(0);          // Photos since armed
             // $table->float('arm_points')->default(0);         // Points since armed
-            $table->decimal('arm_points', 14, 2)->default(0);
+            $table->decimal('arm_points', 10, 2)->default(0);
+            $table->bigInteger('arm_plans')->default(0);
+
             $table->string('last_filename')->nullable();
             $table->string('last_savename')->nullable();
 

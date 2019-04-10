@@ -189,13 +189,26 @@ class AccountsController extends Controller
         foreach ($plans as $plan) {
             $plan_style = $plan->style ? $plan->style : 'test';
 
-            $plan_total = sprintf('%d MB', $plan->points);
+            if (env('APP_USE_POINTS')) {
+                $plan_total = sprintf('%d', $plan->points);
 
-            $plan_used_mb = round($plan->points_used/(1024*1024), 2);
-            $percent = round(($plan_used_mb/$plan->points)*100, 2);
-            $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
+                if ($plan->points) {
+                    $percent = round(($plan->points_used/$plan->points)*100, 2);
+                    $plan_used = sprintf('%.2f (%.2f %%)', $plan->points_used, $percent);
+                } else {
+                    $plan_used = ''; //sprintf('%.2f', $plan->points_used);
+                }
 
-            // $plan_used = sprintf('%.2f MB', $plan_used_mb);
+            } else {
+                $plan_total = sprintf('%d MB', $plan->plans);
+                $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                if ($plan->plans) {
+                    $percent = round(($plan_used_mb/$plan->plans)*100, 2);
+                    $plan_used = sprintf('%.2f MB (%.2f %%)', $plan_used_mb, $percent);
+                } else {
+                    $plan_used = ''; //sprintf('%.2f MB', $plan_used_mb);
+                }
+            }
 
             // $sku = PlanProductSku::find($plan->plan_product_sku_id);
             $sku = PlanProductSku::where('sub_plan', $plan->sub_plan)->first(); // au_5000_1m

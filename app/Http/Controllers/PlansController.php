@@ -536,7 +536,12 @@ class PlansController extends Controller
                 } else {
                     $sku_month = 'for '.$sku->month.' Month';
                 }
-                // $cpp = '[cpp: '.($sku->price/$points).']'; //'[cpp: 0.00259]';
+
+                if (env('APP_USE_POINTS')) {
+                    $cpp = sprintf('[cpp: %.5f]', $sku->price/($product->points**$sku->month)); //'[cpp: 0.00259]';
+                } else {
+                    $cpp = sprintf('[cpM: %.3f]', $sku->price/($product->data_plans*$sku->month));
+                }
 
                 // $txt .=             '<div class="radio">';
                 // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
@@ -546,7 +551,9 @@ class PlansController extends Controller
                 $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku->id.'" >';
                 $txt .=                         '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
                 $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
-                // $txt .=                         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                if (env('APP_USE_POINTS')) {
+                    $txt .=                         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                }
                 $txt .=                 '</label>';
                 $txt .=             '</div>';
 
@@ -654,12 +661,19 @@ class PlansController extends Controller
                 } else {
                     $sku_month = 'for '.$sku->month.' Month';
                 }
-                // $cpp = '[cpp: '.($sku->price/$points).']'; //'[cpp: 0.00259]';
+
+                if (env('APP_USE_POINTS')) {
+                    $cpp = sprintf('[cpp: %.5f]', $sku->price/($product->points**$sku->month)); //'[cpp: 0.00259]';
+                } else {
+                    $cpp = sprintf('[cpM: %.3f]', $sku->price/($product->data_plans*$sku->month));
+                }
 
                 $txt .= '<p>';
                 $txt .=     '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
                 $txt .=     '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
-                // $txt .=  '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                if (env('APP_USE_POINTS')) {
+                    $txt .=  '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                }
                 $txt .= '</p>';
             }
             $txt .=         '</div>';

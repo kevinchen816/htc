@@ -332,6 +332,7 @@ class CartController extends Controller
         $sub_plan = $order_item['sub_plan'];
         $month = $order_item['month'];
         $points = $order_item['points'];
+        $data_plans = $order_item['data_plans'];
 
         $user = Auth::user();
         $plan = Plan::where('iccid', $iccid)->first();
@@ -347,7 +348,7 @@ class CartController extends Controller
 
         // $sub_end = Carbon::now()->addMonth($month)->timestamp;
         $pay_at = new Carbon($order->pay_at);
-        if ($sub_plan == 'au_5000_1d') {
+        if ($sub_plan == 'au_test_1d') {
             $sub_end = $pay_at->addDay(1)->timestamp; // for test
         } else {
             $sub_end = $pay_at->addMonth($month)->timestamp;
@@ -372,8 +373,13 @@ class CartController extends Controller
         if ($subscription) {
             if (($subscription->status == 'trialing')||($subscription->status == 'active')) {
                 $plan->status = 'active';
+
                 $plan->points = $points * $month;
                 $plan->points_used = 0;
+
+                $plan->plans = $data_plans * $month;
+                $plan->plans_used = 0;
+
                 $plan->sub_id = $subscription->id;
                 $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
                 $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
@@ -441,6 +447,7 @@ class CartController extends Controller
                 /* Plan Product */
                 $product = PlanProduct::find($sku->plan_product_id);
                 $points = $product->points;
+                $data_plans = $product->data_plans;
 
                 /* Create Order Item */
                 $item = $order->items()->make([
@@ -449,6 +456,7 @@ class CartController extends Controller
                     'iccid' => $iccid,
                     'sub_plan' => $sub_plan,
                     'points' => $points,
+                    'data_plans' => $data_plans,
                     'month' => $month,
                 ]);
                 $item->planProduct()->associate($sku->plan_product_id); // function name must be planProduct
@@ -459,7 +467,13 @@ class CartController extends Controller
                 // SILVER 5000 Points per Month - for 1 Month
                 // SILVER 5000 for 1 Month
                 $txt_month = ($month > 1) ? 'Months' : 'Month';
-                $description = $product->title.' '.$points.' Points per Month - for '.$month.' '.$txt_month;
+
+                if (env('APP_USE_POINTS')) {
+                    $description = $product->title.' '.$points.' Points per Month - for '.$month.' '.$txt_month;
+                } else {
+                    $description = $product->title.' '.$data_plans.' MB per Month - for '.$month.' '.$txt_month;
+                }
+
                 $amount = $quantity * $price;
                 $total_amount += $amount;
                 \Stripe\InvoiceItem::create([
