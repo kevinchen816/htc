@@ -507,10 +507,10 @@ class PlanProductsController extends Controller
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1, 'active'=>1],
-                ['month'=>2, 'amount'=>2, 'active'=>1],
-                ['month'=>3, 'amount'=>3, 'active'=>1],
-                ['month'=>7, 'amount'=>7, 'active'=>1],
+                ['month'=>1, 'amount'=>100, 'active'=>1],
+                ['month'=>2, 'amount'=>102, 'active'=>1],
+                ['month'=>3, 'amount'=>103, 'active'=>1],
+                ['month'=>7, 'amount'=>107, 'active'=>1],
             ]
         );
 
@@ -655,10 +655,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1, 'active'=>1],
-                ['month'=>2, 'amount'=>2, 'active'=>1],
-                ['month'=>3, 'amount'=>3, 'active'=>1],
-                ['month'=>7, 'amount'=>7, 'active'=>1],
+                ['month'=>1, 'amount'=>100, 'active'=>1],
+                ['month'=>2, 'amount'=>102, 'active'=>1],
+                ['month'=>3, 'amount'=>103, 'active'=>1],
+                ['month'=>7, 'amount'=>107, 'active'=>1],
             ]
         );
 
