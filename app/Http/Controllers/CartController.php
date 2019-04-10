@@ -511,16 +511,29 @@ class CartController extends Controller
             // echo $ret->charge.'<br/>';      // ch_1Di2cYG8UgnSL68U1YxHtDxP
             // echo $ret->paid.'<br/>';        // true
             // echo $ret->status.'<br/>';      // paid (draft, open, paid, uncollectible, or void)
+/*
+"id": "in_1ENkGxG8UgnSL68U7SZxSnjB"
+"billing": "charge_automatically"
+"charge": null
+"number": "38BFE108-0001"
+"status": "paid"
+*/
+// return dd($ret); // for debug
+
             if ($ret->status == 'paid') {
-                $result = $this->updateOrder($order, $ret->charge);
-                // if ($result == 'success') {
-                    $order = Order::where('no', $order->no)->first();
-                    $order_items = OrderItem::where('order_id', $order->id)->get();
-                    foreach ($order_items as $order_item) {
-                        $subscription = $this->createSubscription($order, $order_item);
-                        // if (!$subscription) { send email }
-                    }
-                // }
+                if ($ret->charge != null) {
+                    $result = $this->updateOrder($order, $ret->charge);
+                    // if ($result == 'success') {
+                        $order = Order::where('no', $order->no)->first();
+                        $order_items = OrderItem::where('order_id', $order->id)->get();
+                        foreach ($order_items as $order_item) {
+                            $subscription = $this->createSubscription($order, $order_item);
+                            // if (!$subscription) { send email }
+                        }
+                    // }
+                } else {
+                    session()->flash('danger', 'Invoice Charge Fail');
+                }
             } else { // ($ret->status == 'paid')
                 session()->flash('danger', 'Invoice Pay Fail');
             }
