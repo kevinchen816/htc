@@ -3589,11 +3589,19 @@ return $ret;
         $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
         if ($plan->points > 0) {
             if (env('APP_USE_POINTS')) {
-                $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+                if ($plan->points) {
+                    $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+                } else {
+                    $percent_plan_used = 100;
+                }
             } else {
-                // $plan_used_mb = $plan->points_used/(1024*1024);
-                $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
-                $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+                if ($plan->plans) {
+                    // $plan_used_mb = $plan->points_used/(1024*1024);
+                    $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                    $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+                } else {
+                    $percent_plan_used = 100;
+                }
             }
 
             $percent_plan_avail = 100-$percent_plan_used;
