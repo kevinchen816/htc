@@ -3635,18 +3635,21 @@ return $ret;
         $card_free = number_format(intval($camera->card_space)/1024, 2).'GB';
         $card_info = $card_free.' ('.$card_size.')';
 
-        $plan_total = $plan_used = 0;
+        $plan_total = $plan_used = '';
         if ($plan->points > 0) {
             if (env('APP_USE_POINTS')) {
                 $point_total = $plan->points;
-                $percent = round(($plan->points_used/$plan->points)*100, 4);
-                $point_used = $plan->points_used.' ('.$percent.'%)';
+                if ($plan->points) {
+                    $percent = round(($plan->points_used/$plan->points)*100, 4);
+                    $point_used = $plan->points_used.' ('.$percent.'%)';
+                }
             } else {
                 $plan_total = sprintf('%d MB', $plan->plans);
-
-                $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
-                $percent = round(($plan_used_mb/$plan->plans)*100, 2);
-                $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
+                if ($plan->plans) {
+                    $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                    $percent = round(($plan_used_mb/$plan->plans)*100, 2);
+                    $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
+                }
             }
         }
 
