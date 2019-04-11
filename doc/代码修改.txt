@@ -32,3 +32,8 @@
 
 \database\migrations\2018_12_10_215232_create_order_items_table.php
     增加 $table->integer('data_plans')->default(0);
+
+\database\migrations\2018_12_17_220907_create_plan_history_table.php
+    增加:
+    $table->integer('plans')->default(0);
+    $table->integer('plans_reserve')->default(0);

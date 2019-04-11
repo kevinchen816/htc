@@ -531,11 +531,11 @@ class PlansController extends Controller
                     $checked = ($sku->sub_plan == $select_sub_plan) ? 'checked' : '';
                 }
 
-                if ($sku->month == 1) {
-                    $sku_month = 'per Month';
-                } else {
-                    $sku_month = 'for '.$sku->month.' Month';
-                }
+                // if ($sku->month == 1) {
+                //     $sku_month = 'per Month';
+                // } else {
+                //     $sku_month = 'for '.$sku->month.' Month';
+                // }
 
                 if (env('APP_USE_POINTS')) {
                     $cpp = sprintf('[cpp: %.5f]', $sku->price/($product->points**$sku->month)); //'[cpp: 0.00259]';
@@ -546,16 +546,18 @@ class PlansController extends Controller
                 // $txt .=             '<div class="radio">';
                 // $txt .=                 '<label><input type="radio" name="tier" checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
                 // $txt .=             '</div>';
-                $txt .=             '<div class="radio">';
-                $txt .=                 '<label>';
-                $txt .=                     '<input type="radio" name="tier" '.$checked.' value="'.$sku->id.'" >';
-                $txt .=                         '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
-                $txt .=                         '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
+                $txt .= '<div class="radio">';
+                $txt .=     '<label>';
+                $txt .=         '<input type="radio" name="tier" '.$checked.' value="'.$sku->id.'" >';
+                $txt .=             '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
+
+                // $txt .=          '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
+                $txt .=             '<span style="color:lime;"> '.$sku->description.'</span>';
                 if (env('APP_USE_POINTS')) {
-                    $txt .=                         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
+                    $txt .=         '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
                 }
-                $txt .=                 '</label>';
-                $txt .=             '</div>';
+                $txt .=     '</label>';
+                $txt .= '</div>';
 
                 if ($mode == 'create') {
                     $checked = '';
@@ -571,61 +573,6 @@ class PlansController extends Controller
     public function html_SetupPlan($plan) {
         return 'html_SetupPlan';
     }
-
-    // public function html_SetupPlanX($plan) {
-    //     $txt = '';
-    //     $txt .= '<div class="alert alert-default alert-ratetier">';
-    //     $txt .=     '<div class="row">';
-    //     $txt .=         '<div class="col-md-5">';
-    //     $txt .=             '<div class="label-tier">SILVER</div>';
-    //     $txt .=             '<p class="tier-desc">5000 Points per Month</p>';
-    //     $txt .=         '</div>';
-    //     $txt .=         '<div class="col-md-7">';
-    //     $txt .=             '<div class="radio">';
-    //     $txt .=                 '<label><input type="radio" name="tier"  checked value="20" ><span style="color:white;">12.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00259]</span></label>';
-    //     $txt .=             '</div>';
-    //     $txt .=             '<div class="radio">';
-    //     $txt .=                 '<label><input type="radio" name="tier"  value="22" ><span style="color:white;">36.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00246]</span></label>';
-    //     $txt .=             '</div>';
-    //     $txt .=         '</div>';
-    //     $txt .=     '</div>';
-    //     $txt .= '</div>';
-
-    //     $txt .= '<div class="alert alert-default alert-ratetier">';
-    //     $txt .=     '<div class="row">';
-    //     $txt .=         '<div class="col-md-5">';
-    //     $txt .=             '<div class="label-tier">GOLD</div>';
-    //     $txt .=             '<p class="tier-desc">10000 Points per Month</p>';
-    //     $txt .=         '</div>';
-    //     $txt .=         '<div class="col-md-7">';
-    //     $txt .=             '<div class="radio">';
-    //     $txt .=                 '<label><input type="radio" name="tier"  value="24" ><span style="color:white;">19.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00200]</span></label>';
-    //     $txt .=             '</div>';
-    //     $txt .=             '<div class="radio">';
-    //     $txt .=                 '<label><input type="radio" name="tier"  value="26" ><span style="color:white;">57.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00193]</span></label>';
-    //     $txt .=             '</div>';
-    //     $txt .=         '</div>';
-    //     $txt .=     '</div>';
-    //     $txt .= '</div>';
-
-    //     $txt .= '<div class="alert alert-default alert-ratetier">';
-    //     $txt .=     '<div class="row">';
-    //     $txt .=         '<div class="col-md-5">';
-    //     $txt .=             '<div class="label-tier">PLATINUM PRO</div>';
-    //     $txt .=             '<p class="tier-desc">20000 Points per Month</p>';
-    //     $txt .=         '</div>';
-    //     $txt .=         '<div class="col-md-7">';
-    //     $txt .=             '<div class="radio">';
-    //     $txt .=                 '<label><input type="radio" name="tier"  value="28" ><span style="color:white;">26.95</span> <span style="color:lime;">per Month</span> <span style="color:red;">[cpp: 0.00135]</span></label>';
-    //     $txt .=             '</div>';
-    //     $txt .=             '<div class="radio">';
-    //     $txt .=                 '<label><input type="radio" name="tier"  value="30" ><span style="color:white;">77.95</span> <span style="color:lime;">for 3 Months</span> <span style="color:red;">[cpp: 0.00130]</span></label>';
-    //     $txt .=             '</div>';
-    //     $txt .=         '</div>';
-    //     $txt .=     '</div>';
-    //     $txt .= '</div>';
-    //     return $txt;
-    // }
 
     public function html_PlanInfo() {
         $region = env('APP_REGION');
@@ -656,11 +603,11 @@ class PlansController extends Controller
             $txt .=         '</div>';
             $txt .=         '<div class="col-md-7">';
             foreach ($skus as $sku) {
-                if ($sku->month == 1) {
-                    $sku_month = 'per Month';
-                } else {
-                    $sku_month = 'for '.$sku->month.' Month';
-                }
+                // if ($sku->month == 1) {
+                //     $sku_month = 'per Month';
+                // } else {
+                //     $sku_month = 'for '.$sku->month.' Month';
+                // }
 
                 if (env('APP_USE_POINTS')) {
                     $cpp = sprintf('[cpp: %.5f]', $sku->price/($product->points**$sku->month)); //'[cpp: 0.00259]';
@@ -670,7 +617,10 @@ class PlansController extends Controller
 
                 $txt .= '<p>';
                 $txt .=     '<span style="color:white;">'.$sku->price.'</span>'; // 12.95
-                $txt .=     '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
+
+                // $txt .=     '<span style="color:lime;"> '.$sku_month.'</span>'; // per Month
+                $txt .=     '<span style="color:lime;"> '.$sku->description.'</span>';
+
                 if (env('APP_USE_POINTS')) {
                     $txt .=  '<span style="color:red;"> '.$cpp.'</span>'; // [cpp: 0.00259]
                 }

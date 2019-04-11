@@ -25,6 +25,10 @@ class WebhookController extends CashierController
         $user = $this->getUserByStripeId($payload['data']['object']['customer']);
         if ($user) {
             $data = $payload['data']['object'];
+
+            /*
+                billing_reason: manual, subscription_cycle
+            */
             if ($data['billing_reason'] == 'subscription_cycle') {
                 $plan = Plan::where('sub_id', $data['subscription'])->first();
                 if ($plan) {
@@ -104,8 +108,12 @@ class WebhookController extends CashierController
 
                     $plan->status = 'active';
                     $plan->sub_plan = $plan->renew_plan;
+
                     $plan->points = $product->points * $sku->month;
                     $plan->points_used = 0;
+                    $plan->plans = $product->data_plans * $sku->month;
+                    $plan->plans_used = 0;
+
                     $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
                     $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
                     $plan->update();
@@ -117,6 +125,7 @@ class WebhookController extends CashierController
                     $ph = PlanHistory::where('pay_invoice', $data['invoice'])->first();
                     $ph->status = 'success';
                     $ph->points = $plan->points;
+                    $ph->plans = $plan->plans;
                     $ph->sub_start = $plan->sub_start;
                     $ph->sub_end = $plan->sub_end;
                     $ph->pay_method = $data['source']['brand'];

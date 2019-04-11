@@ -205,6 +205,40 @@ class PlanProductsController extends Controller
         return $form;
     }
 
+     /*----------------------------------------------------------------------------------*/
+    // public function build_stripe($p) {
+    //     // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
+    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+    //     \Stripe\Product::create([
+    //       'id' => $p['id'],     //'eu_silver_5000',
+    //       'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
+    //       'type' => 'service',
+    //     ]);
+
+    //     foreach ($p['plans'] as $plan) {
+    //         $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
+    //         // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['interval_count']; // 'us_5000_1m'
+    //         // if ($plan['interval'] == 'day') {
+    //         //     $plan_id .= 'd';
+    //         // } else if ($plan['interval'] == 'week') {
+    //         //     $plan_id .= 'w';
+    //         // } else if ($plan['interval'] == 'month') {
+    //         //     $plan_id .= 'm';
+    //         // } else if ($plan['interval'] == 'year') {
+    //         //     $plan_id .= 'y';
+    //         // }
+    //         \Stripe\Plan::create([
+    //             'product' => $p['id'],
+    //             'id' => $plan_id,
+    //             'interval' => 'month',
+    //             'interval_count' => $plan['month'], // 1,
+    //             'currency' => $p['currency'],       // 'usd',
+    //             'amount' => $plan['amount'],        // 1295,
+    //         ]);
+    //     }
+    // }
+
     public function build_stripe($p) {
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
@@ -216,45 +250,24 @@ class PlanProductsController extends Controller
         ]);
 
         foreach ($p['plans'] as $plan) {
-            $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
-            // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['interval_count']; // 'us_5000_1m'
-            // if ($plan['interval'] == 'day') {
-            //     $plan_id .= 'd';
-            // } else if ($plan['interval'] == 'week') {
-            //     $plan_id .= 'w';
-            // } else if ($plan['interval'] == 'month') {
-            //     $plan_id .= 'm';
-            // } else if ($plan['interval'] == 'year') {
-            //     $plan_id .= 'y';
-            // }
-            \Stripe\Plan::create([
-                'product' => $p['id'],
-                'id' => $plan_id,
-                'interval' => 'month',
-                'interval_count' => $plan['month'], // 1,
-                'currency' => $p['currency'],       // 'usd',
-                'amount' => $plan['amount'],        // 1295,
-            ]);
-        }
-    }
-
-    public function build_stripe2($p) {
-        // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-
-        \Stripe\Product::create([
-          'id' => $p['id'],     //'eu_silver_5000',
-          'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
-          'type' => 'service',
-        ]);
-
-        foreach ($p['plans'] as $plan) {
             // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
-            $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+            // $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+            $plan_id = $p['id'].'_'.$plan['month'].$plan['ymwd']; // 'au_basic_1m'
+
+            if ($plan['ymwd'] == 'y') {
+                $interval = 'year';
+            } else if ($plan['ymwd'] == 'm') {
+                $interval = 'month';
+            } else if ($plan['ymwd'] == 'w') {
+                $interval = 'week';
+            } else if ($plan['ymwd'] == 'd') {
+                $interval = 'day';
+            }
+
             \Stripe\Plan::create([
                 'product' => $p['id'],
                 'id' => $plan_id,
-                'interval' => 'month',
+                'interval' => $interval,
                 'interval_count' => $plan['month'], // 1,
                 'currency' => $p['currency'],       // 'usd',
                 'amount' => $plan['amount'],        // 1295,
@@ -262,28 +275,29 @@ class PlanProductsController extends Controller
         }
     }
 
-    public function build_stripe_test($p) {
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+    // public function build_stripe_test($p) {
+    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-        \Stripe\Product::create([
-          'id' => $p['id'],     //'eu_silver_5000',
-          'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
-          'type' => 'service',
-        ]);
+    //     \Stripe\Product::create([
+    //       'id' => $p['id'],     //'eu_silver_5000',
+    //       'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
+    //       'type' => 'service',
+    //     ]);
 
-        foreach ($p['plans'] as $plan) {
-            $plan_id = $p['id'].'_'.$plan['month'].'d'; // 'au_basic_1m'
-            \Stripe\Plan::create([
-                'product' => $p['id'],
-                'id' => $plan_id,
-                'interval' => 'day',
-                'interval_count' => $plan['month'], // 1,
-                'currency' => $p['currency'],       // 'usd',
-                'amount' => $plan['amount'],        // 1295,
-            ]);
-        }
-    }
+    //     foreach ($p['plans'] as $plan) {
+    //         $plan_id = $p['id'].'_'.$plan['month'].'d'; // 'au_basic_1m'
+    //         \Stripe\Plan::create([
+    //             'product' => $p['id'],
+    //             'id' => $plan_id,
+    //             'interval' => 'day',
+    //             'interval_count' => $plan['month'], // 1,
+    //             'currency' => $p['currency'],       // 'usd',
+    //             'amount' => $plan['amount'],        // 1295,
+    //         ]);
+    //     }
+    // }
 
+    /*----------------------------------------------------------------------------------*/
     public function build_product($p) {
         $plan_product_id = DB::table("plan_products")->insertGetId([
             'region' => $p['region'],
@@ -291,144 +305,31 @@ class PlanProductsController extends Controller
             'title' => $p['name'],
             'description' => $p['description'],
             'points' => $p['points'],
-            'active' => $p['active']
-        ]);
-
-        foreach ($p['plans'] as $plan) {
-            $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
-            // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['interval_count']; // 'us_5000_1m'
-            // if ($plan['interval'] == 'day') {
-            //     $plan_id .= 'd';
-            // } else if ($plan['interval'] == 'week') {
-            //     $plan_id .= 'w';
-            // } else if ($plan['interval'] == 'month') {
-            //     $plan_id .= 'm';
-            // } else if ($plan['interval'] == 'year') {
-            //     $plan_id .= 'y';
-            // }
-            DB::table('plan_product_skus')->insert([
-                'plan_product_id' => $plan_product_id,
-                'sub_plan' => $plan_id,
-                'month' => $plan['month'],
-                'price' => $plan['amount']/100,
-                'active' => $plan['active']
-            ]);
-        }
-    }
-
-    public function build_product2($p) {
-        $plan_product_id = DB::table("plan_products")->insertGetId([
-            'region' => $p['region'],
-            'currency' => $p['currency'],
-            'title' => $p['name'],
-            'description' => $p['description'],
-            'points' => $p['points'],
             'data_plans' => $p['data_plans'],
             'active' => $p['active']
         ]);
 
         foreach ($p['plans'] as $plan) {
             // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
-            $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+
+            // $plan_id = $p['id'].'_'.$plan['month'].'m'; // 'au_basic_1m'
+            $plan_id = $p['id'].'_'.$plan['month'].$plan['ymwd']; // 'au_basic_1m'
+
             DB::table('plan_product_skus')->insert([
-                'plan_product_id' => $plan_product_id,
-                'sub_plan' => $plan_id,
+                // 'title' => $p['title'],
+                'description' => $plan['description'],
+                'active' => $plan['active'],
                 'month' => $plan['month'],
                 'price' => $plan['amount']/100,
-                'active' => $plan['active']
+                'plan_product_id' => $plan_product_id,
+                'sub_plan' => $plan_id,
             ]);
         }
     }
 
-    public function build_product_test($p) {
-        $plan_product_id = DB::table("plan_products")->insertGetId([
-            'region' => $p['region'],
-            'currency' => $p['currency'],
-            'title' => $p['name'],
-            'description' => $p['description'],
-            'points' => $p['points'],
-            'data_plans' => $p['data_plans'],
-            'active' => $p['active']
-        ]);
-
-        foreach ($p['plans'] as $plan) {
-            $plan_id = $p['id'].'_'.$plan['month'].'d'; // 'au_basic_1m'
-            DB::table('plan_product_skus')->insert([
-                'plan_product_id' => $plan_product_id,
-                'sub_plan' => $plan_id,
-                'month' => $plan['month'],
-                'price' => $plan['amount']/100,
-                'active' => $plan['active']
-            ]);
-        }
-    }
-
+    /*----------------------------------------------------------------------------------*/
     public function build($type) {
         /* eu */
-        // $product_eu_bronze = array(
-        //     'id' => 'eu_bronze_2500',
-        //     'name' => 'BRONZE',
-        //     'points' => 2500,
-        //     'region' => 'eu',
-        //     'currency' => 'eur',
-        //     'active' => 0,
-        //     'plans' => [
-        //         // ['id'=>'eu_2500_1m', 'interval'=>'month', 'interval_count'=>1, 'amount'=>895, 'active'=>1],
-        //         // ['id'=>'eu_2500_3m', 'interval'=>'month', 'interval_count'=>3, 'amount'=>2495, 'active'=>1],
-        //         // ['id'=>'eu_2500_6m', 'interval'=>'month', 'interval_count'=>6, 'amount'=>4895, 'active'=>1],
-        //         // ['id'=>'eu_2500_12m', 'interval'=>'month', 'interval_count'=>12, 'amount'=>9695, 'active'=>0],
-        //         ['month'=>1, 'amount'=>895, 'active'=>1],
-        //         ['month'=>3, 'amount'=>2495, 'active'=>1],
-        //         ['month'=>6, 'amount'=>4895, 'active'=>1],
-        //         ['month'=>12, 'amount'=>9695, 'active'=>0],
-        //     ]
-        // );
-
-        // $product_eu_silver = array(
-        //     'id' => 'eu_silver_5000',
-        //     'name' => 'SILVER',
-        //     'points' => 5000,
-        //     'region' => 'eu',
-        //     'currency' => 'eur',
-        //     'active' => 1,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>1295, 'active'=>1],
-        //         ['month'=>3, 'amount'=>3695, 'active'=>1],
-        //         ['month'=>6, 'amount'=>7295, 'active'=>1],
-        //         ['month'=>12, 'amount'=>14495, 'active'=>0],
-        //     ]
-        // );
-
-        //  $product_eu_gold = array(
-        //     'id' => 'eu_gold_10000',
-        //     'name' => 'GOLD',
-        //     'points' => 10000,
-        //     'region' => 'eu',
-        //     'currency' => 'eur',
-        //     'active' => 1,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>1995, 'active'=>1],
-        //         ['month'=>3, 'amount'=>5795, 'active'=>1],
-        //         ['month'=>6, 'amount'=>11495, 'active'=>1],
-        //         ['month'=>12, 'amount'=>22895, 'active'=>0],
-        //     ]
-        // );
-
-        //  $product_eu_platinum = array(
-        //     'id' => 'eu_platinum_20000',
-        //     'name' => 'PLATINUM PRO',
-        //     'points' => 20000,
-        //     'region' => 'eu',
-        //     'currency' => 'eur',
-        //     'active' => 1,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>2695, 'active'=>1],
-        //         ['month'=>3, 'amount'=>7795, 'active'=>1],
-        //         ['month'=>6, 'amount'=>25595, 'active'=>1],
-        //         ['month'=>12, 'amount'=>31095, 'active'=>0],
-        //     ]
-        // );
-
         $product_eu_basic = array(
             'id' => 'eu_basic',
             'name' => 'BASIC',
@@ -439,10 +340,10 @@ class PlanProductsController extends Controller
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>900, 'active'=>1],
-                ['month'=>3, 'amount'=>900*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>900*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>900*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>900, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>900*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>900*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -456,10 +357,10 @@ class PlanProductsController extends Controller
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1900, 'active'=>1],
-                ['month'=>3, 'amount'=>1900*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>1900*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>1900*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>1900, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>1900*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>1900*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>1900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -473,10 +374,10 @@ class PlanProductsController extends Controller
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>2300, 'active'=>1],
-                ['month'=>3, 'amount'=>2300*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>2300*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>2300*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>2300, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>2300*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>2300*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>2300*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -490,10 +391,10 @@ class PlanProductsController extends Controller
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>3600, 'active'=>1],
-                ['month'=>3, 'amount'=>3600*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>3600*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>3600*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>3600, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>3600*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>3600*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>3600*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -507,75 +408,15 @@ class PlanProductsController extends Controller
             'currency' => 'eur',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>100, 'active'=>1],
-                ['month'=>2, 'amount'=>102, 'active'=>1],
-                ['month'=>3, 'amount'=>103, 'active'=>1],
-                ['month'=>7, 'amount'=>107, 'active'=>1],
+                ['ymwd'=>'d', 'month'=>1, 'amount'=>100, 'active'=>1, 'description' => 'per Day'],
+                ['ymwd'=>'d', 'month'=>2, 'amount'=>102, 'active'=>1, 'description' => 'per 2 Days'],
+                ['ymwd'=>'d', 'month'=>3, 'amount'=>103, 'active'=>1, 'description' => 'per 3 Days'],
+                ['ymwd'=>'d', 'month'=>7, 'amount'=>107, 'active'=>1, 'description' => 'per 7 Days'],
             ]
         );
 
         /*------------------------------------------------------------------*/
         /* au */
-        // $product_au_bronze = array(
-        //     'id' => 'au_bronze_2500',
-        //     'name' => 'BRONZE',
-        //     'points' => 2500,
-        //     'region' => 'au',
-        //     'currency' => 'aud',
-        //     'active' => 0,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>895, 'active'=>1],
-        //         ['month'=>3, 'amount'=>2495, 'active'=>1],
-        //         ['month'=>6, 'amount'=>4895, 'active'=>1],
-        //         ['month'=>12, 'amount'=>9695, 'active'=>0],
-        //     ]
-        // );
-
-        // $product_au_silver = array(
-        //     'id' => 'au_silver_5000',
-        //     'name' => 'SILVER',
-        //     'points' => 5000,
-        //     'region' => 'au',
-        //     'currency' => 'aud',
-        //     'active' => 1,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>1295, 'active'=>1],
-        //         ['month'=>3, 'amount'=>3695, 'active'=>1],
-        //         ['month'=>6, 'amount'=>7295, 'active'=>1],
-        //         ['month'=>12, 'amount'=>14495, 'active'=>0],
-        //     ]
-        // );
-
-        // $product_au_gold = array(
-        //     'id' => 'au_gold_10000',
-        //     'name' => 'GOLD',
-        //     'points' => 10000,
-        //     'region' => 'au',
-        //     'currency' => 'aud',
-        //     'active' => 1,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>1995, 'active'=>1],
-        //         ['month'=>3, 'amount'=>5795, 'active'=>1],
-        //         ['month'=>6, 'amount'=>11495, 'active'=>1],
-        //         ['month'=>12, 'amount'=>22895, 'active'=>0],
-        //     ]
-        // );
-
-        // $product_au_platinum = array(
-        //     'id' => 'au_platinum_20000',
-        //     'name' => 'PLATINUM PRO',
-        //     'points' => 20000,
-        //     'region' => 'au',
-        //     'currency' => 'aud',
-        //     'active' => 1,
-        //     'plans' => [
-        //         ['month'=>1, 'amount'=>2695, 'active'=>1],
-        //         ['month'=>3, 'amount'=>7795, 'active'=>1],
-        //         ['month'=>6, 'amount'=>25595, 'active'=>1],
-        //         ['month'=>12, 'amount'=>31095, 'active'=>0],
-        //     ]
-        // );
-
         $product_au_basic = array(
             // 'id' => 'au_bronze_5m',
             'id' => 'au_basic',
@@ -587,10 +428,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>900, 'active'=>1],
-                ['month'=>3, 'amount'=>900*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>900*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>900*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>900, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>900*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>900*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -604,10 +445,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>1900, 'active'=>1],
-                ['month'=>3, 'amount'=>1900*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>1900*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>1900*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>1900, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>1900*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>1900*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>1900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -621,10 +462,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>2300, 'active'=>1],
-                ['month'=>3, 'amount'=>2300*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>2300*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>2300*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>2300, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>2300*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>2300*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>2300*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -638,10 +479,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>3600, 'active'=>1],
-                ['month'=>3, 'amount'=>3600*3*0.98, 'active'=>1],
-                ['month'=>6, 'amount'=>3600*6*0.96, 'active'=>1],
-                ['month'=>12, 'amount'=>3600*12*0.94, 'active'=>1],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>3600, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>3600*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>3600*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>3600*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -655,161 +496,44 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['month'=>1, 'amount'=>100, 'active'=>1],
-                ['month'=>2, 'amount'=>102, 'active'=>1],
-                ['month'=>3, 'amount'=>103, 'active'=>1],
-                ['month'=>7, 'amount'=>107, 'active'=>1],
+                ['ymwd'=>'d', 'month'=>1, 'amount'=>100, 'active'=>1, 'description' => 'per Day'],
+                ['ymwd'=>'d', 'month'=>2, 'amount'=>102, 'active'=>1, 'description' => 'per 2 Days'],
+                ['ymwd'=>'d', 'month'=>3, 'amount'=>103, 'active'=>1, 'description' => 'per 3 Days'],
+                ['ymwd'=>'d', 'month'=>7, 'amount'=>107, 'active'=>1, 'description' => 'per 7 Days'],
             ]
         );
 
         if ($type == 1) {
             /* eu */
-            // $this->build_product($product_eu_bronze);
-            // $this->build_product($product_eu_silver);
-            // $this->build_product($product_eu_gold);
-            // $this->build_product($product_eu_platinum);
-
-            /* au */
-            // $this->build_product($product_au_bronze);
-            // $this->build_product($product_au_silver);
-            // $this->build_product($product_au_gold);
-            // $this->build_product($product_au_platinum);
-
             if (env('APP_REGION') == 'au') {
-                $this->build_product2($product_au_basic);
-                $this->build_product2($product_au_bronze);
-                $this->build_product2($product_au_silver);
-                $this->build_product2($product_au_gold);
+                $this->build_product($product_au_basic);
+                $this->build_product($product_au_bronze);
+                $this->build_product($product_au_silver);
+                $this->build_product($product_au_gold);
+                $this->build_product($product_au_test);
 
             } else if (env('APP_REGION') == 'eu') {
-                $this->build_product2($product_eu_basic);
-                $this->build_product2($product_eu_bronze);
-                $this->build_product2($product_eu_silver);
-                $this->build_product2($product_eu_gold);
+                $this->build_product($product_eu_basic);
+                $this->build_product($product_eu_bronze);
+                $this->build_product($product_eu_silver);
+                $this->build_product($product_eu_gold);
             }
 
         } else if ($type == 2) {
-            /* eu */
-            // $this->build_stripe($product_eu_bronze);
-            // $this->build_stripe($product_eu_silver);
-            // $this->build_stripe($product_eu_gold);
-            // $this->build_stripe($product_eu_platinum);
+            $this->build_stripe($product_au_basic);
+            $this->build_stripe($product_au_bronze);
+            $this->build_stripe($product_au_silver);
+            $this->build_stripe($product_au_gold);
+            $this->build_stripe($product_au_test);
 
-            /* au */
-            // $this->build_stripe($product_au_bronze);
-            // $this->build_stripe($product_au_silver);
-            // $this->build_stripe($product_au_gold);
-            // $this->build_stripe($product_au_platinum);
-
-            $this->build_stripe2($product_au_basic);
-            $this->build_stripe2($product_au_bronze);
-            $this->build_stripe2($product_au_silver);
-            $this->build_stripe2($product_au_gold);
-
-            $this->build_stripe2($product_eu_basic);
-            $this->build_stripe2($product_eu_bronze);
-            $this->build_stripe2($product_eu_silver);
-            $this->build_stripe2($product_eu_gold);
-
-        } else if ($type == 3) {
-            if (env('APP_REGION') == 'au') {
-                $this->build_product_test($product_au_test);
-            } else if (env('APP_REGION') == 'eu') {
-                $this->build_product_test($product_eu_test);
-            }
-
-        } else if ($type == 4) {
-            $this->build_stripe_test($product_au_test);
-            $this->build_stripe_test($product_eu_test);
+            $this->build_stripe($product_eu_basic);
+            $this->build_stripe($product_eu_bronze);
+            $this->build_stripe($product_eu_silver);
+            $this->build_stripe($product_eu_gold);
+            $this->build_stripe($product_eu_test);
         }
 
-return 'build...OK #'.$type;
-
-        /* us, ca, eu, au, cn, tw */
-        /* eu */
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'eu', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_1m', 'month'=>1, 'active'=>1, 'price'=>8.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_3m', 'month'=>3, 'active'=>1, 'price'=>24.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_6m', 'month'=>6, 'active'=>1, 'price'=>48.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_2500_12m', 'month'=>12, 'active'=>0, 'price'=>96.95],
-        // ]);
-
-
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'eu', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_1m', 'month'=>1, 'active'=>1, 'price'=>12.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_3m', 'month'=>3, 'active'=>1, 'price'=>36.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_6m', 'month'=>6, 'active'=>1, 'price'=>72.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_5000_12m', 'month'=>12, 'active'=>0, 'price'=>144.95],
-        // ]);
-
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'eu', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_1m', 'month'=>1, 'active'=>1, 'price'=>19.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_3m', 'month'=>3, 'active'=>1, 'price'=>57.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_6m', 'month'=>6, 'active'=>1, 'price'=>114.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_10000_12m', 'month'=>12, 'active'=>0, 'price'=>228.95],
-        // ]);
-
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'eu', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_1m', 'month'=>1, 'active'=>1, 'price'=>26.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_3m', 'month'=>3, 'active'=>1, 'price'=>77.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_6m', 'month'=>6, 'active'=>1, 'price'=>155.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'eu_20000_12m', 'month'=>12, 'active'=>0, 'price'=>310.95],
-        // ]);
-
-        /* au */
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'au', 'title'=>'BRONZE', 'points'=>2500, 'active'=>0]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_1m', 'month'=>1, 'active'=>1, 'price'=>8.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_3m', 'month'=>3, 'active'=>1, 'price'=>24.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_6m', 'month'=>6, 'active'=>1, 'price'=>48.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_2500_12m', 'month'=>12, 'active'=>0, 'price'=>96.95],
-        // ]);
-
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'au', 'title'=>'SILVER', 'points'=>5000, 'active'=>1]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_1m', 'month'=>1, 'active'=>1, 'price'=>12.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_3m', 'month'=>3, 'active'=>1, 'price'=>36.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_6m', 'month'=>6, 'active'=>1, 'price'=>72.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_5000_12m', 'month'=>12, 'active'=>0, 'price'=>144.95],
-        // ]);
-
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'au', 'title'=>'GOLD', 'points'=>10000, 'active'=>1]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_1m', 'month'=>1, 'active'=>1, 'price'=>19.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_3m', 'month'=>3, 'active'=>1, 'price'=>57.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_6m', 'month'=>6, 'active'=>1, 'price'=>114.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_10000_12m', 'month'=>12, 'active'=>0, 'price'=>228.95],
-        // ]);
-
-        // $id = DB::table("plan_products")->insertGetId(
-        //     ['region'=>'au', 'title'=>'PLATINUM PRO', 'points'=>20000, 'active'=>1]
-        // );
-        // DB::table('plan_product_skus')->insert([
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_1m', 'month'=>1, 'active'=>1, 'price'=>26.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_3m', 'month'=>3, 'active'=>1, 'price'=>77.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_6m', 'month'=>6, 'active'=>1, 'price'=>155.95],
-        //     ['plan_product_id'=>$id, 'sub_id'=>'au_20000_12m', 'month'=>12, 'active'=>0, 'price'=>310.95],
-        // ]);
-
-        // return 'build...OK';
+        return 'build...OK #'.$type;
     }
 
     /* (1) DB facade */

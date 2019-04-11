@@ -1,3 +1,40 @@
+<?php
+
+修改：
+vendor\laravel\cashier\src\Http\Controllers\WebhookController.php
+
+class WebhookController extends Controller
+{
+    public function handleWebhook(Request $request)
+    {
+        $payload = json_decode($request->getContent(), true);
+
+$this->log_add($payload); // 增加
+
+        if (! $this->isInTestingEnvironment() && ! $this->eventExistsOnStripe($payload['id'])) {
+            return;
+        }
+
+        $method = 'handle'.studly_case(str_replace('.', '_', $payload['type']));
+
+        if (method_exists($this, $method)) {
+            return $this->{$method}($payload);
+        } else {
+            return $this->missingMethod();
+        }
+    }
+
+// 注意：删除
+    /*
+    protected function handleCustomerSubscriptionDeleted(array $payload)
+    {
+        .....
+    }
+    */
+}
+
+//---------------------------------------------------------------------
+
 $user->updateCard($stripeToken);
 
 [ customer.source.created ]
