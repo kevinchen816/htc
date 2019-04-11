@@ -26,8 +26,6 @@
     $table->bigInteger('plans_used')->default(0);
 
 \database\migrations\2018_12_01_211103_create_plan_products_table.php
-    还原 $table->integer('points')->default(0);
-
     增加 $table->bigInteger('data_plans')->default(0);
 
 \database\migrations\2018_12_10_215232_create_order_items_table.php
