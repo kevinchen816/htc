@@ -48,6 +48,7 @@ return [
     'Add Cart Fail'             => 'Karte hinzufügen felgeschlagen',
     'Plan not found'            => 'Datenplan nicht gefunden',
 
+    'BASIC'                     => 'BASIC',
     'BRONZE'                    => 'Bronze',
     'SILVER'                    => 'Silber',
     'GOLD'                      => 'Gold',
@@ -58,6 +59,13 @@ return [
     'for 3 Months'              => 'für 3 Monate',
     'for 6 Months'              => 'für 6 Monate',
 
+    '5MB per Month'             => '5MB per Month',
+    '500MB per Month'           => '500MB per Month',
+    '1GB per Month'             => '1GB per Month',
+    '2GB per Month'             => '2GB per Month',
+    '3GB per Month'             => '3GB per Month',
+    '4GB per Month'             => '4GB per Month',
+    '5GB per Month'             => '5GB per Month',
 'Cart'                          => 'Einkaufswagen',
     'Clear Cart'                => 'Einkaufswagen leeren',
     'Product'                   => 'Produkt',
@@ -132,6 +140,7 @@ return [
         'SD Card'               => 'SD-Karte',
         'Temperature'           => 'Temperatur',
         'Plan Points'           => 'Punkteplan',
+        'Data Plan'             => 'Data Plan',
 
     'More Info'                 => 'Mehr Information',
         'Module ID'             => 'Modul ID',
@@ -142,6 +151,8 @@ return [
         'MCU'                   => 'MCU',
         'Last Connection'       => 'Letzte Verbindung',
         'Points Used'           => 'verbrauchte Punkte',
+        'Data Plan Total'       => 'Plan Total',
+        'Data Plan Used'        => 'Plan Used',
 
     'Live Settings'             => 'aktuelle Einstellungen (der Kamera)',
         'Last Downloaded'       => 'Letzter Download',
@@ -151,6 +162,7 @@ return [
         'Last Armed'            => 'Letze Einstellung',
         'Uploads since armed'   => 'Upload seit letzter Einstellung',
         'Points since armed'    => 'Punkte seit letzter Einstellung',
+        'Data since armed'      => 'Data since armed',
         'Last Heartbeat'        => 'Letzter Heartbeat',
         'Last Photo'            => 'Letztes Photo',
         'Last Video'            => 'Letztes Video',

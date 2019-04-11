@@ -48,6 +48,7 @@ return [
     'Add Cart Fail'             => '加入購物車失敗',
     'Plan not found'            => '門號不存在',
 
+    'BASIC'                     => 'BASIC',
     'BRONZE'                    => 'BRONZE',
     'SILVER'                    => 'SILVER',
     'GOLD'                      => 'GOLD',
@@ -57,6 +58,14 @@ return [
     'per Month'                 => '/月',
     'for 3 Months'              => '/3個月',
     'for 6 Months'              => '/6個月',
+
+    '5MB per Month'             => 'MB/月',
+    '500MB per Month'           => '500MB/月',
+    '1GB per Month'             => '1GB/月',
+    '2GB per Month'             => '2GB/月',
+    '3GB per Month'             => '3GB/月',
+    '4GB per Month'             => '4GB/月',
+    '5GB per Month'             => '5GB/月',
 
 'Cart'                          => '購物車',
     'Clear Cart'                => '清除購物清單',
@@ -132,6 +141,7 @@ return [
         'SD Card'               => '記憶卡',
         'Temperature'           => '溫度',
         'Plan Points'           => '點數',
+        'Data Plan'             => '流量',
 
     'More Info'                 => '更多訊息',
         'Module ID'             => '通訊模組  ID',
@@ -142,6 +152,8 @@ return [
         'MCU'                   => 'MCU 版本',
         'Last Connection'       => '連網類型',
         'Points Used'           => '已使用點數',
+        'Data Plan Total'       => '套餐流量',
+        'Data Plan Used'        => '已使用流量',
 
     'Live Settings'             => '目前設定',
         'Last Downloaded'       => '設定更新時間',
@@ -151,6 +163,7 @@ return [
         'Last Armed'            => '啟用時間',
         'Uploads since armed'   => '啟用後上傳資料筆數',
         'Points since armed'    => '啟用後使用點數',
+        'Data since armed'      => '啟用後使用流量',
         'Last Heartbeat'        => '上次連線檢查時間',
         'Last Photo'            => '上次照片上傳時間',
         'Last Video'            => '上次影片上傳時間',

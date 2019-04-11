@@ -333,7 +333,7 @@ class PlanProductsController extends Controller
         $product_eu_basic = array(
             'id' => 'eu_basic',
             'name' => 'BASIC',
-            'description' => '5MB / per month',
+            'description' => '5MB per month',
             'points' => 100,
             'data_plans' => 5,
             'region' => 'eu',
@@ -350,7 +350,7 @@ class PlanProductsController extends Controller
         $product_eu_bronze = array(
             'id' => 'eu_bronze',
             'name' => 'BRONZE',
-            'description' => '500MB / per month',
+            'description' => '500MB per month',
             'points' => 10000,
             'data_plans' => 500,
             'region' => 'eu',
@@ -367,7 +367,7 @@ class PlanProductsController extends Controller
         $product_eu_silver = array(
             'id' => 'eu_silver',
             'name' => 'SILVER',
-            'description' => '1GB / per month',
+            'description' => '1GB per month',
             'points' => 20000,
             'data_plans' => 1024,
             'region' => 'eu',
@@ -384,7 +384,7 @@ class PlanProductsController extends Controller
         $product_eu_gold = array(
             'id' => 'eu_gold',
             'name' => 'GOLD',
-            'description' => '3GB / per month',
+            'description' => '3GB per month',
             'points' => 60000,
             'data_plans' => 3072,
             'region' => 'eu',
@@ -401,7 +401,7 @@ class PlanProductsController extends Controller
         $product_eu_test = array(
             'id' => 'eu_test',
             'name' => 'TEST',
-            'description' => '5GB / per day',
+            'description' => '5GB per day',
             'points' => 100000,
             'data_plans' => 5000,
             'region' => 'eu',
@@ -421,7 +421,7 @@ class PlanProductsController extends Controller
             // 'id' => 'au_bronze_5m',
             'id' => 'au_basic',
             'name' => 'BASIC',
-            'description' => '5MB / per month',
+            'description' => '5MB per month',
             'points' => 100,
             'data_plans' => 5,
             'region' => 'au',
@@ -438,7 +438,7 @@ class PlanProductsController extends Controller
         $product_au_bronze = array(
             'id' => 'au_bronze',
             'name' => 'BRONZE',
-            'description' => '500MB / per month',
+            'description' => '500MB per month',
             'points' => 10000,
             'data_plans' => 500,
             'region' => 'au',
@@ -455,7 +455,7 @@ class PlanProductsController extends Controller
         $product_au_silver = array(
             'id' => 'au_silver',
             'name' => 'SILVER',
-            'description' => '1GB / per month',
+            'description' => '1GB per month',
             'points' => 20000,
             'data_plans' => 1024,
             'region' => 'au',
@@ -472,7 +472,7 @@ class PlanProductsController extends Controller
         $product_au_gold = array(
             'id' => 'au_gold',
             'name' => 'GOLD',
-            'description' => '3GB / per month',
+            'description' => '3GB per month',
             'points' => 60000,
             'data_plans' => 3072,
             'region' => 'au',
@@ -489,7 +489,7 @@ class PlanProductsController extends Controller
         $product_au_test = array(
             'id' => 'au_test',
             'name' => 'TEST',
-            'description' => '5GB / per day',
+            'description' => '5GB per day',
             'points' => 100000,
             'data_plans' => 5000,
             'region' => 'au',

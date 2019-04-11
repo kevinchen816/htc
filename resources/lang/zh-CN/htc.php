@@ -48,6 +48,7 @@ return [
     'Add Cart Fail'             => '加入购物车失败',
     'Plan not found'            => '门号不存在',
 
+    'BASIC'                     => 'BASIC',
     'BRONZE'                    => 'BRONZE',
     'SILVER'                    => 'SILVER',
     'GOLD'                      => 'GOLD',
@@ -57,6 +58,14 @@ return [
     'per Month'                 => '/月',
     'for 3 Months'              => '/3个月',
     'for 6 Months'              => '/6个月',
+
+    '5MB per Month'             => 'MB/月',
+    '500MB per Month'           => '500MB/月',
+    '1GB per Month'             => '1GB/月',
+    '2GB per Month'             => '2GB/月',
+    '3GB per Month'             => '3GB/月',
+    '4GB per Month'             => '4GB/月',
+    '5GB per Month'             => '5GB/月',
 
 'Cart'                          => '购物车',
     'Clear Cart'                => '清除购物车',
@@ -132,6 +141,7 @@ return [
         'SD Card'               => 'SD 卡',
         'Temperature'           => '温度',
         'Plan Points'           => '点数',
+        'Data Plan'             => '流量',
 
     'More Info'                 => '更多讯息',
         'Module ID'             => '通讯模块 ID',
@@ -142,6 +152,8 @@ return [
         'MCU'                   => 'MCU 版本',
         'Last Connection'       => '连网类型',
         'Points Used'           => '已使用点数',
+        'Data Plan Total'       => '套餐流量',
+        'Data Plan Used'        => '已使用流量',
 
     'Live Settings'             => '目前设定',
         'Last Downloaded'       => '设定更新时间',

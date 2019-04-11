@@ -48,6 +48,7 @@ return [
     'Add Cart Fail'             => 'Add Cart Fail.',
     'Plan not found'            => 'Plan not found.',
 
+    'BASIC'                     => 'BASIC',
     'BRONZE'                    => 'BRONZE',
     'SILVER'                    => 'SILVER',
     'GOLD'                      => 'GOLD',
@@ -57,6 +58,14 @@ return [
     'per Month'                 => 'per Month',
     'for 3 Months'              => 'for 3 Months',
     'for 6 Months'              => 'for 6 Months',
+
+    '5MB per Month'             => '5MB per Month',
+    '500MB per Month'           => '500MB per Month',
+    '1GB per Month'             => '1GB per Month',
+    '2GB per Month'             => '2GB per Month',
+    '3GB per Month'             => '3GB per Month',
+    '4GB per Month'             => '4GB per Month',
+    '5GB per Month'             => '5GB per Month',
 
 'Cart'                          => 'Cart',
     'Clear Cart'                => 'Clear Cart',
@@ -132,7 +141,7 @@ return [
         'SD Card'               => 'SD Card',
         'Temperature'           => 'Temperature',
         'Plan Points'           => 'Plan Points',
-        'Plan Total'            => 'Plan Total',
+        'Data Plan'             => 'Data Plan',
 
     'More Info'                 => 'More Info',
         'Module ID'             => 'Module ID',
@@ -143,7 +152,8 @@ return [
         'MCU'                   => 'MCU',
         'Last Connection'       => 'Last Connection',
         'Points Used'           => 'Points Used',
-        'Plan Used'             => 'Plan Used',
+        'Data Plan Total'       => 'Plan Total',
+        'Data Plan Used'        => 'Plan Used',
 
     'Live Settings'             => 'Live Settings (currently on camera)',
         'Last Downloaded'       => 'Last Downloaded',
@@ -153,6 +163,7 @@ return [
         'Last Armed'            => 'Last Armed',
         'Uploads since armed'   => 'Uploads since armed',
         'Points since armed'    => 'Points since armed',
+        'Data since armed'      => 'Data since armed',
         'Last Heartbeat'        => 'Last Heartbeat',
         'Last Photo'            => 'Last Photo',
         'Last Video'            => 'Last Video',
