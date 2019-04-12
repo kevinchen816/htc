@@ -134,22 +134,27 @@ class PlansController extends Controller
             $style = 'normal';
             $status = 'deactive';
             $points = 0;
+            $plans = 0;
         } else if ($region == 'de') {
             $style = 'normal';
             $status = 'deactive';
             $points = 0;
+            $plans = 0;
         } else if ($region == 'tw') {
             $style = 'test';
             $status = 'active';
             $points = 100000;
+            $plans = 10000;
         } else if ($region == 'cn') {
             $style = 'test';
             $status = 'active';
             $points = 100000;
+            $plans = 10000;
         } else {
             $style = 'normal';
             $status = 'deactive';
             $points = 0;
+            $plans = 0;
 
             // // for test
             // if ($user->permission == 1) {
@@ -200,6 +205,7 @@ class PlansController extends Controller
             'style' => $style,
             'status' => $status,
             'points' => $points,
+            'plans' => $plans,
         ]);
 
 ////$ret = $this->m2m_iccid_active('89610185002185155463');
