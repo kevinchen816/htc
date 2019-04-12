@@ -151,6 +151,8 @@ class AccountsController extends Controller
             'ca' => '/images/cad.png',
             'eu' => '/images/eur.png',
             'au' => '/images/aud.png',
+            'tw' => '/images/aud.png',
+            'cn' => '/images/aud.png',
         );
 
         $currency_region = array(
@@ -158,6 +160,8 @@ class AccountsController extends Controller
             'ca' => '$',
             'eu' => '€',
             'au' => '$',
+            'tw' => '$',
+            'cn' => '$',
             // 'gb' => '£', // gbp
         );
 
