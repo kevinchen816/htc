@@ -370,18 +370,26 @@ class CamerasController extends Controller
     public function itemQualityLevel() {
         $array['title'] = 'Quality Level';
         $array['options'] = array(
-            '1X/Lowest Cost'    => '300',
-            '2X'                => '600',
-            '3X'                => '900',
-            '4X/Balanced'       => '1200',
+            // '1X/Lowest Cost'    => '300',
+            // '2X'                => '600',
+            // '3X'                => '900',
+            // '4X/Balanced'       => '1200',
+            // '5X'                => '1500',
+            // '6X'                => '1800',
+            // '8X'                => '2400',
+            // '16X/Highest Cost'  => '5000',
+            // '20X (test)'        => '6000',
+            // '25X (test)'        => '8000',
+            // '30X (test)'        => '9000',
+            // '35X (test)'        => '10000',
+
+            '3X (Default)'      => '900',
+            '4X'                => '1200',
             '5X'                => '1500',
-            '6X'                => '1800',
+            '6X '               => '1800',
             '8X'                => '2400',
-            '16X/Highest Cost'  => '5000',
-            '20X (test)'        => '6000',
-            '25X (test)'        => '8000',
-            '30X (test)'        => '9000',
-            '35X (test)'        => '10000',
+            '16X'               => '5000',
+            '20X'               => '6000',
         );
         $array['help'] = 'Use quality level to control the image quality for each frame in the video. A higher value will increase quality while also increasing the size of the file captured. If you frequently make video upload requests you may want a lower quality in order to minimize image points used in your data plan. There is no set quality level for a particular application. Please experiment with video quality to achieve an acceptable balance for your environment and budget.';
         return $array;
@@ -644,7 +652,7 @@ class CamerasController extends Controller
             '2m' => '2',
             '3m' => '3',
             '4m' => '4',
-            'Default (5m)' => '5',
+            '5m (Default)' => '5',
             '6m' => '6',
             '7m' => '7',
             '8m' => '8',

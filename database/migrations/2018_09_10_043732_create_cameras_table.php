@@ -72,12 +72,12 @@ class CreateCamerasTable extends Migration
 
             $table->integer('video_resolution')->default(7);    // 7, 8, 9, 10 (11, 12)
             $table->integer('video_fps')->default(4);           // 4, 6, 8, 10, 12, 15, 30 (video_rate)
-            $table->integer('video_bitrate')->default(500);     // quality level (1-13)
-            $table->integer('video_bitrate7')->default(500);
-            $table->integer('video_bitrate8')->default(500);
-            $table->integer('video_bitrate9')->default(500);
-            $table->integer('video_bitrate10')->default(500);
-            $table->integer('video_bitrate11')->default(500);
+            $table->integer('video_bitrate')->default(900);     // quality level (1-13)
+            // $table->integer('video_bitrate7')->default(900);
+            // $table->integer('video_bitrate8')->default(900);
+            // $table->integer('video_bitrate9')->default(900);
+            // $table->integer('video_bitrate10')->default(900);
+            // $table->integer('video_bitrate11')->default(900);
             $table->string('video_length')->default('5s');      // 5s
             $table->string('video_sound')->default('on');       // off, on
 

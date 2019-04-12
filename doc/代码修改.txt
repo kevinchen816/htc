@@ -1,3 +1,26 @@
+<?php
+
+//--------------------------------------------------------------------------------------
+\database\migrations\2018_09_10_043732_create_cameras_table.php
+    原来 $table->integer('video_bitrate')->default(500);
+    修改 $table->integer('video_bitrate')->default(900);
+
+    刪除
+    $table->integer('video_bitrate7')->default(500);
+    $table->integer('video_bitrate8')->default(500);
+    $table->integer('video_bitrate9')->default(500);
+    $table->integer('video_bitrate10')->default(500);
+    $table->integer('video_bitrate11')->default(500);
+
+\database\migrations\2018_10_14_183617_create_sims_table.php
+    原来 $table->string('region');
+    修改 $table->string('region')->nullable();
+
+    增加
+    $table->string('imsi')->nullable();
+    $table->string('phone_num')->nullable();
+
+//--------------------------------------------------------------------------------------
 \database\migrations\2018_09_10_043732_create_cameras_table.php
 
     原来 $table->float('arm_points')->default(0);
