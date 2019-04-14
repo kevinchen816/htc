@@ -205,40 +205,7 @@ class PlanProductsController extends Controller
         return $form;
     }
 
-     /*----------------------------------------------------------------------------------*/
-    // public function build_stripe($p) {
-    //     // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
-    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-
-    //     \Stripe\Product::create([
-    //       'id' => $p['id'],     //'eu_silver_5000',
-    //       'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
-    //       'type' => 'service',
-    //     ]);
-
-    //     foreach ($p['plans'] as $plan) {
-    //         $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['month'].'m'; // 'us_5000_1m'
-    //         // $plan_id = $p['region'].'_'.$p['points'].'_'.$plan['interval_count']; // 'us_5000_1m'
-    //         // if ($plan['interval'] == 'day') {
-    //         //     $plan_id .= 'd';
-    //         // } else if ($plan['interval'] == 'week') {
-    //         //     $plan_id .= 'w';
-    //         // } else if ($plan['interval'] == 'month') {
-    //         //     $plan_id .= 'm';
-    //         // } else if ($plan['interval'] == 'year') {
-    //         //     $plan_id .= 'y';
-    //         // }
-    //         \Stripe\Plan::create([
-    //             'product' => $p['id'],
-    //             'id' => $plan_id,
-    //             'interval' => 'month',
-    //             'interval_count' => $plan['month'], // 1,
-    //             'currency' => $p['currency'],       // 'usd',
-    //             'amount' => $plan['amount'],        // 1295,
-    //         ]);
-    //     }
-    // }
-
+    /*----------------------------------------------------------------------------------*/
     public function build_stripe($p) {
         // \Stripe\Stripe::setApiKey("sk_test_LfAFK776KACX3gaKrSxXNJ0r");
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
@@ -274,28 +241,6 @@ class PlanProductsController extends Controller
             ]);
         }
     }
-
-    // public function build_stripe_test($p) {
-    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-
-    //     \Stripe\Product::create([
-    //       'id' => $p['id'],     //'eu_silver_5000',
-    //       'name' => $p['name'].' ('.$p['id'].')', //'SILVER',
-    //       'type' => 'service',
-    //     ]);
-
-    //     foreach ($p['plans'] as $plan) {
-    //         $plan_id = $p['id'].'_'.$plan['month'].'d'; // 'au_basic_1m'
-    //         \Stripe\Plan::create([
-    //             'product' => $p['id'],
-    //             'id' => $plan_id,
-    //             'interval' => 'day',
-    //             'interval_count' => $plan['month'], // 1,
-    //             'currency' => $p['currency'],       // 'usd',
-    //             'amount' => $plan['amount'],        // 1295,
-    //         ]);
-    //     }
-    // }
 
     /*----------------------------------------------------------------------------------*/
     public function build_product($p) {

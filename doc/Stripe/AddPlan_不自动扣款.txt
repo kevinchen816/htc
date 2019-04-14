@@ -1,0 +1,1827 @@
+<?php
+
+2019-04-11 22:52:36 invoiceitem.created
+2019-04-11 22:52:37 invoiceitem.updated
+2019-04-11 22:52:37 invoice.created
+2019-04-11 22:52:38 payment_intent.created
+2019-04-11 22:52:38 invoice.updated
+2019-04-11 22:52:38 charge.succeeded（重要）
+2019-04-11 22:52:39 payment_intent.succeeded
+2019-04-11 22:52:39 invoice.payment_succeeded
+2019-04-11 22:52:39 invoice.updated
+2019-04-11 22:52:39 invoice.finalized
+
+// subscription
+2019-04-11 22:52:40 invoice.created
+2019-04-11 22:52:41 invoice.finalized
+2019-04-11 22:52:41 invoice.payment_succeeded
+2019-04-11 22:52:41 customer.subscription.created
+2019-04-11 22:52:45 customer.subscription.trial_will_end
+
+//------------------------------------------------------------------------
+[ invoiceitem.created ]
+{
+    "id": "evt_1EO4GVG8UgnSL68UUeDlFxOA",
+    "data": {
+        "object": {
+            "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+            "date": 1554994355,
+            "plan": null,
+            "amount": 100,
+            "object": "invoiceitem",
+            "period": {
+                "end": 1554994355,
+                "start": 1554994355
+            },
+            "invoice": null,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "livemode": false,
+            "metadata": {
+                "plan": "au_test_1d",
+                "iccid": "89860118842319529603",
+                "order_no": "20190411225234304671"
+            },
+            "quantity": 1,
+            "proration": false,
+            "description": "TEST 5000 MB per Month - for 1 Month",
+            "unit_amount": 100,
+            "discountable": true,
+            "subscription": null
+        }
+    },
+    "type": "invoiceitem.created",
+    "object": "event",
+    "created": 1554994355,
+    "request": {
+        "id": "req_ELIBjbduIWeFDX",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoiceitem.updated ]
+{
+    "id": "evt_1EO4GWG8UgnSL68Uz3QdmuxN",
+    "data": {
+        "object": {
+            "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+            "date": 1554994355,
+            "plan": null,
+            "amount": 100,
+            "object": "invoiceitem",
+            "period": {
+                "end": 1554994355,
+                "start": 1554994355
+            },
+            "invoice": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "livemode": false,
+            "metadata": {
+                "plan": "au_test_1d",
+                "iccid": "89860118842319529603",
+                "order_no": "20190411225234304671"
+            },
+            "quantity": 1,
+            "proration": false,
+            "description": "TEST 5000 MB per Month - for 1 Month",
+            "unit_amount": 100,
+            "discountable": true,
+            "subscription": null
+        },
+        "previous_attributes": {
+            "invoice": null
+        }
+    },
+    "type": "invoiceitem.updated",
+    "object": "event",
+    "created": 1554994356,
+    "request": {
+        "id": "req_aevwz48VUQ1ukZ",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.created ]
+{
+    "id": "evt_1EO4GWG8UgnSL68UzCWgTCzq",
+    "data": {
+        "object": {
+            "id": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "tax": null,
+            "date": 1554994356,
+            "paid": false,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GWG8UgnSL68UHxgJxagK/lines",
+                "data": [
+                    {
+                        "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "plan": null,
+                        "type": "invoiceitem",
+                        "amount": 100,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1554994355,
+                            "start": 1554994355
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "plan": "au_test_1d",
+                            "iccid": "89860118842319529603",
+                            "order_no": "20190411225234304671"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "TEST 5000 MB per Month - for 1 Month",
+                        "discountable": true,
+                        "invoice_item": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "subscription": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 100,
+            "charge": null,
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0003",
+            "object": "invoice",
+            "status": "draft",
+            "billing": "charge_automatically",
+            "created": 1554994356,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": null,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": {
+                "order_no": "20190411225234304671"
+            },
+            "subtotal": 100,
+            "attempted": false,
+            "amount_due": 100,
+            "period_end": 1555009031,
+            "amount_paid": 0,
+            "description": null,
+            "invoice_pdf": null,
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": null,
+            "period_start": 1554922633,
+            "subscription": null,
+            "attempt_count": 0,
+            "custom_fields": null,
+            "billing_reason": "manual",
+            "default_source": null,
+            "ending_balance": null,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 100,
+            "starting_balance": 0,
+            "hosted_invoice_url": null,
+            "status_transitions": {
+                "paid_at": null,
+                "voided_at": null,
+                "finalized_at": null,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.created",
+    "object": "event",
+    "created": 1554994356,
+    "request": {
+        "id": "req_aevwz48VUQ1ukZ",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ payment_intent.created ]
+{
+    "id": "evt_1EO4GYG8UgnSL68U9yuLvzVb",
+    "data": {
+        "object": {
+            "id": "pi_1EO4GXG8UgnSL68UnXDoiAAk",
+            "amount": 100,
+            "object": "payment_intent",
+            "review": null,
+            "source": null,
+            "status": "requires_source",
+            "charges": {
+                "url": "/v1/charges?payment_intent=pi_1EO4GXG8UgnSL68UnXDoiAAk",
+                "data": [
+                    {
+                        "id": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+                        "paid": true,
+                        "order": null,
+                        "amount": 100,
+                        "object": "charge",
+                        "review": null,
+                        "source": {
+                            "id": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+                            "name": "Kevin",
+                            "brand": "Visa",
+                            "last4": "0006",
+                            "object": "card",
+                            "country": "AU",
+                            "funding": "credit",
+                            "customer": "cus_ErUada3lFcSYb8",
+                            "exp_year": 2020,
+                            "metadata": [],
+                            "cvc_check": null,
+                            "exp_month": 1,
+                            "address_zip": null,
+                            "fingerprint": "VcL1sXkTk3GuqULy",
+                            "address_city": null,
+                            "address_line1": null,
+                            "address_line2": null,
+                            "address_state": null,
+                            "dynamic_last4": null,
+                            "address_country": null,
+                            "address_zip_check": null,
+                            "address_line1_check": null,
+                            "tokenization_method": null
+                        },
+                        "status": "succeeded",
+                        "created": 1554994357,
+                        "dispute": null,
+                        "invoice": "in_1EO4GWG8UgnSL68UHxgJxagK",
+                        "outcome": {
+                            "type": "authorized",
+                            "reason": null,
+                            "risk_level": "normal",
+                            "risk_score": 16,
+                            "network_status": "approved_by_network",
+                            "seller_message": "Payment complete."
+                        },
+                        "refunds": {
+                            "url": "/v1/charges/ch_1EO4GXG8UgnSL68U8ksg4T6l/refunds",
+                            "data": [],
+                            "object": "list",
+                            "has_more": false,
+                            "total_count": 0
+                        },
+                        "captured": true,
+                        "currency": "aud",
+                        "customer": "cus_ErUada3lFcSYb8",
+                        "livemode": false,
+                        "metadata": [],
+                        "refunded": false,
+                        "shipping": null,
+                        "application": null,
+                        "description": "Payment for invoice ACA70EC9-0003",
+                        "destination": null,
+                        "receipt_url": "https://pay.stripe.com/receipts/acct_1DP6B7G8UgnSL68U/ch_1EO4GXG8UgnSL68U8ksg4T6l/rcpt_ErnshGl0glfC9dcZMarnG07ZGN5wFar",
+                        "failure_code": null,
+                        "on_behalf_of": null,
+                        "fraud_details": [],
+                        "receipt_email": null,
+                        "transfer_data": null,
+                        "payment_intent": "pi_1EO4GXG8UgnSL68UnXDoiAAk",
+                        "payment_method": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+                        "receipt_number": null,
+                        "transfer_group": null,
+                        "amount_refunded": 0,
+                        "application_fee": null,
+                        "billing_details": {
+                            "name": "Kevin",
+                            "email": null,
+                            "phone": null,
+                            "address": {
+                                "city": null,
+                                "line1": null,
+                                "line2": null,
+                                "state": null,
+                                "country": null,
+                                "postal_code": null
+                            }
+                        },
+                        "failure_message": null,
+                        "source_transfer": null,
+                        "balance_transaction": "txn_1EO4GXG8UgnSL68UPFCXVqDP",
+                        "statement_descriptor": null,
+                        "application_fee_amount": null,
+                        "payment_method_details": {
+                            "card": {
+                                "brand": "visa",
+                                "last4": "0006",
+                                "checks": {
+                                    "cvc_check": null,
+                                    "address_line1_check": null,
+                                    "address_postal_code_check": null
+                                },
+                                "wallet": null,
+                                "country": "AU",
+                                "funding": "credit",
+                                "exp_year": 2020,
+                                "exp_month": 1,
+                                "fingerprint": "VcL1sXkTk3GuqULy",
+                                "three_d_secure": null
+                            },
+                            "type": "card"
+                        }
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "created": 1554994357,
+            "invoice": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "livemode": false,
+            "metadata": [],
+            "shipping": null,
+            "application": null,
+            "canceled_at": null,
+            "description": "Payment for invoice ACA70EC9-0003",
+            "next_action": null,
+            "on_behalf_of": null,
+            "client_secret": "pi_1EO4GXG8UgnSL68UnXDoiAAk_secret_QoaGbu3ChVHnxPLkHpxXMq1dg",
+            "receipt_email": null,
+            "transfer_data": null,
+            "capture_method": "automatic",
+            "payment_method": null,
+            "transfer_group": null,
+            "amount_received": 0,
+            "amount_capturable": 0,
+            "last_payment_error": null,
+            "next_source_action": null,
+            "cancellation_reason": null,
+            "confirmation_method": "automatic",
+            "allowed_source_types": [
+                "card"
+            ],
+            "payment_method_types": [
+                "card"
+            ],
+            "statement_descriptor": null,
+            "application_fee_amount": null
+        }
+    },
+    "type": "payment_intent.created",
+    "object": "event",
+    "created": 1554994357,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.updated ]
+{
+    "id": "evt_1EO4GYG8UgnSL68UmHHYxgLi",
+    "data": {
+        "object": {
+            "id": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "tax": null,
+            "date": 1554994356,
+            "paid": false,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GWG8UgnSL68UHxgJxagK/lines",
+                "data": [
+                    {
+                        "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "plan": null,
+                        "type": "invoiceitem",
+                        "amount": 100,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1554994355,
+                            "start": 1554994355
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "plan": "au_test_1d",
+                            "iccid": "89860118842319529603",
+                            "order_no": "20190411225234304671"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "TEST 5000 MB per Month - for 1 Month",
+                        "discountable": true,
+                        "invoice_item": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "subscription": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 100,
+            "charge": null,
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0003",
+            "object": "invoice",
+            "status": "open",
+            "billing": "charge_automatically",
+            "created": 1554994356,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586357,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": {
+                "order_no": "20190411225234304671"
+            },
+            "subtotal": 100,
+            "attempted": false,
+            "amount_due": 100,
+            "period_end": 1555009031,
+            "amount_paid": 0,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994357,
+            "period_start": 1554922633,
+            "subscription": null,
+            "attempt_count": 0,
+            "custom_fields": null,
+            "billing_reason": "manual",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 100,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS",
+            "status_transitions": {
+                "paid_at": null,
+                "voided_at": null,
+                "finalized_at": 1554994357,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        },
+        "previous_attributes": {
+            "status": "draft",
+            "due_date": null,
+            "invoice_pdf": null,
+            "finalized_at": null,
+            "ending_balance": null,
+            "hosted_invoice_url": null,
+            "status_transitions": {
+                "finalized_at": null
+            }
+        }
+    },
+    "type": "invoice.updated",
+    "object": "event",
+    "created": 1554994357,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ charge.succeeded ]（重要）
+{
+    "id": "evt_1EO4GYG8UgnSL68UK88DGQWh",
+    "data": {
+        "object": {
+            "id": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+            "paid": true,
+            "order": null,
+            "amount": 100,
+            "object": "charge",
+            "review": null,
+            "source": {
+                "id": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+                "name": "Kevin",
+                "brand": "Visa",
+                "last4": "0006",
+                "object": "card",
+                "country": "AU",
+                "funding": "credit",
+                "customer": "cus_ErUada3lFcSYb8",
+                "exp_year": 2020,
+                "metadata": [],
+                "cvc_check": null,
+                "exp_month": 1,
+                "address_zip": null,
+                "fingerprint": "VcL1sXkTk3GuqULy",
+                "address_city": null,
+                "address_line1": null,
+                "address_line2": null,
+                "address_state": null,
+                "dynamic_last4": null,
+                "address_country": null,
+                "address_zip_check": null,
+                "address_line1_check": null,
+                "tokenization_method": null
+            },
+            "status": "succeeded",
+            "created": 1554994357,
+            "dispute": null,
+            "invoice": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "outcome": {
+                "type": "authorized",
+                "reason": null,
+                "risk_level": "normal",
+                "risk_score": 16,
+                "network_status": "approved_by_network",
+                "seller_message": "Payment complete."
+            },
+            "refunds": {
+                "url": "/v1/charges/ch_1EO4GXG8UgnSL68U8ksg4T6l/refunds",
+                "data": [],
+                "object": "list",
+                "has_more": false,
+                "total_count": 0
+            },
+            "captured": true,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "livemode": false,
+            "metadata": [],
+            "refunded": false,
+            "shipping": null,
+            "application": null,
+            "description": "Payment for invoice ACA70EC9-0003",
+            "destination": null,
+            "receipt_url": "https://pay.stripe.com/receipts/acct_1DP6B7G8UgnSL68U/ch_1EO4GXG8UgnSL68U8ksg4T6l/rcpt_ErnshGl0glfC9dcZMarnG07ZGN5wFar",
+            "failure_code": null,
+            "on_behalf_of": null,
+            "fraud_details": [],
+            "receipt_email": null,
+            "transfer_data": null,
+            "payment_intent": "pi_1EO4GXG8UgnSL68UnXDoiAAk",
+            "payment_method": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+            "receipt_number": null,
+            "transfer_group": null,
+            "amount_refunded": 0,
+            "application_fee": null,
+            "billing_details": {
+                "name": "Kevin",
+                "email": null,
+                "phone": null,
+                "address": {
+                    "city": null,
+                    "line1": null,
+                    "line2": null,
+                    "state": null,
+                    "country": null,
+                    "postal_code": null
+                }
+            },
+            "failure_message": null,
+            "source_transfer": null,
+            "balance_transaction": "txn_1EO4GXG8UgnSL68UPFCXVqDP",
+            "statement_descriptor": null,
+            "application_fee_amount": null,
+            "payment_method_details": {
+                "card": {
+                    "brand": "visa",
+                    "last4": "0006",
+                    "checks": {
+                        "cvc_check": null,
+                        "address_line1_check": null,
+                        "address_postal_code_check": null
+                    },
+                    "wallet": null,
+                    "country": "AU",
+                    "funding": "credit",
+                    "exp_year": 2020,
+                    "exp_month": 1,
+                    "fingerprint": "VcL1sXkTk3GuqULy",
+                    "three_d_secure": null
+                },
+                "type": "card"
+            }
+        }
+    },
+    "type": "charge.succeeded",
+    "object": "event",
+    "created": 1554994358,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ payment_intent.succeeded ]
+{
+    "id": "evt_1EO4GYG8UgnSL68UifV3RZbO",
+    "data": {
+        "object": {
+            "id": "pi_1EO4GXG8UgnSL68UnXDoiAAk",
+            "amount": 100,
+            "object": "payment_intent",
+            "review": null,
+            "source": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+            "status": "succeeded",
+            "charges": {
+                "url": "/v1/charges?payment_intent=pi_1EO4GXG8UgnSL68UnXDoiAAk",
+                "data": [
+                    {
+                        "id": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+                        "paid": true,
+                        "order": null,
+                        "amount": 100,
+                        "object": "charge",
+                        "review": null,
+                        "source": {
+                            "id": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+                            "name": "Kevin",
+                            "brand": "Visa",
+                            "last4": "0006",
+                            "object": "card",
+                            "country": "AU",
+                            "funding": "credit",
+                            "customer": "cus_ErUada3lFcSYb8",
+                            "exp_year": 2020,
+                            "metadata": [],
+                            "cvc_check": null,
+                            "exp_month": 1,
+                            "address_zip": null,
+                            "fingerprint": "VcL1sXkTk3GuqULy",
+                            "address_city": null,
+                            "address_line1": null,
+                            "address_line2": null,
+                            "address_state": null,
+                            "dynamic_last4": null,
+                            "address_country": null,
+                            "address_zip_check": null,
+                            "address_line1_check": null,
+                            "tokenization_method": null
+                        },
+                        "status": "succeeded",
+                        "created": 1554994357,
+                        "dispute": null,
+                        "invoice": "in_1EO4GWG8UgnSL68UHxgJxagK",
+                        "outcome": {
+                            "type": "authorized",
+                            "reason": null,
+                            "risk_level": "normal",
+                            "risk_score": 16,
+                            "network_status": "approved_by_network",
+                            "seller_message": "Payment complete."
+                        },
+                        "refunds": {
+                            "url": "/v1/charges/ch_1EO4GXG8UgnSL68U8ksg4T6l/refunds",
+                            "data": [],
+                            "object": "list",
+                            "has_more": false,
+                            "total_count": 0
+                        },
+                        "captured": true,
+                        "currency": "aud",
+                        "customer": "cus_ErUada3lFcSYb8",
+                        "livemode": false,
+                        "metadata": [],
+                        "refunded": false,
+                        "shipping": null,
+                        "application": null,
+                        "description": "Payment for invoice ACA70EC9-0003",
+                        "destination": null,
+                        "receipt_url": "https://pay.stripe.com/receipts/acct_1DP6B7G8UgnSL68U/ch_1EO4GXG8UgnSL68U8ksg4T6l/rcpt_ErnshGl0glfC9dcZMarnG07ZGN5wFar",
+                        "failure_code": null,
+                        "on_behalf_of": null,
+                        "fraud_details": [],
+                        "receipt_email": null,
+                        "transfer_data": null,
+                        "payment_intent": "pi_1EO4GXG8UgnSL68UnXDoiAAk",
+                        "payment_method": "card_1ENlbSG8UgnSL68UoaxZEnlB",
+                        "receipt_number": null,
+                        "transfer_group": null,
+                        "amount_refunded": 0,
+                        "application_fee": null,
+                        "billing_details": {
+                            "name": "Kevin",
+                            "email": null,
+                            "phone": null,
+                            "address": {
+                                "city": null,
+                                "line1": null,
+                                "line2": null,
+                                "state": null,
+                                "country": null,
+                                "postal_code": null
+                            }
+                        },
+                        "failure_message": null,
+                        "source_transfer": null,
+                        "balance_transaction": "txn_1EO4GXG8UgnSL68UPFCXVqDP",
+                        "statement_descriptor": null,
+                        "application_fee_amount": null,
+                        "payment_method_details": {
+                            "card": {
+                                "brand": "visa",
+                                "last4": "0006",
+                                "checks": {
+                                    "cvc_check": null,
+                                    "address_line1_check": null,
+                                    "address_postal_code_check": null
+                                },
+                                "wallet": null,
+                                "country": "AU",
+                                "funding": "credit",
+                                "exp_year": 2020,
+                                "exp_month": 1,
+                                "fingerprint": "VcL1sXkTk3GuqULy",
+                                "three_d_secure": null
+                            },
+                            "type": "card"
+                        }
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "created": 1554994357,
+            "invoice": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "livemode": false,
+            "metadata": [],
+            "shipping": null,
+            "application": null,
+            "canceled_at": null,
+            "description": "Payment for invoice ACA70EC9-0003",
+            "next_action": null,
+            "on_behalf_of": null,
+            "client_secret": "pi_1EO4GXG8UgnSL68UnXDoiAAk_secret_QoaGbu3ChVHnxPLkHpxXMq1dg",
+            "receipt_email": null,
+            "transfer_data": null,
+            "capture_method": "automatic",
+            "payment_method": null,
+            "transfer_group": null,
+            "amount_received": 100,
+            "amount_capturable": 0,
+            "last_payment_error": null,
+            "next_source_action": null,
+            "cancellation_reason": null,
+            "confirmation_method": "automatic",
+            "allowed_source_types": [
+                "card"
+            ],
+            "payment_method_types": [
+                "card"
+            ],
+            "statement_descriptor": null,
+            "application_fee_amount": null
+        }
+    },
+    "type": "payment_intent.succeeded",
+    "object": "event",
+    "created": 1554994358,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.payment_succeeded ]
+{
+    "id": "evt_1EO4GYG8UgnSL68UY7emm50x",
+    "data": {
+        "object": {
+            "id": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "tax": null,
+            "date": 1554994356,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GWG8UgnSL68UHxgJxagK/lines",
+                "data": [
+                    {
+                        "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "plan": null,
+                        "type": "invoiceitem",
+                        "amount": 100,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1554994355,
+                            "start": 1554994355
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "plan": "au_test_1d",
+                            "iccid": "89860118842319529603",
+                            "order_no": "20190411225234304671"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "TEST 5000 MB per Month - for 1 Month",
+                        "discountable": true,
+                        "invoice_item": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "subscription": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 100,
+            "charge": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0003",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994356,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586357,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": {
+                "order_no": "20190411225234304671"
+            },
+            "subtotal": 100,
+            "attempted": true,
+            "amount_due": 100,
+            "period_end": 1555009031,
+            "amount_paid": 100,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994357,
+            "period_start": 1554922633,
+            "subscription": null,
+            "attempt_count": 1,
+            "custom_fields": null,
+            "billing_reason": "manual",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS",
+            "status_transitions": {
+                "paid_at": 1554994358,
+                "voided_at": null,
+                "finalized_at": 1554994357,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.payment_succeeded",
+    "object": "event",
+    "created": 1554994358,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.payment_succeeded ]
+{
+    "id": "evt_1EO4GYG8UgnSL68UY7emm50x",
+    "data": {
+        "object": {
+            "id": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "tax": null,
+            "date": 1554994356,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GWG8UgnSL68UHxgJxagK/lines",
+                "data": [
+                    {
+                        "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "plan": null,
+                        "type": "invoiceitem",
+                        "amount": 100,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1554994355,
+                            "start": 1554994355
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "plan": "au_test_1d",
+                            "iccid": "89860118842319529603",
+                            "order_no": "20190411225234304671"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "TEST 5000 MB per Month - for 1 Month",
+                        "discountable": true,
+                        "invoice_item": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "subscription": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 100,
+            "charge": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0003",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994356,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586357,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": {
+                "order_no": "20190411225234304671"
+            },
+            "subtotal": 100,
+            "attempted": true,
+            "amount_due": 100,
+            "period_end": 1555009031,
+            "amount_paid": 100,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994357,
+            "period_start": 1554922633,
+            "subscription": null,
+            "attempt_count": 1,
+            "custom_fields": null,
+            "billing_reason": "manual",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS",
+            "status_transitions": {
+                "paid_at": 1554994358,
+                "voided_at": null,
+                "finalized_at": 1554994357,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.payment_succeeded",
+    "object": "event",
+    "created": 1554994358,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.updated ]
+{
+    "id": "evt_1EO4GYG8UgnSL68UocrWpqd5",
+    "data": {
+        "object": {
+            "id": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "tax": null,
+            "date": 1554994356,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GWG8UgnSL68UHxgJxagK/lines",
+                "data": [
+                    {
+                        "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "plan": null,
+                        "type": "invoiceitem",
+                        "amount": 100,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1554994355,
+                            "start": 1554994355
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "plan": "au_test_1d",
+                            "iccid": "89860118842319529603",
+                            "order_no": "20190411225234304671"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "TEST 5000 MB per Month - for 1 Month",
+                        "discountable": true,
+                        "invoice_item": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "subscription": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 100,
+            "charge": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0003",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994356,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586357,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": {
+                "order_no": "20190411225234304671"
+            },
+            "subtotal": 100,
+            "attempted": true,
+            "amount_due": 100,
+            "period_end": 1555009031,
+            "amount_paid": 100,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994357,
+            "period_start": 1554922633,
+            "subscription": null,
+            "attempt_count": 1,
+            "custom_fields": null,
+            "billing_reason": "manual",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS",
+            "status_transitions": {
+                "paid_at": 1554994358,
+                "voided_at": null,
+                "finalized_at": 1554994357,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        },
+        "previous_attributes": {
+            "paid": false,
+            "charge": null,
+            "status": "open",
+            "attempted": false,
+            "amount_paid": 0,
+            "attempt_count": 0,
+            "amount_remaining": 100,
+            "status_transitions": {
+                "paid_at": null
+            }
+        }
+    },
+    "type": "invoice.updated",
+    "object": "event",
+    "created": 1554994358,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.finalized ]
+{
+    "id": "evt_1EO4GYG8UgnSL68UaISoHvgT",
+    "data": {
+        "object": {
+            "id": "in_1EO4GWG8UgnSL68UHxgJxagK",
+            "tax": null,
+            "date": 1554994356,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GWG8UgnSL68UHxgJxagK/lines",
+                "data": [
+                    {
+                        "id": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "plan": null,
+                        "type": "invoiceitem",
+                        "amount": 100,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1554994355,
+                            "start": 1554994355
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "plan": "au_test_1d",
+                            "iccid": "89860118842319529603",
+                            "order_no": "20190411225234304671"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "TEST 5000 MB per Month - for 1 Month",
+                        "discountable": true,
+                        "invoice_item": "ii_1EO4GVG8UgnSL68UDcU0kwAy",
+                        "subscription": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 100,
+            "charge": "ch_1EO4GXG8UgnSL68U8ksg4T6l",
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0003",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994356,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586357,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": {
+                "order_no": "20190411225234304671"
+            },
+            "subtotal": 100,
+            "attempted": true,
+            "amount_due": 100,
+            "period_end": 1555009031,
+            "amount_paid": 100,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994357,
+            "period_start": 1554922633,
+            "subscription": null,
+            "attempt_count": 1,
+            "custom_fields": null,
+            "billing_reason": "manual",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_QlLa9OXTNa2lYlyTVuW6k2GnPS",
+            "status_transitions": {
+                "paid_at": 1554994358,
+                "voided_at": null,
+                "finalized_at": 1554994357,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.finalized",
+    "object": "event",
+    "created": 1554994358,
+    "request": {
+        "id": "req_QJN9QqmRjn5P3c",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//************************************************************************
+[ invoice.created ]
+{
+    "id": "evt_1EO4GaG8UgnSL68UUj52qvsc",
+    "data": {
+        "object": {
+            "id": "in_1EO4GaG8UgnSL68UfPdEhe6v",
+            "tax": null,
+            "date": 1554994360,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GaG8UgnSL68UfPdEhe6v/lines",
+                "data": [
+                    {
+                        "id": "sli_181ec2ca67bb5c",
+                        "plan": {
+                            "id": "au_test_1d",
+                            "tiers": null,
+                            "active": true,
+                            "amount": 100,
+                            "object": "plan",
+                            "created": 1554922435,
+                            "product": "au_test",
+                            "currency": "aud",
+                            "interval": "day",
+                            "livemode": false,
+                            "metadata": [],
+                            "nickname": null,
+                            "tiers_mode": null,
+                            "usage_type": "licensed",
+                            "billing_scheme": "per_unit",
+                            "interval_count": 1,
+                            "aggregate_usage": null,
+                            "transform_usage": null,
+                            "trial_period_days": null
+                        },
+                        "type": "subscription",
+                        "amount": 0,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1555080757,
+                            "start": 1554994360
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "iccid": "89860118842319529603"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "Trial period for TEST (au_test)",
+                        "discountable": true,
+                        "subscription": "sub_ErnsDUxdl5CQ5c",
+                        "subscription_item": "si_ErnsH5CEwDsAx4"
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 0,
+            "charge": null,
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0004",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994360,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586360,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": [],
+            "subtotal": 0,
+            "attempted": true,
+            "amount_due": 0,
+            "period_end": 1554994360,
+            "amount_paid": 0,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_oLUFAwNbuoQMkDDN7ACWag7GAY/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994360,
+            "period_start": 1554994360,
+            "subscription": "sub_ErnsDUxdl5CQ5c",
+            "attempt_count": 0,
+            "custom_fields": null,
+            "billing_reason": "subscription_update",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_oLUFAwNbuoQMkDDN7ACWag7GAY",
+            "status_transitions": {
+                "paid_at": 1554994360,
+                "voided_at": null,
+                "finalized_at": 1554994360,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.created",
+    "object": "event",
+    "created": 1554994360,
+    "request": {
+        "id": "req_KwLubAqCI8Mapc",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.finalized ]
+{
+    "id": "evt_1EO4GaG8UgnSL68UJlom5yKj",
+    "data": {
+        "object": {
+            "id": "in_1EO4GaG8UgnSL68UfPdEhe6v",
+            "tax": null,
+            "date": 1554994360,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GaG8UgnSL68UfPdEhe6v/lines",
+                "data": [
+                    {
+                        "id": "sli_181ec2ca67bb5c",
+                        "plan": {
+                            "id": "au_test_1d",
+                            "tiers": null,
+                            "active": true,
+                            "amount": 100,
+                            "object": "plan",
+                            "created": 1554922435,
+                            "product": "au_test",
+                            "currency": "aud",
+                            "interval": "day",
+                            "livemode": false,
+                            "metadata": [],
+                            "nickname": null,
+                            "tiers_mode": null,
+                            "usage_type": "licensed",
+                            "billing_scheme": "per_unit",
+                            "interval_count": 1,
+                            "aggregate_usage": null,
+                            "transform_usage": null,
+                            "trial_period_days": null
+                        },
+                        "type": "subscription",
+                        "amount": 0,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1555080757,
+                            "start": 1554994360
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "iccid": "89860118842319529603"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "Trial period for TEST (au_test)",
+                        "discountable": true,
+                        "subscription": "sub_ErnsDUxdl5CQ5c",
+                        "subscription_item": "si_ErnsH5CEwDsAx4"
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 0,
+            "charge": null,
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0004",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994360,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586360,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": [],
+            "subtotal": 0,
+            "attempted": true,
+            "amount_due": 0,
+            "period_end": 1554994360,
+            "amount_paid": 0,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_oLUFAwNbuoQMkDDN7ACWag7GAY/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994360,
+            "period_start": 1554994360,
+            "subscription": "sub_ErnsDUxdl5CQ5c",
+            "attempt_count": 0,
+            "custom_fields": null,
+            "billing_reason": "subscription_update",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_oLUFAwNbuoQMkDDN7ACWag7GAY",
+            "status_transitions": {
+                "paid_at": 1554994360,
+                "voided_at": null,
+                "finalized_at": 1554994360,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.finalized",
+    "object": "event",
+    "created": 1554994360,
+    "request": {
+        "id": "req_KwLubAqCI8Mapc",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ invoice.payment_succeeded ]
+{
+    "id": "evt_1EO4GaG8UgnSL68UfFCSBymN",
+    "data": {
+        "object": {
+            "id": "in_1EO4GaG8UgnSL68UfPdEhe6v",
+            "tax": null,
+            "date": 1554994360,
+            "paid": true,
+            "lines": {
+                "url": "/v1/invoices/in_1EO4GaG8UgnSL68UfPdEhe6v/lines",
+                "data": [
+                    {
+                        "id": "sli_181ec2ca67bb5c",
+                        "plan": {
+                            "id": "au_test_1d",
+                            "tiers": null,
+                            "active": true,
+                            "amount": 100,
+                            "object": "plan",
+                            "created": 1554922435,
+                            "product": "au_test",
+                            "currency": "aud",
+                            "interval": "day",
+                            "livemode": false,
+                            "metadata": [],
+                            "nickname": null,
+                            "tiers_mode": null,
+                            "usage_type": "licensed",
+                            "billing_scheme": "per_unit",
+                            "interval_count": 1,
+                            "aggregate_usage": null,
+                            "transform_usage": null,
+                            "trial_period_days": null
+                        },
+                        "type": "subscription",
+                        "amount": 0,
+                        "object": "line_item",
+                        "period": {
+                            "end": 1555080757,
+                            "start": 1554994360
+                        },
+                        "currency": "aud",
+                        "livemode": false,
+                        "metadata": {
+                            "iccid": "89860118842319529603"
+                        },
+                        "quantity": 1,
+                        "proration": false,
+                        "description": "Trial period for TEST (au_test)",
+                        "discountable": true,
+                        "subscription": "sub_ErnsDUxdl5CQ5c",
+                        "subscription_item": "si_ErnsH5CEwDsAx4"
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "total": 0,
+            "charge": null,
+            "closed": true,
+            "footer": null,
+            "number": "ACA70EC9-0004",
+            "object": "invoice",
+            "status": "paid",
+            "billing": "charge_automatically",
+            "created": 1554994360,
+            "currency": "aud",
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "due_date": 1557586360,
+            "forgiven": false,
+            "livemode": false,
+            "metadata": [],
+            "subtotal": 0,
+            "attempted": true,
+            "amount_due": 0,
+            "period_end": 1554994360,
+            "amount_paid": 0,
+            "description": null,
+            "invoice_pdf": "https://pay.stripe.com/invoice/invst_oLUFAwNbuoQMkDDN7ACWag7GAY/pdf",
+            "tax_percent": null,
+            "auto_advance": false,
+            "finalized_at": 1554994360,
+            "period_start": 1554994360,
+            "subscription": "sub_ErnsDUxdl5CQ5c",
+            "attempt_count": 0,
+            "custom_fields": null,
+            "billing_reason": "subscription_update",
+            "default_source": null,
+            "ending_balance": 0,
+            "receipt_number": null,
+            "application_fee": null,
+            "amount_remaining": 0,
+            "starting_balance": 0,
+            "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_oLUFAwNbuoQMkDDN7ACWag7GAY",
+            "status_transitions": {
+                "paid_at": 1554994360,
+                "voided_at": null,
+                "finalized_at": 1554994360,
+                "marked_uncollectible_at": null
+            },
+            "next_payment_attempt": null,
+            "statement_descriptor": null,
+            "webhooks_delivered_at": null
+        }
+    },
+    "type": "invoice.payment_succeeded",
+    "object": "event",
+    "created": 1554994360,
+    "request": {
+        "id": "req_KwLubAqCI8Mapc",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ customer.subscription.created ]
+{
+    "id": "evt_1EO4GaG8UgnSL68Ue7j41nLD",
+    "data": {
+        "object": {
+            "id": "sub_ErnsDUxdl5CQ5c",
+            "plan": {
+                "id": "au_test_1d",
+                "tiers": null,
+                "active": true,
+                "amount": 100,
+                "object": "plan",
+                "created": 1554922435,
+                "product": "au_test",
+                "currency": "aud",
+                "interval": "day",
+                "livemode": false,
+                "metadata": [],
+                "nickname": null,
+                "tiers_mode": null,
+                "usage_type": "licensed",
+                "billing_scheme": "per_unit",
+                "interval_count": 1,
+                "aggregate_usage": null,
+                "transform_usage": null,
+                "trial_period_days": null
+            },
+            "items": {
+                "url": "/v1/subscription_items?subscription=sub_ErnsDUxdl5CQ5c",
+                "data": [
+                    {
+                        "id": "si_ErnsH5CEwDsAx4",
+                        "plan": {
+                            "id": "au_test_1d",
+                            "tiers": null,
+                            "active": true,
+                            "amount": 100,
+                            "object": "plan",
+                            "created": 1554922435,
+                            "product": "au_test",
+                            "currency": "aud",
+                            "interval": "day",
+                            "livemode": false,
+                            "metadata": [],
+                            "nickname": null,
+                            "tiers_mode": null,
+                            "usage_type": "licensed",
+                            "billing_scheme": "per_unit",
+                            "interval_count": 1,
+                            "aggregate_usage": null,
+                            "transform_usage": null,
+                            "trial_period_days": null
+                        },
+                        "object": "subscription_item",
+                        "created": 1554994360,
+                        "metadata": [],
+                        "quantity": 1,
+                        "subscription": "sub_ErnsDUxdl5CQ5c",
+                        "billing_thresholds": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "start": 1554994360,
+            "object": "subscription",
+            "status": "trialing",
+            "billing": "charge_automatically",
+            "created": 1554994360,
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "ended_at": null,
+            "livemode": false,
+            "metadata": {
+                "iccid": "89860118842319529603"
+            },
+            "quantity": 1,
+            "schedule": null,
+            "cancel_at": 1555080757,
+            "trial_end": 1555080757,
+            "canceled_at": 1554994360,
+            "tax_percent": null,
+            "trial_start": 1554994360,
+            "days_until_due": null,
+            "default_source": null,
+            "latest_invoice": "in_1EO4GaG8UgnSL68UfPdEhe6v",
+            "billing_thresholds": null,
+            "current_period_end": 1555080757,
+            "billing_cycle_anchor": 1555080757,
+            "cancel_at_period_end": true,
+            "current_period_start": 1554994360,
+            "application_fee_percent": null
+        }
+    },
+    "type": "customer.subscription.created",
+    "object": "event",
+    "created": 1554994360,
+    "request": {
+        "id": "req_KwLubAqCI8Mapc",
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------
+[ customer.subscription.trial_will_end ]
+{
+    "id": "evt_1EO4GeG8UgnSL68Uw6TPuVYB",
+    "data": {
+        "object": {
+            "id": "sub_ErnsDUxdl5CQ5c",
+            "plan": {
+                "id": "au_test_1d",
+                "tiers": null,
+                "active": true,
+                "amount": 100,
+                "object": "plan",
+                "created": 1554922435,
+                "product": "au_test",
+                "currency": "aud",
+                "interval": "day",
+                "livemode": false,
+                "metadata": [],
+                "nickname": null,
+                "tiers_mode": null,
+                "usage_type": "licensed",
+                "billing_scheme": "per_unit",
+                "interval_count": 1,
+                "aggregate_usage": null,
+                "transform_usage": null,
+                "trial_period_days": null
+            },
+            "items": {
+                "url": "/v1/subscription_items?subscription=sub_ErnsDUxdl5CQ5c",
+                "data": [
+                    {
+                        "id": "si_ErnsH5CEwDsAx4",
+                        "plan": {
+                            "id": "au_test_1d",
+                            "tiers": null,
+                            "active": true,
+                            "amount": 100,
+                            "object": "plan",
+                            "created": 1554922435,
+                            "product": "au_test",
+                            "currency": "aud",
+                            "interval": "day",
+                            "livemode": false,
+                            "metadata": [],
+                            "nickname": null,
+                            "tiers_mode": null,
+                            "usage_type": "licensed",
+                            "billing_scheme": "per_unit",
+                            "interval_count": 1,
+                            "aggregate_usage": null,
+                            "transform_usage": null,
+                            "trial_period_days": null
+                        },
+                        "object": "subscription_item",
+                        "created": 1554994360,
+                        "metadata": [],
+                        "quantity": 1,
+                        "subscription": "sub_ErnsDUxdl5CQ5c",
+                        "billing_thresholds": null
+                    }
+                ],
+                "object": "list",
+                "has_more": false,
+                "total_count": 1
+            },
+            "start": 1554994360,
+            "object": "subscription",
+            "status": "trialing",
+            "billing": "charge_automatically",
+            "created": 1554994360,
+            "customer": "cus_ErUada3lFcSYb8",
+            "discount": null,
+            "ended_at": null,
+            "livemode": false,
+            "metadata": {
+                "iccid": "89860118842319529603"
+            },
+            "quantity": 1,
+            "schedule": null,
+            "cancel_at": 1555080757,
+            "trial_end": 1555080757,
+            "canceled_at": 1554994360,
+            "tax_percent": null,
+            "trial_start": 1554994360,
+            "days_until_due": null,
+            "default_source": null,
+            "latest_invoice": "in_1EO4GaG8UgnSL68UfPdEhe6v",
+            "billing_thresholds": null,
+            "current_period_end": 1555080757,
+            "billing_cycle_anchor": 1555080757,
+            "cancel_at_period_end": true,
+            "current_period_start": 1554994360,
+            "application_fee_percent": null
+        }
+    },
+    "type": "customer.subscription.trial_will_end",
+    "object": "event",
+    "created": 1554994364,
+    "request": {
+        "id": null,
+        "idempotency_key": null
+    },
+    "livemode": false,
+    "api_version": "2018-09-24",
+    "pending_webhooks": 1
+}
+
+//------------------------------------------------------------------------

@@ -581,10 +581,11 @@ class CamerasController extends Controller
             '1h'=>'1h', '2h'=>'2h', '4h'=>'4h', '6h'=>'6h', '8h'=>'8h', '10h'=>'10h', '12h'=>'12h',
         );
         if (env('APP_REGION') == 'tw') {
-            $items_tw = array(
-                '30s'=>'30s', '1m'=>'1m',
-            );
-            $array['options'] = array_merge($items_tw, $items);;
+            // $items_tw = array(
+            //     '30s'=>'30s', '1m'=>'1m',
+            // );
+            // $array['options'] = array_merge($items_tw, $items);
+            $array['options'] = $items;
         } else {
             $array['options'] = $items;
         }
@@ -4382,12 +4383,27 @@ return $ret;
         // {"_token":"xxxx","id":"1","password":"123456"}
         $user = Auth::user();
         if (Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
+            $camera_id = $request->id;
             $camera = Camera::find($request->id);
             if ($camera) {
-                $camera->delete();
-                $camera->photos()->delete();
+                // $camera->delete();
+
+                // $photos = $camera->photos(); // NG
+                $photos = DB::table('photos')->where('camera_id', $camera_id)->get();
+                $count = 0;
+                foreach ($photos as $photo) {
+                    $photo_id = $photo->id;
+                    $this->deleteGalleryFile($photo);
+
+                    $photoX = Photo::findOrFail($photo_id);
+                    $photoX->delete();
+                    $count++;
+                }
+
+                // $camera->photos()->delete();
                 $camera->actions()->delete();
                 $camera->log_apis()->delete();
+                $camera->delete();
 
                 $data['sel_camera'] = 0; // IMPORTANT !!
                 $user->update($data);
@@ -4476,17 +4492,41 @@ return $ret;
         return $this->route_to_cameras();
     }
 
+    public function deleteGalleryFile_S3($filename) {
+        $filename = 'media/'.$filename;
+        // $exists = Storage::disk('s3')->exists($filename);
+        // if ($exists) {
+            Storage::disk('s3')->delete($filename);
+        // }
+    }
+
+    public function deleteGalleryFile($photo) {
+        // filetype  : 1=photo, 2=video
+        // uploadtype: 1=photo_thumb, 2=photo_original
+        //             3=video_thumb, 4=video_original
+        if (env('S3_ENABLE')) {
+            $this->deleteGalleryFile_S3($photo->id.'.JPG');
+            $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+
+            if ($photo->uploadtype == 4) {
+                $this->deleteGalleryFile_S3($photo->id.'.MP4');
+            }
+        } else {
+
+        }
+    }
+
     public function gallery(Request $request) {
         //$medialist = $_POST['medialist'];
         //{"id":"1","action":"d","medialist":"[\"check_22\"]"}
         //return $request;
 
         $action = $request->action;
+        $camera_id = $request->id;
         $param = array(
             'camera_id'   => $request->id,
             'status'      => ACTION_REQUESTED,
         );
-
         $medialist = json_decode($request->medialist);
         foreach ($medialist as $media) {
             /*
@@ -4505,6 +4545,7 @@ return $ret;
 
             if ($photo->action == 0) {
                 if ($action == 'd') {
+                    $this->deleteGalleryFile($photo);
                     $photo->delete();
 
                 } else if ($action == 'h') {
@@ -4576,6 +4617,24 @@ return $ret;
                 }
             }
         }
+
+        if ($action == 'd') {
+            $cameras = DB::table('cameras')->where('id', $camera_id);
+            $photo = DB::table('photos')
+                ->where('camera_id', $camera_id)
+                ->orderBy('id', 'desc')
+                ->first();
+            if ($photo) {
+                if (env('S3_ENABLE')) {
+                    $cameras->update(['last_savename' => $photo->id]);
+                } else {
+
+                }
+            } else {
+                $cameras->update(['last_savename' => '']);
+            }
+        }
+
         return $this->route_to_cameras();
     }
 
@@ -4701,7 +4760,7 @@ return $ret;
                 $data[$key] = $request[$camera_id.'_'.$key];
             }
         }
-//return $data;
+        //return $data; // for test
 
         $cameras = DB::table('cameras')->where('id', $camera_id);
         $cameras->update($data);
