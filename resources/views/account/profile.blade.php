@@ -41,9 +41,11 @@
                         </li>
 
 @if (!Browser::isMobile())
+    @if (env('APP_BILLING'))
                         <li class={{ ($user->sel_account_tab == 'billing') ? "active" : "" }}>
                             <a href="#billing" data-toggle="tab" data-tab="billing" aria-expanded="false"><span class="glyphicon glyphicon-credit-card"> </span> {{ trans('htc.Billing') }}</a>
                         </li>
+    @endif
 @endif
                         <li class={{ ($user->sel_account_tab == 'remote') ? "active" : "" }}>
                             <a href="#remote" data-toggle="tab" data-tab="remote" aria-expanded="true"><span class="glyphicon glyphicon-link"> </span> {{ trans('htc.Devices') }}</a>
