@@ -278,8 +278,8 @@ class AccountsController extends Controller
 
             */
             $sku = null;
-            $txt_tier = $txt_tier2 = 'xxx';
-            $txt_service_end = '';
+            $txt_tier = $txt_tier2 = 'Renew not defined';
+            $timeServiceStart = $timeServiceEnd = 'not defined';
             if ($action == 'cart') {
                 $sku = PlanProductSku::find($cart->plan_product_sku_id);
 
@@ -290,21 +290,27 @@ class AccountsController extends Controller
                 //     if ($subscription->ends_at) {
                 //         $dt = date_create($subscription->ends_at);
                 //         $dt = date_format($dt, $user->date_format);
-                //         // $txt_service_end = 'Service Ends by 2019/10/04 07:59:59';
-                //         $txt_service_end = 'Service Ends by '.$dt;
+                //         // $timeServiceEnd = 'Service Ends by 2019/10/04 07:59:59';
+                //         $timeServiceEnd = 'Service Ends by '.$dt;
                 //     }
                 // }
 
                 $sku = PlanProductSku::where('sub_plan', $plan->renew_plan)->first();
 
-                $dt = date_create($plan->sub_start);
                 $txtServiceStart = $this->ts('Service Start at');
-                $timeServiceStart = date_format($dt, $user->date_format);
-
-                $dt = date_create($plan->sub_end);
                 $txtServiceEnd = $this->ts('Service End at');
                 $txtServiceRenew = $this->ts('Service Renew at');
-                $txt_service_end = date_format($dt, $user->date_format);
+
+                $timeServiceStart = 'not defined';
+                if ($plan->sub_start) {
+                    $dt = date_create($plan->sub_start);
+                    $timeServiceStart = date_format($dt, $user->date_format);
+                }
+
+                if ($plan->sub_end) {
+                    $dt = date_create($plan->sub_end);
+                    $timeServiceEnd = date_format($dt, $user->date_format);
+                }
             }
 
             /* search Subscription */
@@ -338,7 +344,8 @@ class AccountsController extends Controller
             $handle .=                 '<div class="col-md-5">';
             // $handle .=                     '<i class="fa fa-dot-circle"></i>';
             $handle .=                     ' <span class="label label-highlight" style="font-size:0.9em;">'.$txt_status.'</span>';
-if ($plan->status == 'active') {
+// if ($plan->status == 'active') {
+if (($plan->status == 'active')||($plan->status == 'suspend')) {
     if ($plan_style == 'test') {
                 $handle .=                     ' <span class="label label-info" style="font-size: 1.00em;">'.'TEST'.'</span>';
     } else {
@@ -363,7 +370,7 @@ if ($plan->status == 'active') {
             // // $handle .=                             '<input type="checkbox" class="hidden camera-select" name="autorenew[]" value="8"  checked  />';
             // // // $handle .=                             '<br /><span class="label label-warning" style="font-size:0.9em; margin-left: 20px;">Service Ends by 10/04/2019 7:59:59 am</span>';
             // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$timeServiceStart.'</span>';
-            // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$txt_service_end.'</span>';
+            // // $handle .=                             '<br /><span class="text-warning" style="font-size:0.9em; margin-left: 20px;">'.$timeServiceEnd.'</span>';
             // $handle .=                         '</span>';
             // $handle .=                     '</p>';
 
@@ -373,13 +380,14 @@ if ($plan->status == 'active') {
             $handle .=                             '<tr><td class="pull-right">'.$txtServiceStart.' : </td>';
             $handle .=                                 '<td>'.$timeServiceStart.'</td>';
             $handle .=                             '</tr>';
-            if ($plan->auto_bill) {
+            // if ($plan->auto_bill) {
+            if (($plan->auto_bill) && ($plan->status == 'active')) {
                 $handle .=                         '<tr><td class="pull-right">'.$txtServiceRenew.' : </td>';
             } else {
                 $handle .=                         '<tr><td class="pull-right">'.$txtServiceEnd.' : </td>';
             }
 
-            $handle .=                                 '<td>'.$txt_service_end.'</td>';
+            $handle .=                                 '<td>'.$timeServiceEnd.'</td>';
             $handle .=                         '</tr>';
             $handle .=                         '</tbody>';
             $handle .=                     '</table>';
@@ -416,8 +424,10 @@ if ($plan_style == 'test') {
             $handle .=                         '<i class="glyphicon glyphicon-'.$action_icon.'"> </i> '.$action_name;
             $handle .=                     '</a>';
 
-        // if (($action == 'cart')||($action == 'renew')||($action == 'renew')) {
-        if ($action != 'create') {
+        // create, cart, renew, reactive
+        // if (($action == 'cart')||($action == 'renew')||($action == 'reactive')) {
+        // if ($action != 'create') {
+        if (($action == 'cart')||($action == 'renew')) {
             $handle .=                     '<div class="alert alert-default" style="margin-left:20px; margin-bottom: 2px; margin-top:4px; background-color: #222;">';
             if ($plan->auto_bill) {
                 $handle .=                     '<p>';

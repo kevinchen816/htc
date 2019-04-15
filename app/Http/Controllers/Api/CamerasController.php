@@ -41,17 +41,18 @@ Truphone #2 - 8944503540145561039 F
 
 //define(ERR_INVALID_SIM_CARD, '801');
 const ERR_INVALID_SIM_CARD          = 801;
-const ERR_PLAN_SUSPEND              = 802;
-const ERR_PLAN_DEACTIVE             = 803;
+const ERR_INVALID_CAMERA            = 802;
+const ERR_NOT_CAMERA_OWNER          = 803;
 const ERR_PLAN_NOT_ACTIVE           = 804;
-const ERR_PLAN_EMPTY                = 805;
-const ERR_PLAN_EXPIRE               = 806;
-const ERR_INVALID_CAMERA            = 807;
-const ERR_NOT_CAMERA_OWNER          = 808;
-const ERR_NO_UPLOAD_FILE            = 809;
-const ERR_NO_REQUEST_ID             = 810;
-const ERR_INVALID_REQUEST_ID        = 811;
-const ERR_INVALID_PHOTO_ID          = 812;
+const ERR_PLAN_DEACTIVE             = 805;
+const ERR_PLAN_SUSPEND              = 806;
+const ERR_PLAN_EMPTY                = 807;
+const ERR_PLAN_RENEW_FAIL           = 808;
+const ERR_PLAN_EXPIRE               = 809;
+const ERR_NO_UPLOAD_FILE            = 810;
+const ERR_NO_REQUEST_ID             = 811;
+const ERR_INVALID_REQUEST_ID        = 812;
+const ERR_INVALID_PHOTO_ID          = 813;
 
 const ERR_NO_BLOCK_NUMBER           = 820;
 const ERR_NO_BLOCK_ID               = 821;
@@ -75,12 +76,14 @@ const NOTI_PLAN_NOT_ACTIVE          = 1;
 const NOTI_PLAN_DEACTIVE            = 2;
 const NOTI_PLAN_SUSPEND             = 3;
 const NOTI_PLAN_EMPTY               = 4;
-const NOTI_PLAN_EXPIRE              = 5;
-const NOTI_PLAN_WILL_EXPIRE         = 6;
-const NOTI_BATTERY_EMPTY            = 7;
-const NOTI_CARD_FULL                = 8;
-const NOTI_CARD_ERROR               = 9;
-const NOTI_CARD_FORMAT_DONE         = 10;
+const NOTI_PLAN_RENEW               = 5;
+const NOTI_PLAN_RENEW_FAIL          = 6;
+const NOTI_PLAN_EXPIRE              = 7;
+const NOTI_PLAN_WILL_EXPIRE         = 8;
+const NOTI_BATTERY_EMPTY            = 9;
+const NOTI_CARD_FULL                = 10;
+const NOTI_CARD_ERROR               = 11;
+const NOTI_CARD_FORMAT_DONE         = 12;
 
 class CamerasController extends Controller
 {
@@ -162,13 +165,16 @@ class CamerasController extends Controller
     public function getErrorMessage($errorCode) {
         static $errors = array(
             ERR_INVALID_SIM_CARD => 'Invalid SIM card',
-            ERR_PLAN_SUSPEND => 'Plan is suspend',
-            ERR_PLAN_DEACTIVE => 'Plan is deactive',
-            ERR_PLAN_NOT_ACTIVE => 'Plan not active',
-            ERR_PLAN_EXPIRE => 'Plan is expired',
-            ERR_PLAN_EMPTY => 'Plan points empty',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
+
+            ERR_PLAN_NOT_ACTIVE => 'Plan NOT Active',
+            ERR_PLAN_DEACTIVE => 'Plan Deactive',
+            ERR_PLAN_SUSPEND => 'Plan Suspend',
+            ERR_PLAN_EMPTY => 'Plan Empty', // 'Plan points empty'
+            ERR_PLAN_RENEW_FAIL => 'Plan Renew Fail',
+            ERR_PLAN_EXPIRE => 'Plan Expired',
+
             ERR_NO_UPLOAD_FILE => 'No Upload File',
             ERR_NO_REQUEST_ID => 'No Request ID',
             ERR_INVALID_REQUEST_ID => 'Invalid Request ID',
@@ -1787,8 +1793,19 @@ class CamerasController extends Controller
                     $ret['err'] = 0;
                 } else {
                     if (Carbon::now()->gt($plan->sub_end)) {
-                        $ret['err'] = ERR_PLAN_EXPIRE;
-                        $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_EXPIRE);
+                        if ($plan->auto_bill) {
+                            if (Carbon::now()->subDays(1)->lt($plan->sub_end)) {
+                                $ret['err'] = 0;
+                                $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_RENEW); // for debug
+                            } else {
+                                $ret['err'] = ERR_PLAN_RENEW_FAIL;
+                                $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_RENEW_FAIL);
+                            }
+                        } else {
+                            $ret['err'] = ERR_PLAN_EXPIRE;
+                            $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_EXPIRE);
+                        }
+
                     // } else if (Carbon::now()->addDays(1)->gt($plan->sub_end)) {
                     //     $ret['err'] = 0;
                     //     $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_WILL_EXPIRE);
@@ -1820,7 +1837,7 @@ class CamerasController extends Controller
                 // $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_SUSPEND);
             } else {
                 $ret['err'] = ERR_PLAN_NOT_ACTIVE;
-                // $this->NotificationMessage_Plan($user_id, $iccid, ERR_PLAN_NOT_ACTIVE);
+                // $this->NotificationMessage_Plan($user_id, $iccid, NOTI_PLAN_NOT_ACTIVE);
             }
 
         } else {
@@ -5370,12 +5387,22 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
 
     // public function pushMessagePlan($user_id, $iccid, $message) {
     public function NotificationMessage_Plan($user_id, $iccid, $noti_id) {
-        if ($noti_id == NOTI_PLAN_EXPIRE) {
+        if ($noti_id == NOTI_PLAN_NOT_ACTIVE) {
+            $message = 'Plan Not Actve';
+        } else if ($noti_id == NOTI_PLAN_DEACTIVE) {
+            $message = 'Plan Deactive';
+        } else if ($noti_id == NOTI_PLAN_SUSPEND) {
+            $message = 'Plan Suspend';
+        } else if ($noti_id == NOTI_PLAN_EMPTY) {
+            $message = 'Plan Empty';
+        } else if ($noti_id == NOTI_PLAN_RENEW) {
+            $message = 'Plan Wait Renew';
+        } else if ($noti_id == NOTI_PLAN_RENEW_FAIL) {
+            $message = 'Plan Renew Fail';
+        } else if ($noti_id == NOTI_PLAN_EXPIRE) {
             $message = 'Plan Expired';
         } else if ($noti_id == NOTI_PLAN_WILL_EXPIRE) {
             $message = 'Plan Will Expire';
-        } else if ($noti_id == NOTI_PLAN_EMPTY) {
-            $message = 'Plan Empty';
         } else {
             $message = 'Unknown Plan Notification';
         }

@@ -135,6 +135,7 @@ class PlansController extends Controller
             // $status = 'deactive';
             // $points = 0;
             // $plans = 0;
+
             $style = 'test';
             $status = 'active';
             $points = 100000;
