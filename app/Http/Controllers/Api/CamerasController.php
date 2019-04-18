@@ -3796,7 +3796,11 @@ return $ret;
         }
         $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $obj->hb_interval);
         $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $obj->online_max_time);
-        //$txt .= $this->ovItemShowEx($this->itemRemoteControl(), $obj->remotecontrol);
+
+        if (env('APP_RC24H')) {
+            $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $obj->remotecontrol);
+        }
+
         $txt .= $this->ovItemShowEx($this->itemCellularPassword(), $obj->cellularpw);
         return $txt;
     }
@@ -4112,7 +4116,9 @@ return $ret;
         $txt .= $this->stItemOption($id, $this->itemScheduleFileLimit(), 'wm_sclimit');
         $txt .= $this->stItemOption($id, $this->itemHeartbeatInterval(), 'hb_interval');
         $txt .= $this->stItemOption($id, $this->itemActionProcessTimeLimit(), 'online_max_time');
-        //$txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
+        if (env('APP_RC24H')) {
+            $txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
+        }
         $txt .= $this->stItemOption($id, $this->itemCellularPassword(), 'cellularpw');
         return $txt;
     }
