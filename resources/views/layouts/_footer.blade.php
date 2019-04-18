@@ -79,7 +79,15 @@
         </section>
         <section class="row" id="footer-bottom">
             <div class="col-sm-12 text-center">
+@if (env('APP_REGION') == 'cn')
+                <p class="copyright">&copy;2018 {{ env('APP_NAME') }} All rights reserved.
+                    <a href="http://beian.miit.gov.cn" target="_blank">粤ICP备16020821号-3</a>
+                </p>
+
+
+@else
                 <p class="copyright">&copy;2018 {{ env('APP_NAME') }} All rights reserved.</p>
+@endif
             </div>
         </section>
 

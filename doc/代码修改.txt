@@ -33,7 +33,6 @@
     原来 $table->float('points')->default(0);
     修改 $table->decimal('points', 10, 2)->default(0);
 
-
 \database\migrations\2018_09_21_170056_create_plans_table.php
 
     原来:
