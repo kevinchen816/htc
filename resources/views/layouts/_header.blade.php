@@ -10,22 +10,13 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <!-- <h2>KMCam Pro</h2> -->
-                <!-- <h2>{{ env('APP_NAME') }}</h2> -->
-
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="{{ env('APP_NAME') }} Home">
-                <!-- <a class="navbar-brand" href="http://portal.vigilmax.de" target="_blank" title="VigilMax Home"> -->
-                    <!-- <img class="main-logo" width="224" height="47" src="{{ route('home') }}/images/logo.png" alt="VigilMax logo" /> -->
-
 @if (env('APP_REGION') == 'eu')
                     <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo.png" alt="logo" />
 @elseif (env('APP_REGION') == 'au')
-                    <!-- <h2><span style="color: #E65A06;">RT</span>BaseControl</h2> -->
                     <h2><span style="color: #E65A06;">RT</span><span style="color: #636161;">BaseControl</span></h2>
 @elseif (env('APP_REGION') == 'tw')
-                    <!-- <img class="main-logo" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" /> -->
-                    <!-- <img class="main-logo" height="60" src="{{ route('home') }}/images/logo_eztoview-2.bmp" alt="logo" /> -->
                     <img class="main-logo" style="padding-top: 8px;" width="300" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
 @elseif (env('APP_REGION') == 'cn')
                     <!-- <h2>{{ env('APP_NAME') }}</h2> -->
@@ -43,11 +34,6 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
-
-                    <!--<li class=""><a href="https://portal.ridgetec.com/plans/add-plan"><span class="glyphicon glyphicon-signal"> </span> Add Plan</a></li>
-                    <li class=""><a href="https://portal.ridgetec.com/cameras"><i class="fa fa-camera"></i> My Cameras</a></li>
-                    <li class=""><a href="https://portal.ridgetec.com/account/profile"><i class="fa fa-gear"></i> My Account</a></li>
-                    <li class=""><a href="https://portal.ridgetec.com/help/plans">PLAN INFO</a></li>-->
 
 @if (Auth::check() && isset($user))
     @if (!Browser::isMobile())

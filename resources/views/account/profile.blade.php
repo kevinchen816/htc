@@ -92,6 +92,7 @@
         </div>
     </div>
 
+@if (0)
     <div id="security-options" class="hidden">
         <div class="alert alert-sm alert-info help-container">
             <h4><strong>Security Options</strong>
@@ -129,6 +130,7 @@
 
         </div>
     </div>
+@endif
 
     <div id="invoiceModal" class="modal fade" role="dialog" >
         <div class="modal-dialog">

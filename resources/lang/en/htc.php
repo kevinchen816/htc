@@ -96,7 +96,7 @@ return [
         'Camera'                => 'Camera',
         'No Camera'             => 'No Camera',
     'Billing'                   => 'Billing',
-        'active_card'           => 'The Active Card on file is',
+        'active_card'           => 'Active Card',
         'Cardholder Name'       => 'Cardholder Name',
         'Card Number'           => 'Card Number',
         'Card Expiry'           => 'Card Expiry',
