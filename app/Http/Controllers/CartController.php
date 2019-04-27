@@ -278,6 +278,8 @@ class CartController extends Controller
         $ph->status = 'success';
         $ph->points = $plan->points;
         // $ph->points_reserve = 0;
+        $ph->plans = $plan->data_plans;
+        // $ph->plans_reserve = 0;
 
         $ph->sub_plan = $plan->sub_plan; // au_5000_1m
         $ph->sub_id = $plan->sub_id; // sub_EAh5xs7HT6ObHB
