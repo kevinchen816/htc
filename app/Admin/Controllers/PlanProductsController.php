@@ -373,10 +373,15 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['ymwd'=>'m', 'month'=>1, 'amount'=>900, 'active'=>1, 'description' => 'per Month'],
-                ['ymwd'=>'m', 'month'=>3, 'amount'=>900*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
-                ['ymwd'=>'m', 'month'=>6, 'amount'=>900*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
-                ['ymwd'=>'m', 'month'=>12, 'amount'=>900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
+                // ['ymwd'=>'m', 'month'=>1, 'amount'=>900, 'active'=>0, 'description' => 'per Month'],
+                // ['ymwd'=>'m', 'month'=>3, 'amount'=>900*3*0.98, 'active'=>1, 'description' => 'for 3 Months'],
+                // ['ymwd'=>'m', 'month'=>6, 'amount'=>900*6*0.96, 'active'=>1, 'description' => 'for 6 Months'],
+                // ['ymwd'=>'m', 'month'=>12, 'amount'=>900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
+
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>900, 'active'=>0, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>900*3, 'active'=>1, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>900*6*0.95, 'active'=>1, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>900*12*0.9, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -390,10 +395,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['ymwd'=>'m', 'month'=>1, 'amount'=>1900, 'active'=>1, 'description' => 'per Month'],
-                ['ymwd'=>'m', 'month'=>3, 'amount'=>1900*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
-                ['ymwd'=>'m', 'month'=>6, 'amount'=>1900*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
-                ['ymwd'=>'m', 'month'=>12, 'amount'=>1900*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>1900, 'active'=>0, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>1900*3, 'active'=>1, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>1900*6*0.95, 'active'=>1, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>1900*12*0.9, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -407,10 +412,10 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['ymwd'=>'m', 'month'=>1, 'amount'=>2300, 'active'=>1, 'description' => 'per Month'],
-                ['ymwd'=>'m', 'month'=>3, 'amount'=>2300*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
-                ['ymwd'=>'m', 'month'=>6, 'amount'=>2300*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
-                ['ymwd'=>'m', 'month'=>12, 'amount'=>2300*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>2300, 'active'=>0, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>2300*3, 'active'=>1, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>2300*6*0.95, 'active'=>1, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>2300*12*0.9, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -424,27 +429,33 @@ class PlanProductsController extends Controller
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['ymwd'=>'m', 'month'=>1, 'amount'=>3600, 'active'=>1, 'description' => 'per Month'],
-                ['ymwd'=>'m', 'month'=>3, 'amount'=>3600*3*0.98, 'active'=>0, 'description' => 'for 3 Months'],
-                ['ymwd'=>'m', 'month'=>6, 'amount'=>3600*6*0.96, 'active'=>0, 'description' => 'for 6 Months'],
-                ['ymwd'=>'m', 'month'=>12, 'amount'=>3600*12*0.94, 'active'=>0, 'description' => 'for 12 Months'],
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>3600, 'active'=>0, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>3600*3, 'active'=>1, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>3600*6*0.95, 'active'=>1, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>3600*12*0.9, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
         $product_au_test = array(
             'id' => 'au_test',
             'name' => 'TEST',
-            'description' => '5GB per day',
+            // 'description' => '5GB per day',
+            'description' => '5GB per month',
             'points' => 100000,
             'data_plans' => 5000,
             'region' => 'au',
             'currency' => 'aud',
             'active' => 1,
             'plans' => [
-                ['ymwd'=>'d', 'month'=>1, 'amount'=>100, 'active'=>1, 'description' => 'per Day'],
-                ['ymwd'=>'d', 'month'=>2, 'amount'=>102, 'active'=>1, 'description' => 'per 2 Days'],
-                ['ymwd'=>'d', 'month'=>3, 'amount'=>103, 'active'=>1, 'description' => 'per 3 Days'],
-                ['ymwd'=>'d', 'month'=>7, 'amount'=>107, 'active'=>1, 'description' => 'per 7 Days'],
+                // ['ymwd'=>'d', 'month'=>1, 'amount'=>100, 'active'=>1, 'description' => 'per Day'],
+                // ['ymwd'=>'d', 'month'=>2, 'amount'=>102, 'active'=>1, 'description' => 'per 2 Days'],
+                // ['ymwd'=>'d', 'month'=>3, 'amount'=>103, 'active'=>1, 'description' => 'per 3 Days'],
+                // ['ymwd'=>'d', 'month'=>7, 'amount'=>107, 'active'=>1, 'description' => 'per 7 Days'],
+
+                ['ymwd'=>'m', 'month'=>1, 'amount'=>100, 'active'=>1, 'description' => 'per Month'],
+                ['ymwd'=>'m', 'month'=>3, 'amount'=>103, 'active'=>0, 'description' => 'for 3 Months'],
+                ['ymwd'=>'m', 'month'=>6, 'amount'=>106, 'active'=>0, 'description' => 'for 6 Months'],
+                ['ymwd'=>'m', 'month'=>12, 'amount'=>112, 'active'=>0, 'description' => 'for 12 Months'],
             ]
         );
 
@@ -471,6 +482,7 @@ class PlanProductsController extends Controller
             $this->build_stripe($product_au_gold);
             $this->build_stripe($product_au_test);
 
+        } else if ($type == 3) {
             $this->build_stripe($product_eu_basic);
             $this->build_stripe($product_eu_bronze);
             $this->build_stripe($product_eu_silver);
