@@ -48,7 +48,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     {{ trans('htc.Control Settings') }}
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
+                    <!-- <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a> -->
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Basic($camera) !!}
@@ -60,7 +60,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     {{ trans('htc.Trigger Settings') }}
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
+                    <!-- <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a> -->
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Trigger($camera) !!}
@@ -91,7 +91,7 @@
             <div class="panel panel-default panel-primary custom-settings-panel">
                 <div class="panel-heading">
                     {{ trans('htc.Wireless Settings') }}
-                    <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a>
+                    <!-- <a class="btn btn-info btn-xs pull-right toggle-help-block" style="margin-left: 4px;"> <i class="glyphicon glyphicon-eye-open"></i> {{ trans('htc.Toggle Help') }}</a> -->
                 </div>
                 <div class="panel-body">
                     {!! $cc->html_Settings_Wireless_Mode($camera) !!}
