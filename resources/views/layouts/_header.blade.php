@@ -59,13 +59,13 @@
                         <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> {{ trans('htc.My Account') }}</a>
                     </li>
 
-    @if (env('APP_PLAN'))
+    @if (env('APP_PLAN') && (!Browser::isMobile()))
                     <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
                         <a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a>
                     </li>
     @endif
 @else
-    @if (env('APP_PLAN'))
+    @if (env('APP_PLAN') && (!Browser::isMobile()))
                     <li class=""><a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a></li>
     @endif
 @endif
