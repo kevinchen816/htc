@@ -1948,7 +1948,27 @@ class CamerasController extends Controller
         $camera->temperature  = $datalist['Temperature'];
         $camera->dsp_version  = $datalist['FirmwareVersion'];
         $camera->mcu_version  = $datalist['mcu'];
-        //$camera->cellular     = $datalist['cellular'];
+        $camera->save();
+        return 0;
+    }
+
+    public function Camera_Add2($user_id, $request) {
+        $camera = new Camera;
+
+        $camera->user_id = $user_id; /* search iccid to find the user_id */
+
+        $camera->module_id = $request->module_id;
+        $camera->iccid     = $request->iccid;
+        $camera->model_id  = $request->model_id;
+        $camera->cellular  = $request->cellular;
+
+        $camera->battery      = $request->Battery;
+        $camera->signal_value = $request->SignalValue;
+        $camera->card_space   = $request->Cardspace;
+        $camera->card_size    = $request->Cardsize;
+        $camera->temperature  = $request->Temperature;
+        $camera->dsp_version  = $request->FirmwareVersion;
+        $camera->mcu_version  = $request->mcu;
         $camera->save();
         return 0;
     }
@@ -2530,6 +2550,12 @@ return $ret;
         $err = $ret['err'];
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
+
+        if ($err == ERR_INVALID_CAMERA) {
+            $err = $this->Camera_Add2($user_id, $request);
+            $camera = $this->Camera_Find($request->module_id);
+        }
+
         if ($err == 0) {
             $camera_id = $camera->id;
 
@@ -2652,6 +2678,12 @@ return $ret;
         $err = $ret['err'];
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
+
+        if ($err == ERR_INVALID_CAMERA) {
+            $err = $this->Camera_Add2($user_id, $request);
+            $camera = $this->Camera_Find($request->module_id);
+        }
+
         if ($err == 0) {
             $camera_id = $camera->id;
 

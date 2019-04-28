@@ -131,15 +131,10 @@ class PlansController extends Controller
 
         $region = env('APP_REGION');
         if ($region == 'au') {
-            // $style = 'normal';
-            // $status = 'deactive';
-            // $points = 0;
-            // $plans = 0;
-
-            $style = 'test';
-            $status = 'active';
-            $points = 100000;
-            $plans = 10000;
+            $style = 'normal';
+            $status = 'deactive';
+            $points = 0;
+            $plans = 0;
         } else if ($region == 'de') {
             $style = 'normal';
             $status = 'deactive';
@@ -160,25 +155,14 @@ class PlansController extends Controller
             $status = 'deactive';
             $points = 0;
             $plans = 0;
-
-            // // for test
-            // if ($user->permission == 1) {
-            //     $region = 'au';
-            //     $style = 'normal';
-            //     // $style = 'test';
-            // } else {
-            //     $region = 'au';
-            //     $style = 'test';
-            // }
         }
 
-        // if ($style == 'test') {
-        //     $status = 'active';
-        //     $points = 100000;
-        // } else {
-        //     $status = 'deactive';
-        //     $points = 0;
-        // }
+        if (env('APP_PLAN_TEST')) {
+            $style = 'test';
+            $status = 'active';
+            $points = 100000;
+            $plans = 10000;
+        }
 
         /* Stripe - create customer id */
 //        if ($request->mode == 'new') {
