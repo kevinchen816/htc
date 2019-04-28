@@ -131,15 +131,15 @@ class PlansController extends Controller
 
         $region = env('APP_REGION');
         if ($region == 'au') {
-            $style = 'normal';
-            $status = 'deactive';
-            $points = 0;
-            $plans = 0;
+            // $style = 'normal';
+            // $status = 'deactive';
+            // $points = 0;
+            // $plans = 0;
 
-            // $style = 'test';
-            // $status = 'active';
-            // $points = 100000;
-            // $plans = 10000;
+            $style = 'test';
+            $status = 'active';
+            $points = 100000;
+            $plans = 10000;
         } else if ($region == 'de') {
             $style = 'normal';
             $status = 'deactive';
