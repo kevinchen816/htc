@@ -3145,6 +3145,7 @@ return $ret;
         $err = $ret['err'];
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
+        $file_not_exists = 0;
         if ($err == 0) {
             $this->Camera_Status_Update($user_id, $request);
 
@@ -3171,7 +3172,12 @@ return $ret;
                         $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
                         $pathname = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
 
-                        $crc32 = hexdec(hash_file('crc32b', $pathname));
+                        if (file_exists($pathname)) {
+                            $crc32 = hexdec(hash_file('crc32b', $pathname));
+                        } else {
+                            $err = 0; // TODO
+                            $file_not_exists = 1;
+                        }
                     }
                 } else {
                     $err = 0;
@@ -3180,8 +3186,12 @@ return $ret;
         }
 
         $response = $this->Response_Result($err, $camera);
-        if ($err == 1) {
-            $response['crc32'] = (string) $crc32;
+        if ($file_not_exists) {
+            $response['message'] = 'file not exist';
+        } else {
+            if ($err == 1) {
+                $response['crc32'] = (string) $crc32;
+            }
         }
 
         if ($user_id && $camera) {
