@@ -5217,7 +5217,9 @@ return $request;
 
     /*----------------------------------------------------------------------------------*/
     public function kk_test() {
-return ini_get('post_max_size');
+$pay_at = new Carbon('2019-04-29 08:34:06');
+return $pay_at;
+//return ini_get('post_max_size');
 
         $ret1 = Browser::isMobile();
         $ret2 = Browser::isTablet();
@@ -5547,5 +5549,79 @@ return 'OK';
         $push->message('Hello JPush');
         $ret = $push->send();
         return dd($ret);
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    // public function createSubscription($order, $order_item) {
+    public function createSubscription($iccid) {
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $iccid = $iccid; //$order_item['iccid'];
+        $sub_plan = 'au_bronze_6m'; //$order_item['sub_plan'];
+        $month = 6; //$order_item['month'];
+        $points = 10000; //$order_item['points'];
+        $data_plans = 500; //$order_item['data_plans'];
+
+        $stripe_id = 'cus_EyK533PvQujFuU';
+        // $stripe_id = 'cus_EyMZx94txhgyhc';
+
+        // $user = Auth::user();
+        $plan = Plan::where('iccid', $iccid)->first();
+
+        /* Plan Product SKU */
+        // $sku = PlanProductSku::find($plan_product_sku_id);
+        // $sub_plan = $sku->sub_plan; // 'au_5000_1m'
+        // $month = $sku->month;
+
+        /* Plan Product */
+        // $product = PlanProduct::find($sku->plan_product_id);
+        // $points = $product->points;
+
+        // $sub_end = Carbon::now()->addMonth($month)->timestamp;
+        // $pay_at = new Carbon($order->pay_at);
+        $pay_at = new Carbon('2019-04-29 08:34:06');
+        // if ($sub_plan == 'au_test_1d') {
+        //     $sub_end = $pay_at->addDay(1)->timestamp; // for test
+        // } else {
+            $sub_end = $pay_at->addMonth($month)->timestamp;
+        // }
+
+        $subscription = \Stripe\Subscription::create([
+            'customer' => $stripe_id, //$user->stripe_id,
+            'items' => [
+                ['plan' => $sub_plan]
+            ],
+            'metadata' => [
+                'iccid' => $iccid,
+            ],
+            'prorate' => false,
+            'cancel_at_period_end' => $plan->auto_bill ? false : true,
+            'trial_end' => $sub_end,
+            // 'billing_cycle_anchor' => $sub_end,
+        ]);
+
+        /* status = trialing, active, past_due, canceled, or unpaid */
+        // if ($subscription && ($subscription->status == 'active')) {
+        if ($subscription) {
+            if (($subscription->status == 'trialing')||($subscription->status == 'active')) {
+                $plan->status = 'active';
+
+                $plan->points = $points * $month;
+                // $plan->points_used = 0;
+
+                $plan->plans = $data_plans * $month;
+                // $plan->plans_used = 0;
+
+                $plan->sub_id = $subscription->id;
+                $plan->sub_start = date('Y-m-d H:i:s', $subscription->current_period_start);
+                $plan->sub_end = date('Y-m-d H:i:s', $subscription->current_period_end);
+                $plan->renew_plan = $sub_plan;
+                $plan->update();
+
+                /* Plan History */
+                // $this->savePlanHistory('create', $plan, $order);
+            }
+        }
+        return $subscription;
     }
 }

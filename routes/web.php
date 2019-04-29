@@ -302,6 +302,8 @@ Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@downlo
 Route::get('/push', 'Api\CamerasController@push_test');
 Route::get('/push2', 'Api\CamerasController@push_test2');
 
+Route::get('/stripe/createsub/{iccid}', 'Api\CamerasController@createSubscription');
+
 //Route::get('/bootstrap', function () { return view('bootstrap'); });
 //Route::get('/env', function () { return env('APP_ENV'); });
 
