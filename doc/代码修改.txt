@@ -1,6 +1,11 @@
 <?php
 
 //--------------------------------------------------------------------------------------
+// 2019-04-29
+\database\migrations\2018_09_10_043732_create_cameras_table.php
+    增加 $table->string('stamp_text')->nullable();
+
+//--------------------------------------------------------------------------------------
 \database\migrations\2018_09_10_043732_create_cameras_table.php
     原来 $table->integer('video_bitrate')->default(500);
     修改 $table->integer('video_bitrate')->default(900);

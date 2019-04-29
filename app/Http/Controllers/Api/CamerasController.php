@@ -614,6 +614,7 @@ class CamerasController extends Controller
     public function itemScheduleInterval() {
         $array['title'] = 'Schedule Interval';
         $array['options'] = array(
+'Every 30 Minutes'    => '30m',
             'Every Hour'    => '1h',
             'Every 2 Hours' => '2h',
             'Every 4 Hours' => '4h',
@@ -625,6 +626,8 @@ class CamerasController extends Controller
     public function itemScheduleFileLimit() {
         $array['title'] = 'Schedule File Limit';
         $array['options'] = array(
+'5 Files'  => '5',
+'10 Files'  => '10',
             '20 Files'  => '20',
             '30 Files'  => '30',
             '40 Files'  => '40',
@@ -2252,6 +2255,7 @@ class CamerasController extends Controller
 
             $datalist['time_format']     = (string) $camera->time_format;
             $datalist['temperature']     = (string) $camera->temp_unit;
+$datalist['stamp_text']       = (string) $camera->stamp_text;
             $datalist['quiettime']       = (string) $camera->quiettime;
             $datalist['timelapse']       = (string) $camera->timelapse;
             $datalist['tls_start']       = date('H:i', strtotime($camera->tls_start));
