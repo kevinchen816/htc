@@ -470,6 +470,16 @@ class CamerasController extends Controller
         return $array;
     }
 
+    public function itemStampText() {
+        $array['title'] = 'Stamp Text';
+        $array['type'] = 'input';
+        $array['format'] = 'maxlength="15"';
+        //$array['placeholder'] = 'Input Stamp Text';
+        $array['placeholder'] = 'Max Len. 15 (Letters, Numbers and @-_.)';
+        $array['help'] = 'Input 15 Characters. Letters, Numbers and @-_.';
+        return $array;
+    }
+
     /* Quiet Time */
     public function itemQuietTime() {
         $array['title'] = 'Quiet Time';
@@ -3822,6 +3832,7 @@ return $ret;
         $txt .= $this->ovItemShowEx($this->itemDateFormat(), $obj->date_format);
         $txt .= $this->ovItemShowEx($this->itemTimeFormat(), $obj->time_format);
         $txt .= $this->ovItemShowEx($this->itemTemperature(), $obj->temperature); // temp_unit
+        // $txt .= $this->ovItemShowEx($this->itemStampText(), $obj->stamp_text);
         $txt .= '<br/>';
 
         $txt .= $this->ovItemShowEx($this->itemQuietTime(), $obj->quiettime);
@@ -4139,6 +4150,7 @@ return $ret;
         $txt .= $this->stItemOption($id, $this->itemDateFormat(), 'date_format');
         $txt .= $this->stItemOption($id, $this->itemTimeFormat(), 'time_format');
         $txt .= $this->stItemOption($id, $this->itemTemperature(), 'temp_unit');
+        $txt .= $this->stItemOption($id, $this->itemStampText(), 'stamp_text');
         return $txt;
     }
 
@@ -4752,6 +4764,7 @@ return $ret;
             "video_resolution", "video_fps", "video_bitrate", "video_length", "video_sound",
             "timestamp", "date_format", "time_format",
             "temp_unit",
+            "stamp_text",
 
             /* Trigger Settings */
             "quiettime",

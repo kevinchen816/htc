@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Camera extends Model
 {
     protected $fillable = [
-        'module_id', 'iccid', 'model_id', 'remotecurrent', 'columns', 'thumbs',
+        'module_id', 'iccid', 'model_id', 'remotecurrent', 'columns', 'thumbs', 'stamp_text'
     ];
 
     public function user() {
