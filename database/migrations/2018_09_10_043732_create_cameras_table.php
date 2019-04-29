@@ -59,7 +59,6 @@ class CreateCamerasTable extends Migration
             $table->string('card_space')->default('')->nullable();
             $table->string('card_size')->default('')->nullable();
             $table->string('temperature')->default('')->nullable();
-            $table->string('stamp_text')->default('')->nullable();
             $table->string('dsp_version')->default('')->nullable();
             $table->string('mcu_version')->default('')->nullable();
             $table->string('cellular')->default('')->nullable();
@@ -90,6 +89,7 @@ class CreateCamerasTable extends Migration
             $table->string('date_format')->default('Ymd');      // Ymd, mdY, dmY
             $table->string('time_format')->default('24');       // 12, 24
             $table->string('temp_unit')->default('c');          // c, f
+            $table->string('stamp_text')->default('')->nullable();
 
             $table->string('quiettime')->default('5s');         // 0s
 
