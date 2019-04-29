@@ -211,7 +211,7 @@ class ActionsController extends Controller
         }
 
         $user = Auth::user();
-        if ($user->permission == 1) {
+        if ($user->permission == 99) {
             $txt .= '<tr>';
             $txt .=     '<td>';
             if ($camera->log == 1) {
