@@ -1,6 +1,21 @@
 <?php
 
 //--------------------------------------------------------------------------------------
+// 2019-04-30
+/database/migrations/2018_10_14_183617_create_sims_table.php
+    增加
+    $table->string('sim_sn')->nullable();
+    $table->string('msisdn')->nullable();
+    $table->string('operator')->nullable();
+
+/database/migrations/2018_12_17_220907_create_plan_history_table.php
+    修改: 增加 nullable()
+    $table->integer('points')->nullable()->default(0);
+    $table->decimal('points_reserve', 10, 2)->nullable()->default(0);
+    $table->integer('plans')->nullable()->default(0);
+    $table->integer('plans_reserve')->nullable()->default(0);
+
+//--------------------------------------------------------------------------------------
 // 2019-04-29
 \database\migrations\2018_09_10_043732_create_cameras_table.php
     增加 $table->string('stamp_text')->nullable();

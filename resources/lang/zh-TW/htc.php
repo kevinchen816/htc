@@ -43,7 +43,7 @@ return [
     'input_ICCID'               => '請輸入 ICCID',
     'agree_TERMS'               => '請閱讀並同意本協議條款和條件',
     'ICCID_had_registered'      => '此 ICCID 已經被使用',
-    'invalid_ICCID.'            => '無效的 ICCID.',
+    'Invalid ICCID'            => '無效的 ICCID.',
     'ICCID not exist'           => '此 ICCID 不存在',
     'Add Cart Fail'             => '加入購物車失敗',
     'Plan not found'            => '門號不存在',

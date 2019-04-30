@@ -10,7 +10,7 @@ use DB;
 class HelpsController extends Controller
 {
     public function terms(Request $request) {
-        if (env('APP_TERMS') == 'au') {
+        if (env('APP_REGION') == 'au') {
             $html = 'help.au.terms';
         } else {
             $html = 'help.terms';
@@ -34,7 +34,7 @@ class HelpsController extends Controller
     }
 
     public function plans() {
-        if (env('APP_PLAN') == 'au') {
+        if (env('APP_REGION') == 'au') {
             $html = 'help.au.plans';
         } else {
             $html = 'help.plans';
@@ -59,7 +59,7 @@ class HelpsController extends Controller
     }
 
     public function quick_start(Request $request) {
-        if (env('APP_PLAN') == 'au') {
+        if (env('APP_REGION') == 'au') {
             $html = 'help.au.quick-start';
         } else {
             $html = 'help.quick-start';

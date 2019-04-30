@@ -5578,7 +5578,7 @@ return 'OK';
 
     /*----------------------------------------------------------------------------------*/
     public function kk_test() {
-// return 'OK';
+return 'OK';
 // Debugbar::debug('hello');
 
         // $photo_id = 1;

@@ -21,10 +21,10 @@ class CreatePlanHistoryTable extends Migration
 
             $table->string('event')->nullable();
             $table->string('status')->nullable();
-            $table->integer('points')->default(0);
-            $table->decimal('points_reserve', 10, 2)->default(0);
-            $table->integer('plans')->default(0);
-            $table->integer('plans_reserve')->default(0);
+            $table->integer('points')->nullable()->default(0);
+            $table->decimal('points_reserve', 10, 2)->nullable()->default(0);
+            $table->integer('plans')->nullable()->default(0);
+            $table->integer('plans_reserve')->nullable()->default(0);
 
             $table->string('sub_id')->nullable();   // sub_EAh5xs7HT6ObHB
             $table->string('sub_plan')->nullable(); // au_5000_1m

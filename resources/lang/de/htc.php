@@ -43,7 +43,7 @@ return [
     'input_ICCID'               => 'Bitte geben Sie die ICCID ein',
     'agree_TERMS'               => 'Bitte lesen Sie die AGBs und stimmen Sie diesen zu.',
     'ICCID_had_registered'      => 'Diese ICCID wurde bereits registriert.',
-    'invalid_ICCID.'            => 'ungültige ICCID',
+    'Invalid ICCID'            => 'ungültige ICCID',
     'ICCID not exist'           => 'ICCID existiert nicht',
     'Add Cart Fail'             => 'Karte hinzufügen felgeschlagen',
     'Plan not found'            => 'Datenplan nicht gefunden',

@@ -100,8 +100,11 @@ class PlansController extends Controller
             return redirect()->back();
         }
         $iccid = $request->iccid;
+        $style = 'normal';
+        $status = 'deactive';
+        $region = env('APP_REGION');
 
-        if (env('APP_TERMS')){
+        if (env('APP_CHECK_TERMS')){
             if (!$request['agree-terms']) {
                // session()->flash('danger', 'Error: Please read and agree to the TERMS and CONDITIONS.');
                session()->flash('danger', $this->ts('agree_TERMS'));
@@ -120,36 +123,27 @@ class PlansController extends Controller
         }
 
         /* search SIM */
-        // $sim = DB::table('sims')->where('iccid', $iccid)->first();
-        // if (!$sim) {
-        //     session()->flash('danger', 'Invalid ICCID.');
-        //     session()->flash('danger', $this->ts('invalid_ICCID'));
-        //     return redirect()->back();
-        // }
-        // $region = $sim->region; // us, ca, eu, au, cn, tw
-        // $style = $sim->style; // demo, normal
+        if (env('APP_CHECK_SIM')){
+            $sim = DB::table('sims')->where('iccid', $iccid)->first();
+            if (!$sim) {
+                // session()->flash('danger', 'Invalid ICCID.');
+                session()->flash('danger', $this->ts('Invalid ICCID'));
+                return redirect()->back();
+            }
+            // $region = $sim->region; // us, ca, eu, au, cn, tw
+            $style = $sim->style; // test, normal
+            $region = $sim->region;
+        }
 
-        $region = env('APP_REGION');
-        if ($region == 'au') {
-            $style = 'normal';
-            $status = 'deactive';
-            $points = 0;
-            $plans = 0;
-        } else if ($region == 'de') {
-            $style = 'normal';
-            $status = 'deactive';
-            $points = 0;
-            $plans = 0;
-        } else if ($region == 'tw') {
+        if (env('APP_PLAN') == 'test') {
             $style = 'test';
+        }
+
+        if ($style == 'test') {
+            // $style = 'test';
             $status = 'active';
-            $points = 100000;
-            $plans = 10000;
-        } else if ($region == 'cn') {
-            $style = 'test';
-            $status = 'active';
-            $points = 100000;
-            $plans = 10000;
+            $points = 5000;
+            $plans = 1000;
         } else {
             $style = 'normal';
             $status = 'deactive';
@@ -157,24 +151,33 @@ class PlansController extends Controller
             $plans = 0;
         }
 
-        if (env('APP_PLAN_TEST')) {
-            $style = 'test';
-            $status = 'active';
-            $points = 5000;
-            $plans = 1000;
-        }
-
-        if ($iccid == '89860117851133511789') { // Michael
-            $style = 'test';
-            $status = 'active';
-            $points = 5000;
-            $plans = 1000;
-        } else if ($iccid == '89882390000053590074') { // Testcam Olli (German)
-            $style = 'test';
-            $status = 'active';
-            $points = 5000;
-            $plans = 1000;
-        }
+        // $region = env('APP_REGION');
+        // if ($region == 'au') {
+        //     $style = 'normal';
+        //     $status = 'deactive';
+        //     $points = 0;
+        //     $plans = 0;
+        // } else if ($region == 'de') {
+        //     $style = 'normal';
+        //     $status = 'deactive';
+        //     $points = 0;
+        //     $plans = 0;
+        // } else if ($region == 'tw') {
+        //     $style = 'test';
+        //     $status = 'active';
+        //     $points = 100000;
+        //     $plans = 10000;
+        // } else if ($region == 'cn') {
+        //     $style = 'test';
+        //     $status = 'active';
+        //     $points = 100000;
+        //     $plans = 10000;
+        // } else {
+        //     $style = 'normal';
+        //     $status = 'deactive';
+        //     $points = 0;
+        //     $plans = 0;
+        // }
 
         /* Stripe - create customer id */
 //        if ($request->mode == 'new') {

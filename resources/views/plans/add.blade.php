@@ -30,7 +30,7 @@
                                 </div>
                             </div>
 
-@if (env('APP_TERMS'))
+@if (env('APP_CHECK_TERMS'))
                             <div class="form-group">
                                 <div class="col-md-3">
                                 </div>

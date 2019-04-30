@@ -19,7 +19,7 @@
 @endif
     </div>
 
-@if (0)
+@if (env('APP_BILLING') == 'test')
     <div class="alert alert-defaulto" style="background-color: #088;">
         <h4>Please Input Test Card Number</h4>
         <p>4242 4242 4242 4242 (USA)</p>

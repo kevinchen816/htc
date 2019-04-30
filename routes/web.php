@@ -284,11 +284,15 @@ Route::group(['middleware' => 'setLocale'], function() {
 
 /*----------------------------------------------------------------------------------*/
 /* for test */
-// Route::get('/test', function() {return 'OK';});
-Route::get('/test', 'Api\CamerasController@kk_test');
-Route::get('/test2/{id}', 'Api\CamerasController@kk_test2');
+Route::get('/test', function() {return 'OK';});
+// Route::get('/test', 'Api\CamerasController@kk_test');
+// Route::get('/test2/{id}', 'Api\CamerasController@kk_test2');
+
 // Route::get('/email/test', 'MailController@test')->name('email.test');
 // Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
+
+// Route::get('/push', 'Api\CamerasController@push_test');
+Route::get('/push2', 'Api\CamerasController@push_test2');
 
 Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
 
@@ -299,9 +303,6 @@ Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@downlo
 // Route::get('/stripe/test2', 'AccountsController@getStripeTest2');
 // Route::get('/stripe/test3', 'AccountsController@getStripeTest3');
 // Route::get('/stripe/test4', 'AccountsController@getStripeTest4');
-
-Route::get('/push', 'Api\CamerasController@push_test');
-Route::get('/push2', 'Api\CamerasController@push_test2');
 
 Route::get('/stripe/createsub/{iccid}', 'Api\CamerasController@createSubscription');
 

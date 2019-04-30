@@ -1,7 +1,7 @@
 service mysqld start
 service mysqld stop
 
-mysql -h 52.192.110.218 -P 3306 -ukevin -pkevin816
+mysql -h 52.192.xxx.xxx -P 3306 -uUSERNAME -pPASSWORD
 
 //------------------------------------------------------------
 [ 问题处理 ] ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes
