@@ -286,6 +286,7 @@ Route::group(['middleware' => 'setLocale'], function() {
 /* for test */
 // Route::get('/test', function() {return 'OK';});
 Route::get('/test', 'Api\CamerasController@kk_test');
+Route::get('/test2/{id}', 'Api\CamerasController@kk_test2');
 // Route::get('/email/test', 'MailController@test')->name('email.test');
 // Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
 

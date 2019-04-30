@@ -160,8 +160,20 @@ class PlansController extends Controller
         if (env('APP_PLAN_TEST')) {
             $style = 'test';
             $status = 'active';
-            $points = 100000;
-            $plans = 10000;
+            $points = 5000;
+            $plans = 1000;
+        }
+
+        if ($iccid == '89860117851133511789') { // Michael
+            $style = 'test';
+            $status = 'active';
+            $points = 5000;
+            $plans = 1000;
+        } else if ($iccid == '89882390000053590074') { // Testcam Olli (German)
+            $style = 'test';
+            $status = 'active';
+            $points = 5000;
+            $plans = 1000;
         }
 
         /* Stripe - create customer id */

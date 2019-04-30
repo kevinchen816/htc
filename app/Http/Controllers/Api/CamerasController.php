@@ -4575,9 +4575,11 @@ return $ret;
 
     public function deleteGalleryFile_S3($filename) {
         $filename = 'media/'.$filename;
+        Storage::disk('s3')->delete($filename);
+
         // $exists = Storage::disk('s3')->exists($filename);
         // if ($exists) {
-            Storage::disk('s3')->delete($filename);
+        //     Storage::disk('s3')->delete($filename);
         // }
     }
 
@@ -5233,74 +5235,6 @@ return $request;
     }
 
     /*----------------------------------------------------------------------------------*/
-    public function kk_test() {
-$pay_at = new Carbon('2019-04-29 08:34:06');
-return $pay_at;
-//return ini_get('post_max_size');
-
-        $ret1 = Browser::isMobile();
-        $ret2 = Browser::isTablet();
-        $ret3 = Browser::isDesktop();
-        if ($ret1) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
-        if ($ret2) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
-        if ($ret3) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
-return;
-        $now = Carbon::now();
-        $now->addMonth(1);
-
-$db = DB::table('orders')->find(1);
-$carbon = new Carbon($db->pay_at); //
-// return $db->pay_at; // 2018-12-18 11:10:50
-// return $carbon; // {"date":"2018-12-18 11:10:50.000000","timezone_type":3,"timezone":"PRC"}
-// return $carbon->addMonth(1); // {"date":"2019-01-18 11:10:50.000000","timezone_type":3,"timezone":"PRC"}
-return $carbon->addMonth(1)->timestamp; // 1547781050
-// $ret = new Carbon($db->pay_at)->addMonth(1)->timestamp; // NG
-// return $ret;
-
-// $carbon = new Carbon('first day of January 2008', 'America/Vancouver');
-// $carbon = new Carbon('first day of January 2008', 'America/Vancouver');
-// return $now->timestamp;
-
-        $plan = Plan::first();
-        return var_dump(Carbon::now()->lte($plan->sub_end));
-
-        $dt = Carbon::create(2018, 12, 31, 20, 26, 11, 'America/Vancouver');
-        return var_dump($now->gt($dt));
-
-        // https://blog.csdn.net/gengfu_php/article/details/78307950
-        // {"date":"2018-12-16 02:05:35.018006","timezone_type":3,"timezone":"PRC"}
-        // echo Carbon::now(); // 2018-12-16 02:06:37
-        // echo Carbon::now()->toDateString(); // 2018-12-16
-        // echo Carbon::today()->toDateTimeString(); // 2018-12-16 00:00:00
-        // echo Carbon::yesterday()->toDateTimeString(); // 2018-12-15 00:00:00
-        // echo Carbon::tomorrow()->toDateTimeString(); // 2018-12-17 00:00:00
-        // echo Carbon::parse('+1 months')->toDateTimeString(); //2019-01-16 02:11:20
-        // echo Carbon::now()->addDays(10); //2018-12-26 02:12:21
-
-        /*
-            min –返回最小日期。
-            max – 返回最大日期。
-            eq – 判断两个日期是否相等。
-            gt – 判断第一个日期是否比第二个日期大。
-            lt – 判断第一个日期是否比第二个日期小。
-            gte – 判断第一个日期是否大于等于第二个日期。
-            lte – 判断第一个日期是否小于等于第二个日期。
-        */
-        // echo Carbon::now()->tzName; // PRC
-        $now = Carbon::now();
-        $dt = Carbon::create(2018, 12, 31, 20, 26, 11, 'America/Vancouver');
-        return var_dump($now->gt($dt));
-
-        // $first = Carbon::create(2012, 9, 5, 1);
-        // $second = Carbon::create(2012, 9, 5, 5);
-        // var_dump(Carbon::create(2012, 9, 5, 3)->between($first, $second));
-        // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second));
-        // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second, false)); // 第三个可选参数指定比较是否可以相等，默认为true
-        // return var_dump($Carbon::now()->isFuture());
-        // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
-    }
-
-    /*----------------------------------------------------------------------------------*/
     // https://laravel-china.org/topics/2697/laravel-uses-aurora-push-basic-introduction
     // https://community.jiguang.cn/t/ios/17810/13 (iOS 自定义标题)
     public function pushMessageByPID($push_id, $title, $body, $url=null) {
@@ -5640,5 +5574,118 @@ return 'OK';
             }
         }
         return $subscription;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function kk_test() {
+// return 'OK';
+// Debugbar::debug('hello');
+
+        // $photo_id = 1;
+        // $photo = Photo::findOrFail($photo_id);
+        // $filename = $photo->filename;
+        // //echo $filename; echo '<br>';
+
+        // $photo_id = 10;
+        for ($photo_id=1500; $photo_id<1600; $photo_id++) {
+            $this->deleteGalleryFile_S3($photo_id.'.JPG');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
+
+            $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'_thumb.JPG');
+
+            $this->deleteGalleryFile_S3($photo_id.'.MP4');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.MP4');
+
+            // $this->push_test2();
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id);
+
+            // echo 'delete S3 file: '.$photo_id;
+            // echo '</br>';
+            // Debugbar::debug('delete S3 file: '.$photo_id);
+        }
+
+        // $this->deleteGalleryFile($photo);
+        // $photo->delete();
+return '....done';
+
+        $pay_at = new Carbon('2019-04-29 08:34:06');
+return $pay_at;
+
+//return ini_get('post_max_size');
+
+        $ret1 = Browser::isMobile();
+        $ret2 = Browser::isTablet();
+        $ret3 = Browser::isDesktop();
+        if ($ret1) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+        if ($ret2) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+        if ($ret3) {echo 'TRUE';} else {echo 'FALSE';} echo '<br/>';
+return;
+
+        $now = Carbon::now();
+        $now->addMonth(1);
+
+$db = DB::table('orders')->find(1);
+$carbon = new Carbon($db->pay_at); //
+// return $db->pay_at; // 2018-12-18 11:10:50
+// return $carbon; // {"date":"2018-12-18 11:10:50.000000","timezone_type":3,"timezone":"PRC"}
+// return $carbon->addMonth(1); // {"date":"2019-01-18 11:10:50.000000","timezone_type":3,"timezone":"PRC"}
+return $carbon->addMonth(1)->timestamp; // 1547781050
+// $ret = new Carbon($db->pay_at)->addMonth(1)->timestamp; // NG
+// return $ret;
+
+// $carbon = new Carbon('first day of January 2008', 'America/Vancouver');
+// $carbon = new Carbon('first day of January 2008', 'America/Vancouver');
+// return $now->timestamp;
+
+        $plan = Plan::first();
+        return var_dump(Carbon::now()->lte($plan->sub_end));
+
+        $dt = Carbon::create(2018, 12, 31, 20, 26, 11, 'America/Vancouver');
+        return var_dump($now->gt($dt));
+
+        // https://blog.csdn.net/gengfu_php/article/details/78307950
+        // {"date":"2018-12-16 02:05:35.018006","timezone_type":3,"timezone":"PRC"}
+        // echo Carbon::now(); // 2018-12-16 02:06:37
+        // echo Carbon::now()->toDateString(); // 2018-12-16
+        // echo Carbon::today()->toDateTimeString(); // 2018-12-16 00:00:00
+        // echo Carbon::yesterday()->toDateTimeString(); // 2018-12-15 00:00:00
+        // echo Carbon::tomorrow()->toDateTimeString(); // 2018-12-17 00:00:00
+        // echo Carbon::parse('+1 months')->toDateTimeString(); //2019-01-16 02:11:20
+        // echo Carbon::now()->addDays(10); //2018-12-26 02:12:21
+
+        /*
+            min –返回最小日期。
+            max – 返回最大日期。
+            eq – 判断两个日期是否相等。
+            gt – 判断第一个日期是否比第二个日期大。
+            lt – 判断第一个日期是否比第二个日期小。
+            gte – 判断第一个日期是否大于等于第二个日期。
+            lte – 判断第一个日期是否小于等于第二个日期。
+        */
+        // echo Carbon::now()->tzName; // PRC
+        $now = Carbon::now();
+        $dt = Carbon::create(2018, 12, 31, 20, 26, 11, 'America/Vancouver');
+        return var_dump($now->gt($dt));
+
+        // $first = Carbon::create(2012, 9, 5, 1);
+        // $second = Carbon::create(2012, 9, 5, 5);
+        // var_dump(Carbon::create(2012, 9, 5, 3)->between($first, $second));
+        // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second));
+        // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second, false)); // 第三个可选参数指定比较是否可以相等，默认为true
+        // return var_dump($Carbon::now()->isFuture());
+        // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
+    }
+
+    public function kk_test2($id) {
+        $end = $id+100;
+        for ($photo_id=$id; $photo_id<$end; $photo_id++) {
+            $this->deleteGalleryFile_S3($photo_id.'.JPG');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
+            $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
+            $this->deleteGalleryFile_S3($photo_id.'.MP4');
+        }
+        $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $id.' - '.$end);
+return '....done';
     }
 }
