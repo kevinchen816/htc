@@ -5,6 +5,8 @@ $ php artisan make:controller MobileController
 $ php artisan make:model Models/Mobile -m // 自动产生 xxx_create_mobiles_table.php
 //$ php artisan make:migration create_mobiles_table --create=mobiles
 
+$ php artisan make:model Models/EZCode
+$ php artisan make:migration create_ezcode_table --create=ezcode
 
 $ php artisan migrate
 $ php artisan migrate:rollback

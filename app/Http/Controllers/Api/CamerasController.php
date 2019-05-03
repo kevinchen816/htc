@@ -64,6 +64,13 @@ const ERR_INVALID_BLOCK_ID          = 826;
 const ERR_COPY_MERGE_FILE_FAIL      = 827;
 const ERR_NO_MERGE_FILENAME         = 828;
 
+// const ERR_INVALID_EZCODE            = 850;
+const ERR_EZCODE_NOT_FOUND          = 850;
+const ERR_EZCODE_NOT_USED           = 851;
+const ERR_EZCODE_DEACTIVE           = 852;
+const ERR_EZCODE_SUSPEND            = 853;
+const ERR_EZCODE_NOT_ACTIVE         = 854;
+
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
 const ACTION_COMPLETED              = 2;
@@ -164,7 +171,8 @@ class CamerasController extends Controller
 
     public function getErrorMessage($errorCode) {
         static $errors = array(
-            ERR_INVALID_SIM_CARD => 'Invalid SIM card',
+            // ERR_INVALID_SIM_CARD => 'Invalid SIM card',
+            ERR_INVALID_SIM_CARD => 'Please add ICCID to Portal',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
 
@@ -189,6 +197,14 @@ class CamerasController extends Controller
             ERR_INVALID_BLOCK_ID => 'Invalid blockid',
             ERR_COPY_MERGE_FILE_FAIL => 'Copy merge file failure',
             ERR_NO_MERGE_FILENAME => 'Missinf merge filename',
+
+            // ERR_INVALID_EZCODE => 'Invalid EZCode',
+            ERR_EZCODE_NOT_FOUND => 'EZCode Not Found',
+            // ERR_EZCODE_NOT_USED => 'EZCode Not Used',
+            ERR_EZCODE_NOT_USED => 'Please add EZCode to Portal',
+            ERR_EZCODE_DEACTIVE => 'EZCode Deactive',
+            ERR_EZCODE_SUSPEND => 'EZCode Suspend',
+            ERR_EZCODE_NOT_ACTIVE => 'EZCode Not Active',
 
             //900 => 'Invalid or Missing camera Module',
             //901 => 'Invalid SIM card',
@@ -1680,6 +1696,19 @@ class CamerasController extends Controller
         return $actions;
         */
 
+        $query['camera_id'] = $camera_id;
+        $query['status'] = ACTION_REQUESTED;
+        $actions = DB::table('actions')->where($query)->get();
+        foreach ($actions as $action) {
+            if ($action->action == 'UO') {
+                $photo = Photo::find($action->photo_id);
+                if ($photo) {
+                    $photo->action = 0;
+                    $photo->save();
+                }
+            }
+        }
+
         $affected = DB::update(
             'update actions set status = ? where camera_id = ? AND (status = ? OR status = ?)',
             [ACTION_CANCELLED, $camera_id, ACTION_REQUESTED, ACTION_PENDING]
@@ -1804,6 +1833,7 @@ class CamerasController extends Controller
 
                 if ($plan->style == 'test') {
                     $ret['err'] = 0;
+
                 } else {
                     if (Carbon::now()->gt($plan->sub_end)) {
                         if ($plan->auto_bill) {
@@ -1855,6 +1885,26 @@ class CamerasController extends Controller
 
         } else {
             $ret['err'] = ERR_INVALID_SIM_CARD;
+        }
+        return $ret;
+    }
+
+    public function EZCode_Check($module_id, $iccid) {
+        // $ezcode = DB::table('ezcode')->where('module_id', $module_id)->first();
+        $query = array(
+            'module_id' => $module_id,
+            'status' => 'active',
+        );
+        $ezcode = DB::table('ezcode')->where($query)->first();
+        if ($ezcode) {
+            $ret = $this->Plan_Check($ezcode->ezcode);
+            if ($ret['err'] == ERR_INVALID_SIM_CARD) {
+                $ret['err'] = ERR_EZCODE_NOT_USED;
+            }
+            $ret['module_id'] = $ezcode->ezcode;
+        } else {
+            $ret = $this->Plan_Check($iccid);
+            $ret['module_id'] = $module_id;
         }
         return $ret;
     }
@@ -1920,12 +1970,22 @@ class CamerasController extends Controller
     }
 
     public function Camera_Check($param) {
+    // public function Camera_Check_Plan($param) {
         $camera = null;
         $user_id = null;
-        $ret = $this->Plan_Check($param->iccid);
+        if (env('APP_BUSINESS_MODE') == 'rent') {
+            $ret = $this->EZCode_Check($param->module_id, $param->iccid);
+        } else {
+            $ret = $this->Plan_Check($param->iccid);
+        }
         $err = $ret['err'];
         if ($err == 0) {
             $user_id = $ret['user_id'];
+
+            if (env('APP_BUSINESS_MODE') == 'rent') {
+                $param->module_id = $ret['module_id'];
+            }
+
             $camera = $this->Camera_Find($param->module_id);
             if ($camera) {
                 if ($camera->user_id == $user_id) {
@@ -1942,6 +2002,43 @@ class CamerasController extends Controller
         $ret['user_id'] = $user_id;
         return $ret;
     }
+
+    // public function Camera_Check_EZCode($param) {
+    //     $camera = null;
+    //     $user_id = null;
+    //     $ret = $this->EZCode_Check($param->module_id, $param->iccid);
+    //     $err = $ret['err'];
+    //     if ($err == 0) {
+    //         $user_id = $ret['user_id'];
+
+    //     $module_id = $ret['module_id'];
+    //     $param->module_id = $module_id;
+
+    //         $camera = $this->Camera_Find($module_id);
+    //         if ($camera) {
+    //             if ($camera->user_id == $user_id) {
+    //                 $err = 0;
+    //             } else {
+    //                 $err = ERR_NOT_CAMERA_OWNER;
+    //             }
+    //         } else {
+    //             $err = ERR_INVALID_CAMERA;
+    //         }
+    //     }
+    //     $ret['err'] = $err;
+    //     $ret['camera'] = $camera;
+    //     $ret['user_id'] = $user_id;
+    //     return $ret;
+    // }
+
+    // public function Camera_Check($param) {
+    //     if (env('APP_BUSINESS_MODE') == 'rent') {
+    //         $ret = $this->Camera_Check_EZCode($param);
+    //     } else {
+    //         $ret = $this->Camera_Check_Plan($param);
+    //     }
+    //     return $ret;
+    // }
 
     public function Camera_Add($user_id, $request) {
         $camera = new Camera;
@@ -2176,15 +2273,14 @@ class CamerasController extends Controller
             $this->pushHeartbeat($user_id, $camera);
             $this->LogApi_Add('report', 1, $user_id, $camera->id, $request, $response);
         }
+
+// $response['module_id'] = $request->module_id; // for test
+// $response['ezcode'] = $ret['module_id'];
+
         return $response;
     }
 
     /*----------------------------------------------------------------------------------*/
-//     public function status(Request $request) {
-//         $ret['ret'] = 'Hello';
-// return $ret;
-//     }
-
     public function status(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -4222,7 +4318,8 @@ return $ret;
             $control_group = 'controlgroup'.$id.'-'.($week+1); // controlgroup54-1
 
             $value = hexdec($camera[$dt_week[$week]]);
-            $bit = 0x800000;
+            // $bit = 0x800000;
+            $bit = 0x000001;
 
             $txt .= '<div id="'.$tabs_id.'">';
             $txt .=    '<div id="'.$control_group.'" class="mobile-dutytime-div">';
@@ -4256,7 +4353,8 @@ return $ret;
                     $txt .= '</tr>';
                 }
 
-                $bit >>= 1;
+                // $bit >>= 1;
+                $bit <<= 1;
             }
             $txt .=        '</table>';
             $txt .=    '</div>';
@@ -4622,80 +4720,83 @@ return $ret;
             $photo_id = $x[1];
             //echo $photo_id; echo '<br>';
 
-            $photo = Photo::findOrFail($photo_id);
-            $filename = $photo->filename;
-            //echo $filename; echo '<br>';
+            // $photo = Photo::findOrFail($photo_id);
+            $photo = Photo::find($photo_id);
+            if ($photo) {
+                $filename = $photo->filename;
+                //echo $filename; echo '<br>';
 
-            if ($photo->action == 0) {
-                if ($action == 'd') {
-                    $this->deleteGalleryFile($photo);
-                    $photo->delete();
+                if ($photo->action == 0) {
+                    if ($action == 'd') {
+                        $this->deleteGalleryFile($photo);
+                        $photo->delete();
 
-                } else if ($action == 'h') {
-                    //if ($photo->filetype == 1) {
-                    // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
-                    if ($photo->uploadtype == 1) {
-                        $param['action_code'] = 'UO';
-                        $param['photo_id'] = $photo_id;
-                        $param['filename'] = $filename;
-                        $param['image_size'] = 5;
-                        $param['compression'] = 28; //$compression;
-                        $this->Action_Add($param);
+                    } else if ($action == 'h') {
+                        //if ($photo->filetype == 1) {
+                        // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                        if ($photo->uploadtype == 1) {
+                            $param['action_code'] = 'UO';
+                            $param['photo_id'] = $photo_id;
+                            $param['filename'] = $filename;
+                            $param['image_size'] = 5;
+                            $param['compression'] = 28; //$compression;
+                            $this->Action_Add($param);
 
-                        $data['action'] = 1;
-                        $photo->update($data);
-                    }
+                            $data['action'] = 1;
+                            $photo->update($data);
+                        }
 
-                // 2019-03-06 modify
-                // } else if ($action == 'o') {
-                //     //if ($photo->filetype == 1) {
-                //     // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
-                //     if ($photo->uploadtype == 1) {
-                //         $param['action_code'] = 'UO';
-                //         $param['photo_id'] = $photo_id;
-                //         $param['filename'] = $filename;
-                //         $param['image_size'] = 6;
-                //         $this->Action_Add($param);
+                    // 2019-03-06 modify
+                    // } else if ($action == 'o') {
+                    //     //if ($photo->filetype == 1) {
+                    //     // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                    //     if ($photo->uploadtype == 1) {
+                    //         $param['action_code'] = 'UO';
+                    //         $param['photo_id'] = $photo_id;
+                    //         $param['filename'] = $filename;
+                    //         $param['image_size'] = 6;
+                    //         $this->Action_Add($param);
 
-                //         $data['action'] = 1;
-                //         $photo->update($data);
-                //     }
+                    //         $data['action'] = 1;
+                    //         $photo->update($data);
+                    //     }
 
-                } else if ($action == 'o') {
-                    //if ($photo->filetype == 1) {
-                    // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
-                    if ($photo->uploadtype == 1) {
-                        $param['action_code'] = 'UO';
-                        $param['photo_id'] = $photo_id;
-                        $param['filename'] = $filename;
-                        $param['image_size'] = 6;
-                        $this->Action_Add($param);
+                    } else if ($action == 'o') {
+                        //if ($photo->filetype == 1) {
+                        // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                        if ($photo->uploadtype == 1) {
+                            $param['action_code'] = 'UO';
+                            $param['photo_id'] = $photo_id;
+                            $param['filename'] = $filename;
+                            $param['image_size'] = 6;
+                            $this->Action_Add($param);
 
-                        $data['action'] = 1;
-                        $photo->update($data);
+                            $data['action'] = 1;
+                            $photo->update($data);
 
-                    } else if ($photo->uploadtype == 3) {
-                        $param['action_code'] = 'UV';
-                        $param['photo_id'] = $photo_id;
-                        $param['filename'] = $filename;
-                        $this->Action_Add($param);
+                        } else if ($photo->uploadtype == 3) {
+                            $param['action_code'] = 'UV';
+                            $param['photo_id'] = $photo_id;
+                            $param['filename'] = $filename;
+                            $this->Action_Add($param);
 
-                        $data['action'] = 1;
-                        $photo->update($data);
-                    }
-                //+
+                            $data['action'] = 1;
+                            $photo->update($data);
+                        }
+                    //+
 
-                } else if ($action == 'v') {
-                    //if ($photo->filetype == 2) {
-                    // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
-                    if ($photo->uploadtype == 3) {
-                        $param['action_code'] = 'UV';
-                        $param['photo_id'] = $photo_id;
-                        $param['filename'] = $filename;
-                        $this->Action_Add($param);
+                    } else if ($action == 'v') {
+                        //if ($photo->filetype == 2) {
+                        // 1:photo_thumb, 2:photo_original, 3:video_thumb, 4:video_original
+                        if ($photo->uploadtype == 3) {
+                            $param['action_code'] = 'UV';
+                            $param['photo_id'] = $photo_id;
+                            $param['filename'] = $filename;
+                            $this->Action_Add($param);
 
-                        $data['action'] = 1;
-                        $photo->update($data);
+                            $data['action'] = 1;
+                            $photo->update($data);
+                        }
                     }
                 }
             }
@@ -4798,15 +4899,29 @@ return $ret;
 
         $camera_id = $request->id;
 
+        // for ($week=1; $week<=7; $week++) {
+        //     $value = 0;
+        //     $bit = 0x800000;
+        //     for ($hour=1; $hour<=24; $hour++) {
+        //         $zz = $camera_id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
+        //         if($request[$zz]) {
+        //             $value |= $bit;
+        //         }
+        //         $bit >>= 1;
+        //     }
+        //     $key = $dt_week[$week-1];
+        //     $data[$key] = sprintf("%06x", $value);
+        // }
+
         for ($week=1; $week<=7; $week++) {
             $value = 0;
-            $bit = 0x800000;
+            $bit = 0x000001;
             for ($hour=1; $hour<=24; $hour++) {
                 $zz = $camera_id.'_hour_'.$week.'_'.$hour; //54_hour_1_1
                 if($request[$zz]) {
                     $value |= $bit;
                 }
-                $bit >>= 1;
+                $bit <<= 1;
             }
             $key = $dt_week[$week-1];
             $data[$key] = sprintf("%06x", $value);

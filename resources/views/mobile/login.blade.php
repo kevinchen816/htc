@@ -42,11 +42,11 @@
                         </div>
 
                         <!-- <div class="checkbox"> -->
-                        <div class="checkbox-XX">
+<!--                         <div class="checkbox-XX">
                             <label>
                                 <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ trans('htc.Remember Me') }}
                             </label>
-                        </div>
+                        </div> -->
 
                         <button type="submit" class="btn btn-primary">{{ trans('htc.Login') }}</button>
                     </form>

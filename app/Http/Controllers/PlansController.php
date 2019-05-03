@@ -95,14 +95,26 @@ class PlansController extends Controller
         //    'iccid' => 'required|unique:plans|max:20',
         // ]);
         if (!$request->iccid) {
-            // session()->flash('danger', 'Please input an ICCID.');
-            session()->flash('danger', $this->ts('input_ICCID'));
+            if (env('APP_BUSINESS_MODE') == 'rent') {
+                session()->flash('danger', 'Please input an ICCID or EZCode.');
+            } else {
+                // session()->flash('danger', 'Please input an ICCID.');
+                session()->flash('danger', $this->ts('input_ICCID'));
+            }
             return redirect()->back();
         }
         $iccid = $request->iccid;
         $style = 'normal';
         $status = 'deactive';
         $region = env('APP_REGION');
+
+        if (env('APP_BUSINESS_MODE') == 'rent') {
+            if (!is_numeric($iccid)) {
+                $is_ezcode = 1;
+            } else {
+                $is_ezcode = 0;
+            }
+        }
 
         if (env('APP_CHECK_TERMS')){
             if (!$request['agree-terms']) {
@@ -115,24 +127,58 @@ class PlansController extends Controller
         /* search Plan */
         $plan = DB::table('plans')->where('iccid', $iccid)->first();
         if ($plan) {
-            //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
-            // session()->flash('danger', 'ICCID had used.');
-            // session()->flash('danger', 'This ICCID has already been registered.');
-            session()->flash('danger', $this->ts('ICCID_had_registered'));
+            if (env('APP_BUSINESS_MODE') == 'rent') {
+                if ($is_ezcode) {
+                    session()->flash('danger', 'This EZCode has already been registered.');
+                } else {
+                    session()->flash('danger', 'This ICCID has already been registered.');
+                }
+            } else {
+                //session()->flash('danger', 'Invalid ICCID. (** Verify you have not already used this ICCID in another plan and that you have input the ICCID correctly.)');
+                // session()->flash('danger', 'ICCID had used.');
+                // session()->flash('danger', 'This ICCID has already been registered.');
+                session()->flash('danger', $this->ts('ICCID_had_registered'));
+            }
             return redirect()->back();
         }
 
         /* search SIM */
-        if (env('APP_CHECK_SIM')){
-            $sim = DB::table('sims')->where('iccid', $iccid)->first();
-            if (!$sim) {
-                // session()->flash('danger', 'Invalid ICCID.');
-                session()->flash('danger', $this->ts('Invalid ICCID'));
-                return redirect()->back();
+        if (env('APP_BUSINESS_MODE') == 'rent'){
+            if (is_numeric($iccid)) {
+                if (env('APP_CHECK_SIM')){
+                    $sim = DB::table('sims')->where('iccid', $iccid)->first();
+                    if (!$sim) {
+                        // session()->flash('danger', 'Invalid ICCID.');
+                        session()->flash('danger', $this->ts('Invalid ICCID'));
+                        return redirect()->back();
+                    }
+                    // $region = $sim->region; // us, ca, eu, au, cn, tw
+                    $style = $sim->style; // test, normal
+                    $region = $sim->region;
+                }
+            } else {
+                $ezcode = DB::table('ezcode')->where('ezcode', $iccid)->first();
+                if (!$ezcode) {
+                    session()->flash('danger', $this->ts('Invalid EZCode'));
+                    return redirect()->back();
+                }
+
+                $style = $ezcode->style; // test, normal
+                // $region = $sim->region;
             }
-            // $region = $sim->region; // us, ca, eu, au, cn, tw
-            $style = $sim->style; // test, normal
-            $region = $sim->region;
+
+        } else {
+            if (env('APP_CHECK_SIM')){
+                $sim = DB::table('sims')->where('iccid', $iccid)->first();
+                if (!$sim) {
+                    // session()->flash('danger', 'Invalid ICCID.');
+                    session()->flash('danger', $this->ts('Invalid ICCID'));
+                    return redirect()->back();
+                }
+                // $region = $sim->region; // us, ca, eu, au, cn, tw
+                $style = $sim->style; // test, normal
+                $region = $sim->region;
+            }
         }
 
         if (env('APP_PLAN') == 'test') {
