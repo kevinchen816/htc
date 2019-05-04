@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+// use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Auth;
 use DB;
 
@@ -11,6 +12,8 @@ use App\Models\Device;
 
 class MobileController extends Controller
 {
+    // use AuthenticatesUsers;
+
     public function getLogin() {
         $device_id = '';
         return view('mobile.login', ['device_id' => $device_id]);
@@ -30,8 +33,8 @@ class MobileController extends Controller
 
         //if (Auth::attempt(['email' => $email, 'password' => $password])) {
         // if (Auth::attempt($credentials)) {
-        // if (Auth::attempt($credentials, $request->has('remember'))) {
-        if (Auth::attempt($credentials, true)) {
+        // if (Auth::attempt($credentials, true)) {
+        if (Auth::attempt($credentials, $request->has('remember'))) {
             session()->flash('success', 'Login Successful');
             $this->device_add($request->device_id);
             return redirect()->route('home', [Auth::user()]);
