@@ -30,7 +30,8 @@ class MobileController extends Controller
 
         //if (Auth::attempt(['email' => $email, 'password' => $password])) {
         // if (Auth::attempt($credentials)) {
-        if (Auth::attempt($credentials, $request->has('remember'))) {
+        // if (Auth::attempt($credentials, $request->has('remember'))) {
+        if (Auth::attempt($credentials, true)) {
             session()->flash('success', 'Login Successful');
             $this->device_add($request->device_id);
             return redirect()->route('home', [Auth::user()]);
