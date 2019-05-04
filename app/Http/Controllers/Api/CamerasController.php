@@ -791,14 +791,12 @@ class CamerasController extends Controller
         $txt = '';
         $txt .= '<div class="row">';
         // $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-$txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .8em;">';
-// $txt .= '<div class="col-xs-5 col-sm-5 col-md-5" style="font-size: .85em;">';
+$txt .= '<div class="col-xs-5 col-sm-5 col-md-5" style="font-size: .85em;">';
 
         $txt .= '<span class="pull-right">'.$title .'</span>';
         $txt .= '</div>';
         // $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-$txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .8em;">';
-// $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
+$txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
 
         $txt .= '<strong>'.$value.'</strong>';
         $txt .= '</div>';
@@ -3862,7 +3860,7 @@ return $ret;
         }
 
 
-        if (1) {//(Browser::isMobile()) {
+        if (Browser::isMobile()) {
             $txt  = $this->ovItemShow2('Module ID', $camera->module_id);
             $txt .= $this->ovItemShow2('SIM ICCID', $camera->iccid);
             $txt .= $this->ovItemShow2('Model', $camera->model_id); // Lookout North America
