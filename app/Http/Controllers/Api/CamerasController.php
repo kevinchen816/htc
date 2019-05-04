@@ -766,13 +766,39 @@ class CamerasController extends Controller
 
         $txt = '';
         $txt .= '<div class="row">';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+// $txt .= '<div class="col-xs-5 col-sm-5 col-md-5" style="font-size: .85em;">';
+
+        $txt .= '<span class="pull-right">'.$title .'</span>';
+        $txt .= '</div>';
+        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+// $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
+
+        $txt .= '<strong>'.$value.'</strong>';
+        $txt .= '</div>';
+        $txt .= '</div>';
+        return $txt;
+    }
+
+    public function ovItemShow2($title, $value, $empty_txt=null) {
+        if (empty($value) && $empty_txt) {
+            $value = $empty_txt;
+        }
+
+        $title = $this->ts($title);
+        $value = $this->ts($value);
+
+        $txt = '';
+        $txt .= '<div class="row">';
         // $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-$txt .= '<div class="col-xs-5 col-sm-5 col-md-5" style="font-size: .85em;">';
+$txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .8em;">';
+// $txt .= '<div class="col-xs-5 col-sm-5 col-md-5" style="font-size: .85em;">';
 
         $txt .= '<span class="pull-right">'.$title .'</span>';
         $txt .= '</div>';
         // $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
-$txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
+$txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .8em;">';
+// $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
 
         $txt .= '<strong>'.$value.'</strong>';
         $txt .= '</div>';
@@ -3835,19 +3861,37 @@ return $ret;
             }
         }
 
-        $txt  = $this->ovItemShow('Module ID', $camera->module_id);
-        $txt .= $this->ovItemShow('SIM ICCID', $camera->iccid);
-        $txt .= $this->ovItemShow('Model', $camera->model_id); // Lookout North America
-        $txt .= $this->ovItemShow('Card Free (Size)', $card_info);
-        $txt .= $this->ovItemShow('Firmware', $camera->dsp_version);
-        $txt .= $this->ovItemShow('MCU', $camera->mcu_version);
-        $txt .= $this->ovItemShow('Last Connection', $camera->cellular);
-        if (env('APP_USE_POINTS')) {
-            $txt .= $this->ovItemShow('Plan Points', $point_total);
-            $txt .= $this->ovItemShow('Points Used', $point_used);
+
+        if (1) {//(Browser::isMobile()) {
+            $txt  = $this->ovItemShow2('Module ID', $camera->module_id);
+            $txt .= $this->ovItemShow2('SIM ICCID', $camera->iccid);
+            $txt .= $this->ovItemShow2('Model', $camera->model_id); // Lookout North America
+            $txt .= $this->ovItemShow2('Card Free (Size)', $card_info);
+            $txt .= $this->ovItemShow2('Firmware', $camera->dsp_version);
+            $txt .= $this->ovItemShow2('MCU', $camera->mcu_version);
+            $txt .= $this->ovItemShow2('Last Connection', $camera->cellular);
+            if (env('APP_USE_POINTS')) {
+                $txt .= $this->ovItemShow2('Plan Points', $point_total);
+                $txt .= $this->ovItemShow2('Points Used', $point_used);
+            } else {
+                $txt .= $this->ovItemShow2('Data Plan Total', $plan_total);
+                $txt .= $this->ovItemShow2('Data Plan Used', $plan_used);
+            }
         } else {
-            $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
-            $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
+            $txt  = $this->ovItemShow('Module ID', $camera->module_id);
+            $txt .= $this->ovItemShow('SIM ICCID', $camera->iccid);
+            $txt .= $this->ovItemShow('Model', $camera->model_id); // Lookout North America
+            $txt .= $this->ovItemShow('Card Free (Size)', $card_info);
+            $txt .= $this->ovItemShow('Firmware', $camera->dsp_version);
+            $txt .= $this->ovItemShow('MCU', $camera->mcu_version);
+            $txt .= $this->ovItemShow('Last Connection', $camera->cellular);
+            if (env('APP_USE_POINTS')) {
+                $txt .= $this->ovItemShow('Plan Points', $point_total);
+                $txt .= $this->ovItemShow('Points Used', $point_used);
+            } else {
+                $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
+                $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
+            }
         }
         return $txt;
     }
