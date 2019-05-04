@@ -117,30 +117,35 @@
                     </li> -->
 @else
                     <li class={{ ($user->sel_camera_tab == 'overview') ? "active" : "" }}>
+                    <!-- <li> -->
                         <a href="#overview-{{ $camera->id }}" data-toggle="tab" data-tab="overview" data-url="{{ route('camera.overview', $camera->id) }}" aria-expanded="true">
                             <span class="glyphicon glyphicon-list-alt"> </span> {{ trans('htc.Overview') }}
                         </a>
                     </li>
 
                     <li class={{ ($user->sel_camera_tab == 'gallery') ? "active" : "" }}>
+                    <!-- <li> -->
                         <a href="#gallery-{{ $camera->id }}" data-toggle="tab" data-tab="gallery" data-url="reload" aria-expanded="true">
                             <span class="glyphicon glyphicon-picture"> </span> {{ trans('htc.Gallery') }}
                         </a>
                     </li>
 
                     <li class={{ ($user->sel_camera_tab == 'settings') ? "active" : "" }}>
+                    <!-- <li> -->
                         <a href="#settings-{{ $camera->id }}" data-toggle="tab" data-tab="settings" aria-expanded="false">
                             <span class="glyphicon glyphicon-edit"> </span> {{ trans('htc.Settings') }}
                         </a>
                     </li>
 
                     <li class={{ ($user->sel_camera_tab == 'commands') ? "active" : "" }}>
+                    <!-- <li> -->
                         <a href="#action-{{ $camera->id }}" data-toggle="tab" data-tab="commands" data-url="{{ route('camera.actions', $camera->id) }}" aria-expanded="false">
                             <span class="glyphicon glyphicon-tasks"> </span> {{ trans('htc.Actions') }}
                         </a>
                     </li>
 
                     <li class={{ ($user->sel_camera_tab == 'options') ? "active" : "" }}>
+                    <!-- <li> -->
                         <a href="#options-{{ $camera->id }}" data-toggle="tab" data-tab="options" aria-expanded="false">
                             <span class="glyphicon glyphicon-cog"> </span> {{ trans('htc.Options') }}
                         </a>

@@ -41,7 +41,11 @@
 
         <div id="live" class="panel-collapse collapse">
             <div class="panel-body">
+@if (1)
+                {!! $cc->html_OverviewSettings($camera) !!}
+@else
                 {!! $cc->html_OverviewSettings($user, $camera) !!}
+@endif
             </div>
         </div>
     </div>
@@ -54,7 +58,11 @@
             <h4 class="panel-title">{{ trans('htc.Event Data') }}</h4>
         </div>
         <div class="panel-body">
+@if (1)
+            {!! $cc->html_OverviewEvent($camera) !!}
+@else
             {!! $cc->html_OverviewEvent($user, $camera) !!}
+@endif
         </div>
     </div>
 </div>

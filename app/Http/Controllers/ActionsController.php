@@ -75,7 +75,9 @@ class ActionsController extends Controller
         </tr>
     */
     //public function html_History($portal, $user, $camera) {
-    public function html_History($user, $camera) {
+    // public function html_History($user, $camera) {
+    public function html_History($camera) {
+        $user = Auth::user();
         //if (!Auth::check()) {
         //    return $this->back_to_login($portal);
         //}

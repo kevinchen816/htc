@@ -3944,7 +3944,9 @@ return $ret;
     //    return $txt;
     //}
 
-    public function html_OverviewSettings($user, $camera) {
+    // public function html_OverviewSettings($user, $camera) {
+    public function html_OverviewSettings($camera) {
+        $user = Auth::user();
         $last_settings = $this->_user_dateformat($user, $camera->last_settings);
 
         $txt  = $this->ovItemShow('Last Downloaded', $last_settings);
@@ -4004,7 +4006,9 @@ return $ret;
         return $txt;
     }
 
-    public function html_OverviewEvent($user, $camera) {
+    // public function html_OverviewEvent($user, $camera) {
+    public function html_OverviewEvent($camera) {
+        $user = Auth::user();
         $txt  = $this->ovItemShow('Last Contact', $this->_user_dateformat($user, $camera->last_contact));
         $txt .= $this->ovItemShow('Last Armed', $this->_user_dateformat($user, $camera->last_armed));
         $txt .= $this->ovItemShow('Uploads since armed', $camera->arm_photos);

@@ -69,7 +69,11 @@
                         </tr>
                     </thead>
                     <tbody>
+@if (1)
+                        {!! $actions_ctrl->html_History($camera) !!}
+@else
                         {!! $actions_ctrl->html_History($user, $camera) !!}
+@endif
                     </tbody>
                 </table>
             </div>
