@@ -11,7 +11,7 @@ return [
     'Username'                  => '用户名',
     'Password'                  => '密码',
     'Confirm Password'          => '确认密码',
-    'Remember Me'               => '记住我',
+    'Remember Me'               => '自动登陆',
 
     'dont_you_have_an_account'  => '',
     'Create New Account'        => '- 注册新帐号',

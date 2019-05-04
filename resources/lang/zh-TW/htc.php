@@ -11,7 +11,7 @@ return [
     'Username'                  => '使用者名稱',
     'Password'                  => '密碼',
     'Confirm Password'          => '確認密碼',
-    'Remember Me'               => '記住帳號密碼',
+    'Remember Me'               => '自動登錄',
 
     'dont_you_have_an_account'  => '',
     'Create New Account'        => '- 註冊新帳號',

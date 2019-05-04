@@ -682,7 +682,7 @@ class CamerasController extends Controller
     }
 
     public function itemActionProcessTimeLimit() {
-        //$array['title'] = 'Max Online Time';
+        // $array['title'] = 'Max Online Time';
         $array['title'] = 'Action Process Time Limit';
         $array['options'] = array(
             '2m' => '2',
@@ -766,10 +766,14 @@ class CamerasController extends Controller
 
         $txt = '';
         $txt .= '<div class="row">';
-        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        // $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+$txt .= '<div class="col-xs-5 col-sm-5 col-md-5" style="font-size: .85em;">';
+
         $txt .= '<span class="pull-right">'.$title .'</span>';
         $txt .= '</div>';
-        $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+        // $txt .= '<div class="col-xs-6 col-sm-6 col-md-6" style="font-size: .85em;">';
+$txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
+
         $txt .= '<strong>'.$value.'</strong>';
         $txt .= '</div>';
         $txt .= '</div>';
@@ -3948,7 +3952,7 @@ return $ret;
             $txt .= $this->ovItemShowEx($this->itemScheduleFileLimit(), $obj->wm_sclimit);
         }
         $txt .= $this->ovItemShowEx($this->itemHeartbeatInterval(), $obj->hb_interval);
-        $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $obj->online_max_time);
+        // $txt .= $this->ovItemShowEx($this->itemActionProcessTimeLimit(), $obj->online_max_time);
 
         if (env('APP_RC24H')) {
             $txt .= $this->ovItemShowEx($this->itemRemoteControl(), $obj->remotecontrol);
@@ -4269,7 +4273,7 @@ return $ret;
         $txt .= $this->stItemOption($id, $this->itemScheduleInterval(), 'wm_schedule');
         $txt .= $this->stItemOption($id, $this->itemScheduleFileLimit(), 'wm_sclimit');
         $txt .= $this->stItemOption($id, $this->itemHeartbeatInterval(), 'hb_interval');
-        $txt .= $this->stItemOption($id, $this->itemActionProcessTimeLimit(), 'online_max_time');
+        // $txt .= $this->stItemOption($id, $this->itemActionProcessTimeLimit(), 'online_max_time');
         if (env('APP_RC24H')) {
             $txt .= $this->stItemOption($id, $this->itemRemoteControl(), 'remotecontrol');
         }
@@ -4312,6 +4316,12 @@ return $ret;
 
         $id = $camera->id;
 
+        if (Browser::isMobile()) {
+            $count = 4;
+        } else {
+            $count = 6;
+        }
+
         $txt = '';
         for ($week=0; $week<7; $week++) {
             $tabs_id = 'tabs'.$id.'-'.($week+1); // tabs54-1
@@ -4326,7 +4336,8 @@ return $ret;
             $txt .=        '<table>';
             for ($h=0; $h<24; $h++) {
                 $zz = $id.'_hour_'.($week+1).'_'.($h+1); //54_hour_1_1
-                if (($h%6) == 0) {
+                // if (($h%6) == 0) {
+                if (($h % $count) == 0) {
                     $txt .= '<tr>';
                 }
 
@@ -4349,7 +4360,8 @@ return $ret;
                 }
                 $txt .= '</span>';
                 $txt .= '</td>';
-                if (($h+1)%6 == 0) {
+                // if (($h+1)%6 == 0) {
+                if (($h+1) % $count == 0) {
                     $txt .= '</tr>';
                 }
 
@@ -4466,6 +4478,7 @@ return $ret;
 // return trans('htc.login');
 // return redirect()->route('confirm.send');
 
+        // if (Auth::guard()->check()) {
         if (Auth::check()) {
             return $this->route_to_cameras();
         } else {

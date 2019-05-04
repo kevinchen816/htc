@@ -20,7 +20,8 @@ class RedirectIfAuthenticated
         if (Auth::guard($guard)->check()) {
             //return redirect('/home');
 
-            //session()->flash('info', '您已登录，无需再次操作。');
+            /* modify redirect('/home') to redirect('/') */
+            // session()->flash('info', '您已登录，无需再次操作。');
             return redirect('/');
         }
 
