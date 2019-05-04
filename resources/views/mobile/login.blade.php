@@ -41,13 +41,14 @@
                             @endif
                         </div>
 
+@if (env('APP_REMEMBER_ME'))
                         <!-- <div class="checkbox"> -->
-<!--                         <div class="checkbox-XX">
+                        <div class="checkbox-XX">
                             <label>
                                 <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ trans('htc.Remember Me') }}
                             </label>
-                        </div> -->
-
+                        </div>
+@endif
                         <button type="submit" class="btn btn-primary">{{ trans('htc.Login') }}</button>
                     </form>
                 </div>
