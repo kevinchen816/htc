@@ -231,6 +231,7 @@ return [
         'Temperature Unit'      => '溫度單位',
             'Fahrenheit'            => '華氏',
             'Celsius'               => '攝氏',
+        'Stamp Text'            => '浮水印文字',
 
         'Video Resolution'      => '錄影解析度',
         'Frame Rate'            => '錄影幀率',
@@ -251,11 +252,16 @@ return [
             'Schedule'          => '定時上傳',
         'Schedule Interval'     => '時間間隔',
         'Schedule File Limit'   => '單次上傳最大數量',
+            '5 Files'           => '5 個檔案',
+            '10 Files'          => '10 個檔案',
             '20 Files'          => '20 個檔案',
             '30 Files'          => '30 個檔案',
             '40 Files'          => '40 個檔案',
             '50 Files'          => '50 個檔案',
         'Heartbeat Interval'    => '連線檢查間隔時間',
+            'Every 5 Minutes'   => '5 分鐘',
+            'Every 10 Minutes'  => '10 分鐘',
+            'Every 15 Minutes'  => '15 分鐘',
             'Every 30 Minutes'  => '30 分鐘',
             'Every Hour'        => '1 小時',
             'Every 2 Hours'     => '2 小時',
@@ -267,8 +273,8 @@ return [
             'Input Cellular Password' => '輸入密碼',
 
     'Duty Time'                 => '工作時間段',
-        'Check All'             => 'Check All',
-        'Check None'            => 'Check None',
+        'Check All'             => '全部選擇',
+        'Check None'            => '全部取消',
         'Sunday'                => '週日',
         'Monday'                => '週一',
         'Tuesday'               => '週二',
@@ -315,6 +321,7 @@ return [
 
 'Cancel'                        => '取消',
 'Confirm'                       => '確認',
+'OK'                            => 'OK',
 
 'Hello,'                        => '您好，',
 'Regards'                       => '謝謝',
@@ -331,4 +338,23 @@ return [
 'DO NOT REPLY TO THIS EMAIL.'   => '不需要回覆此電子郵件。',
 'THIS MAIL BOX IS NOT MONITORED.' => '',
 
+'No_Cameras' => '無設備記錄',
+
+'Request Original File from SD Card' => 'Request Original File from SD Card',
+'Request_Original: are you sure' => 'Are you sure to request Original file ?',
+'Request_Original: too many images' => 'You can not request Original for more than 10 images',
+'Request_Original: no images' => 'No images selected.',
+
+'Delete Media' => 'Delete Media',
+'Delete_Media: are you sure' => 'Are you sure to delete file ?',
+'Delete_Media: no images' => 'No images selected.',
+
+'Request Original File from SD Card' => '請求原始檔案',
+'Request_Original: are you sure' => '確定要請求原始檔案嗎？',
+'Request_Original: too many images' => '請求原始檔案限制超過10個',
+'Request_Original: no images' => '沒有選擇檔案',
+
+'Delete Media' => '刪除檔案',
+'Delete_Media: are you sure' => '確定要刪除檔案嗎？',
+'Delete_Media: no images' => '沒有選擇檔案',
 ];

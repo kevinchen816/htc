@@ -406,7 +406,8 @@
         });
 
         $('.image-check').on('change', function () {
-			//alert('==> .image-check'); // kk-debug
+			// alert('==> .image-check'); // kk-debug
+            console.log('.image-check (on change)');
             var items = JSON.parse(sessionStorage.getItem('items')) || [];
             var id = $(this).attr('id');
             v = $(this).prop('checked');
@@ -433,7 +434,7 @@
         });
 
         $('#multi-select').on('change', function () {
-            //console.log('multi-select change event fired');
+            console.log('multi-select change event fired');
             console.log(JSON.stringify('#manageOn='+$(this).prop('checked'))); // kk-debug
 
             sessionStorage.setItem('manageOn', JSON.stringify($(this).prop('checked')));
@@ -551,13 +552,16 @@
             if (itemcount > 1) {
                 modal.find('.confirm-modal').show();
                 modal.find('.cancel-modal').text('Cancel');
-                modal.find('.modal-body').text('Are you sure you would like to delete all ' + itemcount.toString() + ' images?');
+                // modal.find('.modal-body').text('Are you sure you would like to delete all ' + itemcount.toString() + ' images?');
+                modal.find('.modal-body').text("{{ trans('htc.Delete_Media: are you sure') }}");
             } else if (itemcount === 1) {
                 modal.find('.confirm-modal').show();
                 modal.find('.cancel-modal').text('Cancel');
-                modal.find('.modal-body').text('Are you sure you would like to delete this image?');
+                // modal.find('.modal-body').text('Are you sure you would like to delete this image?');
+                modal.find('.modal-body').text("{{ trans('htc.Delete_Media: are you sure') }}");
             } else {
-                modal.find('.modal-body').text('No images currently selected. Please select items prior to submitting');
+                // modal.find('.modal-body').text('No images currently selected. Please select items prior to submitting');
+                modal.find('.modal-body').text("{{ trans('htc.Delete_Media: no images') }}");
                 modal.find('.confirm-modal').hide(100);
                 modal.find('.cancel-modal').text('OK');
             }
@@ -625,19 +629,23 @@
             var itemcount = items.length;
             //modal.find('.modal-title').text('Request HighRes MAX');
             if(itemcount > 10){
-                modal.find('.modal-body').text('You can not request Original for more than 10 images');
+                // modal.find('.modal-body').text('You can not request Original for more than 10 images');
+                modal.find('.modal-body').text("{{ trans('htc.Request_Original: too many images') }}");
                 modal.find('.confirm-modal').hide(100);
                 modal.find('.cancel-modal').text('OK');
             } else if(items.length > 1 && items.length <= 10) {
                 modal.find('.confirm-modal').show(100);
                 modal.find('.cancel-modal').text('Cancel');
-                modal.find('.modal-body').text('Are you sure you want to request Original for ' + itemcount.toString() + ' images?');
+                // modal.find('.modal-body').text('Are you sure you want to request Original for ' + itemcount.toString() + ' images?');
+                modal.find('.modal-body').text("{{ trans('htc.Request_Original: are you sure') }}");
             } else if(items.length === 1){
                 modal.find('.confirm-modal').show(100);
                 modal.find('.cancel-modal').text('Cancel');
-                modal.find('.modal-body').text('Are you sure you want to request Original for this image?');
+                // modal.find('.modal-body').text('Are you sure you want to request Original for this image?');
+                modal.find('.modal-body').text("{{ trans('htc.Request_Original: are you sure') }}");
             } else{
-                modal.find('.modal-body').text('No images currently selected. Please select items prior to submitting');
+                // modal.find('.modal-body').text('No images currently selected. Please select items prior to submitting');
+                modal.find('.modal-body').text("{{ trans('htc.Request_Original: no images') }}");
                 modal.find('.confirm-modal').hide(100);
                 modal.find('.cancel-modal').text('OK');
             }

@@ -231,6 +231,7 @@ return [
         'Temperature Unit'      => 'Temperature Unit',
             'Fahrenheit'            => 'Fahrenheit',
             'Celsius'               => 'Celsius',
+        'Stamp Text'            => 'Stamp Text',
 
         'Video Resolution'      => 'Video Resolution',
         'Frame Rate'            => 'Frame Rate',
@@ -256,6 +257,9 @@ return [
             '40 Files'          => '40 Files',
             '50 Files'          => '50 Files',
         'Heartbeat Interval'    => 'Heartbeat Interval',
+            'Every 5 Minutes'   => 'Every 5 Minutes',
+            'Every 10 Minutes'  => 'Every 10 Minutes',
+            'Every 15 Minutes'  => 'Every 15 Minutes',
             'Every 30 Minutes'  => 'Every 30 Minutes',
             'Every Hour'        => 'Every Hour',
             'Every 2 Hours'     => 'Every 2 Hours',
@@ -315,6 +319,7 @@ return [
 
 'Cancel'                        => 'Cancel',
 'Confirm'                       => 'Confirm',
+'OK'                            => 'OK',
 
 'Hello,'                        => 'Hello,',
 'Regards'                       => 'Regards',
@@ -332,4 +337,14 @@ return [
 'DO NOT REPLY TO THIS EMAIL.'   => 'DO NOT REPLY TO THIS EMAIL.',
 'THIS MAIL BOX IS NOT MONITORED.' => 'THIS MAIL BOX IS NOT MONITORED.',
 
+'No_Cameras' => 'You do not currently have any cameras on your account.',
+
+'Request Original File from SD Card' => 'Request Original File from SD Card',
+'Request_Original: are you sure' => 'Are you sure to request Original file ?',
+'Request_Original: too many images' => 'You can not request Original for more than 10 images',
+'Request_Original: no images' => 'No images selected.',
+
+'Delete Media' => 'Delete Media',
+'Delete_Media: are you sure' => 'Are you sure to delete file ?',
+'Delete_Media: no images' => 'No images selected.',
 ];

@@ -37,7 +37,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <!-- <h4 class="modal-title">Request Original Photo from SD Card</h4> -->
-                <h4 class="modal-title">Request Original File from SD Card</h4>
+                <!-- <h4 class="modal-title">Request Original File from SD Card</h4> -->
+                <h4 class="modal-title">{{ trans('htc.Request Original File from SD Card') }}</h4>
                 <h5 class="modal-body" id="HighresModalLabel"> Confirmation</h5>
             </div>
             <a aria-hidden="true" class="btn btn-danger cancel-modal" role="button" data-dismiss="modal" aria-label="Cancel">Cancel</a>
@@ -63,7 +64,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Delete Media</h4>
+                <!-- <h4 class="modal-title">Delete Media</h4> -->
+                <h4 class="modal-title">{{ trans('htc.Delete Media') }}</h4>
                 <h5 class="modal-body" id="DeleteModalLabel"> Confirmation</h5>
             </div>
             <a aria-hidden="true" class="btn btn-danger cancel-modal" role="button" data-dismiss="modal" aria-label="Cancel">Cancel</a>

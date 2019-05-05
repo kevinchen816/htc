@@ -11,14 +11,17 @@
 
         <div class="col-md-12">
             <div class="well well-sm">
+                <h3><strong>{{ trans('htc.No_Cameras') }}</strong></h3>
+
+                @if (0)
                 <h3><strong>You do not currently have any cameras on your account.</strong></h3>
                 <h4><span class="glyphicon glyphicon-signal"> </span> You have an Active Camera Data Plan. <strong>Switch your camera to ON</strong>.</h4>
                 <p>Refresh this page several times and your camera should be added to your account automatically and display below.
                     This can sometimes take a several minutes.</p>
                 <hr>
+                @endif
             </div>
         </div>
-
     </div>
 </div>
 @stop

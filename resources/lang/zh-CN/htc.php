@@ -230,6 +230,7 @@ return [
         'Temperature Unit'      => '温度单位',
             'Fahrenheit'            => '华氏',
             'Celsius'               => '摄氏',
+        'Stamp Text'            => '浮水印文字',
 
         'Video Resolution'      => '录影分辨率',
         'Frame Rate'            => '录影帧率',
@@ -249,12 +250,20 @@ return [
             'Instant'           => '即时上传',
             'Schedule'          => '定时上传',
         'Schedule Interval'     => '时间间隔',
+            'Every 30 Minutes'  => '30 分钟',
+            'Every 30 Minutes'  => '30 分钟',
+
         'Schedule File Limit'   => '单次上传最大数量',
+            '5 Files'           => '5 个文件',
+            '10 Files'          => '10 个文件',
             '20 Files'          => '20 个文件',
             '30 Files'          => '30 个文件',
             '40 Files'          => '40 个文件',
             '50 Files'          => '50 个文件',
         'Heartbeat Interval'    => '连线检查间隔时间',
+            'Every 5 Minutes'   => '5 分钟',
+            'Every 10 Minutes'  => '10 分钟',
+            'Every 15 Minutes'  => '15 分钟',
             'Every 30 Minutes'  => '30 分钟',
             'Every Hour'        => '1 小时',
             'Every 2 Hours'     => '2 小时',
@@ -266,8 +275,8 @@ return [
             'Input Cellular Password' => '输入密码',
 
     'Duty Time'                 => '工作时间段',
-        'Check All'             => 'Check All',
-        'Check None'            => 'Check None',
+        'Check All'             => '全部选择',
+        'Check None'            => '全部取消',
         'Sunday'                => '周日',
         'Monday'                => '周一',
         'Tuesday'               => '周二',
@@ -314,6 +323,7 @@ return [
 
 'Cancel'                        => '取消',
 'Confirm'                       => '确认',
+'OK'                            => 'OK',
 
 'Hello,'                        => '您好，',
 'Regards'                       => '谢谢',
@@ -330,4 +340,14 @@ return [
 'DO NOT REPLY TO THIS EMAIL.'   => '不需要回覆此电子邮件。',
 'THIS MAIL BOX IS NOT MONITORED.' => '',
 
+'No_Cameras' => '无设备记录',
+
+'Request Original File from SD Card' => '请求原始文件',
+'Request_Original: are you sure' => '确定要请求原始文件吗？',
+'Request_Original: too many images' => '请求原始文件限制超过10个',
+'Request_Original: no images' => '没有选择文件',
+
+'Delete Media' => '删除文件',
+'Delete_Media: are you sure' => '确定要删除文件吗？',
+'Delete_Media: no images' => '没有选择文件',
 ];

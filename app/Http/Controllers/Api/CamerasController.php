@@ -642,7 +642,7 @@ class CamerasController extends Controller
     public function itemScheduleInterval() {
         $array['title'] = 'Schedule Interval';
         $array['options'] = array(
-'Every 30 Minutes'    => '30m',
+            'Every 30 Minutes'    => '30m',
             'Every Hour'    => '1h',
             'Every 2 Hours' => '2h',
             'Every 4 Hours' => '4h',
@@ -654,8 +654,8 @@ class CamerasController extends Controller
     public function itemScheduleFileLimit() {
         $array['title'] = 'Schedule File Limit';
         $array['options'] = array(
-'5 Files'  => '5',
-'10 Files'  => '10',
+            '5 Files'  => '5',
+            '10 Files'  => '10',
             '20 Files'  => '20',
             '30 Files'  => '30',
             '40 Files'  => '40',
