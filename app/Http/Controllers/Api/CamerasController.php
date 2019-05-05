@@ -612,12 +612,14 @@ class CamerasController extends Controller
             '50m'=>'50m', '55m'=>'55m',
             '1h'=>'1h', '2h'=>'2h', '4h'=>'4h', '6h'=>'6h', '8h'=>'8h', '10h'=>'10h', '12h'=>'12h',
         );
-        if (env('APP_REGION') == 'tw') {
-            // $items_tw = array(
-            //     '30s'=>'30s', '1m'=>'1m',
-            // );
-            // $array['options'] = array_merge($items_tw, $items);
-            $array['options'] = $items;
+
+        if (env('APP_TLS_1M')) {
+            $items_ex = array(
+                // '30s'=>'30s',
+                '1m'=>'1m',
+            );
+            $array['options'] = array_merge($items_ex, $items);
+            // $array['options'] = $items;
         } else {
             $array['options'] = $items;
         }
@@ -4633,9 +4635,12 @@ return $ret;
                     $photo_id = $photo->id;
                     $this->deleteGalleryFile($photo);
 
-                    $photoX = Photo::findOrFail($photo_id);
-                    $photoX->delete();
-                    $count++;
+                    // $photoX = Photo::findOrFail($photo_id);
+                    $photoX = Photo::find($photo_id);
+                    if ($photoX) {
+                        $photoX->delete();
+                        $count++;
+                    }
                 }
 
                 // $camera->photos()->delete();
