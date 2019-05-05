@@ -284,12 +284,12 @@ class ImageUploadHandler
             $ret['imagename'] = $imagename;
             $ret['savename'] = $savename;
 
-//            foreach ($files as $file) {
-//                unlink($file);
-//            }
-
-//           unlink($tagert_name);
-//           rmdir($path_block);
+            /* delete block files */
+            foreach ($files as $file) {
+               unlink($file);
+            }
+            unlink($tagert_name);
+            rmdir($path_block);
         }
         return $ret;
     }
