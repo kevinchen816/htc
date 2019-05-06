@@ -285,11 +285,12 @@ class ImageUploadHandler
             $ret['savename'] = $savename;
 
             /* delete block files */
-            // foreach ($files as $file) {
-            //    unlink($file);
-            // }
-            // unlink($tagert_name);
-            // rmdir($path_block);
+            foreach ($files as $file) {
+               unlink($file);
+            }
+            unlink($tagert_name);
+            unlink($tempFilename); // must delete filename.txt before merge files
+            rmdir($path_block);
         }
         return $ret;
     }
