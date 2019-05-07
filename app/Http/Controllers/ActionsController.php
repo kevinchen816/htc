@@ -124,7 +124,13 @@ class ActionsController extends Controller
             } else if ($action_code == 'SC') {
                 /* Scheduled Updated .......... 20 photos uploaded. */
                 $action_txt = 'Scheduled Updated';
-                $photo_total = $action->last_number - $action->first_number + 1;
+
+                if (($action->first_number == 0) && ($action->last_number == 0)) {
+                    $photo_total = 0;
+                } else {
+                    $photo_total = $action->last_number - $action->first_number + 1;
+                }
+
                 if ($action->status == ACTION_COMPLETED) {
                     $note = $photo_total.' photos uploaded.';
                 } else if ($action->status == ACTION_FAILED) {

@@ -2777,6 +2777,8 @@ return $ret;
                             } else if ($action->action == 'SC') {
                                 $data['filename'] = $request->FileName;
                                 $data['photo_id'] = $photo->id;
+
+                                // 判断文件名称，以避免文件重传，重复计数
                                 if ($request->FileName != $action->filename) {
                                     $data['photo_cnt'] = $action->photo_cnt + 1;
                                 }
