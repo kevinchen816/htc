@@ -14,6 +14,7 @@ const ACTION_CANCELLED              = 3;
 const ACTION_FAILED                 = 4;
 const ACTION_PENDING                = 5;
 //const ACTION_ABORT                = 6;
+const ACTION_IMAGE_MISSING          = 7;
 
 class ActionsController extends Controller
 {
@@ -172,6 +173,8 @@ class ActionsController extends Controller
                 $status_txt = 'Pending';
             //} else if ($action->status == ACTION_ABORT) {
             //    $status_txt = 'Abort';
+            } else if ($action->status == ACTION_IMAGE_MISSING) {
+                $status_txt = 'Failed';
             } else {
                 $status_txt = 'Unknown';
             }

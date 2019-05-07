@@ -78,6 +78,7 @@ const ACTION_CANCELLED              = 3;
 const ACTION_FAILED                 = 4;
 const ACTION_PENDING                = 5;
 //const ACTION_ABORT                = 6;
+const ACTION_IMAGE_MISSING          = 7;
 
 const NOTI_PLAN_NOT_ACTIVE          = 1;
 const NOTI_PLAN_DEACTIVE            = 2;
@@ -1676,6 +1677,11 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
         return $this->Action_Update($param);
     }
 
+    public function Action_Image_Missing($param) {
+        $param['status'] = ACTION_IMAGE_MISSING;
+        return $this->Action_Update($param);
+    }
+
     //public function Action_Completed($param) {
     //    $ret = 0;
     //    $request_id = $param['request_id'];
@@ -3264,6 +3270,25 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
         if ($err == 0) {
+            $camera_id = $camera->id;
+            if (isset($request->RequestID)) {
+                $action = Action::find($request->RequestID);
+                if ($action) {
+                    // $photo = Photo::find($action->photo_id);
+                    $query = array(
+                        'id' => $action->photo_id,
+                        // 'camera_id' => $camera_id,
+                    );
+                    $photos = DB::table('photos')->where($query);
+                    $photo = $photos->first();
+                    if ($photo) {
+                        $data = [];
+                        $data['action'] = 0;
+                        $photos->update($data);
+                    }
+                }
+            }
+
             $this->Camera_Status_Update($user_id, $request);
 
             if ($request->RequestID) {
@@ -3272,7 +3297,7 @@ return $ret;
                     'camera_id'   => $camera->id,
                     'action_code' => 'UO',
                 );
-                $this->Action_Completed($param);
+                $this->Action_Image_Missing($param);
             }
         }
 
