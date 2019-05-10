@@ -5022,6 +5022,18 @@ return $ret;
             //$name = $camera_id.'_'.$key;
             //$data[$key] = $request[$name];
             if (isset($request[$camera_id.'_'.$key])) {
+
+                if ($key == 'photo_quality') {
+                    $photo_quality = $request[$camera_id.'_'.$key];
+                    if ($photo_quality == 1) {
+                        $data['photo_compression'] = 35;
+                    } else if ($photo_quality == 2) {
+                        $data['photo_compression'] = 43;
+                    } else {
+                        $data['photo_compression'] = 50;
+                    }
+                }
+
                 $data[$key] = $request[$camera_id.'_'.$key];
             }
         }
