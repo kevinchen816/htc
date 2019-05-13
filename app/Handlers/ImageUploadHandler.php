@@ -5,6 +5,8 @@ namespace App\Handlers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 
+use App\Services\OSS;
+
 // use Debugbar;
 
 /* reference vendor/symfony/http-foundation/File/UploadedFile.php */
@@ -140,12 +142,61 @@ class ImageUploadHandler
         return $ret;
     }
 
+    public function oss_save_file($file, $photo_id, $thumb=0) {
+        // Method 1: composer require "johnlui/aliyun-oss"
+        // $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+        // $fileName = $photo_id.'.'.$extension;
+        // $filePath = 'media/'.$fileName;
+
+        // // $content = file_get_contents($file);
+        // $bucket_name = config('oss.bucketName');
+        // $target = $filePath;
+        // $source = $file->getRealPath();
+        // $content_type = mime_content_type($file->getRealPath());
+        // $result = OSS::publicUpload($bucket_name, $target, $source, ['ContentType' => $content_type]); //设置HTTP头
+
+        // Method 2: composer require jacobcyl/ali-oss-storage:dev-master
+        $oss = \Storage::disk('oss');
+        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
+        $fileName = $photo_id.'.'.$extension;
+        $filePath = '/media/'.$fileName;
+        $result = $oss->put($filePath, file_get_contents($file)); // "result": true
+
+        $ret['err'] = ($result) ? 0 : 1;
+        $ret['imagename'] = $file->getClientOriginalName(); // TODO uploadoriginal (del)
+        $ret['filesize'] = $file->getClientSize(); // TODO uploadoriginal (del)
+        $ret['savename'] = $photo_id;
+        // $ret['savename'] = $fileName;
+        return $ret;
+    }
+
     public function s3_save_thumb_file($file, $photo_id) {
         $s3 = \Storage::disk('s3');
         $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
         $fileName = $photo_id.'_thumb.'.$extension;
-        $filePath = '/media/'.$fileName;
+        $filePath = 'media/'.$fileName;
         $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+        return $result;
+    }
+
+    public function oss_save_thumb_file($file, $photo_id) {
+        // Method 1: composer require "johnlui/aliyun-oss"
+        // $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
+        // $fileName = $photo_id.'_thumb.'.$extension;
+        // $filePath = 'media/'.$fileName;
+
+        // $bucket_name = config('oss.bucketName');
+        // $target = $filePath;
+        // $source = $file->getRealPath();
+        // $content_type = mime_content_type($file->getRealPath());
+        // $result = OSS::publicUpload($bucket_name, $target, $source, ['ContentType' => $content_type]); //设置HTTP头
+
+        // Method 2: composer require jacobcyl/ali-oss-storage:dev-master
+        $oss = \Storage::disk('oss');
+        $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
+        $fileName = $photo_id.'_thumb.'.$extension;
+        $filePath = 'media/'.$fileName;
+        $result = $oss->put($filePath, file_get_contents($file)); // "result": true
         return $result;
     }
 
@@ -238,7 +289,7 @@ class ImageUploadHandler
         $crc32_check = hexdec(hash_file('crc32b', $tagert_name));
         if ($crc32_check == $crc32) {
 
-            if (env('S3_ENABLE')) {
+            if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
                 /*
                     uploadtype: 1=photo_thumb, 2=photo_original
                                 3=video_thumb, 4=video_original
@@ -261,6 +312,17 @@ class ImageUploadHandler
                 }
                 // $ret = Storage::putFileAs('media', new File($tagert_name), $savename); // storage/app/media/photo.jpg
 
+            } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                $savename = $photo_id;
+                if ($api == 'uploadvideo') {
+                    $ret = Storage::disk('oss')->putFileAs('media', new File($tagert_name), $photo_id.'.MP4');
+                } else {
+                    $ret = Storage::disk('oss')->putFileAs('media', new File($tagert_name), $photo_id.'.JPG');
+                }
+
+                if ($api == 'photo_thumb' || $api == 'video_thumb') {
+                    $ret = Storage::disk('oss')->putFileAs('media', new File($tagert_name), $photo_id.'_thumb.JPG');
+                }
             } else {
                 $savename = time().'_'.$imagename; // 1550417684_PICT0001.JPG
                 $to_file = public_path().'/uploads/'.$camera_id.'/'.$savename;

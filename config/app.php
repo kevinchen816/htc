@@ -186,6 +186,7 @@ return [
 
         Barryvdh\Debugbar\ServiceProvider::class,
         \hisorange\BrowserDetect\ServiceProvider::class,
+        Jacobcyl\AliOSS\AliOssServiceProvider::class,
 
     ],
 

@@ -1,30 +1,95 @@
-[ Laravel 运用 OSS ]
-https://learnku.com/articles/2938/laravel-using-oss
+[ 现有支持Flysystem的AliyunOss组件整理 ]
+http://www.panwenbin.com/%E7%8E%B0%E6%9C%89%E6%94%AF%E6%8C%81flysystem%E7%9A%84aliyunoss%E7%BB%84%E4%BB%B6%E6%95%B4%E7%90%86
 
-
-$ composer require "johnlui/aliyun-oss"
-
-组件下载完成之后, 作者的 GitHub 上面说需要在 app/config/app.php 中增加四项配置,
-我建议在 app/config 下面新建一个 alioss.php 文件然后在添加配置:
-
-<?php
-return [
-    'ossServer' => env('ALIOSS_SERVER', null),                      // 外网
-    'ossServerInternal' => env('ALIOSS_SERVERINTERNAL', null),      // 内网
-    'AccessKeyId' => env('ALIOSS_KEYID', null),                     // key
-    'AccessKeySecret' => env('ALIOSS_KEYSECRET', null),             // secret
-    'BucketName' => env('ALIOSS_BUCKETNAME', null)                  // bucket
-];
-
-LTAIoC6OoEoO46cW
-h6yfN1gTbl1ch2pzUfJRr9XRbvcJEr
-
+//-----------------------------------------------------------
 [ Laravel 阿里云OSS图片上传 ]
 https://blog.csdn.net/qq292913477/article/details/80896402
 
+    1. 安装
+    $ composer require "johnlui/aliyun-oss"
 
+        ** 补充: 发生 memory 不足时，增加 swap 空间
+        The following exception is caused by a lack of memory or swap, or not having swap configured
+        $ sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+        $ sudo /sbin/mkswap /var/swap.1
+            mkswap: /var/swap.1: insecure permissions 0644, 0600 suggested.
+        $ sudo /sbin/swapon /var/swap.1
+            swapon: /var/swap.1: insecure permissions 0644, 0600 suggested.
+
+    2. 组件下载完成之后, 在 config 下面新建一个 oss.php 文件然后在添加配置:
+
+        <?php
+        return [
+            /**
+             * 经典网络 or VPC
+             */
+            'networkType' => env('OSS_NET_WORK_TYPE','经典网络'),
+            /**
+             * 城市名称：
+             *  经典网络下可选：杭州、上海、青岛、北京、张家口、深圳、香港、硅谷、弗吉尼亚、新加坡、悉尼、日本、法兰克福、迪拜
+             *  VPC 网络下可选：杭州、上海、青岛、北京、张家口、深圳、硅谷、弗吉尼亚、新加坡、悉尼、日本、法兰克福、迪拜
+             */
+            'city' => env('OSS_CITY','深圳'),
+            'AccessKeyId' => env('OSS_ACCESS_KEY_ID',''),
+            'AccessKeySecret' => env('OSS_ACCESS_KEY_SECRET',''),
+            'bucketName' => env('OSS_BUCKET_NAME'),
+            'ossDomain' => env('OSS_DOMAIN'),//OSS绑定域名
+        ];
+
+
+    3. 在 .env 文件里面把配置信息都填上.
+
+        OSS_NET_WORK_TYPE=经典网络
+        OSS_CITY=深圳
+        OSS_ACCESS_KEY_ID=xxxxx
+        OSS_ACCESS_KEY_SECRET=xxxxx
+        OSS_BUCKET_NAME=eztoview
+        #OSS_DOMAIN=
+
+    4. 构建 Service 文件
+        参考 \app\Services\oss.php
+
+    5. 使用
+
+        public function upload($file, $action = 'avatar')
+        {
+            if ($file->isValid()) {
+                $content_type = mime_content_type($file->getRealPath());
+                $file_name = $action . '/' . time() . rand(10, 99) . '.' . $file->extension();
+                //头像处理
+                if ($action == 'avatar') {
+                    $content = Image::make($file)->resize(200, 200)->encode()->encoded;
+                } else {
+                    $content = file_get_contents($file);
+                }
+                $bucket_name = config('oss.bucketName');
+                OSS::publicUploadContent($bucket_name, $file_name, $content,['ContentType' => $content_type]);//设置HTTP头
+                //获取公开文件URL
+                $url = OSS::getPublicObjectURL($bucket_name, $file_name);
+                //获取私密文件URL
+        //            $expire_time = Carbon::now()->addDay();
+        //            $url = OSS::getPrivateObjectURLWithExpireTime($bucket_name, $file_name,$expire_time);
+                return compact('url');
+            } else {
+                throw new ApiException('文件上传失败', 500);
+            }
+        }
+
+
+https://www.jianshu.com/p/7a0f435cf413
+https://www.jianshu.com/p/95205398c9b8
+
+    $ composer require jacobcyl/ali-oss-storage:dev-master
+
+        $filename = 'media/10.JPG';
+        $ret = Storage::disk('oss')->size($filename);
+
+//-----------------------------------------------------------
 [ laravel下使用阿里云oss上传图片 ]
 https://www.cnblogs.com/lsm19870508/p/5846680.html
+
+[ Laravel 运用 OSS ]
+https://learnku.com/articles/2938/laravel-using-oss
 
 //-----------------------------------------------------------
 [ 使用限制 ]
@@ -39,6 +104,5 @@ https://help.aliyun.com/document_detail/54464.html?spm=a2c4g.11186623.2.12.46c51
 对于缩略后的图：
     宽与高的乘积不能超过 4096x4096。
     单边长度不能超过 4096。
-
 
 //-----------------------------------------------------------

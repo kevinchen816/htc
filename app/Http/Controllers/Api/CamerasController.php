@@ -18,11 +18,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Schema;
 //use Storage;
+use DateTime;
 
 use Mail;
 use App\Http\Controllers\MailController;
 use App\Mail\PhotoSend;
 use App\Mail\NotificationSend;
+
+use App\Services\OSS;
 
 use Carbon\Carbon;
 use JPush\Client as JPush;
@@ -2616,7 +2619,6 @@ return $ret;
 
         // basename($uriString, $extString)
 
-        $ret['s3'] = env('S3_ENABLE') ? '1' : '0';
         // $savePath = 'media/80.JPG';
         // $ret['exist'] = Storage::disk('s3')->exists($savePath);
 return $ret;
@@ -2638,14 +2640,25 @@ return $ret;
     }
 
     public function s3_file_url($filename) {
-        $s3 = \Storage::disk('s3');
-        // if ($s3->exists($filename)) {
-            $url = $s3->temporaryUrl(
-                $filename, now()->addMinutes(1440)
-            );
+        // if (env('APP_STORAGE') == 'AWS_S3') {
+            $s3 = \Storage::disk('s3');
+            // if ($s3->exists($filename)) {
+                $url = $s3->temporaryUrl($filename, now()->addMinutes(1440));
+            // } else {
+                // $url = '';
+            // }
+        // } else if (env('APP_STORAGE') == 'ALI_OSS') {
+        //     $expire_time = Carbon::now()->addDay();
+        //     $url = OSS::getPrivateObjectURLWithExpireTime(config('oss.bucketName'), $filename, $expire_time);
         // } else {
-            // $url = '';
+        //     $url = public_path().'/uploads/'.$camera->id.'/'.$filename;
         // }
+        return $url;
+    }
+
+    public function oss_file_url($filename) {
+        $expire_time = Carbon::now()->addDay();
+        $url = OSS::getPrivateObjectURLWithExpireTime(config('oss.bucketName'), $filename, $expire_time);
         return $url;
     }
 
@@ -2680,7 +2693,7 @@ return $ret;
     // }
 
     /*----------------------------------------------------------------------------------*/
-    public function uploadfile_EBS($request, $api) {
+    public function uploadfile_to_local($request, $api) {
         //$camera = $camera->find(1);
         //return $camera;
 
@@ -2817,7 +2830,7 @@ return $ret;
         return $ret;
     }
 
-    public function uploadfile_S3($request, $api) {
+    public function uploadfile_to_remote($request, $api) {
 
         $uploader = new ImageUploadHandler;
 
@@ -2844,9 +2857,15 @@ return $ret;
             } else {
                 $file = $request->Image;
                 if ($file && $file->isValid()) {
-                    $ret = $uploader->s3_save_file($file, $photo->id);
-                    $uploader->s3_save_thumb_file($file, $photo->id);
-                    $err = $ret['err'];
+                    if (env('APP_STORAGE') == 'ALI_OSS') {
+                        $ret = $uploader->oss_save_file($file, $photo->id);
+                        $uploader->oss_save_thumb_file($file, $photo->id);
+                        $err = $ret['err'];
+                    } else { // AWS_S3
+                        $ret = $uploader->s3_save_file($file, $photo->id);
+                        $uploader->s3_save_thumb_file($file, $photo->id);
+                        $err = $ret['err'];
+                    }
 
                     // $imagename = $file->getClientOriginalName();
                     // $filesize = $file->getClientSize();
@@ -2925,10 +2944,10 @@ return $ret;
     }
 
     public function uploadfile($request, $api) {
-        if (env('S3_ENABLE')) {
-            $ret = $this->uploadfile_S3($request, $api);
+        if ((env('APP_STORAGE') == 'AWS_S3') || (env('APP_STORAGE') == 'ALI_OSS')) { //if (env('S3_ENABLE')) {
+            $ret = $this->uploadfile_to_remote($request, $api);
         } else {
-            $ret = $this->uploadfile_EBS($request, $api);
+            $ret = $this->uploadfile_to_local($request, $api);
         }
         return $ret;
     }
@@ -2986,8 +3005,10 @@ return $ret;
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
                                 $uploader = new ImageUploadHandler;
-                                if (env('S3_ENABLE')) {
+                                if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
                                     $ret = $uploader->s3_save_file($file, $photo->id);
+                                } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                                    $ret = $uploader->oss_save_file($file, $photo->id);
                                 } else {
                                     $ret = $uploader->save_file($camera_id, $file);
                                 }
@@ -3030,7 +3051,7 @@ return $ret;
                 $data['resolution'] = $request->upload_resolution;
                 $data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $imagename; //ret['imagename'];
-                if (env('S3_ENABLE')) {
+                if ((env('APP_STORAGE') == 'AWS_S3') || (env('APP_STORAGE') == 'ALI_OSS')) { //if (env('S3_ENABLE')) {
                     // do nothing
                 } else {
                     $data['original_name'] = $savename; //$ret['savename'];
@@ -3155,8 +3176,10 @@ return $ret;
                             $file = $request->Image;
                             if ($file && $file->isValid()) {
                                 $uploader = new ImageUploadHandler;
-                                if (env('S3_ENABLE')) {
+                                if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
                                     $ret = $uploader->s3_save_file($file, $photo->id);
+                                } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                                    $ret = $uploader->oss_save_file($file, $photo->id);
                                 } else {
                                     $ret = $uploader->save_file($camera_id, $file);
                                 }
@@ -3164,24 +3187,6 @@ return $ret;
                             } else {
                                 $err = ERR_NO_UPLOAD_FILE;
                             }
-
-                            // // for test
-                            // if ($file) {
-                            //     if ($file->isValid()) {
-                            //         $uploader = new ImageUploadHandler;
-                            //         if (env('S3_ENABLE')) {
-                            //             $ret = $uploader->s3_save_file($file, $photo->id);
-                            //         } else {
-                            //             $ret = $uploader->save_file($camera_id, $file);
-                            //         }
-                            //         $err = $ret['err'];
-                            //     } else {
-                            //         $err = 999;
-                            //     }
-
-                            // } else {
-                            //     $err = ERR_NO_UPLOAD_FILE;
-                            // }
                         }
                     } else {
                         $err = ERR_INVALID_PHOTO_ID;
@@ -3215,11 +3220,12 @@ return $ret;
                 $data['resolution'] = $request->upload_resolution;
                 //$data['photo_compression'] = $request->photo_compression;
                 $data['imagename'] = $ret['imagename'];
-                if (env('S3_ENABLE')) {
+                if ((env('APP_STORAGE') == 'AWS_S3') || (env('APP_STORAGE') == 'ALI_OSS')) { //if (env('S3_ENABLE')) {
                     // do nothing
                 } else {
                     $data['original_name'] = $savename; //$ret['savename'];
                 }
+
                 $data['filesize'] = $filesize;
                 $data['points'] = $points;
                 $photos->update($data);
@@ -4143,26 +4149,28 @@ return $ret;
             // filetype  : 1=photo, 2=video
             // uploadtype: 1=photo_thumb, 2=photo_original
             //             3=video_thumb, 4=video_original
-            if (env('S3_ENABLE')) {
+            if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
                 $url_img = $this->s3_file_url('media/'.$photo_id.'_thumb.JPG');
-
                 if ($photo->uploadtype == 4) { /* original video */
                     $url_href = $this->s3_file_url('media/'.$photo_id.'.MP4');
                 } else {
                     $url_href = $this->s3_file_url('media/'.$photo_id.'.JPG');
                 }
-
                 // $filepath = $url_img;
-
+            } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                $url_img = $this->oss_file_url('media/'.$photo_id.'_thumb.JPG');
+                if ($photo->uploadtype == 4) { /* original video */
+                    $url_href = $this->oss_file_url('media/'.$photo_id.'.MP4');
+                } else {
+                    $url_href = $this->oss_file_url('media/'.$photo_id.'.JPG');
+                }
             } else {
                 $url_img = sprintf('/uploads/%d/%s', $camera_id, $photo->thumb_name);
-
                 if (($photo->uploadtype == 2) || ($photo->uploadtype == 4)) {
                     $url_href = sprintf('/uploads/%d/%s', $camera_id, $photo->original_name);
                 } else {
                     $url_href = $url_img;
                 }
-
                 // $filepath = $url_img;
             }
 
@@ -4497,9 +4505,11 @@ return $ret;
 
             $url = '';
             if (!empty($camera->last_savename)) {
-                if (env('S3_ENABLE')) {
+                if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
                     // $url = $this->s3_file_url('media/'.$camera->last_savename.'.JPG');
                     $url = $this->s3_file_url('media/'.$camera->last_savename.'_thumb.JPG');
+                } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                    $url = $this->oss_file_url('media/'.$camera->last_savename.'_thumb.JPG');
                 } else {
                     //$url = 'http://sample.test/uploads/1/1537233425_2YDReN47PS.JPG';
                     $url = url('/uploads/'.$camera_id.'/').'/'.$camera->last_savename;
@@ -4697,7 +4707,7 @@ return $ret;
         /* /uploads/camera_id/1539695099_2Q7NJJh7ur.ZIP */
         // 1=photo_thumb, 2=photo_original,
         // 3=video_thumb, 4=video_original
-        if (env('S3_ENABLE')) {
+        if ((env('APP_STORAGE') == 'AWS_S3') || (env('APP_STORAGE') == 'ALI_OSS')) { //if (env('S3_ENABLE')) {
             if ($photo->uploadtype == 1) {
                 $filename = $photo->filename;
                 $s3_pathname = 'media/'.$photo_id.'.JPG';
@@ -4723,8 +4733,13 @@ return $ret;
             //     return redirect('admin/task/create')->with(compact('error'));
             // }
 
-            $fileSize = Storage::disk('s3')->size($s3_pathname);
-            $content = Storage::disk('s3')->get($s3_pathname);
+            if (env('APP_STORAGE') == 'AWS_S3') {
+                $fileSize = Storage::disk('s3')->size($s3_pathname);
+                $content = Storage::disk('s3')->get($s3_pathname);
+            } else { // ALI_OSS
+                $fileSize = Storage::disk('oss')->size($s3_pathname);
+                $content = Storage::disk('oss')->get($s3_pathname);
+            }
 
             //告诉浏览器这是一个文件流格式的文件
             Header("Content-type: application/octet-stream");
@@ -4772,16 +4787,27 @@ return $ret;
         // }
     }
 
+    public function deleteGalleryFile_OSS($filename) {
+        $filename = 'media/'.$filename;
+        // OSS::publicDeleteObject(config('oss.bucketName'), $filename);
+        Storage::disk('oss')->delete($filename);
+    }
+
     public function deleteGalleryFile($photo) {
         // filetype  : 1=photo, 2=video
         // uploadtype: 1=photo_thumb, 2=photo_original
         //             3=video_thumb, 4=video_original
-        if (env('S3_ENABLE')) {
+        if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
             $this->deleteGalleryFile_S3($photo->id.'.JPG');
             $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-
             if ($photo->uploadtype == 4) {
                 $this->deleteGalleryFile_S3($photo->id.'.MP4');
+            }
+        } else if (env('APP_STORAGE') == 'ALI_OSS') {
+            $this->deleteGalleryFile_OSS($photo->id.'.JPG');
+            $this->deleteGalleryFile_OSS($photo->id.'_thumb.JPG');
+            if ($photo->uploadtype == 4) {
+                $this->deleteGalleryFile_OSS($photo->id.'.MP4');
             }
         } else {
 
@@ -4900,10 +4926,10 @@ return $ret;
                 ->orderBy('id', 'desc')
                 ->first();
             if ($photo) {
-                if (env('S3_ENABLE')) {
+                if ((env('APP_STORAGE') == 'AWS_S3') || (env('APP_STORAGE') == 'ALI_OSS')) { //if (env('S3_ENABLE')) {
                     $cameras->update(['last_savename' => $photo->id]);
                 } else {
-
+                    // do nothing
                 }
             } else {
                 $cameras->update(['last_savename' => '']);
@@ -5437,8 +5463,10 @@ return $request;
         if ($camera->noti_email == 'on') {
             $user = DB::table('users')->where('id', $user_id)->first();
             if ($user) {
-                if (env('S3_ENABLE')) {
+                if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
                     $imgPath = $this->s3_file_url('media/'.$filename.'_thumb.JPG');
+                } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                    $imgPath = $this->oss_file_url('media/'.$filename.'_thumb.JPG');
                 } else {
                     $imgPath = public_path().'/uploads/'.$camera->id.'/'.$filename;
                 }
@@ -5796,7 +5824,30 @@ return 'OK';
 
     /*----------------------------------------------------------------------------------*/
     public function kk_test() {
-return 'OK';
+// return 'OK';
+        // $ret = OSS::getAllObjectKey('eztoview');
+        // $ret = OSS::publicDeleteObject('eztoview', 'media/34.JPG');
+
+        // $ret = OSS::getPublicObjectURL('eztoview', 'media/35.JPG');
+        // $expire_time = new DateTime('+1 day');
+
+        // $expire_time = Carbon::now()->addDay();
+        // $ret = OSS::getPrivateObjectURLWithExpireTime(config('oss.bucketName'), 'media/35.JPG', $expire_time);
+       // $ret = $this->oss_file_url('media/10.JPG');
+
+        // Storage::disk('oss');
+        // $ret = Storage::get('media/10.JPG');
+// $fileSize = Storage::disk('s3')->size($s3_pathname);
+// $content = Storage::disk('s3')->get($s3_pathname);
+
+        $filename = 'media/10.JPG';
+        $ret = Storage::disk('oss')->size($filename);
+
+// $oss = \Storage::disk('oss');
+// $ret = $oss->temporaryUrl($filename, now()->addMinutes(1440));
+
+return $ret;
+
 // Debugbar::debug('hello');
 
         // $photo_id = 1;
