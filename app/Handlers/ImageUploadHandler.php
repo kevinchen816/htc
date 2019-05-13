@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 
 use App\Services\OSS;
+use Image;
 
 // use Debugbar;
 
@@ -196,7 +197,16 @@ class ImageUploadHandler
         $extension = 'JPG'; //strtoupper($file->getClientOriginalExtension()); // JPG
         $fileName = $photo_id.'_thumb.'.$extension;
         $filePath = 'media/'.$fileName;
-        $result = $oss->put($filePath, file_get_contents($file)); // "result": true
+
+        if (0) {
+            // $content = Image::make($file)->resize(432, 243)->encode();
+            $img = Image::make($file)->resize(432, 243);
+            $zz = 'uploads/resize'.$file;
+            $img->save($zz);
+            $result = $oss->put($filePath, file_get_contents($zz)); // "result": true
+        } else {
+            $result = $oss->put($filePath, file_get_contents($file)); // "result": true
+        }
         return $result;
     }
 

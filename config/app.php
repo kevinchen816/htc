@@ -187,6 +187,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         \hisorange\BrowserDetect\ServiceProvider::class,
         Jacobcyl\AliOSS\AliOssServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -239,6 +240,7 @@ return [
 
         'Browser' => \hisorange\BrowserDetect\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
