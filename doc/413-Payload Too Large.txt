@@ -14,8 +14,8 @@ https://www.jb51.net/article/128065.htm
 修改如下：
 
 $ sudo vim /etc/php/7.1/fpm/php.ini
-    post_max_size = 101M            《-- 注意：post_max_size 需要大于 upload_max_filesize
-    upload_max_filesize = 100M
+    post_max_size = 101M    // 8M    《-- 注意：post_max_size 需要大于 upload_max_filesize
+    upload_max_filesize = 100M // 2M
 
 $ sudo vim /etc/nginx/nginx.conf
 

@@ -173,6 +173,11 @@ https://www.jianshu.com/p/fb037caf4fff
             client_max_body_size 100m;    #100M 为允许的文件大小
         }
 
+    $ sudo vim /etc/php/7.1/fpm/php.ini
+        --> 解决 413-Payload Too Large
+        post_max_size = 101M    // 8M    《-- 注意：post_max_size 需要大于 upload_max_filesize
+        upload_max_filesize = 100M // 2M
+
 	$ sudo vim /etc/nginx/sites-available/default
 
     	--> 修改如下，根据自己的项目情况修改对应信息：
