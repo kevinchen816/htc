@@ -19,7 +19,9 @@ $git log
 
 ** 新建 GitHub 仓库
 $ cd ~/Code/sample
-$ git remote add origin git@github.com:kevinchen816/xxxx
+$ git remote add origin git@github.com:kevinchen816/xxxx.git
+或
+  git remote add origin https://github.com/kevinchen816/caperplus.git
 $ git push -u origin master
 
 ** 代码改动，更新到 GitHub

@@ -1,0 +1,102 @@
+
+(1)
+> cd ~/Homestead && vagrant up
+> vagrant halt
+
+(2) 创建应用
+$ cd ~/Code
+
+/* Composer 加速 */
+$ composer config -g repo.packagist composer https://packagist.phpcomposer.com
+
+建立新的：
+$ cd ~/Code
+$ composer create-project laravel/laravel Laravel --prefer-dist "5.5.*"
+  composer create-project laravel/laravel caperplus --prefer-dist "5.8.*"
+
+下载已有的：
+$ cd ~/Code
+$ git clone git@github.com:kevin816/larabbs.git
+$ cd larabbs
+$ composer install
+$ cp .env.example .env
+
+(3) 修改 hosts
+> subl /etc/hosts
+192.168.10.10	homestead.test
+
+(4) 新增站点
+> subl ~/Homestead/Homestead.yaml
+sites:
+    - map: homestead.app
+      to: /home/vagrant/Code/Laravel/public
+    - map: larabbs.test # <--- 这里
+      to: /home/vagrant/Code/larabbs/public # <--- 这里
+    - map: larabbs.test # <--- 这里
+      to: /home/vagrant/Code/sample/public # <--- 这里
+
+      databases:
+    - homestead
+    - larabbs # <--- 这里
+    - sample # <--- 这里
+
+(5) 重启虚拟机
+> cd ~/Homestead && vagrant provision && vagrant reload
+
+(6) 修改 .env -> 为应用指定数据库名称 sample
+DB_DATABASE=sample
+
+APP_ENV=local         <-- 设定当前应用的运行环境
+APP_DEBUG=true        <-- 设定是否在应用报错时显示调试信息
+APP_KEY=your_app_key  <-- 生成应用的密钥用于加密一些较为敏感的数据
+
+在完成对 .env 文件的设置后，我们便可以通过传参给 getenv 方法来获取到 .env 文件中指定的值，
+如调用 getenv('APP_ENV') 将返回 local。
+
+[补充]
+我们也可以对数据库的连接方式、数据库名、用户名密码等做相关配置：
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_DATABASE=sample
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+
+缓存、会话、队列等驱动的相关配置信息：
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_DRIVER=sync
+
+Redis 相关的配置信息：
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+邮件相关的配置信息：
+MAIL_DRIVER=smtp
+MAIL_HOST=mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+
+(7) 生成 App Key： ??
+$ cd ~/Code/larabbs
+$ php artisan key:generate
+$ php artisan migrate --seed
+
+(8) Git 代码版本控制
+$ cd ~/Code/sample
+$ git init
+$ git add -A
+$ git commit -m "Initial commit"
+
+需要在 GitHub 上新建一个名为 sample 的项目 点击创建新项目，并将代码推送上去：
+$ git remote add origin git@github.com:kevinchen816/sample.git
+$ git push -u origin master
+
+或
+$ git remote add origin https://github.com/kevinchen816/sample.git
+$ git push -u origin master
+
+accout: kevinchen816
+password: kevin816
