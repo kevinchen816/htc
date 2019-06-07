@@ -1,0 +1,20 @@
+https://learnku.com/articles/7742/the-reasons-and-solutions-for-the-chrome-browsers-no-refresh-effect-after-the-optimization-of-the-style
+
+https://blog.csdn.net/qq_28484355/article/details/53511496
+
+windows 下 ctrl+F5 就 ok 了
+
+//---------------------------------------------------------------------------------
+今天在弄web开发的时候，遇到一个问题：明明对css文件进行了修改，保存后对页面进行刷新，却没有修改的效果。
+
+百度了解得知，原因是我们常用的浏览器通常为了加载效率，往往会缓存 js/css 文件。
+如果没有清除浏览器缓存的 js/css 文件的话，修改的效果就不会起作用，
+因为浏览器还是用的缓存在本地的 js/css 文件。
+
+不同浏览器的清除缓存办法：
+
+1、IE 浏览器，直接：internet选项——>设置->查看文件，就可以看到浏览器缓存了哪些文件。
+
+2、Firefox 浏览器，缓存采用二进制的方式存储，查看可以在地址栏中输入about:cache。要清除就更简单了：internert选项——>删除。
+
+3、chrome 浏览器，菜单->更多工具->清除缓存数据，然后勾选“缓存的图片和文件”，点击【清除浏览数据】，即可。
