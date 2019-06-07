@@ -1,0 +1,128 @@
+<?php
+
+Passport 是对 OAuth2 的封装，可以快速方便的在服务端搭建完整的 OAuth2。
+
+OAuth2 密码模式
+
+对于我们自己的客户端，用户应该直接在客户端中输入用户名和密码，
+客户端直接通过用户数据的用户名和密码获取 access_token 即可。
+
+
+密码模式流程如下：
+
+1. 用户在客户端输入用户名和密码；
+2. 客户端提交用户名，密码，client_id 和 client_secret 到服务器；
+3. 服务器直接返回 access_token；
+
+可以看到密码模式的流程非常简洁，我们可以方便的向自己的客户端发出访问令牌，
+而不需要遍历整个 OAuth2 授权代码重定向流程。
+
+[ 安装 jwt-auth]
+    $ composer require tymon/jwt-auth:1.0.0-rc.4.1
+        * jwt-auth 是 Laravel 和 lumen 的 JWT 组件，首先来安装一下，目前最新的版本为 1.0.0-rc.3。
+
+    安装完成后，我们需要设置一下 JWT 的 secret，这个 secret 很重要，用于最后的签名，
+    更换这个 secret 会导致之前生成的所有 token 无效。
+
+    $ php artisan jwt:secret
+
+    可以看到在 .env 文件中，增加了一行 JWT_SECRET。
+
+    修改 config/auth.php，将 api guard 的 driver 改为 jwt。
+
+        'guards' => [
+            .....
+            'api' => [
+                'driver' => 'jwt',
+                'provider' => 'users',
+            ],
+        ],
+
+    修改 config/api.php，auth 中增加 JWT 相关的配置
+        'auth' => [
+            'jwt' => 'Dingo\Api\Auth\Provider\JWT',
+        ],
+
+[ Passport 安装 ]
+
+    // 安装 Passport
+    $ composer require laravel/passport
+
+    // 生成数据表
+    $ php artisan migrate
+
+    // 创建加密秘钥
+    $ php artisan passport:keys
+        - 执行成功后，会在 storage 目录中看到两个以 oauth 开头的秘钥文件
+
+    // 创建客户端
+    $ php artisan passport:client --password --name='caperplus'
+        - passport:client 命令可以创建一个客户端，
+        - 由于我们使用的是密码模式，所以需要增加 --password 参数。
+        - 同时还可以增加 --name 参数为客户端起个名字，我们这里起名为 larabbs-ios：
+
+        Client ID: 1
+        Client secret: lHAalaIesD2Li3iylELAUVpKFBG7d9lgcYsk7jE7
+
+[ Passport 调试 ]
+    1. 注册路由
+        Passport::routes 是 Passport 为我们提供了基础的路由，我们先注册一下路由。
+
+        修改 app/Providers/AuthServiceProvider.php
+
+            use Carbon\Carbon;
+            use Laravel\Passport\Passport;
+
+            public function boot()
+            {
+                // Passport 的路由
+                Passport::routes();
+                // access_token 过期时间
+                Passport::tokensExpireIn(Carbon::now()->addDays(15));
+                // refreshTokens 过期时间
+                Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
+            }
+
+     2. 获取访问令牌
+
+        密码模式我们通过 {{host}}/oauth/token 这个路由获取访问令牌
+
+        提交的参数如下:
+        > grant_type —— 密码模式固定为 password；
+        > client_id —— 通过 passport:client 创建的客户端 id；
+        > client_secret —— 通过 passport:client 创建的客户端 secret；
+        > username —— 登录的用户名，数据库中任意用户邮箱；
+        > password —— 用户密码；
+        > scope —— 作用域，可填写 * 或者为空；
+
+        返回:
+        > token_type —— 令牌类型；
+        > expires_in—— 多长时间后过期；
+        > access_token —— 访问令牌；
+        > refresh_token —— 刷新令牌；
+
+        POST {{host}}/oauth/token
+
+        {
+            "token_type": "Bearer",
+            "expires_in": 1296000,
+            "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijc5OTczMjM2NGVlMWRmMjM2N2UyZGUwZmI0NzQ2NjIzOTE0MGIxZGQ1OTcxZmEwYjRkMjc0ZDJiYWJkYTc5MThiNDBiNDllMDhlYmJhZDljIn0.eyJhdWQiOiIxIiwianRpIjoiNzk5NzMyMzY0ZWUxZGYyMzY3ZTJkZTBmYjQ3NDY2MjM5MTQwYjFkZDU5NzFmYTBiNGQyNzRkMmJhYmRhNzkxOGI0MGI0OWUwOGViYmFkOWMiLCJpYXQiOjE1NTg2MzYwNTQsIm5iZiI6MTU1ODYzNjA1NCwiZXhwIjoxNTU5OTMyMDU0LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.jn7JsGVebaiJ45IV1C6OBeU2hcPzg9ce9_XquSeG_e8vil-qNgVcd8gUiS7mSA_cSzLlr4URh3JMjCi-ceBkxlmJhYxRXr6aqJPJ5NZEiFAoIsKwk5JsxGbdr3v4OGm3ieu-C4FuOa2jLMiw4nUGFUYdYol1eKz6p3R9a6a27sa--kvaGR79G8W3d6eqHWhLIEslSfqBXJa3tY7j8ONmflg2XV3CA-kind25TDGLMwbfc3fmO1c0sbYAPspJqW003g2lTROS0HzMSjcgDVDl8fAvAWhdPMEnjTUsJGVHo87X266yUPvh_bJRGPqM7Z0zLfyHGsqRihAzm9o_vgp1JgkNOLP8nVu7Vl3gbVkIrd7JbycmN7t2MuqUNoiF3l7dK6av7sw6N4Ghg7nqgtjjcajYjp1QLQEaAGiD7p1nSjBKwq6cP6gJJ9ZYEDnk1XyZOhNINmMIDguGLba0pN75GBfzOupKjks6u1I9z3x-aoXfhw0nk7okvsu1zH-cGie_f2B-PtwGOqAE51zY4RJR1qRRYOFCbE1M_6JYty4hYxw13sGOQPPzuu6IcmSwFv_Raoe_pZbD6uHTQDh8bp2_O5oZPk8OqBPpblp4txkHST83dm-uQScH-iiJIi1po6DWmQM9OOu6jkaVeFwmB3lBL1-QK_tIg5t5e93EJVZPBMQ",
+            "refresh_token": "def502009d6a7e4fe14e19985aec11329373436c8765c4177c855d96b010fef2bd266e6bc44330e87ec77e758fc0dbdda3e5ada5531ef922e84cf05c15d09889e24918d4449cfb71dcec80b658472f85ed2681b137404801674818cbdb2cbd17b6bd81941962f7f277db71d47cfea2f2725337a54cbd9d14dd1ffc3cd449dea52449c95c1b20253758f9ecac5ea99920722c50dbd599056dfb619de25c825d4e588e33f3d1f649ee39f49ebb7032ba1d7f24a6bcec4b79714573f14f6cee0eba39ffd5a7a3364c2f0fbf69067ea211f1a14245061d7ecc904e0b2928d63a79f75b3311d0ffe46040c8bf3e91fad658c58799ce7b99c27aa3243630606dc7d7f8bf07bb04bf97bb9817794808c2d1475becfda42632936c260f3e08ae9d2cc8a2458fb41c58f8ab86f84b652be04ea7270195fdc930cc53d9627caecea6f32d017065fe0bca3bef3e6ed12676311ca4182d1913d8526a71ab6d075e5f86768801ed"
+        }
+
+    3. 刷新访问令牌
+
+        刷新访问令牌 接口与 获取访问令牌 接口一样，只是参数不同。
+
+        > grant_type —— 刷新令牌固定为 refresh_token；
+        > client_id —— 通过 passport:client 创建的客户端 id；
+        > client_secret —— 通过 passport:client 创建的客户端 secret；
+        > refresh_token —— 刷新令牌；
+        > scope —— 作用域，可填写 * 或者为空；
+
+        {
+            "token_type": "Bearer",
+            "expires_in": 1295999,
+            "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjUzZGY5ZmFmOTEwMjA3ZmY4Mjg3YTNmYjQ0MmJjZTNjNGVkYTU4ZTllODZlODRlMDNkZWY5ZWU0OTkxZjhiZjhhYTZkMGMwZjk2NTQ3ZDczIn0.eyJhdWQiOiIxIiwianRpIjoiNTNkZjlmYWY5MTAyMDdmZjgyODdhM2ZiNDQyYmNlM2M0ZWRhNThlOWU4NmU4NGUwM2RlZjllZTQ5OTFmOGJmOGFhNmQwYzBmOTY1NDdkNzMiLCJpYXQiOjE1NTg2MzY0NzcsIm5iZiI6MTU1ODYzNjQ3NywiZXhwIjoxNTU5OTMyNDc2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.kwEwJ7JC-ZMWQAwLrP8_wpBDoo6GXrtMsGY8_iwjiWK4-9Xe8Nyr7CXsAvxvRFybiIuqwqrIutOIv8M93WSiXI2I1wGCFGSX94IYedTHRJGKrC56Quido76dep7wP-ymOiYksM-ZrZBkLwB3YuFqh1hE0nF-PePXDByz1gyqNbiHlZ1xAm5zuY1kLVL-eFWRBeLDwCTPn4NjGqvZzIHR2ZyTDGhanK297YnvMj1QgIuNTU2kCnS-saYloHyl4rokbAy6miWpfXRKBX7bYFkhuGYsdTXkHzBrbuN947vpdyg4ZTzuDLI3LWvcMKQwPUFgKxa7FZjp-8N5CsfX8n6j7Fze36isC30mpdkv6zD308DVv8Df44Q2aNLWNafzYWQDas5075jAOLHPBdi3Da0LyVrHdrr1dJFy0M5Q3Zpqm-XaaIDoxkf_IzXRS6aE3t_9kkL55OQxu6V-iM0fkz54z4i32DAVOd18wH2NMsD6XrEF_8o1g-Bm-0lWKYFl-PUrdFnA7eFnZBYcLa6hX2xtZlpOGFXsrY6fa-p4lVaEb20NxtRKbIGoxmTGtYsmygs5KqgHe0zBRT3Dw75eOIHepvsZYj9xiVTHoAXm02KYO1l4892MOkjiPRTEteZX0WBnqOdgBM2QxSDDTGprgjSMXvfVL8_Caj3K53WUdv-CyAE",
+            "refresh_token": "def50200a9f3cdb6679f74cf197645a6df8aebcd938c29ad133a78ce4a01d9c46379eb1e86243d287e1821ab0ace616443796a4db76e316007f931db3acc4518c8a70089d3ced68833edd3df532295893e465fe60ce39513d15cbd4633e99ccfcea98ea4d55a70d8c8f41887a10335f2123924aebb70c764c8b298d5f6a63de1e5ababca62c78ce210688513d22e387366a0aa722bb9bcbca61176c7cc24a65049218f141e46232c95b627bf96542e274bed25a87cf1b5465e5d22510d930a02366b5d0721b5685c270f4fd27f0fa6f89c5461704c6fffc58b21c5ea00d53ae3e0d4a57529e1d29240c45018631dc73cb21be73a4cb14eb92772da284658b2556a5df746b40335eade8b2466a088b20b7e9315de9f8d0f92cb0be4571140447f5b37e081d253ca5cb230b93511a8cfb92d7fd3359767b3a3e7ce6567724b9a32974206fabb6183820fd391fe587332db9a70dc99c3a31657929a32de372c308024"
+        }

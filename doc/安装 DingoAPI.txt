@@ -46,3 +46,25 @@ API_DEBUG       测试环境，打开 debug，方便我们看到错误信息，�
     Accept: application/prs.10ware.v2+json
 
 //--------------------------------------------------------------------------
+修改 /Users/kevin/Code/caperplus/routes/api.php
+
+    // Route::middleware('auth:api')->get('/user', function (Request $request) {
+    //     return $request->user();
+    // });
+
+    $api = app('Dingo\Api\Routing\Router');
+
+    $api->version('v1', [
+        'namespace' => 'App\Http\Controllers\Api',
+        // 'middleware' => ['serializer:array', 'bindings'],
+    ], function($api) {
+
+
+
+    });
+
+
+    $ php artisan make:controller Api/Controller    // 参考 3.3. 手机注册验证码
+    $ php artisan make:request Api/FormRequest      // 参考 3.3. 手机注册验证码
+
+//--------------------------------------------------------------------------

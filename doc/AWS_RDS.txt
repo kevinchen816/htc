@@ -1,3 +1,9 @@
+
+/etc/init.d/mysql restart
+/etc/init.d/mysql start
+/etc/init.d/mysql stop
+
+//-----------------------------------------------------------------------
 AWS RDS 使用笔记
 https://www.cnblogs.com/edward2013/p/5496531.html
 
@@ -51,3 +57,5 @@ https://blog.csdn.net/huangyuehong914/article/details/80503195
 
     ⑤ 刷新
     执行命令为：flush privileges;
+
+//-----------------------------------------------------------------------

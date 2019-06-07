@@ -1,7 +1,26 @@
-service mysqld start
-service mysqld stop
 
-mysql -h 52.192.xxx.xxx -P 3306 -uUSERNAME -pPASSWORD
+** 无法使用 Sequel Pro 连到服务器内部的 MySQL
+    - 测试：使用 mysql -h 52.192.xxx.xxx -P 3306 -uUSERNAME -pPASSWORD
+
+
+    # mysql -h 39.108.97.249 -P 3306
+    ERROR 2003 (HY000): Can't connect to MySQL server on '39.108.97.249' (111)
+
+    修改 /etc/mysql/mysql.conf.d/mysqld.cnf
+
+        #bind-address = 127.0.0.1   <-- 把这行注释掉
+
+    重启 MySQL
+    # /etc/init.d/mysql restart
+
+    # /etc/init.d/mysql start
+    # /etc/init.d/mysql stop
+
+    测试：
+    # mysql -h 39.108.97.249 -P 3306 -ukevin -pkevin816
+
+    参考：
+    https://www.cnblogs.com/wangdaijun/p/6024972.html
 
 //------------------------------------------------------------
 [ 问题处理 ] ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes

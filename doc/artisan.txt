@@ -1,19 +1,31 @@
+<?php
+
 $ php artisan route:list
 
 $ php artisan make:controller MobileController
+$ php artisan make:controller Api/CamerasController
 
-$ php artisan make:model Models/Mobile -m // 自动产生 xxx_create_mobiles_table.php
-//$ php artisan make:migration create_mobiles_table --create=mobiles
+$ php artisan make:model Models/Mobile -m
+    ** -m 自动产生 xxx_create_cameras_table.php
 
-$ php artisan make:model Models/EZCode
-$ php artisan make:migration create_ezcode_table --create=ezcode
+    $ php artisan make:model Models/Camera
+    $ php artisan make:migration create_cameras_table --create=cameras
+    //$ php artisan make:migration create_cameras_table --create="cameras"
 
+    [ 不希望数据库名称跟 Model 名称一样有大写 ]
+    $ php artisan make:model Models/EZCode
+    $ php artisan make:migration create_ezcode_table --create=ezcode
+
+//------------------------------------------------------------
 $ php artisan migrate
 $ php artisan migrate:rollback
 
 $ php artisan migrate:fresh         <-- 使用这个
 $ php artisan migrate:refresh
 
-refresh 和 fresh 命令的区别在于：
-fresh 命令不按照 migrations 表里的记录逐步回滚，而是通过删除数据库里所有表来跳过还原和回滚的步骤，
-然后在空数据库上执行每个 migration 文件里的 up 方法。
+[ refresh 和 fresh 命令的区别在于 ]
+    fresh 命令不按照 migrations 表里的记录逐步回滚，
+    而是通过删除数据库里所有表来跳过还原和回滚的步骤，
+    然后在空数据库上执行每个 migration 文件里的 up 方法。
+
+//------------------------------------------------------------
