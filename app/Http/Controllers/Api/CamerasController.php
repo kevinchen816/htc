@@ -2141,7 +2141,7 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
 
         } else if (($api_type == 'upload_photo')||($api_type == 'upload_video')) {
             $data['battery']      = $param->Battery;
-            if ($param->SignalValue != 0 || $param->SignalValue != 99) {
+            if ($param->SignalValue != 0 && $param->SignalValue != 99) {
                 $data['signal_value'] = $param->SignalValue;
             }
             $data['card_space']   = $param->Cardspace;
@@ -2167,7 +2167,7 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
             $datalist = $param->DataList;
             if ($datalist) {
                 $data['battery']      = $datalist['Battery'];
-                if ($param->SignalValue != 0 || $param->SignalValue != 99) {
+                if ($param->SignalValue != 0 && $param->SignalValue != 99) {
                     $data['signal_value'] = $datalist['SignalValue'];
                 }
                 $data['card_space']   = $datalist['Cardspace'];
