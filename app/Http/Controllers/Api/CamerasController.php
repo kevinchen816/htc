@@ -2167,7 +2167,7 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
             $datalist = $param->DataList;
             if ($datalist) {
                 $data['battery']      = $datalist['Battery'];
-                if ($param->SignalValue != 0 && $param->SignalValue != 99) {
+                if ($datalist['SignalValue'] != 0 && $datalist['SignalValue'] != 99) {
                     $data['signal_value'] = $datalist['SignalValue'];
                 }
                 $data['card_space']   = $datalist['Cardspace'];
