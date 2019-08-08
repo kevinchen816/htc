@@ -672,7 +672,8 @@ class CamerasController extends Controller
     public function itemHeartbeatInterval() {
         $array['title'] = 'Heartbeat Interval';
         $array['options'] = array(
-            // 'Every 5 Minutes'   => '5m',
+            'Every 1 Minutes'   => '1m',
+            'Every 5 Minutes'   => '5m',
             // 'Every 10 Minutes'  => '10m',
             // 'Every 15 Minutes'  => '15m',
             // 'Every 20 Minutes'  => '20m',
