@@ -19,6 +19,54 @@ class MobileController extends Controller
         return view('mobile.login', ['device_id' => $device_id]);
     }
 
+    public function getLogin2() {
+        // $device_id = '';
+        // return view('mobile.login', ['device_id' => $device_id]);
+
+        $email = 'kevin@10ware.com';
+        $password = '123456';
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            session()->flash('success', 'Login Successful');
+            // $this->device_add($request->device_id);
+            return redirect()->route('home', [Auth::user()]);
+        } else {
+            session()->flash('danger', 'Login Fail');
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function getLogin3($email, $password) {
+    // public function getLogin3($password) {
+        // $device_id = '';
+        // return view('mobile.login', ['device_id' => $device_id]);
+// return $email;
+// return $password;
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            session()->flash('success', 'Login Successful');
+            // $this->device_add($request->device_id);
+            return redirect()->route('home', [Auth::user()]);
+        } else {
+            // session()->flash('danger', 'Login Fail');
+            // return redirect()->back()->withInput();
+return 'XX';
+        }
+    }
+
+    public function getLogin4($email, $password, $device_id) {
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            session()->flash('success', 'Login Successful');
+            // $this->device_add($request->device_id);
+            return redirect()->route('home', [Auth::user()]);
+        } else {
+            // session()->flash('danger', 'Login Fail');
+            // return redirect()->back()->withInput();
+return 'Login Fail';
+        }
+    }
+
     public function getLoginEx($device_id) {
         return view('mobile.login', ['device_id' => $device_id]);
     }

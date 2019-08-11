@@ -1,0 +1,6 @@
+$ composer require laravel/passport:~4.0
+
+重要：如果安装过程中遇到 paragonie/random_compat 版本冲突的问题，
+可以先执行 composer require paragonie/random_compat:^2.0 将其降级为 2.0 的版本。
+
+$ composer require paragonie/random_compat:^2.0

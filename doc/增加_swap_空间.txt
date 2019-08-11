@@ -1,0 +1,19 @@
+https://www.linuxidc.com/Linux/2017-07/145673.htm
+
+The following exception is caused by a lack of memory or swap,
+or not having swap configured
+
+** 补充: 发生 memory 不足时，增加 swap 空间
+    $ sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+    $ sudo /sbin/mkswap /var/swap.1
+        mkswap: /var/swap.1: insecure permissions 0644, 0600 suggested.
+    $ sudo /sbin/swapon /var/swap.1
+        swapon: /var/swap.1: insecure permissions 0644, 0600 suggested.
+
+** 检查您当前的交换分区swap
+    $ swapon -s
+    Filename                Type        Size    Used    Priority
+    /var/swap.1                             file        1048572 538780  -2
+
+** 检查可用空间
+    $df -h
