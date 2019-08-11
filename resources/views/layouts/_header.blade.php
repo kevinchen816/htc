@@ -95,10 +95,17 @@
 
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
+                                @if (!Browser::isMobile())
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     {{ trans('htc.Logout') }}
                                 </a>
+                                @else
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit(); api.closeFrame()">
+                                    {{ trans('htc.Logout') }}
+                                </a>
+                                @endif
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
