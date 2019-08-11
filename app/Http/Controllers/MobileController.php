@@ -58,7 +58,7 @@ return 'XX';
 
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             session()->flash('success', 'Login Successful');
-            // $this->device_add($request->device_id);
+            $this->device_add($device_id);
             return redirect()->route('home', [Auth::user()]);
         } else {
             // session()->flash('danger', 'Login Fail');

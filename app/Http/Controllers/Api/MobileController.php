@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Auth;
 use DB;
 
 use App\Models\Mobile;
@@ -12,6 +13,28 @@ use App\Models\Mobile;
 
 class MobileController extends Controller
 {
+    public function postAccountCheck(Request $request) {
+// return 'OK';
+        $email = $request->email;
+        $password = $request->password;
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            $ResultCode = 0;
+            $ret['ResultCode'] = 0;
+
+            // $user = Auth::user();
+            // $ret['id'] = $user->id;
+            Auth::logout();
+
+        } else {
+            // $ResultCode = 1;
+            $ret['ResultCode'] = 1;
+        }
+
+        // $ret['ResultCode'] = $ResultCode;
+        return $ret;
+    }
+
     /*----------------------------------------------------------------------------------*/
     public function mobileadd(Request $request) {
         // $logapi = new LogApi;

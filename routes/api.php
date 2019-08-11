@@ -77,6 +77,9 @@ $api->version('v1', [
 
     $api->post('mobileadd', 'MobileController@mobileadd')->name('api.mobile.add');
     // $api->post('deviceadd', 'MobileController@deviceaddX')->name('api.device.add');
+
+    $api->post('account_check', 'MobileController@postAccountCheck')->name('api.mobile.account_check');
+
 });
 
 $api->version('v2', function($api) {
