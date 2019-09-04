@@ -63,6 +63,10 @@ $api->version('v1', [
     $api->post('firmwaredone', 'CamerasController@firmwaredone')->name('api.camera.firmwaredone');
     $api->post('firmwarefail', 'CamerasController@firmwarefail')->name('api.camera.firmwarefail');
 
+    $api->post('moduleinfo', 'CamerasController@moduleinfo')->name('api.camera.moduleinfo');
+    $api->post('moduledone', 'CamerasController@moduledone')->name('api.camera.moduledone');
+    $api->post('modulefail', 'CamerasController@modulefail')->name('api.camera.modulefail');
+
     $api->post('cardfull', 'CamerasController@cardfull')->name('api.camera.cardfull');
     $api->post('carderror', 'CamerasController@carderror')->name('api.camera.carderror');
     $api->post('formatdone', 'CamerasController@formatdone')->name('api.camera.formatdone');

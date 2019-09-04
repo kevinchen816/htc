@@ -3483,6 +3483,103 @@ return $ret;
     }
 
     /*----------------------------------------------------------------------------------*/
+    /*
+    {"iccid":"89860117851014783481","module_id":"861107032685597","model_id":"lookout-na",
+     "RequestID":"4980","version":"20180720",
+     "Battery":"f","Cardspace":"30405MB","Cardsize":"30432MB"}
+    */
+    public function moduleinfo(Request $request) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        $file_not_exists = 0;
+        if ($err == 0) {
+            $this->Camera_Status_Update($user_id, $request);
+        }
+
+        $filepath = '';
+        $filename = 'NETWORK.ZIP';
+        if (env('APP_STORAGE') == 'ALI_OSS') {
+            $bucket_name = config('oss.bucketName');
+            $pathname = $filepath.'/'.$filename;
+
+            /* 获取公开文件URL */
+            // http://eztoview.oss-cn-shenzhen.aliyuncs.com//NETWORK.ZIP
+            $url = OSS::getPublicObjectURL($bucket_name, $pathname);
+
+        } else {
+            // $folder_name = 'uploads/'.$filepath.'/'.$filename;
+            // $upload_path = public_path().'/'.$folder_name;
+            // $url = public_path().'/uploads/'.$filepath.'/'.$filename;
+            $url = env('APP_URL').'/uploads/'.$filepath.'/'.$filename;
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        // $response['url'] = 'http://portal.eztoview.cn/network.zip';
+        // $response['url'] = 'https://eztoview.oss-cn-shenzhen.aliyuncs.com/NETWORK.ZIP?Expires=1567596551&OSSAccessKeyId=TMP.hVFixAEHTJf8S7bPGrBUXTBV8aNdN2Rizs6FWsVtAvVsLqDdrt5tFLLJWS8kmDghgpPWgM3KyC9sivvzyCiaaheaGqUknSdSEMMdX29H5Qggqy634Wd15iGwfaZM1w.tmp&Signature=bGlLlr%2FTFkIlHDr7L9I7RgqR4x0%3D';
+        $response['url'] = $url;
+
+        // if ($user_id && $camera) {
+        //     $this->LogApi_Add('moduleinfo', 1, $user_id, $camera->id, $request, $response);
+        // }
+        return $response;
+    }
+
+    public function moduledone(Request $request) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $this->Camera_Status_Update($user_id, $request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'MF',
+                    //'photo_id'    => null,
+                    //'photo_cnt'   => null,
+                );
+                $this->Action_Completed($param);
+            }
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('moduledone', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
+    }
+
+    public function modulefail(Request $request) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $this->Camera_Status_Update($user_id, $request);
+
+            if ($request->RequestID) {
+                $param = array(
+                    'request_id'  => $request->RequestID,
+                    'camera_id'   => $camera->id,
+                    'action_code' => 'MF',
+                    'status' => 4, // 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending
+                );
+                $this->Action_Update($param);
+            }
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('modulefail', 1, $user_id, $camera->id, $request, $response);
+        }
+        return $response;
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function cardfull(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
