@@ -3548,6 +3548,8 @@ return $ret;
         }
 
         $response = $this->Response_Result($err, $camera);
+        $response['iccid'] = $request->iccid;
+        $response['module_id'] = $request->module_id;
         if ($user_id && $camera) {
             $this->LogApi_Add('moduledone', 1, $user_id, $camera->id, $request, $response);
         }
