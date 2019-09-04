@@ -3502,7 +3502,8 @@ return $ret;
         $filename = 'NETWORK.ZIP';
         if (env('APP_STORAGE') == 'ALI_OSS') {
             $bucket_name = config('oss.bucketName');
-            $pathname = $filepath.'/'.$filename;
+            // $pathname = $filepath.'/'.$filename;
+            $pathname = $filepath.$filename;
 
             /* 获取公开文件URL */
             // http://eztoview.oss-cn-shenzhen.aliyuncs.com//NETWORK.ZIP
