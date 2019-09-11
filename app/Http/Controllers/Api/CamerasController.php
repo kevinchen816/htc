@@ -433,6 +433,11 @@ class CamerasController extends Controller
             '8s'    => '8s',
             '9s'    => '9s',
             '10s'   => '10s',
+
+            '15s'   => '15s',
+            '20s'   => '20s',
+            '25s'   => '25s',
+            '30s'   => '30s',
         );
         $array['help'] = 'Note: The longer the duration, the larger the video file will be if uploaded to the portal.';
         return $array;
