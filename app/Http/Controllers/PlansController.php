@@ -188,8 +188,19 @@ class PlansController extends Controller
         if ($style == 'test') {
             // $style = 'test';
             $status = 'active';
-            $points = 5000;
-            $plans = 1000;
+
+            if (env('APP_PLAN_POINTS')) {
+                $points = env('APP_PLAN_POINTS');
+            } else {
+                $points = 5000;
+            }
+
+            if (env('APP_PLAN_MB')) {
+                $plans = env('APP_PLAN_MB');
+            } else {
+                $plans = 1000; // MB
+            }
+
         } else {
             $style = 'normal';
             $status = 'deactive';

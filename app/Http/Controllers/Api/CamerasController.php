@@ -676,19 +676,30 @@ class CamerasController extends Controller
 
     public function itemHeartbeatInterval() {
         $array['title'] = 'Heartbeat Interval';
-        $array['options'] = array(
-            'Every 1 Minutes'   => '1m',
-            'Every 5 Minutes'   => '5m',
-            // 'Every 10 Minutes'  => '10m',
-            // 'Every 15 Minutes'  => '15m',
-            // 'Every 20 Minutes'  => '20m',
-            'Every 30 Minutes'  => '30m',
-            'Every Hour'    => '1h',
-            'Every 2 Hours' => '2h',
-            'Every 4 Hours' => '4h',
-            'Every 8 Hours' => '8h',
-            'Every 12 Hours'=> '12h',
-        );
+        if (env('APP_REGION') == 'tw') {
+            $array['options'] = array(
+                // 'Every 1 Minute'    => '1m',
+                // 'Every 5 Minutes'   => '5m',
+                'Every 10 Minutes'  => '10m',
+                'Every 15 Minutes'  => '15m',
+                'Every 20 Minutes'  => '20m',
+                'Every 30 Minutes'  => '30m',
+                'Every Hour'    => '1h',
+                'Every 2 Hours' => '2h',
+                'Every 4 Hours' => '4h',
+                'Every 8 Hours' => '8h',
+                'Every 12 Hours'=> '12h',
+            );
+        } else {
+            $array['options'] = array(
+                'Every 30 Minutes'  => '30m',
+                'Every Hour'    => '1h',
+                'Every 2 Hours' => '2h',
+                'Every 4 Hours' => '4h',
+                'Every 8 Hours' => '8h',
+                'Every 12 Hours'=> '12h',
+            );
+        }
         $array['help'] = 'This timer will fire on the specified interval and will send a status to the server. The mobile app will recieve a notification when this occurs. This lets you know your camera is still functioning and its curent status. It will also process any pending Action items you have queued like High-Res Max, Video, Original, Settings.';
         return $array;
     }

@@ -56,11 +56,13 @@
                         <a href="{{ route('cameras') }}"><i class="fa fa-camera"></i> {{ trans('htc.My Cameras') }}</a>
                     </li>
 
-    @if (env('APP_PLAN_INFO') && (!Browser::isMobile()))
+    @if (!Browser::isMobile())
                     <li class={{ ($user->sel_menu == 'account') ? "active" : "" }}>
                         <a href="{{ route('account.profile') }}"><i class="fa fa-gear"></i> {{ trans('htc.My Account') }}</a>
                     </li>
+    @endif
 
+    @if (env('APP_PLAN_INFO') && (!Browser::isMobile()))
                     <li class={{ ($user->sel_menu == 'help') ? "active" : "" }}>
                         <a href="{{ route('help.plans') }}">{{ trans('htc.PLAN INFO') }}</a>
                     </li>
