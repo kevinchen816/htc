@@ -3366,6 +3366,28 @@ return $ret;
      "RequestID":"4980","version":"20180720",
      "Battery":"f","Cardspace":"30405MB","Cardsize":"30432MB"}
     */
+    public function image_url($filepath, $filename)
+    {
+        if ($filename) {
+            if (env('APP_STORAGE') == 'ALI_OSS') {
+                $bucket_name = config('oss.bucketName');
+                $pathname = $filepath.'/'.$filename;
+
+                /* 获取公开文件URL */
+                $url = OSS::getPublicObjectURL($bucket_name, $pathname);
+
+            } else {
+                // $folder_name = 'uploads/'.$filepath.'/'.$filename;
+                // $upload_path = public_path().'/'.$folder_name;
+                // $url = public_path().'/uploads/'.$filepath.'/'.$filename;
+                $url = env('APP_URL').'/uploads/'.$filepath.'/'.$filename;
+            }
+        } else {
+            $url = null;
+        }
+        return $url;
+    }
+
     public function firmwareinfo(Request $request) {
         $ret = $this->Camera_Check($request);
         $err = $ret['err'];
@@ -3381,7 +3403,6 @@ return $ret;
                 ->first();
             if ($firmware) {
                 $version = $firmware->version;
-
                 if ($request->version < $version) {
                     $freespace =  (integer) ($request->Cardspace);
                     if ($freespace < 10) {
@@ -3396,14 +3417,18 @@ return $ret;
                         /* /firmware/lookout-na/20180816/IMAGE.ZIP */
                         $model_id = $request->model_id;
                         $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
-                        $pathname = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+                        // $pathname = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+                        // if (file_exists($pathname)) {
+                        //     $crc32 = hexdec(hash_file('crc32b', $pathname));
+                        // } else {
+                        //     $err = 0; // TODO
+                        //     $file_not_exists = 1;
+                        // }
 
-                        if (file_exists($pathname)) {
-                            $crc32 = hexdec(hash_file('crc32b', $pathname));
-                        } else {
-                            $err = 0; // TODO
-                            $file_not_exists = 1;
-                        }
+                        $filepath = 'firmware/'.$model_id.'/'.$version;
+                        $url = $this->image_url($filepath, $filename);
+                        $crc32 = $firmware->crc32;
+                        // return $url;
                     }
                 } else {
                     $err = 0;
@@ -3417,6 +3442,7 @@ return $ret;
         } else {
             if ($err == 1) {
                 $response['crc32'] = (string) $crc32;
+                $response['url'] = $url;
             }
         }
 
@@ -3437,11 +3463,33 @@ return $ret;
             /* /firmware/lookout-na/20180816/IMAGE.ZIP */
             $version = $firmware->version;
             $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
-            //$pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
-            $pathToFile = public_path().'/firmware/kmcam/'.$version.'/'.$filename;
+            $pathname = 'firmware/'.$model_id.'/'.$version.'/'.$filename;
+            if (env('APP_STORAGE') == 'AWS_S3') {
+                $fileSize = Storage::disk('s3')->size($pathname);
+                $content = Storage::disk('s3')->get($pathname);
+            } else { // ALI_OSS
+                $fileSize = Storage::disk('oss')->size($pathname);
+                $content = Storage::disk('oss')->get($pathname);
+            }
 
-            // TODO: check file exist
-            return response()->download($pathToFile, $filename);
+            //告诉浏览器这是一个文件流格式的文件
+            Header("Content-type: application/octet-stream");
+
+            //请求范围的度量单位
+            Header("Accept-Ranges: bytes");
+
+            //Content-Length是指定包含于请求或响应中数据的字节长度
+            Header("Accept-Length: ".$fileSize);
+
+            //用来告诉浏览器，文件是可以当做附件被下载，下载后的文件名称为$file_name该变量的值。
+            Header("Content-Disposition: attachment; filename=".$filename);
+
+            echo $content;
+            exit();
+
+            // //$pathToFile = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+            // $pathToFile = public_path().'/firmware/kmcam/'.$version.'/'.$filename;
+            // return response()->download($pathToFile, $filename); // TODO: check file exist
         }
     }
 
