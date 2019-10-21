@@ -4224,12 +4224,15 @@ return $ret;
         $txt .= $this->ovItemShow('Last Armed', $this->_user_dateformat($user, $camera->last_armed));
         $txt .= $this->ovItemShow('Uploads since armed', $camera->arm_photos);
 
-        if (env('APP_USE_POINTS')) {
-            $txt .= $this->ovItemShow('Points since armed', $camera->arm_points);
-        } else {
-            $armed_used_mb = round($camera->arm_plans/(1024*1024), 2).' MB';
-            $txt .= $this->ovItemShow('Data since armed', $armed_used_mb);
+        if (env('APP_REGION') != 'tw') {
+            if (env('APP_USE_POINTS')) {
+                $txt .= $this->ovItemShow('Points since armed', $camera->arm_points);
+            } else {
+                $armed_used_mb = round($camera->arm_plans/(1024*1024), 2).' MB';
+                $txt .= $this->ovItemShow('Data since armed', $armed_used_mb);
+            }
         }
+
         $txt .= $this->ovItemShow('Last Heartbeat', $this->_user_dateformat($user, $camera->last_hb));
         $txt .= $this->ovItemShow('Last Photo', $this->_user_dateformat($user, $camera->last_photo));
         $txt .= $this->ovItemShow('Last Video', $this->_user_dateformat($user, $camera->last_video));
