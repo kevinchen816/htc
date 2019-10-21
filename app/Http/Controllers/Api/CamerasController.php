@@ -3997,42 +3997,45 @@ return $ret;
         $txt .= $this->ovItemShow('Temperature', $camera->temperature);
         //$txt .= $this->ovItemShow('Temperature', '&#176;C');
 
-        $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
-        if ($plan->points > 0) {
-            if (env('APP_USE_POINTS')) {
-                if ($plan->points) {
-                    $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+        if (env('APP_REGION') != 'tw') {
+            $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+            if ($plan->points > 0) {
+                if (env('APP_USE_POINTS')) {
+                    if ($plan->points) {
+                        $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+                    } else {
+                        $percent_plan_used = 100;
+                    }
                 } else {
-                    $percent_plan_used = 100;
+                    if ($plan->plans) {
+                        // $plan_used_mb = $plan->points_used/(1024*1024);
+                        $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                        $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+                    } else {
+                        $percent_plan_used = 100;
+                    }
                 }
-            } else {
-                if ($plan->plans) {
-                    // $plan_used_mb = $plan->points_used/(1024*1024);
-                    $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
-                    $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+
+                $percent_plan_avail = 100-$percent_plan_used;
+
+                $plan_points = '';
+                $plan_points .= '<div class="progress progress-points">';
+                $plan_points .=     '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="'.$percent_plan_used.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_used.'%; min-height: 22px; line-height: 18px;">';
+                $plan_points .=         $percent_plan_used.' % used';
+                $plan_points .=     '</div>';
+                $plan_points .=     '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percent_plan_avail.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_avail.'%; min-height: 22px; line-height: 18px;">';
+                $plan_points .=         $percent_plan_avail.' % avail';
+                $plan_points .=     '</div>';
+                $plan_points .= '</div>';
+
+                if (env('APP_USE_POINTS')) {
+                    $txt .= $this->ovItemShow('Plan Points', $plan_points);
                 } else {
-                    $percent_plan_used = 100;
+                    $txt .= $this->ovItemShow('Data Plan', $plan_points);
                 }
-            }
-
-            $percent_plan_avail = 100-$percent_plan_used;
-
-            $plan_points = '';
-            $plan_points .= '<div class="progress progress-points">';
-            $plan_points .=     '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="'.$percent_plan_used.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_used.'%; min-height: 22px; line-height: 18px;">';
-            $plan_points .=         $percent_plan_used.' % used';
-            $plan_points .=     '</div>';
-            $plan_points .=     '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percent_plan_avail.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_avail.'%; min-height: 22px; line-height: 18px;">';
-            $plan_points .=         $percent_plan_avail.' % avail';
-            $plan_points .=     '</div>';
-            $plan_points .= '</div>';
-
-            if (env('APP_USE_POINTS')) {
-                $txt .= $this->ovItemShow('Plan Points', $plan_points);
-            } else {
-                $txt .= $this->ovItemShow('Data Plan', $plan_points);
             }
         }
+
         //$points_reserve  = '30.00 (20000.00 points)';
         //$points_reserve .= '<br /><a href="/plans/buy-reserve/7" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Buy Reserve (<i class="fa fa-dollar-sign"></i>10)</a>';
         //$txt .= $this->ovItemShow('Points Reserve', $points_reserve);
@@ -4088,12 +4091,15 @@ return $ret;
             $txt .= $this->ovItemShow('Firmware', $camera->dsp_version);
             $txt .= $this->ovItemShow('MCU', $camera->mcu_version);
             $txt .= $this->ovItemShow('Last Connection', $camera->cellular);
-            if (env('APP_USE_POINTS')) {
-                $txt .= $this->ovItemShow('Plan Points', $point_total);
-                $txt .= $this->ovItemShow('Points Used', $point_used);
-            } else {
-                $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
-                $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
+
+            if (env('APP_REGION') != 'tw') {
+                if (env('APP_USE_POINTS')) {
+                    $txt .= $this->ovItemShow('Plan Points', $point_total);
+                    $txt .= $this->ovItemShow('Points Used', $point_used);
+                } else {
+                    $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
+                    $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
+                }
             }
         }
         return $txt;

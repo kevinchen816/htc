@@ -471,16 +471,20 @@ if ($plan_style == 'test') {
             $handle .=                 '<tr><td class="pull-right">'.$txtCamera.':</td>';
             $handle .=                     '<td><strong>'.$camera_name.'</strong></td>';
             $handle .=                 '</tr>';
-            // $handle .=                 '<tr><td class="pull-right">'.$txtPlanPoints.':</td>';
-            // $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
-            $handle .=                 '<tr><td class="pull-right">'.$txtPlanTotal.':</td>';
-            $handle .=                     '<td><strong>'.$plan_total.'</strong></td>';
-            $handle .=                 '</tr>';
-            // $handle .=                 '<tr><td class="pull-right">'.$txtPointsUsed.':</td>';
-            // $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
-            $handle .=                 '<tr><td class="pull-right">'.$txtPlanUsed.':</td>';
-            $handle .=                     '<td><strong>'.$plan_used.'</strong></td>';
-            $handle .=                 '</tr>';
+
+            if (env('APP_REGION') != 'tw') {
+                // $handle .=                 '<tr><td class="pull-right">'.$txtPlanPoints.':</td>';
+                // $handle .=                     '<td><strong>'.$plan->points.'</strong></td>';
+                $handle .=                 '<tr><td class="pull-right">'.$txtPlanTotal.':</td>';
+                $handle .=                     '<td><strong>'.$plan_total.'</strong></td>';
+                $handle .=                 '</tr>';
+                // $handle .=                 '<tr><td class="pull-right">'.$txtPointsUsed.':</td>';
+                // $handle .=                     '<td><strong>'.$plan->points_used.'</strong></td>';
+                $handle .=                 '<tr><td class="pull-right">'.$txtPlanUsed.':</td>';
+                $handle .=                     '<td><strong>'.$plan_used.'</strong></td>';
+                $handle .=                 '</tr>';
+            }
+
             // $handle .=                 '<tr><td class="pull-right">SMS Sent:</td>';
             // $handle .=                     '<td><strong>'.$plan->sms_sent.'</strong></td>';
             // $handle .=                 '</tr>';
