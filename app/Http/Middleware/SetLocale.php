@@ -43,6 +43,7 @@ class SetLocale
             $langArray = array('en', 'zh-tw', 'zh-TW');
         } else if (env('APP_REGION') == 'cn') {
             $langArray = array('en', 'zh-cn', 'zh-CN');
+            // $langArray = array('en', 'zh-cn', 'zh-CN', 'zh-tw', 'zh-TW');
         }
 
         // Debugbar::debug($request->server('HTTP_ACCEPT_LANGUAGE'));
