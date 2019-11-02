@@ -4867,9 +4867,13 @@ return $ret;
                 $data['sel_camera'] = 0; // IMPORTANT !!
                 $user->update($data);
             }
-            session()->flash('success', ' Success: Camera Deleted. All associated media files removed.');
+            // session()->flash('success', 'Success: Camera Deleted. All associated media files removed.');
+            $message = $this->ts('Success: Camera Deleted. All associated media files removed.');
+            session()->flash('success', $message);
         } else {
-            session()->flash('danger', 'Error: Invalid Password. Please try again.');
+            // session()->flash('danger', 'Error: Invalid Password. Please try again.');
+            $message = $this->ts('Error: Invalid Password. Please try again.');
+            session()->flash('danger', $message);
         }
         return $this->route_to_cameras();
     }

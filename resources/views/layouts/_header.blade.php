@@ -13,16 +13,16 @@
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ route('home') }}" target="_blank" title="{{ env('APP_NAME') }} Home">
 @if (env('APP_REGION') == 'eu')
-                    <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo.png" alt="logo" />
+                    <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo-vigilmax.png" alt="logo" />
 @elseif (env('APP_REGION') == 'au')
                     <!-- <h2>{{ env('APP_NAME') }}</h2> -->
                     <h2><span style="color: #E65A06;">RT</span><span style="color: #636161;">BaseControl</span></h2>
 @elseif (env('APP_REGION') == 'tw')
-                    <img class="main-logo" style="padding-top: 8px;" width="300" src="{{ route('home') }}/images/logo_eztoview.png" alt="logo" />
+                    <img class="main-logo" style="padding-top: 8px;" width="300" src="{{ route('home') }}/images/logo-eztoview.png" alt="logo" />
 @elseif (env('APP_REGION') == 'cn')
                     <!-- <h2>{{ env('APP_NAME') }}</h2> -->
-                    <!-- <img class="main-logo" style="padding-top: 8px;" width="200" src="{{ route('home') }}/images/logo_eztoview_en.png" alt="logo" /> -->
-                    <img class="main-logo" style="padding-top: 8px;" src="{{ route('home') }}/images/logo.png" alt="logo" />
+                    <!-- <img class="main-logo" style="padding-top: 8px;" width="200" src="{{ route('home') }}/images/logo-eztoview_en.png" alt="logo" /> -->
+                    <img class="main-logo" style="padding-top: 0px;" src="{{ route('home') }}/images/logo-vigilmax.png" alt="logo" />
 @endif
                 </a>
             </div>

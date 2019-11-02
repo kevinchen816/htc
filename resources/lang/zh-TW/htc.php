@@ -342,15 +342,6 @@ return [
 
 'No_Cameras' => '無設備記錄',
 
-'Request Original File from SD Card' => 'Request Original File from SD Card',
-'Request_Original: are you sure' => 'Are you sure to request Original file ?',
-'Request_Original: too many images' => 'You can not request Original for more than 10 images',
-'Request_Original: no images' => 'No images selected.',
-
-'Delete Media' => 'Delete Media',
-'Delete_Media: are you sure' => 'Are you sure to delete file ?',
-'Delete_Media: no images' => 'No images selected.',
-
 'Request Original File from SD Card' => '請求原始檔案',
 'Request_Original: are you sure' => '確定要請求原始檔案嗎？',
 'Request_Original: too many images' => '請求原始檔案限制超過10個',
@@ -359,4 +350,8 @@ return [
 'Delete Media' => '刪除檔案',
 'Delete_Media: are you sure' => '確定要刪除檔案嗎？',
 'Delete_Media: no images' => '沒有選擇檔案',
+
+'Success: Camera Deleted. All associated media files removed.' => '設備已刪除',
+'Error: Invalid Password. Please try again.' => '無效密碼，請重新輸入',
+
 ];

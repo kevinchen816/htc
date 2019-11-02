@@ -35,7 +35,7 @@ return [
 'Cameras'                       => '设备',
 'Refresh'                       => '刷新',
 
-'Add Plan'                      => '新增门号',
+'Add Plan'                      => '新增设备',
     'Input ICCID'               => '输入 ICCID',
     'agree_Terms'               => '同意本协议条款和条件',
     'TERMS AND CONDITIONS'      => '协议条款和条件',
@@ -163,6 +163,7 @@ return [
         'Last Armed'            => '启用时间',
         'Uploads since armed'   => '启用后上传文件笔数',
         'Points since armed'    => '启用后使用点数',
+        'Data since armed'      => '启用后使用流量',
         'Last Heartbeat'        => '上次连线检查时间',
         'Last Photo'            => '上次照片上传时间',
         'Last Video'            => '上次视频上传时间',
@@ -352,4 +353,8 @@ return [
 'Delete Media' => '删除文件',
 'Delete_Media: are you sure' => '确定要删除文件吗？',
 'Delete_Media: no images' => '没有选择文件',
+
+'Success: Camera Deleted. All associated media files removed.' => '设备已删除',
+'Error: Invalid Password. Please try again.' => '无效密码，请重新输入',
+
 ];
