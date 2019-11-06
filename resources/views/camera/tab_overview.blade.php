@@ -5,10 +5,10 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 {{ trans('htc.Status') }}
-                <span class="pull-right">{{ trans('htc.Plan') }}:
+                <!-- <span class="pull-right">{{ trans('htc.Plan') }}: -->
                     <!-- <strong><span class="label label-highlight" style="font-size: 1.0em;">Active</strong> -->
                     {!! $cc->html_OverviewTitle($camera) !!}
-                </span>
+                <!-- </span> -->
             </h4>
         </div>
         <div class="panel-body">

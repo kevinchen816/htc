@@ -151,6 +151,8 @@ Route::group(['middleware' => 'setLocale'], function() {
 
             /*-----------------------------------------------------------*/
             /* My Cameras */
+            Route::post('/camera/add','Api\CamerasController@postCameraAdd')->name('camera.add');
+
             Route::get('/cameras', 'Api\CamerasController@cameras')->name('cameras');
             Route::get('/10ware/cameras', 'Api\CamerasController@cameras_10ware')->name('cameras.10ware');
             Route::get('/de/cameras', 'Api\CamerasController@cameras_germany')->name('cameras.de');

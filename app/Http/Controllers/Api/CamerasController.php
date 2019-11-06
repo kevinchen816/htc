@@ -56,6 +56,7 @@ const ERR_NO_UPLOAD_FILE            = 810;
 const ERR_NO_REQUEST_ID             = 811;
 const ERR_INVALID_REQUEST_ID        = 812;
 const ERR_INVALID_PHOTO_ID          = 813;
+const ERR_CAMERA_NOT_EXIST          = 814;
 
 const ERR_NO_BLOCK_NUMBER           = 820;
 const ERR_NO_BLOCK_ID               = 821;
@@ -179,6 +180,7 @@ class CamerasController extends Controller
             ERR_INVALID_SIM_CARD => 'Please add ICCID to Portal',
             ERR_INVALID_CAMERA => 'Invalid Camera Module',
             ERR_NOT_CAMERA_OWNER => 'Not Camera Owner',
+            ERR_CAMERA_NOT_EXIST => 'Please Add Camera',
 
             ERR_PLAN_NOT_ACTIVE => 'Plan NOT Active',
             ERR_PLAN_DEACTIVE => 'Plan Deactive',
@@ -2029,30 +2031,42 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
     // public function Camera_Check_Plan($param) {
         $camera = null;
         $user_id = null;
-        if (env('APP_BUSINESS_MODE') == 'rent') {
-            $ret = $this->EZCode_Check($param->module_id, $param->iccid);
-        } else {
-            $ret = $this->Plan_Check($param->iccid);
-        }
-        $err = $ret['err'];
-        if ($err == 0) {
-            $user_id = $ret['user_id'];
 
-            if (env('APP_BUSINESS_MODE') == 'rent') {
-                $param->module_id = $ret['module_id'];
-            }
-
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
             $camera = $this->Camera_Find($param->module_id);
             if ($camera) {
-                if ($camera->user_id == $user_id) {
-                    $err = 0;
-                } else {
-                    $err = ERR_NOT_CAMERA_OWNER;
-                }
+                $user_id = $camera->user_id;
+                $err = 0;
             } else {
-                $err = ERR_INVALID_CAMERA;
+                $err = ERR_CAMERA_NOT_EXIST;
+            }
+        } else {
+            if (env('APP_BUSINESS_MODE') == 'rent') {
+                $ret = $this->EZCode_Check($param->module_id, $param->iccid);
+            } else {
+                $ret = $this->Plan_Check($param->iccid);
+            }
+            $err = $ret['err'];
+            if ($err == 0) {
+                $user_id = $ret['user_id'];
+
+                if (env('APP_BUSINESS_MODE') == 'rent') {
+                    $param->module_id = $ret['module_id'];
+                }
+
+                $camera = $this->Camera_Find($param->module_id);
+                if ($camera) {
+                    if ($camera->user_id == $user_id) {
+                        $err = 0;
+                    } else {
+                        $err = ERR_NOT_CAMERA_OWNER;
+                    }
+                } else {
+                    $err = ERR_INVALID_CAMERA;
+                }
             }
         }
+
         $ret['err'] = $err;
         $ret['camera'] = $camera;
         $ret['user_id'] = $user_id;
@@ -2135,6 +2149,41 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
         $camera->temperature  = $request->Temperature;
         $camera->dsp_version  = $request->FirmwareVersion;
         $camera->mcu_version  = $request->mcu;
+        $camera->save();
+        return 0;
+    }
+
+    public function Camera_Add3($user_id, $imei) {
+        $camera = new Camera;
+
+        $camera->user_id = $user_id;
+        $camera->module_id = $imei;
+        // $camera->iccid     = $request->iccid;
+        // $camera->model_id  = $request->model_id;
+        // $camera->cellular  = $request->cellular;
+
+        if (env('APP_REGION') == 'cn') {
+            $camera->region = 'CN';
+            $camera->timezone = 'Asia/Shanghai';
+        } else if (env('APP_REGION') == 'tw') {
+            $camera->region = 'TW';
+            $camera->timezone = 'Asia/Taipei';
+        } else if (env('APP_REGION') == 'de') {
+            $camera->region = 'EU';
+            $camera->timezone = 'Europe/Berlin';
+        } else if (env('APP_REGION') == 'au') {
+            $camera->region = 'AU';
+            $camera->timezone = 'Australia/Sydney';
+        }
+
+        // $datalist             = $request->DataList;
+        // $camera->battery      = $datalist['Battery'];
+        // $camera->signal_value = $datalist['SignalValue'];
+        // $camera->card_space   = $datalist['Cardspace'];
+        // $camera->card_size    = $datalist['Cardsize'];
+        // $camera->temperature  = $datalist['Temperature'];
+        // $camera->dsp_version  = $datalist['FirmwareVersion'];
+        // $camera->mcu_version  = $datalist['mcu'];
         $camera->save();
         return 0;
     }
@@ -2319,9 +2368,15 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
 
-        if ($err == ERR_INVALID_CAMERA) {
-            $err = $this->Camera_Add($user_id, $request);
-            $camera = $this->Camera_Find($request->module_id);
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            if ($err == ERR_CAMERA_NOT_EXIST) {
+                // do nothing
+            }
+        } else {
+            if ($err == ERR_INVALID_CAMERA) {
+                $err = $this->Camera_Add($user_id, $request);
+                $camera = $this->Camera_Find($request->module_id);
+            }
         }
 
         if ($err == 0) {
@@ -2347,9 +2402,15 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
         $camera = $ret['camera'];
         $user_id = $ret['user_id'];
 
-        if ($err == ERR_INVALID_CAMERA) {
-            $err = $this->Camera_Add($user_id, $request);
-            $camera = $this->Camera_Find($request->module_id);
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            if ($err == ERR_CAMERA_NOT_EXIST) {
+                // do nothing
+            }
+        } else {
+            if ($err == ERR_INVALID_CAMERA) {
+                $err = $this->Camera_Add($user_id, $request);
+                $camera = $this->Camera_Find($request->module_id);
+            }
         }
 
         if ($err == 0) {
@@ -2731,9 +2792,15 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
 
-        if ($err == ERR_INVALID_CAMERA) {
-            $err = $this->Camera_Add2($user_id, $request);
-            $camera = $this->Camera_Find($request->module_id);
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            if ($err == ERR_CAMERA_NOT_EXIST) {
+                // do nothing
+            }
+        } else {
+            if ($err == ERR_INVALID_CAMERA) {
+                $err = $this->Camera_Add2($user_id, $request);
+                $camera = $this->Camera_Find($request->module_id);
+            }
         }
 
         if ($err == 0) {
@@ -2861,9 +2928,15 @@ return $ret;
         $user_id = $ret['user_id'];
         $camera = $ret['camera'];
 
-        if ($err == ERR_INVALID_CAMERA) {
-            $err = $this->Camera_Add2($user_id, $request);
-            $camera = $this->Camera_Find($request->module_id);
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            if ($err == ERR_CAMERA_NOT_EXIST) {
+                // do nothing
+            }
+        } else {
+            if ($err == ERR_INVALID_CAMERA) {
+                $err = $this->Camera_Add2($user_id, $request);
+                $camera = $this->Camera_Find($request->module_id);
+            }
         }
 
         if ($err == 0) {
@@ -3962,8 +4035,18 @@ return $ret;
     /*----------------------------------------------------------------------------------*/
     /* TAB Overview */
     public function html_OverviewTitle($camera) {
-        $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
-        $txt = '<strong><span class="label label-highlight" style="font-size: 1.0em;">'.ucfirst($plan->status).'</strong>';
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            $txt = '';
+        } else {
+            $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+            // $txt = '<strong><span class="label label-highlight" style="font-size: 1.0em;">'.ucfirst($plan->status).'</strong>';
+            if ($plan) {
+                $txt = '';
+                $txt .= '<span class="pull-right">'.$this->ts('Plan').':';
+                $txt .= '<strong><span class="label label-highlight" style="font-size: 1.0em;">'.ucfirst($plan->status).'</strong>';
+                $txt .= '</span>';
+            }
+        }
         return $txt;
     }
 
@@ -3991,51 +4074,55 @@ return $ret;
             $percent_card_avail = round(($card_free/$card_size)*100, 2);
             $txt .= $this->ovItemShow('SD Card', $percent_card_avail.' % available');
         } else {
-            $txt .= $this->ovItemShow('SD Card', 'unknown');
+            // $txt .= $this->ovItemShow('SD Card', 'unknown');
+            $txt .= $this->ovItemShow('SD Card', '');
         }
 
         $txt .= $this->ovItemShow('Temperature', $camera->temperature);
         //$txt .= $this->ovItemShow('Temperature', '&#176;C');
 
-        if (env('APP_REGION') != 'tw') {
-            $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
-            if ($plan->points > 0) {
-                if (env('APP_USE_POINTS')) {
-                    if ($plan->points) {
-                        $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            // do nothing
+        } else {
+            if (env('APP_REGION') != 'tw') {
+                $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+                if ($plan->points > 0) {
+                    if (env('APP_USE_POINTS')) {
+                        if ($plan->points) {
+                            $percent_plan_used = round(($plan->points_used/$plan->points)*100, 2);
+                        } else {
+                            $percent_plan_used = 100;
+                        }
                     } else {
-                        $percent_plan_used = 100;
+                        if ($plan->plans) {
+                            // $plan_used_mb = $plan->points_used/(1024*1024);
+                            $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                            $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+                        } else {
+                            $percent_plan_used = 100;
+                        }
                     }
-                } else {
-                    if ($plan->plans) {
-                        // $plan_used_mb = $plan->points_used/(1024*1024);
-                        $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
-                        $percent_plan_used = round(($plan_used_mb/$plan->plans)*100, 2);
+
+                    $percent_plan_avail = 100-$percent_plan_used;
+
+                    $plan_points = '';
+                    $plan_points .= '<div class="progress progress-points">';
+                    $plan_points .=     '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="'.$percent_plan_used.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_used.'%; min-height: 22px; line-height: 18px;">';
+                    $plan_points .=         $percent_plan_used.' % used';
+                    $plan_points .=     '</div>';
+                    $plan_points .=     '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percent_plan_avail.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_avail.'%; min-height: 22px; line-height: 18px;">';
+                    $plan_points .=         $percent_plan_avail.' % avail';
+                    $plan_points .=     '</div>';
+                    $plan_points .= '</div>';
+
+                    if (env('APP_USE_POINTS')) {
+                        $txt .= $this->ovItemShow('Plan Points', $plan_points);
                     } else {
-                        $percent_plan_used = 100;
+                        $txt .= $this->ovItemShow('Data Plan', $plan_points);
                     }
-                }
-
-                $percent_plan_avail = 100-$percent_plan_used;
-
-                $plan_points = '';
-                $plan_points .= '<div class="progress progress-points">';
-                $plan_points .=     '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="'.$percent_plan_used.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_used.'%; min-height: 22px; line-height: 18px;">';
-                $plan_points .=         $percent_plan_used.' % used';
-                $plan_points .=     '</div>';
-                $plan_points .=     '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percent_plan_avail.'%" aria-valuemin="0" aria-valuemax="100" style="width:'.$percent_plan_avail.'%; min-height: 22px; line-height: 18px;">';
-                $plan_points .=         $percent_plan_avail.' % avail';
-                $plan_points .=     '</div>';
-                $plan_points .= '</div>';
-
-                if (env('APP_USE_POINTS')) {
-                    $txt .= $this->ovItemShow('Plan Points', $plan_points);
-                } else {
-                    $txt .= $this->ovItemShow('Data Plan', $plan_points);
                 }
             }
         }
-
         //$points_reserve  = '30.00 (20000.00 points)';
         //$points_reserve .= '<br /><a href="/plans/buy-reserve/7" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Buy Reserve (<i class="fa fa-dollar-sign"></i>10)</a>';
         //$txt .= $this->ovItemShow('Points Reserve', $points_reserve);
@@ -4044,29 +4131,37 @@ return $ret;
     }
 
     public function html_OverviewStatus2($camera) {
-        $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
-        $card_size = number_format(intval($camera->card_size)/1024, 2).'GB';
-        $card_free = number_format(intval($camera->card_space)/1024, 2).'GB';
-        $card_info = $card_free.' ('.$card_size.')';
 
-        $plan_total = $plan_used = '';
-        if ($plan->points > 0) {
-            if (env('APP_USE_POINTS')) {
-                $point_total = $plan->points;
-                if ($plan->points) {
-                    $percent = round(($plan->points_used/$plan->points)*100, 4);
-                    $point_used = $plan->points_used.' ('.$percent.'%)';
-                }
-            } else {
-                $plan_total = sprintf('%d MB', $plan->plans);
-                if ($plan->plans) {
-                    $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
-                    $percent = round(($plan_used_mb/$plan->plans)*100, 2);
-                    $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
+        if (intval($camera->card_size) > 0) {
+            $card_size = number_format(intval($camera->card_size)/1024, 2).'GB';
+            $card_free = number_format(intval($camera->card_space)/1024, 2).'GB';
+            $card_info = $card_free.' ('.$card_size.')';
+        } else {
+            $card_info = '';
+        }
+
+        if (env('APP_USE_IMEI_ADD_CAMERA')) {
+            // do nothing
+        } else {
+            $plan_total = $plan_used = '';
+            $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
+            if ($plan->points > 0) {
+                if (env('APP_USE_POINTS')) {
+                    $point_total = $plan->points;
+                    if ($plan->points) {
+                        $percent = round(($plan->points_used/$plan->points)*100, 4);
+                        $point_used = $plan->points_used.' ('.$percent.'%)';
+                    }
+                } else {
+                    $plan_total = sprintf('%d MB', $plan->plans);
+                    if ($plan->plans) {
+                        $plan_used_mb = round($plan->plans_used/(1024*1024), 2);
+                        $percent = round(($plan_used_mb/$plan->plans)*100, 2);
+                        $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
+                    }
                 }
             }
         }
-
 
         if (Browser::isMobile()) {
             $txt  = $this->ovItemShow2('Module ID', $camera->module_id);
@@ -4092,13 +4187,17 @@ return $ret;
             $txt .= $this->ovItemShow('MCU', $camera->mcu_version);
             $txt .= $this->ovItemShow('Last Connection', $camera->cellular);
 
-            if (env('APP_REGION') != 'tw') {
-                if (env('APP_USE_POINTS')) {
-                    $txt .= $this->ovItemShow('Plan Points', $point_total);
-                    $txt .= $this->ovItemShow('Points Used', $point_used);
-                } else {
-                    $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
-                    $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
+            if (env('APP_USE_IMEI_ADD_CAMERA')) {
+                // do nothing
+            } else {
+                if (env('APP_REGION') != 'tw') {
+                    if (env('APP_USE_POINTS')) {
+                        $txt .= $this->ovItemShow('Plan Points', $point_total);
+                        $txt .= $this->ovItemShow('Points Used', $point_used);
+                    } else {
+                        $txt .= $this->ovItemShow('Data Plan Total', $plan_total);
+                        $txt .= $this->ovItemShow('Data Plan Used', $plan_used);
+                    }
                 }
             }
         }
@@ -4763,6 +4862,28 @@ return $ret;
         Auth::user()->update($data);
 
         return $sel_camera_tab;
+    }
+
+    public function postCameraAdd(Request $request) {
+        $user = Auth::user();
+        $user_id = $user->id;
+
+        if (!$request->imei) {
+            // session()->flash('danger', 'Please input an ICCID.');
+            session()->flash('danger', $this->ts('input_IMEI'));
+            return redirect()->back();
+        }
+
+        $camera = $this->Camera_Find($request->imei);
+        if ($camera) {
+            session()->flash('danger', $this->ts('IMEI_had_registered'));
+            return redirect()->back();
+        } else {
+            $err = $this->Camera_Add3($user_id, $request->imei);
+            // $camera = $this->Camera_Find($request->module_id);
+            session()->flash('success', 'Create Success');
+            return redirect()->back();
+        }
     }
 
     // https://blog.csdn.net/woshihaiyong168/article/details/52992812

@@ -12,21 +12,38 @@
 
                 <div class="panel-heading">
                     <h4 class="panel-title">
+@if (env('APP_USE_IMEI_ADD_CAMERA'))
+                        {{ trans('htc.Add Camera') }}
+@else
                         {{ trans('htc.Add Plan') }}
+@endif
                     </h4>
                 </div>
 
                 <div class="panel-body">
 
                     <!--<div class="col-md-6">-->
+@if (env('APP_USE_IMEI_ADD_CAMERA'))
+                        <form method="POST" action="{{ route('camera.add') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+@else
                         <form method="POST" action="{{ route('plans.add') }}" accept-charset="UTF-8" class="form-horizontal" role="form" id="profile-addplan-form">
+@endif
                             {{ csrf_field() }}
                             <input name="mode" type="hidden" value="new">
 
                             <div class="form-group">
+@if (env('APP_USE_IMEI_ADD_CAMERA'))
+                                <label class="col-md-3 control-label" for="imei inputSmall">IMEI</label>
+@else
                                 <label class="col-md-3 control-label" for="iccid inputSmall">SIM ICCID</label>
+@endif
+
                                 <div class="col-md-8">
+@if (env('APP_USE_IMEI_ADD_CAMERA'))
+                                    <input type="text" value="{{ old('imei') }}" name="imei" maxlength="70" id="imei" class="form-control input-sm" placeholder="{{ trans('htc.Input IMEI') }}">
+@else
                                     <input type="text" value="{{ old('iccid') }}" name="iccid" maxlength="70" id="iccid" class="form-control input-sm" placeholder="{{ trans('htc.Input ICCID') }}">
+@endif
                                 </div>
                             </div>
 
@@ -52,7 +69,11 @@
                                 <div class="col-md-7">
                                     <button type="submit" class="btn btn-primary  btn-sm" name="submit-new-plan" value="update">
                                         <i class="glyphicon glyphicon-plus"></i>
+@if (env('APP_USE_IMEI_ADD_CAMERA'))
+                                        {{ trans('htc.Add New Camera') }}
+@else
                                         {{ trans('htc.Create New Plan') }}
+@endif
                                     </button>
                                     <a href="{{ route('plans.cancel') }}" class="btn btn-sm btn-warning">{{ trans('htc.Cancel') }}</a>
                                 </div>

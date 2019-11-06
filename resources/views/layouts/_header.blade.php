@@ -40,7 +40,11 @@
 @if (Auth::check() && isset($user))
     @if (!Browser::isMobile())
                     <li class={{ ($user->sel_menu == 'plan') ? "active" : "" }}>
+                        @if (env('APP_USE_IMEI_ADD_CAMERA'))
+                        <a href="{{ route('plans.add') }}"><span class="glyphicon glyphicon-signal"> </span> {{ trans('htc.Add Camera') }}</a>
+                        @else
                         <a href="{{ route('plans.add') }}"><span class="glyphicon glyphicon-signal"> </span> {{ trans('htc.Add Plan') }}</a>
+                        @endif
                     </li>
 
                     @if (count($user->cartItems()->get()) > 0)
