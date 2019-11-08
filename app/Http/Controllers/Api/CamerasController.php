@@ -4171,12 +4171,18 @@ return $ret;
             $txt .= $this->ovItemShow2('Firmware', $camera->dsp_version);
             $txt .= $this->ovItemShow2('MCU', $camera->mcu_version);
             $txt .= $this->ovItemShow2('Last Connection', $camera->cellular);
-            if (env('APP_USE_POINTS')) {
-                $txt .= $this->ovItemShow2('Plan Points', $point_total);
-                $txt .= $this->ovItemShow2('Points Used', $point_used);
+            if (env('APP_USE_IMEI_ADD_CAMERA')) {
+                // do nothing
             } else {
-                $txt .= $this->ovItemShow2('Data Plan Total', $plan_total);
-                $txt .= $this->ovItemShow2('Data Plan Used', $plan_used);
+                if (env('APP_REGION') != 'tw') {
+                    if (env('APP_USE_POINTS')) {
+                        $txt .= $this->ovItemShow2('Plan Points', $point_total);
+                        $txt .= $this->ovItemShow2('Points Used', $point_used);
+                    } else {
+                        $txt .= $this->ovItemShow2('Data Plan Total', $plan_total);
+                        $txt .= $this->ovItemShow2('Data Plan Used', $plan_used);
+                    }
+                }
             }
         } else {
             $txt  = $this->ovItemShow('Module ID', $camera->module_id);
