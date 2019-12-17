@@ -43,37 +43,37 @@ Truphone #2 - 8944503540145561039 F
 */
 
 //define(ERR_INVALID_SIM_CARD, '801');
-const ERR_INVALID_SIM_CARD          = 801;
-const ERR_INVALID_CAMERA            = 802;
-const ERR_NOT_CAMERA_OWNER          = 803;
-const ERR_PLAN_NOT_ACTIVE           = 804;
-const ERR_PLAN_DEACTIVE             = 805;
-const ERR_PLAN_SUSPEND              = 806;
-const ERR_PLAN_EMPTY                = 807;
-const ERR_PLAN_RENEW_FAIL           = 808;
-const ERR_PLAN_EXPIRE               = 809;
-const ERR_NO_UPLOAD_FILE            = 810;
-const ERR_NO_REQUEST_ID             = 811;
-const ERR_INVALID_REQUEST_ID        = 812;
-const ERR_INVALID_PHOTO_ID          = 813;
-const ERR_CAMERA_NOT_EXIST          = 814;
+const ERR_INVALID_SIM_CARD          = 601; /* 801->601*/
+const ERR_INVALID_CAMERA            = 602;
+const ERR_NOT_CAMERA_OWNER          = 603;
+const ERR_PLAN_NOT_ACTIVE           = 604;
+const ERR_PLAN_DEACTIVE             = 605;
+const ERR_PLAN_SUSPEND              = 606;
+const ERR_PLAN_EMPTY                = 607;
+const ERR_PLAN_RENEW_FAIL           = 608;
+const ERR_PLAN_EXPIRE               = 609;
+const ERR_NO_UPLOAD_FILE            = 610;
+const ERR_NO_REQUEST_ID             = 611;
+const ERR_INVALID_REQUEST_ID        = 612;
+const ERR_INVALID_PHOTO_ID          = 613;
+const ERR_CAMERA_NOT_EXIST          = 614;
 
-const ERR_NO_BLOCK_NUMBER           = 820;
-const ERR_NO_BLOCK_ID               = 821;
-const ERR_NO_CRC32                  = 822;
-const ERR_NO_FILE_BUFFER            = 823;
-const ERR_CRC32_FAIL                = 824;
-const ERR_INVALID_BLOCK_NUMBER      = 825;
-const ERR_INVALID_BLOCK_ID          = 826;
-const ERR_COPY_MERGE_FILE_FAIL      = 827;
-const ERR_NO_MERGE_FILENAME         = 828;
+const ERR_NO_BLOCK_NUMBER           = 620;
+const ERR_NO_BLOCK_ID               = 621;
+const ERR_NO_CRC32                  = 622;
+const ERR_NO_FILE_BUFFER            = 623;
+const ERR_CRC32_FAIL                = 624;
+const ERR_INVALID_BLOCK_NUMBER      = 625;
+const ERR_INVALID_BLOCK_ID          = 626;
+const ERR_COPY_MERGE_FILE_FAIL      = 627;
+const ERR_NO_MERGE_FILENAME         = 628;
 
 // const ERR_INVALID_EZCODE            = 850;
-const ERR_EZCODE_NOT_FOUND          = 850;
-const ERR_EZCODE_NOT_USED           = 851;
-const ERR_EZCODE_DEACTIVE           = 852;
-const ERR_EZCODE_SUSPEND            = 853;
-const ERR_EZCODE_NOT_ACTIVE         = 854;
+const ERR_EZCODE_NOT_FOUND          = 650;
+const ERR_EZCODE_NOT_USED           = 651;
+const ERR_EZCODE_DEACTIVE           = 652;
+const ERR_EZCODE_SUSPEND            = 653;
+const ERR_EZCODE_NOT_ACTIVE         = 654;
 
 /* 1:requested, 2:completed, 3:cancelled, 4:failed, 5:pending */
 const ACTION_REQUESTED              = 1;
@@ -1874,6 +1874,7 @@ $txt .= '<div class="col-xs-7 col-sm-7 col-md-7" style="font-size: .85em;">';
             }
 
         } else {
+
             $ret['ErrorMsg'] = $this->getErrorMessage($err);
         }
         $ret['DateTimeStamp'] = $this->_datetime_get($camera);
