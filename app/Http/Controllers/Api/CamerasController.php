@@ -6134,6 +6134,146 @@ return 'OK';
     }
 
     /*----------------------------------------------------------------------------------*/
+    // public function kk_del($camera_id, Photo $photos) {
+    // public function kk_del($camera_id) {
+    public function kk_del($camera_id, $year, $month) {
+// return 'OK';
+        // $camera = Camera::find($camera_id);
+        // $camera = DB::table('cameras')->where('id', $camera_id)->first();
+// return $camera->description;
+
+        $photos = DB::table('photos')
+            ->where('camera_id', $camera_id)
+            // ->where('created_at', '<', '20191028000000')
+            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->limit(10)
+            ->get();
+
+// $query = $photos->query();
+// $query->where('camera_id', $camera_id);
+// $query->where('created_at', '<', '20191028');
+// $query->orderBy('id', 'asc'); // asc, desc
+// // $query->limit(10);
+// $photos = $query->get();
+
+        foreach ($photos as $photo) {
+            echo $photo->id;
+            echo '<br>';
+
+            $this->deleteGalleryFile_S3($photo->id.'.JPG');
+            $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+            $this->deleteGalleryFile_S3($photo->id.'.MP4');
+        }
+
+        $num = DB::table('photos')
+            ->where('camera_id', $camera_id)
+            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->delete();
+
+// return 'OK';
+return 'delete count = '.$num;
+    }
+
+    public function kk_del2($camera_id, $year) {
+        $photos = DB::table('photos')
+            ->where('camera_id', $camera_id)
+            ->whereYear('created_at', '=', $year)
+            ->limit(10)
+            ->get();
+
+        foreach ($photos as $photo) {
+            echo $photo->id;
+            echo '<br>';
+
+            $this->deleteGalleryFile_S3($photo->id.'.JPG');
+            $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+            $this->deleteGalleryFile_S3($photo->id.'.MP4');
+        }
+
+        $num = DB::table('photos')
+            ->where('camera_id', $camera_id)
+            ->whereYear('created_at', '=', $year)
+            ->delete();
+// return 'OK';
+        return 'delete count = '.$num;
+    }
+
+    public function kk_del3($year, $month) {
+        $cameras = DB::table('cameras')->get();
+
+        foreach ($cameras as $camera) {
+            if ($camera->id != 9 && $camera->id != 10) {
+                echo $camera->id.' -> '.$camera->description;
+                echo '<br>';
+                $this->kk_del($camera->id, $year, $month);
+            }
+        }
+        return 'OK';
+    }
+
+    public function kk_del4($year) {
+        $cameras = DB::table('cameras')->get();
+
+        foreach ($cameras as $camera) {
+            if ($camera->id != 9 && $camera->id != 10) {
+                echo $camera->id.' -> '.$camera->description;
+                echo '<br>';
+                $this->kk_del2($camera->id, $year);
+            }
+        }
+        return 'OK';
+    }
+
+    public function kk_list3($year, $month) {
+        $cameras = DB::table('cameras')->get();
+
+        foreach ($cameras as $camera) {
+            if ($camera->id != 9 && $camera->id != 10) {
+                echo $camera->id.' -> '.$camera->description;
+                echo '<br>';
+
+                $photos = DB::table('photos')
+                    ->where('camera_id', $camera->id)
+                    ->whereYear('created_at', '=', $year)
+                    ->whereMonth('created_at', '=', $month)
+                    ->limit(10)
+                    ->get();
+
+                foreach ($photos as $photo) {
+                    echo $photo->id;
+                    echo '<br>';
+                }
+            }
+        }
+        return 'OK';
+    }
+
+    public function kk_list4($year) {
+        $cameras = DB::table('cameras')->get();
+
+        foreach ($cameras as $camera) {
+            if ($camera->id != 9 && $camera->id != 10) {
+                echo $camera->id.' -> '.$camera->description;
+                echo '<br>';
+
+                $photos = DB::table('photos')
+                    ->where('camera_id', $camera->id)
+                    ->whereYear('created_at', '=', $year)
+                    ->limit(10)
+                    ->get();
+
+                foreach ($photos as $photo) {
+                    echo $photo->id;
+                    echo '<br>';
+                }
+            }
+        }
+        return 'OK';
+    }
+
+    /*----------------------------------------------------------------------------------*/
     public function kk_test() {
 // return 'OK';
         // $ret = OSS::getAllObjectKey('eztoview');
@@ -6151,8 +6291,8 @@ return 'OK';
 // $fileSize = Storage::disk('s3')->size($s3_pathname);
 // $content = Storage::disk('s3')->get($s3_pathname);
 
-        $filename = 'media/10.JPG';
-        $ret = Storage::disk('oss')->size($filename);
+        // $filename = 'media/10.JPG';
+        // $ret = Storage::disk('oss')->size($filename);
 
 // $oss = \Storage::disk('oss');
 // $ret = $oss->temporaryUrl($filename, now()->addMinutes(1440));
