@@ -4146,7 +4146,7 @@ return $ret;
         } else {
             $plan_total = $plan_used = '';
             $plan = DB::table('plans')->where('iccid', $camera->iccid)->first();
-            if ($plan->points > 0) {
+            // if ($plan->points > 0) { // 2020-02-13 del by kevin
                 if (env('APP_USE_POINTS')) {
                     $point_total = $plan->points;
                     if ($plan->points) {
@@ -4161,7 +4161,7 @@ return $ret;
                         $plan_used = sprintf('%.2f MB (%6.2f %%)', $plan_used_mb, $percent);
                     }
                 }
-            }
+            // }
         }
 
         if (Browser::isMobile()) {
@@ -6142,12 +6142,14 @@ return 'OK';
         // $camera = DB::table('cameras')->where('id', $camera_id)->first();
 // return $camera->description;
 
+        $limit = 10;
+
         $photos = DB::table('photos')
             ->where('camera_id', $camera_id)
             // ->where('created_at', '<', '20191028000000')
             ->whereYear('created_at', '=', $year)
             ->whereMonth('created_at', '=', $month)
-            ->limit(10)
+            ->limit($limit)
             ->get();
 
 // $query = $photos->query();
@@ -6170,6 +6172,7 @@ return 'OK';
             ->where('camera_id', $camera_id)
             ->whereYear('created_at', '=', $year)
             ->whereMonth('created_at', '=', $month)
+            ->limit($limit)
             ->delete();
 
 // return 'OK';
@@ -6177,10 +6180,12 @@ return 'delete count = '.$num;
     }
 
     public function kk_del2($camera_id, $year) {
+        $limit = 10;
+
         $photos = DB::table('photos')
             ->where('camera_id', $camera_id)
             ->whereYear('created_at', '=', $year)
-            ->limit(10)
+            ->limit($limit)
             ->get();
 
         foreach ($photos as $photo) {
@@ -6195,6 +6200,7 @@ return 'delete count = '.$num;
         $num = DB::table('photos')
             ->where('camera_id', $camera_id)
             ->whereYear('created_at', '=', $year)
+            ->limit($limit)
             ->delete();
 // return 'OK';
         return 'delete count = '.$num;
@@ -6217,7 +6223,8 @@ return 'delete count = '.$num;
         $cameras = DB::table('cameras')->get();
 
         foreach ($cameras as $camera) {
-            if ($camera->id != 9 && $camera->id != 10) {
+            // if ($camera->id != 9 && $camera->id != 10) {
+            if ($camera->id != 10) {
                 echo $camera->id.' -> '.$camera->description;
                 echo '<br>';
                 $this->kk_del2($camera->id, $year);
@@ -6254,7 +6261,8 @@ return 'delete count = '.$num;
         $cameras = DB::table('cameras')->get();
 
         foreach ($cameras as $camera) {
-            if ($camera->id != 9 && $camera->id != 10) {
+            // if ($camera->id != 9 && $camera->id != 10) {
+            if ($camera->id != 10) {
                 echo $camera->id.' -> '.$camera->description;
                 echo '<br>';
 
@@ -6271,6 +6279,31 @@ return 'delete count = '.$num;
             }
         }
         return 'OK';
+    }
+
+    public function kk_delx($start, $end) {
+        // for ($photo_id=10000; $photo_id<10100; $photo_id++) {
+        for ($photo_id=$start; $photo_id<$end; $photo_id++) {
+            $this->deleteGalleryFile_S3($photo_id.'.JPG');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
+
+            $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'_thumb.JPG');
+
+            $this->deleteGalleryFile_S3($photo_id.'.MP4');
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.MP4');
+
+            // $this->push_test2();
+            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id);
+
+            // echo 'delete S3 file: '.$photo_id;
+            // echo '</br>';
+            // Debugbar::debug('delete S3 file: '.$photo_id);
+        }
+
+        // $this->deleteGalleryFile($photo);
+        // $photo->delete();
+return '....done';
     }
 
     /*----------------------------------------------------------------------------------*/

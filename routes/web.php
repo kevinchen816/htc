@@ -295,6 +295,8 @@ Route::get('/del/{camera_id}/{year}/{month}', 'Api\CamerasController@kk_del');
 Route::get('/del2/{camera_id}/{year}', 'Api\CamerasController@kk_del2');
 Route::get('/del3/{year}/{month}', 'Api\CamerasController@kk_del3');
 Route::get('/del4/{year}', 'Api\CamerasController@kk_del4');
+// Route::get('/delx', 'Api\CamerasController@kk_delx');
+Route::get('/delx/{start}/{end}', 'Api\CamerasController@kk_delx');
 Route::get('/list3/{year}/{month}', 'Api\CamerasController@kk_list3');
 Route::get('/list4/{year}', 'Api\CamerasController@kk_list4');
 // Route::get('/test2/{id}', 'Api\CamerasController@kk_test2');
