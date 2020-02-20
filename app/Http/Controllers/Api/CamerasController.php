@@ -6134,151 +6134,216 @@ return 'OK';
     }
 
     /*----------------------------------------------------------------------------------*/
-    // public function kk_del($camera_id, Photo $photos) {
-    // public function kk_del($camera_id) {
-    public function kk_del($camera_id, $year, $month) {
-// return 'OK';
-        // $camera = Camera::find($camera_id);
-        // $camera = DB::table('cameras')->where('id', $camera_id)->first();
-// return $camera->description;
+    /*
+        http://htc.test/process/72/2020/1/6/10/1
+    */
+    public function kk_process($camera_id, $year, $month, $day, $limit, $del_flag) {
+        if ($camera_id == 9 || $camera_id == 10) {
+            return 0;
+        }
 
-        $limit = 10;
+        $count = 0;
+        // $photos = DB::table('photos')
+        //     ->where('camera_id', $camera_id)
+        //     // ->where('created_at', '<', '20191028000000')
+        //     ->whereYear('created_at', '=', $year)
+        //     ->whereMonth('created_at', '=', $month)
+        //     ->whereDay('created_at', '=', $day)
+        //     ->orderBy('id')
+        //     ->limit($limit)
+        //     ->get();
 
-        $photos = DB::table('photos')
-            ->where('camera_id', $camera_id)
-            // ->where('created_at', '<', '20191028000000')
-            ->whereYear('created_at', '=', $year)
-            ->whereMonth('created_at', '=', $month)
-            ->limit($limit)
-            ->get();
-
-// $query = $photos->query();
-// $query->where('camera_id', $camera_id);
-// $query->where('created_at', '<', '20191028');
-// $query->orderBy('id', 'asc'); // asc, desc
-// // $query->limit(10);
-// $photos = $query->get();
+        // $query->where('created_at', '<', '20191028');
+        $query = Photo::query();
+        if ($year && $month && $day) {
+            $date = $year.'-'.$month.'-'.$day;
+            $query->whereDate('created_at', $date);
+        } else {
+            if ($year) {
+                $query->whereYear('created_at', '=', $year);
+            }
+            if ($month) {
+                $query->whereMonth('created_at', '=', $month);
+            }
+            if ($day) {
+                $query->whereDay('created_at', '=', $day);
+            }
+        }
+        $query->where('camera_id', $camera_id);
+        $query->orderBy('id', 'asc'); // asc, desc
+        $query->limit($limit);
+        $photos = $query->get();
 
         foreach ($photos as $photo) {
             echo $photo->id;
             echo '<br>';
+            if ($del_flag == 1) {
+                $this->deleteGalleryFile_S3($photo->id.'.JPG');
+                $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+                $this->deleteGalleryFile_S3($photo->id.'.MP4');
 
-            $this->deleteGalleryFile_S3($photo->id.'.JPG');
-            $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-            $this->deleteGalleryFile_S3($photo->id.'.MP4');
+                // DB::table("photos")->where('id', '=', $photo->id)->delete();
+                Photo::find($photo->id)->delete();
+            }
+            $count++;
         }
-
-        $num = DB::table('photos')
-            ->where('camera_id', $camera_id)
-            ->whereYear('created_at', '=', $year)
-            ->whereMonth('created_at', '=', $month)
-            ->limit($limit)
-            ->delete();
-
-// return 'OK';
-return 'delete count = '.$num;
+        return $count;
     }
 
-    public function kk_del2($camera_id, $year) {
-        $limit = 10;
-
-        $photos = DB::table('photos')
-            ->where('camera_id', $camera_id)
-            ->whereYear('created_at', '=', $year)
-            ->limit($limit)
-            ->get();
-
-        foreach ($photos as $photo) {
-            echo $photo->id;
+    public function kk_list_Y($year, $limit) {
+        $total_count = 0;
+        $cameras = DB::table('cameras')->get();
+        foreach ($cameras as $camera) {
+            echo $camera->id.' -> '.$camera->description;
             echo '<br>';
-
-            $this->deleteGalleryFile_S3($photo->id.'.JPG');
-            $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-            $this->deleteGalleryFile_S3($photo->id.'.MP4');
+            $count = $this->kk_process($camera->id, $year, null, null, $limit, 0);
+            $total_count += $count;
         }
-
-        $num = DB::table('photos')
-            ->where('camera_id', $camera_id)
-            ->whereYear('created_at', '=', $year)
-            ->limit($limit)
-            ->delete();
-// return 'OK';
-        return 'delete count = '.$num;
+        return 'count = '.$total_count;
     }
 
-    public function kk_del3($year, $month) {
+    public function kk_list_YM($year, $month, $limit) {
+        $total_count = 0;
         $cameras = DB::table('cameras')->get();
-
         foreach ($cameras as $camera) {
-            if ($camera->id != 9 && $camera->id != 10) {
-                echo $camera->id.' -> '.$camera->description;
-                echo '<br>';
-                $this->kk_del($camera->id, $year, $month);
+            echo $camera->id.' -> '.$camera->description;
+            echo '<br>';
+            $count = $this->kk_process($camera->id, $year, $month, null, $limit, 0);
+            $total_count += $count;
+        }
+        return 'count = '.$total_count;
+    }
+
+    public function kk_list_YMD($year, $month, $day, $limit) {
+        $total_count = 0;
+        $cameras = DB::table('cameras')->get();
+        foreach ($cameras as $camera) {
+            echo $camera->id.' -> '.$camera->description;
+            echo '<br>';
+            $count = $this->kk_process($camera->id, $year, $month, $day, $limit, 0);
+            $total_count += $count;
+        }
+        return 'count = '.$total_count;
+    }
+
+    public function kk_del_YM($year, $month, $limit) {
+        $total_count = 0;
+        $cameras = DB::table('cameras')->get();
+        foreach ($cameras as $camera) {
+            echo $camera->id.' -> '.$camera->description;
+            echo '<br>';
+            $count = $this->kk_process($camera->id, $year, $month, null, $limit, 1);
+            $total_count += $count;
+        }
+        return 'count = '.$total_count;
+    }
+
+    public function kk_del_YMD($year, $month, $day, $limit) {
+        $total_count = 0;
+        $cameras = DB::table('cameras')->get();
+        foreach ($cameras as $camera) {
+            echo $camera->id.' -> '.$camera->description;
+            echo '<br>';
+            $count = $this->kk_process($camera->id, $year, $month, $day, $limit, 1);
+            $total_count += $count;
+        }
+        return 'count = '.$total_count;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+    public function kk_process_ex($year, $month, $day, $limit, $del_flag) {
+        $count = 0;
+        $query = Photo::query();
+        if ($year && $month && $day) {
+            $date = $year.'-'.$month.'-'.$day;
+            $query->whereDate('created_at', $date);
+            // $query->whereDate('created_at', '<=', $date);
+        } else {
+            if ($year) {
+                $query->whereYear('created_at', '=', $year);
+            }
+            if ($month) {
+                $query->whereMonth('created_at', '=', $month);
+            }
+            if ($day) {
+                $query->whereDay('created_at', '=', $day);
             }
         }
-        return 'OK';
-    }
-
-    public function kk_del4($year) {
-        $cameras = DB::table('cameras')->get();
-
-        foreach ($cameras as $camera) {
-            // if ($camera->id != 9 && $camera->id != 10) {
-            if ($camera->id != 10) {
-                echo $camera->id.' -> '.$camera->description;
+        $query->orderBy('id', 'asc'); // asc, desc
+        $query->limit($limit);
+        $photos = $query->get();
+        foreach ($photos as $photo) {
+            if ($photo->camera_id != 9 && $photo->camera_id != 10) {
+                echo $photo->id;
                 echo '<br>';
-                $this->kk_del2($camera->id, $year);
-            }
-        }
-        return 'OK';
-    }
+                if ($del_flag == 1) {
+                    $this->deleteGalleryFile_S3($photo->id.'.JPG');
+                    $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+                    $this->deleteGalleryFile_S3($photo->id.'.MP4');
 
-    public function kk_list3($year, $month) {
-        $cameras = DB::table('cameras')->get();
-
-        foreach ($cameras as $camera) {
-            if ($camera->id != 9 && $camera->id != 10) {
-                echo $camera->id.' -> '.$camera->description;
-                echo '<br>';
-
-                $photos = DB::table('photos')
-                    ->where('camera_id', $camera->id)
-                    ->whereYear('created_at', '=', $year)
-                    ->whereMonth('created_at', '=', $month)
-                    ->limit(10)
-                    ->get();
-
-                foreach ($photos as $photo) {
-                    echo $photo->id;
-                    echo '<br>';
+                    // DB::table("photos")->where('id', '=', $photo->id)->delete();
+                    Photo::find($photo->id)->delete();
                 }
+                $count++;
             }
         }
-        return 'OK';
+        return $count;
     }
 
-    public function kk_list4($year) {
-        $cameras = DB::table('cameras')->get();
+    public function kk_list_YMD_ex($year, $month, $day, $limit) {
+        $count = $this->kk_process_ex($year, $month, $day, $limit, 0);
+        return 'count = '.$count;
+    }
 
-        foreach ($cameras as $camera) {
-            // if ($camera->id != 9 && $camera->id != 10) {
-            if ($camera->id != 10) {
-                echo $camera->id.' -> '.$camera->description;
+    public function kk_list_YM_ex($year, $month, $limit) {
+        $count = $this->kk_process_ex($year, $month, null, $limit, 0);
+        return 'count = '.$count;
+    }
+
+    public function kk_list_Y_ex($year, $limit) {
+        $count = $this->kk_process_ex($year, null, null, $limit, 0);
+        return 'count = '.$count;
+    }
+
+    public function kk_del_YMD_ex($year, $month, $day, $limit) {
+        $count = $this->kk_process_ex($year, $month, $day, $limit, 1);
+        return 'count = '.$count;
+    }
+
+    public function kk_del_YM_ex($year, $month, $limit) {
+        $count = $this->kk_process_ex($year, $month, null, $limit, 1);
+        return 'count = '.$count;
+    }
+
+    // public function kk_del_Y_ex($year, $limit) {
+    //     $count = $this->kk_process_ex($year, null, null, $limit, 1);
+    //     return 'count = '.$count;
+    // }
+
+    public function kk_del_YMD_ex2($year, $month, $day, $limit) {
+        $count = 0;
+        $query = Photo::query();
+        $date = $year.'-'.$month.'-'.$day;
+        $query->whereDate('created_at', $date);
+        $query->orderBy('id', 'asc'); // asc, desc
+        $query->limit($limit);
+        $photos = $query->get();
+        foreach ($photos as $photo) {
+            if ($photo->camera_id != 9 && $photo->camera_id != 10) {
+                echo $photo->id;
                 echo '<br>';
+                // if ($del_flag == 1) {
+                    $this->deleteGalleryFile_S3($photo->id.'.JPG');
+                    $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+                    $this->deleteGalleryFile_S3($photo->id.'.MP4');
 
-                $photos = DB::table('photos')
-                    ->where('camera_id', $camera->id)
-                    ->whereYear('created_at', '=', $year)
-                    ->limit(10)
-                    ->get();
-
-                foreach ($photos as $photo) {
-                    echo $photo->id;
-                    echo '<br>';
-                }
+                    // DB::table("photos")->where('id', '=', $photo->id)->delete();
+                    Photo::find($photo->id)->delete();
+                // }
+                $count++;
             }
         }
-        return 'OK';
+        return 'count = '.$count;
     }
 
     public function kk_delx($start, $end) {
@@ -6308,7 +6373,7 @@ return '....done';
 
     /*----------------------------------------------------------------------------------*/
     public function kk_test() {
-// return 'OK';
+return 'OK';
         // $ret = OSS::getAllObjectKey('eztoview');
         // $ret = OSS::publicDeleteObject('eztoview', 'media/34.JPG');
 
@@ -6329,37 +6394,9 @@ return '....done';
 
 // $oss = \Storage::disk('oss');
 // $ret = $oss->temporaryUrl($filename, now()->addMinutes(1440));
-
-return $ret;
+// return $ret;
 
 // Debugbar::debug('hello');
-
-        // $photo_id = 1;
-        // $photo = Photo::findOrFail($photo_id);
-        // $filename = $photo->filename;
-        // //echo $filename; echo '<br>';
-
-        // $photo_id = 10;
-        for ($photo_id=1500; $photo_id<1600; $photo_id++) {
-            $this->deleteGalleryFile_S3($photo_id.'.JPG');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
-
-            $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'_thumb.JPG');
-
-            $this->deleteGalleryFile_S3($photo_id.'.MP4');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.MP4');
-
-            // $this->push_test2();
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id);
-
-            // echo 'delete S3 file: '.$photo_id;
-            // echo '</br>';
-            // Debugbar::debug('delete S3 file: '.$photo_id);
-        }
-
-        // $this->deleteGalleryFile($photo);
-        // $photo->delete();
 return '....done';
 
         $pay_at = new Carbon('2019-04-29 08:34:06');
@@ -6430,15 +6467,4 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
     }
 
-    public function kk_test2($id) {
-        $end = $id+100;
-        for ($photo_id=$id; $photo_id<$end; $photo_id++) {
-            $this->deleteGalleryFile_S3($photo_id.'.JPG');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
-            $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
-            $this->deleteGalleryFile_S3($photo_id.'.MP4');
-        }
-        $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $id.' - '.$end);
-return '....done';
-    }
 }

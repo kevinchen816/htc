@@ -290,20 +290,22 @@ Route::group(['middleware' => 'setLocale'], function() {
 /* for test */
 // Route::get('/test', function() {return 'OK';});
 Route::get('/test', 'Api\CamerasController@kk_test');
-// Route::get('/del/{camera_id}', 'Api\CamerasController@kk_del');
-Route::get('/del/{camera_id}/{year}/{month}', 'Api\CamerasController@kk_del');
-Route::get('/del2/{camera_id}/{year}', 'Api\CamerasController@kk_del2');
-Route::get('/del3/{year}/{month}', 'Api\CamerasController@kk_del3');
-Route::get('/del4/{year}', 'Api\CamerasController@kk_del4');
-// Route::get('/delx', 'Api\CamerasController@kk_delx');
+
+Route::get('/process/{camera_id}/{year}/{month}/{day}/{limit}/{del_flag}', 'Api\CamerasController@kk_process');
+// Route::get('/listY/{year}/{limit}', 'Api\CamerasController@kk_list_Y');
+// Route::get('/listYM/{year}/{month}/{limit}', 'Api\CamerasController@kk_list_YM');
+// Route::get('/listYMD/{year}/{month}/{day}/{limit}', 'Api\CamerasController@kk_list_YMD');
+// Route::get('/delYM/{year}/{month}/{limit}', 'Api\CamerasController@kk_del_YM');
+// Route::get('/delYMD/{year}/{month}/{day}/{limit}', 'Api\CamerasController@kk_del_YMD');
+Route::get('/listY/{year}/{limit}', 'Api\CamerasController@kk_list_Y_ex');
+Route::get('/listYM/{year}/{month}/{limit}', 'Api\CamerasController@kk_list_YM_ex');
+Route::get('/listYMD/{year}/{month}/{day}/{limit}', 'Api\CamerasController@kk_list_YMD_ex');
+Route::get('/delYM/{year}/{month}/{limit}', 'Api\CamerasController@kk_del_YM_ex');
+Route::get('/delYMD/{year}/{month}/{day}/{limit}', 'Api\CamerasController@kk_del_YMD_ex');
 Route::get('/delx/{start}/{end}', 'Api\CamerasController@kk_delx');
-Route::get('/list3/{year}/{month}', 'Api\CamerasController@kk_list3');
-Route::get('/list4/{year}', 'Api\CamerasController@kk_list4');
-// Route::get('/test2/{id}', 'Api\CamerasController@kk_test2');
 
 // Route::get('/email/test', 'MailController@test')->name('email.test');
 // Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
-
 // Route::get('/push', 'Api\CamerasController@push_test');
 Route::get('/push2', 'Api\CamerasController@push_test2');
 
