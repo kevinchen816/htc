@@ -3538,7 +3538,7 @@ return $ret;
         } else {
             if ($err == 1) {
                 $response['crc32'] = (string) $crc32;
-                $response['url'] = $url;
+                // $response['url'] = $url;
             }
         }
 
