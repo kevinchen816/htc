@@ -3490,7 +3490,8 @@ return $ret;
                         $err = 1;
 
                         $model_id = $request->model_id;
-                        $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
+                        // $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
+                        $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BRN';
 
                         if (env('APP_STORAGE') == 'AWS_S3') {
                             $pathname = 'firmware/'.$model_id.'/'.$version.'/'.$filename;
@@ -3558,7 +3559,8 @@ return $ret;
         if ($firmware) {
             /* /firmware/lookout-na/20180816/IMAGE.ZIP */
             $version = $firmware->version;
-            $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
+            // $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
+            $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BRN';
             $pathname = 'firmware/'.$model_id.'/'.$version.'/'.$filename;
             if (env('APP_STORAGE') == 'AWS_S3') {
                 $fileSize = Storage::disk('s3')->size($pathname);
