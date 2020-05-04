@@ -3477,6 +3477,7 @@ return $ret;
                 ->first();
             if ($firmware) {
                 $version = $firmware->version;
+                $crc32 = $firmware->crc32;
                 if ($request->version < $version) {
                     $freespace =  (integer) ($request->Cardspace);
                     if ($freespace < 10) {
@@ -3488,21 +3489,42 @@ return $ret;
                     } else {
                         $err = 1;
 
-                        /* /firmware/lookout-na/20180816/IMAGE.ZIP */
                         $model_id = $request->model_id;
                         $filename = ($firmware->type == 1) ? 'IMAGE.ZIP' : 'IMAGE.BIN';
-                        // $pathname = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
-                        // if (file_exists($pathname)) {
-                        //     $crc32 = hexdec(hash_file('crc32b', $pathname));
-                        // } else {
-                        //     $err = 0; // TODO
-                        //     $file_not_exists = 1;
-                        // }
 
-                        $filepath = 'firmware/'.$model_id.'/'.$version;
-                        $url = $this->image_url($filepath, $filename);
-                        $crc32 = $firmware->crc32;
-                        // return $url;
+                        if (env('APP_STORAGE') == 'AWS_S3') {
+                            $pathname = 'firmware/'.$model_id.'/'.$version.'/'.$filename;
+                            $exists = Storage::disk('s3')->exists($pathname);
+                            if ($exists) {
+                                $url = $this->s3_file_url($pathname);
+                                // $crc32 = hexdec(hash_file('crc32b', $pathname));
+                                $crc32 = $firmware->crc32;
+                            } else {
+                                $err = 0; // TODO
+                                $file_not_exists = 1;
+                            }
+
+                        // } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                        //     $pathname = 'firmware/'.$model_id.'/'.$version.'/'.$filename;
+                        //     $url = $this->oss_file_url($pathname);
+
+                        } else {
+
+                            /* for local (public/firmware/lookout-na/20180816/IMAGE.ZIP) */
+                            $pathname = public_path().'/firmware/'.$model_id.'/'.$version.'/'.$filename;
+                            if (file_exists($pathname)) {
+                                $crc32 = hexdec(hash_file('crc32b', $pathname));
+                            } else {
+                                $err = 0; // TODO
+                                $file_not_exists = 1;
+                            }
+                        }
+
+                        // for debug
+                        // $filepath = 'firmware/'.$model_id.'/'.$version;
+                        // $url = $this->image_url($filepath, $filename);
+                        // $crc32 = $firmware->crc32;
+                        // // return $url;
                     }
                 } else {
                     $err = 0;
@@ -6274,6 +6296,7 @@ return 'OK';
         $photos = $query->get();
         foreach ($photos as $photo) {
             if ($photo->camera_id != 9 && $photo->camera_id != 10) {
+                // Debugbar::debug($photo->id);
                 echo $photo->id;
                 echo '<br>';
                 if ($del_flag == 1) {
