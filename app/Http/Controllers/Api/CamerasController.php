@@ -3570,6 +3570,9 @@ return $ret;
                 $content = Storage::disk('oss')->get($pathname);
             }
 
+return Storage::disk('s3')->download($pathname);
+// return Storage::download($pathname);
+
             //告诉浏览器这是一个文件流格式的文件
             Header("Content-type: application/octet-stream");
 
