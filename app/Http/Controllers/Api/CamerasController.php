@@ -6205,9 +6205,12 @@ return 'OK';
             echo $photo->id;
             echo '<br>';
             if ($del_flag == 1) {
-                $this->deleteGalleryFile_S3($photo->id.'.JPG');
-                $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-                $this->deleteGalleryFile_S3($photo->id.'.MP4');
+                // $this->deleteGalleryFile_S3($photo->id.'.JPG');
+                // $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+                // $this->deleteGalleryFile_S3($photo->id.'.MP4');
+                $this->deleteGalleryFile($photo->id.'.JPG');
+                $this->deleteGalleryFile($photo->id.'_thumb.JPG');
+                $this->deleteGalleryFile($photo->id.'.MP4');
 
                 // DB::table("photos")->where('id', '=', $photo->id)->delete();
                 Photo::find($photo->id)->delete();
@@ -6305,9 +6308,12 @@ return 'OK';
                 echo $photo->id;
                 echo '<br>';
                 if ($del_flag == 1) {
-                    $this->deleteGalleryFile_S3($photo->id.'.JPG');
-                    $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-                    $this->deleteGalleryFile_S3($photo->id.'.MP4');
+                    // $this->deleteGalleryFile_S3($photo->id.'.JPG');
+                    // $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
+                    // $this->deleteGalleryFile_S3($photo->id.'.MP4');
+                    $this->deleteGalleryFile($photo->id.'.JPG');
+                    $this->deleteGalleryFile($photo->id.'_thumb.JPG');
+                    $this->deleteGalleryFile($photo->id.'.MP4');
 
                     // DB::table("photos")->where('id', '=', $photo->id)->delete();
                     Photo::find($photo->id)->delete();
@@ -6377,14 +6383,25 @@ return 'OK';
     public function kk_delx($start, $end) {
         // for ($photo_id=10000; $photo_id<10100; $photo_id++) {
         for ($photo_id=$start; $photo_id<$end; $photo_id++) {
-            $this->deleteGalleryFile_S3($photo_id.'.JPG');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
+            // $this->deleteGalleryFile($photo_id.'.JPG');
+            // // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.JPG');
 
-            $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'_thumb.JPG');
+            // $this->deleteGalleryFile($photo_id.'_thumb.JPG');
+            // // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'_thumb.JPG');
 
-            $this->deleteGalleryFile_S3($photo_id.'.MP4');
-            // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.MP4');
+            // $this->deleteGalleryFile($photo_id.'.MP4');
+            // // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id.'.MP4');
+
+            if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
+                $this->deleteGalleryFile_S3($photo_id.'.JPG');
+                $this->deleteGalleryFile_S3($photo_id.'_thumb.JPG');
+                $this->deleteGalleryFile_S3($photo_id.'.MP4');
+            } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                $this->deleteGalleryFile_OSS($photo_id.'.JPG');
+                $this->deleteGalleryFile_OSS($photo_id.'_thumb.JPG');
+                $this->deleteGalleryFile_OSS($photo_id.'.MP4');
+            }
+
 
             // $this->push_test2();
             // $this->pushMessageByPID(env('JPUSH_TESTID'), env('APP_NAME'), $photo_id);
