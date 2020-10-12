@@ -458,11 +458,9 @@ class ImageUploadHandler
             date_default_timezone_set($tz);
 
             if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
-                $savename = $photo_id;
                 $ret = Storage::disk('s3')->putFileAs('log/'.$camera_id, new File($tagert_name), $fileName);
 
             } else if (env('APP_STORAGE') == 'ALI_OSS') {
-                $savename = $photo_id;
                 $ret = Storage::disk('oss')->putFileAs('log/'.$camera_id, new File($tagert_name), $fileName);
 
             } else {
