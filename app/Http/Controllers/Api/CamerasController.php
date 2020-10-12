@@ -3971,21 +3971,6 @@ return Storage::disk('s3')->download($pathname);
         $camera = $ret['camera'];
         if ($err == 0) {
             $camera_id = $camera->id;
-            // if (isset($request->blockid)) {
-            //     $ret =$this->uploadblock_merge('uploadlog', $camera, $filename, $request->blockid, $request->crc32);
-            //     $err = $ret['err'];
-            // } else {
-            //     //$file = $request->Image;
-            //     $file = $request->log;
-            //     if ($file && $file->isValid()) {
-            //         //$ret = $uploader->save_log($camera_id, $file);
-            //         $ret = $uploader->save_log($camera, $file);
-            //         $err = $ret['err'];
-            //     } else {
-            //         $err = ERR_NO_UPLOAD_FILE;
-            //     }
-            // }
-
             if (isset($request->blockid)) {
                 $ret =$this->uploadblock_merge_log($camera, $request->blockid, $request->crc32);
                 $err = $ret['err'];
@@ -4006,8 +3991,6 @@ return Storage::disk('s3')->download($pathname);
             }
 
             if ($err == 0) {
-                $filesize = $ret['filesize'];
-
                 $param = $request;
                 $param['camera_id'] = $camera_id;
                 $param['imagename'] = $ret['imagename'];
@@ -4075,14 +4058,12 @@ return Storage::disk('s3')->download($pathname);
             }
 
             if ($err == 0) {
-                // $filesize = $ret['filesize'];
-
                 $param = $request;
                 $param['camera_id'] = $camera_id;
                 $param['imagename'] = $ret['imagename'];
                 $param['filepath'] = $ret['filepath'];
                 $param['filename'] = $ret['filename'];
-                // $param['filesize'] = $ret['filesize'];
+                $param['filesize'] = $ret['filesize'];
 
                 /* update Camera Status */
                 $this->Camera_Status_Update($user_id, $param);

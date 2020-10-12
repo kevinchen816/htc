@@ -463,7 +463,7 @@ class ImageUploadHandler
 
             } else if (env('APP_STORAGE') == 'ALI_OSS') {
                 $filePath = 'log/'.$camera_id;
-                $ret = Storage::disk('oss')->putFileAs($filePath new File($tagert_name), $fileName);
+                $ret = Storage::disk('oss')->putFileAs($filePath, new File($tagert_name), $fileName);
 
             } else {
                 $filePath = public_path().'/uploads/logs/'.$camera_id;
@@ -484,10 +484,10 @@ class ImageUploadHandler
         $ret['err'] = $err;
         $ret['CRC32'] = $crc32_check;
         if ($err == 0) {
-            $ret['filesize'] = filesize($tagert_name);; //filesize($to_file);
             $ret['imagename'] = $imagename;
             $ret['filepath'] = $filePath;
             $ret['filename'] = $fileName;
+            $ret['filesize'] = filesize($tagert_name);; //filesize($to_file);
 
             /* delete block files */
             foreach ($files as $file) {
