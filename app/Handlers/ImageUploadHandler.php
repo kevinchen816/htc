@@ -406,7 +406,7 @@ class ImageUploadHandler
         return $ret;
     }
 
-    public function merge_log($camera, $filename, $blockid, $crc32) {
+    public function merge_log($camera, $blockid, $crc32) {
         $err = 0;
         $to_file = '';
         $camera_id = $camera->id;

@@ -3945,9 +3945,9 @@ return Storage::disk('s3')->download($pathname);
         return $response;
     }
 
-    public function uploadblock_merge_log($camera, $filename, $blockid, $crc32) {
+    public function uploadblock_merge_log($camera, $blockid, $crc32) {
         $uploader = new ImageUploadHandler;
-        $ret = $uploader->merge_log($camera, $filename, $blockid, $crc32);
+        $ret = $uploader->merge_log($camera, $blockid, $crc32);
         $err = $ret['err'];
         if ($err == 0) {
             $ret['err'] = 0;
@@ -3987,8 +3987,7 @@ return Storage::disk('s3')->download($pathname);
             // }
 
             if (isset($request->blockid)) {
-                $filename = 'LOG.TXT';
-                $ret =$this->uploadblock_merge_log($camera, $filename, $request->blockid, $request->crc32);
+                $ret =$this->uploadblock_merge_log($camera, $request->blockid, $request->crc32);
                 $err = $ret['err'];
             } else {
                 $file = $request->log; /* file content */
@@ -4057,8 +4056,7 @@ return Storage::disk('s3')->download($pathname);
         if ($err == 0) {
             $camera_id = $camera->id;
             if (isset($request->blockid)) {
-                // $filename = 'LOG.TXT';
-                $ret =$this->uploadblock_merge_log($camera, $filename, $request->blockid, $request->crc32);
+                $ret =$this->uploadblock_merge_log($camera, $request->blockid, $request->crc32);
                 $err = $ret['err'];
             } else {
                 $file = $request->log; /* file content */
