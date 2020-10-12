@@ -406,9 +406,10 @@ class ImageUploadHandler
         return $ret;
     }
 
-    public function merge_log($camera_id, $filename, $blockid, $crc32) {
+    public function merge_log($camera, $filename, $blockid, $crc32) {
         $err = 0;
         $to_file = '';
+        $camera_id = $camera->id;
         //return storage_path();
         //return Storage::files('.');
         //return Storage::allFiles('.');
@@ -487,7 +488,6 @@ class ImageUploadHandler
             $ret['imagename'] = $imagename;
             $ret['filepath'] = $filePath;
             $ret['filename'] = $fileName;
-            // $ret['savename'] = $savename;
 
             /* delete block files */
             foreach ($files as $file) {

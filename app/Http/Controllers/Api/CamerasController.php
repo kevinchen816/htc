@@ -3947,8 +3947,7 @@ return Storage::disk('s3')->download($pathname);
 
     public function uploadblock_merge_log($camera, $filename, $blockid, $crc32) {
         $uploader = new ImageUploadHandler;
-        $camera_id = $camera->id;
-        $ret = $uploader->merge_log($camera_id, $filename, $blockid, $crc32);
+        $ret = $uploader->merge_log($camera, $filename, $blockid, $crc32);
         $err = $ret['err'];
         if ($err == 0) {
             $ret['err'] = 0;
@@ -4058,7 +4057,7 @@ return Storage::disk('s3')->download($pathname);
         if ($err == 0) {
             $camera_id = $camera->id;
             if (isset($request->blockid)) {
-                $filename = 'LOG.TXT';
+                // $filename = 'LOG.TXT';
                 $ret =$this->uploadblock_merge_log($camera, $filename, $request->blockid, $request->crc32);
                 $err = $ret['err'];
             } else {
@@ -4078,14 +4077,14 @@ return Storage::disk('s3')->download($pathname);
             }
 
             if ($err == 0) {
-                $filesize = $ret['filesize'];
+                // $filesize = $ret['filesize'];
 
                 $param = $request;
                 $param['camera_id'] = $camera_id;
                 $param['imagename'] = $ret['imagename'];
                 $param['filepath'] = $ret['filepath'];
                 $param['filename'] = $ret['filename'];
-                $param['filesize'] = $ret['filesize'];
+                // $param['filesize'] = $ret['filesize'];
 
                 /* update Camera Status */
                 $this->Camera_Status_Update($user_id, $param);
