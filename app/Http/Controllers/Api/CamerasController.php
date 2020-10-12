@@ -3948,7 +3948,7 @@ return Storage::disk('s3')->download($pathname);
     public function uploadblock_merge_log($camera, $filename, $blockid, $crc32) {
         $uploader = new ImageUploadHandler;
         $camera_id = $camera->id;
-        $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
+        $ret = $uploader->merge_log($camera_id, $filename, $blockid, $crc32);
         $err = $ret['err'];
         if ($err == 0) {
             $ret['err'] = 0;

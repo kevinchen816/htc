@@ -421,7 +421,7 @@ class ImageUploadHandler
 
         $tempFilename = $path_block.'/filename.txt';
         if (file_exists($tempFilename)) {
-            $imagename = file_get_contents($tempFilename);
+            $imagename = file_get_contents($tempFilename); // LOG.KZ
 //            unlink($tempFilename); // must delete filename.txt before merge files
         } else {
             $ret['err'] = 4;
