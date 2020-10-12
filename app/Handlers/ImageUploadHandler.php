@@ -458,10 +458,12 @@ class ImageUploadHandler
             date_default_timezone_set($tz);
 
             if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
-                $ret = Storage::disk('s3')->putFileAs('log/'.$camera_id, new File($tagert_name), $fileName);
+                $filePath = 'log/'.$camera_id;
+                $ret = Storage::disk('s3')->putFileAs($filePath, new File($tagert_name), $fileName);
 
             } else if (env('APP_STORAGE') == 'ALI_OSS') {
-                $ret = Storage::disk('oss')->putFileAs('log/'.$camera_id, new File($tagert_name), $fileName);
+                $filePath = 'log/'.$camera_id;
+                $ret = Storage::disk('oss')->putFileAs($filePath new File($tagert_name), $fileName);
 
             } else {
                 $filePath = public_path().'/uploads/logs/'.$camera_id;
