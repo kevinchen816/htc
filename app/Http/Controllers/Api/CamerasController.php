@@ -3945,15 +3945,25 @@ return Storage::disk('s3')->download($pathname);
         return $response;
     }
 
-/*
-{
-    "iccid": "89860117851014783481",
-    "module_id": "861107032685597",
-    "model_id": "lookout-na",
-    "RequestID": "2",
-    "log": []
-}
-*/
+    public function uploadblock_merge_log($camera, $filename, $blockid, $crc32) {
+        $uploader = new ImageUploadHandler;
+        $camera_id = $camera->id;
+        $ret = $uploader->merge($camera_id, $filename, $blockid, $crc32);
+        $err = $ret['err'];
+        if ($err == 0) {
+            $ret['err'] = 0;
+        } else if ($err == 1) {
+            $ret['err'] = ERR_INVALID_BLOCK_ID;
+        } else if ($err == 2) {
+            $ret['err'] = ERR_CRC32_FAIL;
+        } else if ($err == 3) {
+            $ret['err'] = ERR_COPY_MERGE_FILE_FAIL;
+        } else if ($err == 4) {
+            $ret['err'] = ERR_NO_MERGE_FILENAME;
+        }
+        return $ret;
+    }
+
     //{"ResultCode":0,"ActionCode":"LU","ParameterList":{"REQUESTID":"4"},"DateTimeStamp":"2018-10-18 06:08:25"}
     public function uploadlog(Request $request, ImageUploadHandler $uploader) {
         $ret = $this->Camera_Check($request);
@@ -3962,61 +3972,49 @@ return Storage::disk('s3')->download($pathname);
         $camera = $ret['camera'];
         if ($err == 0) {
             $camera_id = $camera->id;
-            //if (isset($request->RequestID)) {
-                /* search Action */
-                //$query = array(
-                //    'id' => $request->RequestID,
-                //    'camera_id' => $camera_id,
-                //    'action' => 'LU',
-                //    'status' => ACTION_REQUESTED,
-                //);
-                //$actions = DB::table('actions')->where($query);
-                //$action  = $actions->first();
-                //if ($action) {
+            // if (isset($request->blockid)) {
+            //     $ret =$this->uploadblock_merge('uploadlog', $camera, $filename, $request->blockid, $request->crc32);
+            //     $err = $ret['err'];
+            // } else {
+            //     //$file = $request->Image;
+            //     $file = $request->log;
+            //     if ($file && $file->isValid()) {
+            //         //$ret = $uploader->save_log($camera_id, $file);
+            //         $ret = $uploader->save_log($camera, $file);
+            //         $err = $ret['err'];
+            //     } else {
+            //         $err = ERR_NO_UPLOAD_FILE;
+            //     }
+            // }
 
-                    /* search Photo */
-                    //$query = array(
-                    //    'id' => $action->photo_id,
-                    //    'camera_id' => $camera_id,
-                    //);
-                    //$photos = DB::table('photos')->where($query);
-                    //$photo = $photos->first();
-                    //if ($photo) {
-                        $filename = 'LOG.TXT';
-                        if (isset($request->blockid)) {
-                            $ret =$this->uploadblock_merge('uploadlog', $camera, $filename, $request->blockid, $request->crc32);
-                            $err = $ret['err'];
-                        } else {
-                            //$file = $request->Image;
-                            $file = $request->log;
-                            if ($file && $file->isValid()) {
-                                //$ret = $uploader->save_log($camera_id, $file);
-                                $ret = $uploader->save_log($camera, $file);
-                                $err = $ret['err'];
-                            } else {
-                                $err = ERR_NO_UPLOAD_FILE;
-                            }
-                        }
-
-                    //} else {
-                    //    $err = ERR_INVALID_PHOTO_ID;
-                    //}
-                //} else {
-                //    $err = ERR_INVALID_REQUEST_ID;
-                //}
-            //} else {
-            //    $err = ERR_NO_REQUEST_ID;
-            //}
+            if (isset($request->blockid)) {
+                $filename = 'LOG.TXT';
+                $ret =$this->uploadblock_merge_log($camera, $filename, $request->blockid, $request->crc32);
+                $err = $ret['err'];
+            } else {
+                $file = $request->log; /* file content */
+                if ($file && $file->isValid()) {
+                    if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
+                        $ret = $uploader->s3_save_log($camera, $file);
+                    // } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                    //     $ret = $uploader->oss_save_file($file, $photo->id);
+                    } else {
+                        $ret = $uploader->save_log($camera, $file);
+                    }
+                    $err = $ret['err'];
+                } else {
+                    $err = ERR_NO_UPLOAD_FILE;
+                }
+            }
 
             if ($err == 0) {
                 $filesize = $ret['filesize'];
 
                 $param = $request;
                 $param['camera_id'] = $camera_id;
-                $param['filename'] = $request->FileName;
                 $param['imagename'] = $ret['imagename'];
-                $param['savename'] = $ret['savename'];
-                //$param['extension'] = $ret['extension'];
+                $param['filepath'] = $ret['filepath'];
+                $param['filename'] = $ret['filename'];
                 $param['filesize'] = $ret['filesize'];
 
                 /* update Camera Status */
@@ -4031,12 +4029,6 @@ return Storage::disk('s3')->download($pathname);
                     );
                     $this->Action_Completed($param);
                 }
-
-                //$data = [];
-                //$data['status'] = ACTION_COMPLETED;
-                //$data['completed'] = date('Y-m-d H:i:s');
-                ////$data['photo_cnt'] = 1;
-                //$actions->update($data);
             }
         }
 
@@ -4045,15 +4037,75 @@ return Storage::disk('s3')->download($pathname);
             $this->LogApi_Add('uploadlog', 1, $user_id, $camera->id, $request, $response);
         }
 
-// if ($err == 0) { /* for test */
-//     $response['camera_id'] = $camera_id;
-//     //$response['filename'] = $request->FileName;
-//     $response['imagename'] = $ret['imagename'];
-//     $response['savename'] = $ret['savename'];
-//     $response['savepath'] = $ret['savepath'];
-//     //$response['extension'] = $ret['extension'];
-//     $response['filesize'] = $ret['filesize'];
-// }
+        /* for test */
+        // if ($err == 0) {
+        //     $response['camera_id'] = $camera_id;
+        //     // $response['filename'] = $request->FileName;
+        //     $response['imagename'] = $ret['imagename'];
+        //     $response['filepath'] = $ret['filepath'];
+        //     $response['filename'] = $ret['filename'];
+        //     $response['filesize'] = $ret['filesize'];
+        // }
+
+        return $response;
+    }
+
+    public function dailyuploadlog(Request $request, ImageUploadHandler $uploader) {
+        $ret = $this->Camera_Check($request);
+        $err = $ret['err'];
+        $user_id = $ret['user_id'];
+        $camera = $ret['camera'];
+        if ($err == 0) {
+            $camera_id = $camera->id;
+            if (isset($request->blockid)) {
+                $filename = 'LOG.TXT';
+                $ret =$this->uploadblock_merge_log($camera, $filename, $request->blockid, $request->crc32);
+                $err = $ret['err'];
+            } else {
+                $file = $request->log; /* file content */
+                if ($file && $file->isValid()) {
+                    if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
+                        $ret = $uploader->s3_save_log($camera, $file);
+                    // } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                    //     $ret = $uploader->oss_save_file($file, $photo->id);
+                    } else {
+                        $ret = $uploader->save_log($camera, $file);
+                    }
+                    $err = $ret['err'];
+                } else {
+                    $err = ERR_NO_UPLOAD_FILE;
+                }
+            }
+
+            if ($err == 0) {
+                $filesize = $ret['filesize'];
+
+                $param = $request;
+                $param['camera_id'] = $camera_id;
+                $param['imagename'] = $ret['imagename'];
+                $param['filepath'] = $ret['filepath'];
+                $param['filename'] = $ret['filename'];
+                $param['filesize'] = $ret['filesize'];
+
+                /* update Camera Status */
+                $this->Camera_Status_Update($user_id, $param);
+            }
+        }
+
+        $response = $this->Response_Result($err, $camera);
+        if ($user_id && $camera) {
+            $this->LogApi_Add('dailyuploadlog', 1, $user_id, $camera->id, $request, $response);
+        }
+
+        /* for test */
+        // if ($err == 0) {
+        //     $response['camera_id'] = $camera_id;
+        //     // $response['filename'] = $request->FileName;
+        //     $response['imagename'] = $ret['imagename'];
+        //     $response['filepath'] = $ret['filepath'];
+        //     $response['filename'] = $ret['filename'];
+        //     $response['filesize'] = $ret['filesize'];
+        // }
 
         return $response;
     }

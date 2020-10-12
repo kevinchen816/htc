@@ -368,31 +368,135 @@ class ImageUploadHandler
     }
 
     /*----------------------------------------------------------------------------------*/
-    //public function save_log($camera_id, $file)
-    public function save_log($camera, $file)
-    {
-        $OriginalName = $file->getClientOriginalName();
-        $extension = strtoupper($file->getClientOriginalExtension()); // JPG,MP4
-
-        $camera_id = $camera->id;
-        $path_upload = public_path().'/uploads/logs/'.$camera_id;
-        //$savename = time() . '_' . str_random(10) . '.' . $extension;
-        //$savename = date('ymdhis').'_'.$OriginalName;
+    public function save_log($camera, $file) {
+        $filePath = public_path().'/uploads/logs/'.$camera->id;
 
         $tz = date_default_timezone_get();
         date_default_timezone_set($camera->timezone);
-        $savename = date('Ymd').'_'.date('Hi').'_'.$OriginalName;
+        $fileName = date('Ymd').'_'.date('Hi').'_'.$file->getClientOriginalName();
         date_default_timezone_set($tz);
 
-        $savepath = $file->move($path_upload, $savename);
+        $savepath = $file->move($filePath, $fileName);
 
-        $ret['imagename'] = $OriginalName;
-        $ret['savename'] = $savename;
-        $ret['savepath'] = "$savepath";
-        $ret['extension'] = "$extension";
-        $ret['filesize'] = $file->getClientSize();
         $ret['err'] = 0;
+        $ret['imagename'] = $file->getClientOriginalName();
+        $ret['filepath'] = $filePath;
+        $ret['filename'] = $fileName;
+        $ret['filesize'] = $file->getClientSize();
         return $ret;
     }
 
+    public function s3_save_log($camera, $file) {
+        $s3 = \Storage::disk('s3');
+
+        $filePath = '/log/'.$camera->id;
+
+        $tz = date_default_timezone_get();
+        date_default_timezone_set($camera->timezone);
+        $fileName = date('Ymd').'_'.date('Hi').'_'.$file->getClientOriginalName();
+        date_default_timezone_set($tz);
+
+        $result = $s3->put($filePath.'/'.$fileName, file_get_contents($file)); // "result": true
+
+        $ret['err'] = ($result) ? 0 : 1;
+        $ret['imagename'] = $file->getClientOriginalName(); // TODO uploadoriginal (del)
+        $ret['filepath'] = $filePath;
+        $ret['filename'] = $fileName;
+        $ret['filesize'] = $file->getClientSize(); // TODO uploadoriginal (del)
+        return $ret;
+    }
+
+    public function merge_log($camera_id, $filename, $blockid, $crc32) {
+        $err = 0;
+        $to_file = '';
+        //return storage_path();
+        //return Storage::files('.');
+        //return Storage::allFiles('.');
+
+        $path_block = public_path().'/uploads/block/'.$blockid;
+        if (!file_exists($path_block)) {
+            $ret['err'] = 1;
+            return $ret;
+        }
+
+        $tempFilename = $path_block.'/filename.txt';
+        if (file_exists($tempFilename)) {
+            $imagename = file_get_contents($tempFilename);
+//            unlink($tempFilename); // must delete filename.txt before merge files
+        } else {
+            $ret['err'] = 4;
+            return $ret;
+        }
+
+        $tagert_name =  $path_block.'/'.$imagename;
+        if (file_exists($tagert_name)) {
+            unlink($tagert_name);
+        }
+
+        $files = $this->dirTree($path_block);
+        sort($files);
+
+        $fp = fopen($tagert_name, 'w+b');
+        foreach ($files as $file) {
+            $handle = fopen($file, "rb");
+            fwrite($fp, fread($handle, filesize($file)));
+            fclose($handle);
+            unset($handle);
+//            unlink($file);
+        }
+        fclose($fp);
+
+        /* https://www.cnblogs.com/mslagee/p/6223140.html */
+        $crc32_check = hexdec(hash_file('crc32b', $tagert_name));
+        if ($crc32_check == $crc32) {
+
+            $tz = date_default_timezone_get();
+            date_default_timezone_set($camera->timezone);
+            $fileName = date('Ymd').'_'.date('Hi').'_'.$imagename;
+            // $fileName = date('Ymd').'_'.date('Hi').'_LOG.KZ';
+            date_default_timezone_set($tz);
+
+            if (env('APP_STORAGE') == 'AWS_S3') { //if (env('S3_ENABLE')) {
+                $savename = $photo_id;
+                $ret = Storage::disk('s3')->putFileAs('log/'.$camera_id, new File($tagert_name), $fileName);
+
+            } else if (env('APP_STORAGE') == 'ALI_OSS') {
+                $savename = $photo_id;
+                $ret = Storage::disk('oss')->putFileAs('log/'.$camera_id, new File($tagert_name), $fileName);
+
+            } else {
+                $filePath = public_path().'/uploads/logs/'.$camera_id;
+                $to_file = $filePath.'/'.$fileName;
+                $ret = copy($tagert_name, $to_file);
+            }
+
+            if ($ret == false) {
+                $err = 3/*2*/;
+            } else {
+                $err = 0;
+            }
+        } else {
+            $err = 2/*1*/;
+        }
+
+        $ret = [];
+        $ret['err'] = $err;
+        $ret['CRC32'] = $crc32_check;
+        if ($err == 0) {
+            $ret['filesize'] = filesize($tagert_name);; //filesize($to_file);
+            $ret['imagename'] = $imagename;
+            $ret['filepath'] = $filePath;
+            $ret['filename'] = $fileName;
+            // $ret['savename'] = $savename;
+
+            /* delete block files */
+            foreach ($files as $file) {
+               unlink($file);
+            }
+            unlink($tagert_name);
+            unlink($tempFilename); // must delete filename.txt before merge files
+            rmdir($path_block);
+        }
+        return $ret;
+    }
 }

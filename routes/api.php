@@ -77,6 +77,7 @@ $api->version('v1', [
     $api->post('uploadlog', 'CamerasController@uploadlog')->name('api.camera.uploadlog');
 
     $api->post('uploadlog', 'CamerasController@uploadlog')->name('api.camera.uploadlog');
+    $api->post('dailyuploadlog', 'CamerasController@dailyuploadlog')->name('api.camera.dailyuploadlog');
 
 
     $api->post('mobileadd', 'MobileController@mobileadd')->name('api.mobile.add');
