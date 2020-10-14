@@ -1,7 +1,20 @@
 https://www.linuxidc.com/Linux/2017-07/145673.htm
 
+/*-------------------------------------------------------------------------------*/
+修改 Homestead 虚拟机的 memory 大小
+    Homestead.yaml
+        ip: "192.168.10.10"
+        memory: 4096        《-- 2048 修改为 4096
+        cpus: 1
+
+/*-------------------------------------------------------------------------------*/
+增加 swap 空间
+
 The following exception is caused by a lack of memory or swap,
 or not having swap configured
+
+剩余空间
+    $free -m
 
 ** 补充: 发生 memory 不足时，增加 swap 空间
     $ sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024

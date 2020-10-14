@@ -26,6 +26,7 @@ use App\Mail\PhotoSend;
 use App\Mail\NotificationSend;
 
 use App\Services\OSS;
+use App\Jobs\FileDelete;
 
 use Carbon\Carbon;
 use JPush\Client as JPush;
@@ -6338,12 +6339,7 @@ return 'OK';
                 echo $photo->id;
                 echo '<br>';
                 if ($del_flag == 1) {
-                    // $this->deleteGalleryFile_S3($photo->id.'.JPG');
-                    // $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-                    // $this->deleteGalleryFile_S3($photo->id.'.MP4');
-                    $this->deleteGalleryFile($photo->id.'.JPG');
-                    $this->deleteGalleryFile($photo->id.'_thumb.JPG');
-                    $this->deleteGalleryFile($photo->id.'.MP4');
+                    $this->deleteGalleryFile($photo);
 
                     // DB::table("photos")->where('id', '=', $photo->id)->delete();
                     Photo::find($photo->id)->delete();
@@ -6370,45 +6366,24 @@ return 'OK';
     }
 
     public function kk_del_YMD_ex($year, $month, $day, $limit) {
-        $count = $this->kk_process_ex($year, $month, $day, $limit, 1);
-        return 'count = '.$count;
+        // $count = $this->kk_process_ex($year, $month, $day, $limit, 1);
+        // return 'count = '.$count;
+        dispatch(new FileDelete($year, $month, $day, $limit));
+        return 'OK';
     }
 
     public function kk_del_YM_ex($year, $month, $limit) {
-        $count = $this->kk_process_ex($year, $month, null, $limit, 1);
-        return 'count = '.$count;
+        // $count = $this->kk_process_ex($year, $month, null, $limit, 1);
+        // return 'count = '.$count;
+        dispatch(new FileDelete($year, $month, null, $limit));
+        return 'OK';
     }
 
     // public function kk_del_Y_ex($year, $limit) {
-    //     $count = $this->kk_process_ex($year, null, null, $limit, 1);
-    //     return 'count = '.$count;
+    //     // $count = $this->kk_process_ex($year, null, null, $limit, 1);
+    //     // return 'count = '.$count;
+    //     return "注意：目前禁止删除整年资料";
     // }
-
-    public function kk_del_YMD_ex2($year, $month, $day, $limit) {
-        $count = 0;
-        $query = Photo::query();
-        $date = $year.'-'.$month.'-'.$day;
-        $query->whereDate('created_at', $date);
-        $query->orderBy('id', 'asc'); // asc, desc
-        $query->limit($limit);
-        $photos = $query->get();
-        foreach ($photos as $photo) {
-            if ($photo->camera_id != 9 && $photo->camera_id != 10) {
-                echo $photo->id;
-                echo '<br>';
-                // if ($del_flag == 1) {
-                    $this->deleteGalleryFile_S3($photo->id.'.JPG');
-                    $this->deleteGalleryFile_S3($photo->id.'_thumb.JPG');
-                    $this->deleteGalleryFile_S3($photo->id.'.MP4');
-
-                    // DB::table("photos")->where('id', '=', $photo->id)->delete();
-                    Photo::find($photo->id)->delete();
-                // }
-                $count++;
-            }
-        }
-        return 'count = '.$count;
-    }
 
     public function kk_delx($start, $end) {
         // for ($photo_id=10000; $photo_id<10100; $photo_id++) {

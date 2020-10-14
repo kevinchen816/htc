@@ -1,0 +1,143 @@
+Laravel 5.5 Redis 队列基本使用指南
+https://blog.csdn.net/maxsky/article/details/83381853
+
+
+/*-------------------------------------------------------------------------------*/
+6.9. 使用队列
+https://learnku.com/courses/laravel-intermediate-training/7.x/using-queues/9042
+
+1. 配置队列
+    队列的配置信息储存于 config/queue.php 文件中，在这个文件中你会发现框架所支持的队列驱动的配置连接示例。
+
+    本项目中，我们将使用 Redis 来作为我们的队列驱动器，先使用 Composer 安装依赖：
+        $ composer require "predis/predis:~1.1"     《-- v5.5.45 不确定是否需要
+
+        如果安装出现 -》PHP Fatal error:  Allowed memory size of 1610612736 bytes exhausted
+        $ COMPOSER_MEMORY_LIMIT=-1 composer require "predis/predis:~1.1"
+
+    修改环境变量 QUEUE_CONNECTION 的值为 redis，并指定我们将使用 predis 作为请求 Redis 的类库：
+        .env
+            QUEUE_DRIVER=redis          《-- sync 修改为 redis
+            #QUEUE_CONNECTION=redis     《-- v5.5.45 不确定是否需要
+            #REDIS_CLIENT=predis        《-- v5.5.45 不确定是否需要
+
+    失败任务#
+        - 有时候队列中的任务会失败。
+        - Laravel 内置了一个方便的方式来指定任务重试的最大次数。
+          当任务超出这个重试次数后，它就会被插入到 failed_jobs 数据表里面。
+        - 默认 Laravel 已经为我们创建了 failed_jobs 表。 《-- 可能新版才有支持
+          打开 database/migrations/2019_08_19_000000_create_failed_jobs_table.php 文件，
+
+2. 生成任务类
+    使用以下 Artisan 命令来生成一个新的队列任务：
+        $ php artisan make:job FileDelete
+
+    该命令会在 app/Jobs 目录下生成一个新的类：
+        app/Jobs/FileDelete.php
+
+3. 任务分发
+    接下来我们要修改 Topic 模型监控器，将 Slug 翻译的调用修改为队列执行的方式：
+        dispatch(new FileDelete($year, $month, $day, $limit));
+
+4. 开始测试
+    开始之前，我们需要在命令行启动队列系统，队列在启动完成后会进入监听状态：
+        $ php artisan queue:listen
+
+        问题：The process "'/usr/bin/php7.2' 'artisan' queue:work '' --once --queue='default' --delay=0 -
+          -memory=128 --sleep=3 --tries=0" exceeded the timeout of 60 seconds.
+        参考：https://stackoverflow.com/questions/25877752/laravel-queue-process-timeout-error
+
+            $ php artisan queue:listen --timeout=0
+
+        补充：
+            $ php artisan queue:restart
+
+** 以上步骤即可进行 “队列” 功能
+
+5. 队列监控 Horizon     《-- Laravel v5.5.45 可能不支持
+    https://learnku.com/docs/laravel/5.5/horizon/1345
+
+    - 由于 Horizon 中使用了异步处理信号，所以需要 PHP 7.1+
+    - Horizon 是 Laravel 生态圈里的一员，为 Laravel Redis 队列提供了一个漂亮的仪表板，
+      允许我们很方便地查看和管理 Redis 队列任务执行的情况。
+
+    (1) 安装
+        $ composer require laravel/horizon
+        $ composer require "laravel/horizon:~4.3"
+
+        注：如果你在安装时遇到 PHP Fatal error: Allowed memory size of xxxx bytes exhausted，
+        那是 PHP Cli 设置的内存不够 Composer 使用的缘故，使用这个命令去除内存设置试试
+
+        $ COMPOSER_MEMORY_LIMIT=-1 composer require "laravel/horizon:~4.3"
+        $ COMPOSER_MEMORY_LIMIT=-1 composer require laravel/horizon
+
+    (2) 安装完成后，使用 vendor:publish Artisan 命令发布相关文件：
+        $ php artisan vendor:publish --provider="Laravel\Horizon\HorizonServiceProvider"
+
+        分别是配置文件 config/horizon.php 和存放在 public/vendor/horizon 文件夹中的 CSS 、JS 等页面资源文件。
+
+    (3) 至此安装完毕，浏览器打开 htc.test/horizon 访问控制台
+
+    (4) Horizon 是一个监控程序，需要常驻运行，我们可以通过以下命令启动：
+        $ php artisan horizon       // 无需使用 queue:listen
+        $ php artisan horizon:pause
+        $ php artisan horizon:continue
+        $ php artisan horizon:terminate
+
+使用 Supervisor 进程工具进行管理，配置和使用请参照 文档 进行配置；
+每一次部署代码时，需 artisan horizon:terminate 然后再 artisan horizon 重新加载代码。
+
+
+/*-------------------------------------------------------------------------------*/
+laravel 的 queue 使用注意事项
+https://www.cnblogs.com/zgxblog/p/10996112.html
+
+1. 在修改 queue 相关代码后，必须要使用 php artisan queue:restart 来重启队列服务，否则所做的修改可能不会生效
+    (没法重现了，按理说应该和使用 queue:listen 或 queue:work 有关，不过最好还是重启；
+    可能和 supervisor 开启多个 queue:work 进程也有关系，本地测试的时候只有一个进程)。
+
+    在 queue:work Artisan 命令里包含了 --daemon 选项，强制队列服务器持续处理任务，而不需要重新启动整个框架。
+    比起 queue:listen 命令，这将明显的减少 CPU 的用量。
+
+
+/*-------------------------------------------------------------------------------*/
+使用 Laravel Queue 不得不明白的知识
+https://learnku.com/articles/3729/use-laravel-queue-to-understand-the-knowledge
+
+问：什么时候使用 queue:listen 什么时候使用 queue:work？
+
+答：
+Laravel 5.3 的文档已经不写 queue:listen 这个指令怎么用了，
+所以可能官方已经不怎么建议使用 queue:listen 了，但是在本地调试的时候要使用 queue:listen，
+因为 queue:work 在启动后，代码修改，queue:work 不会再 Load 上下文，
+但是 queue:listen 仍然会重新 Load 新代码。
+
+其余情况全部使用 queue:work 吧，因为效率更高。
+
+$ php artisan queue:work --daemon --quiet --queue=default --delay=3 --sleep=3 --tries=3
+$ php artisan queue:work --daemon --queue=default --delay=3 --sleep=3 --tries=3
+
+--daemon
+    The queue:work Artisan command includes a --daemon option for forcing the queue worker
+    to continue processing jobs without ever re-booting the framework.
+    This results in a significant reduction of CPU usage when compared to the queue:listen command
+    总体来说，在 supervisor 中一般要加这个 option，可以节省 CPU 使用。
+
+--quiet
+    不输出任何内容
+
+--delay=3
+    一个任务失败后，延迟多长时间后再重试，单位是秒。
+    这个值的设定我个人建议不要太短，因为一个任务失败（比如网络原因），
+    重试时间太短可能会出现连续失败的情况。
+
+--sleep=3
+    去 Redis 中拿任务的时候，发现没有任务，休息多长时间，单位是秒。
+    这个值的设定要看你的任务是否紧急，如果是那种非常紧急的任务，不能等待太长时间。
+
+--tries=3
+    定义失败任务最多重试次数。
+    这个值的设定根据任务的重要程度来确定，一般 3 次比较适合。
+
+
+/*-------------------------------------------------------------------------------*/
