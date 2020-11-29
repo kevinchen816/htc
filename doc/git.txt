@@ -4,32 +4,66 @@ $ git reset --hard origin/master
 $ git pull
 
 //----------------------------------------------------------
+$ git log                           获取某个历史版本的 idxxxx
+$ git log --oneline                 获取某个历史版本的 idxxxx
+
+$ git reset --hard idxxxx           切换到某个历史版本的 idxxxx
+
+$ git push -f -u origin master
+
+    注意：
+    * 使用 git push -f 要非常小心
+    * git push -f 远程仓库别名  分支名称
+    * 加了参数 -u 后，以后即可直接用 git push 代替 git push origin master
+
+/*-------------------------------------------------------------------------------*/
 $ git config --list
 $ git config --global user.name "Kevin Chen"
 $ git config --global user.email "kevin@10ware.com"
 $ git config --global push.default simple
 
-//----------------------------------------------------------
+/*-------------------------------------------------------------------------------*/
 $ cd ~/Code/sample
 $ git init
 $ git add -A
 $ git status
-$git commit -m "Initial commit"
-$git log
+$ git commit -m "Initial commit"
+$ git log
 
 ** 新建 GitHub 仓库
 $ cd ~/Code/sample
+
 $ git remote add origin git@github.com:kevinchen816/xxxx.git
-或
+    或
   git remote add origin https://github.com/kevinchen816/caperplus.git
+
 $ git push -u origin master
+    * 加了参数 -u 后，以后即可直接用 git push 代替 git push origin master
 
 ** 代码改动，更新到 GitHub
 $ git add -A
 $ git commit -m "xxxx"
 $ git push
 
-//----------------------------------------------------------
+/*-------------------------------------------------------------------------------*/
+** 比较文件差异
+1. git diff [文件名]
+
+    将工作区中的文件和暂存区对应文件进行比较
+    例：git diff test.txt
+
+2. git diff [本地库中文件历史记录(指针)] [文件名]
+
+    将工作区中的文件和本地库历史记录比较
+    例：
+    git diff HEAD test.txt      比较最新一次修改
+    git diff HEAD^ text.txt     比较上一次修改
+    git diff 46e8eaa test.txt   比较历史记录号为 46e8eaa的修改
+
+3. git diff
+    不带文件名，比较所有文件的修改
+
+/*-------------------------------------------------------------------------------*/
 $ git checkout -f
 
 ** 新建分支

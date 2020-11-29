@@ -52,6 +52,9 @@ https://learnku.com/courses/laravel-intermediate-training/7.x/using-queues/9042
         补充：
             $ php artisan queue:restart
 
+            $ php artisan queue:work --daemon --quiet --queue=default --delay=3 --sleep=3 --tries=3
+            $ php artisan queue:work --daemon --queue=default --delay=3 --sleep=3 --tries=3
+
 ** 以上步骤即可进行 “队列” 功能
 
 5. 队列监控 Horizon     《-- Laravel v5.5.45 可能不支持
