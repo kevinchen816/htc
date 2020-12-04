@@ -4,16 +4,16 @@ $ git reset --hard origin/master
 $ git pull
 
 //----------------------------------------------------------
-$ git log                           获取某个历史版本的 idxxxx
-$ git log --oneline                 获取某个历史版本的 idxxxx
+** git 回退到某个历史版本
+https://www.jianshu.com/p/1814668a61e1
+https://blog.csdn.net/weixin_36833780/article/details/84142504?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
 
-$ git reset --hard idxxxx           切换到某个历史版本的 idxxxx
+$ git log                           查找历史版本 （或 git log --oneline）
+$ git reset --hard idxxxx           恢复到历史版本
+$ git push -f -u origin master      把修改推到远程服务器
 
-$ git push -f -u origin master
-
-    注意：
-    * 使用 git push -f 要非常小心
-    * git push -f 远程仓库别名  分支名称
+    注意：使用 git push -f 要非常小心
+    * git push -f 远程仓库别名 分支名称
     * 加了参数 -u 后，以后即可直接用 git push 代替 git push origin master
 
 /*-------------------------------------------------------------------------------*/

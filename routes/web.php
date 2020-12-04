@@ -290,6 +290,9 @@ Route::group(['middleware' => 'setLocale'], function() {
 /* for test */
 // Route::get('/test', function() {return 'OK';});
 Route::get('/test', 'Api\CamerasController@kk_test');
+Route::get('/bibi/test', 'Api\CamerasController@bibi_test');
+Route::get('/bibi/test2', 'Api\CamerasController@bibi_test2');
+Route::get('/bibi/test3/{uid}/{eid}', 'Api\CamerasController@bibi_test3');
 
 Route::get('/process/{camera_id}/{year}/{month}/{day}/{limit}/{del_flag}', 'Api\CamerasController@kk_process');
 // Route::get('/listY/{year}/{limit}', 'Api\CamerasController@kk_list_Y');

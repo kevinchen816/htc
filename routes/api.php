@@ -85,6 +85,12 @@ $api->version('v1', [
 
     $api->post('account_check', 'MobileController@postAccountCheck')->name('api.mobile.account_check');
 
+
+    $api->post('startevent', 'CamerasController@startevent')->name('api.startevent');
+    $api->post('stopevent', 'CamerasController@stopevent')->name('api.stopevent');
+    $api->post('uploadposition', 'CamerasController@uploadposition')->name('api.uploadposition');
+    $api->post('downloadposition', 'CamerasController@downloadposition')->name('api.downloadposition');
+
 });
 
 $api->version('v2', function($api) {

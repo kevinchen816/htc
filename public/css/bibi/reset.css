@@ -1,0 +1,238 @@
+@media screen and (min-width: 240px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 10px;
+    }
+}
+
+@media screen and (min-width: 320px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 13px;
+    }
+}
+
+@media screen and (min-width: 374px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 15px;
+    }
+}
+
+@media screen and (min-width: 400px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 413px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 16.5px;
+    }
+}
+
+@media screen and (min-width: 426px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 17px;
+    }
+}
+
+@media screen and (min-width: 450px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 19px;
+    }
+}
+
+@media screen and (min-width: 480px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 19.5px;
+    }
+}
+
+@media screen and (min-width: 540px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 21.25px;
+    }
+}
+
+@media screen and (min-width: 590px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 23.13px;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 23.5px;
+    }
+}
+
+@media screen and (min-width: 640px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 25px;
+    }
+}
+
+@media screen and (min-width: 720px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 28px;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 31px;
+    }
+}
+/*  */
+*{
+    margin: 0;
+    padding: 0;
+}
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+    color: #333;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /*åŽ»æŽ‰ç‚¹å‡»aæ ‡ç­¾æ—¶çš„é˜´å½±*/
+}
+
+img {
+    border: none;
+    outline: none;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+html,
+body {
+    -webkit-touch-callout: none;
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+th,
+var,
+i,
+b {
+    font-style: normal;
+    font-weight: 500;
+}
+
+input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+/*html5æ ‡ç­¾*/
+
+header,
+footer,
+section,
+article,
+aside,
+nav,
+figure {
+    display: block;
+}
+
+body {
+    /*font-size: 100px;*/
+    -webkit-overflow-scrolling: touch;
+    background: #fff;
+}
+
+/*重新设置mui顶部栏的样式*/
+.mui-icon-back:before, .mui-icon-left-nav:before {
+    content: '\e471';
+    color: #fff;
+    font-size: 2.3rem;
+}
+
+.mui-bar .mui-icon {
+    padding-top: 1.7rem;
+}
+
+.mui-bar .mui-title {
+    top: 1.5rem;
+    color: #fff;
+}

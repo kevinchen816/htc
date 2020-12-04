@@ -12,6 +12,8 @@ use App\Models\Photo;
 use App\Models\Plan;
 use App\Models\Firmware;
 use App\Models\LogApi;
+use App\Models\Event;
+use App\Models\Trace;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -6515,6 +6517,132 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         // var_dump(Carbon::create(2012, 9, 5, 5)->between($first, $second, false)); // 第三个可选参数指定比较是否可以相等，默认为true
         // return var_dump($Carbon::now()->isFuture());
         // echo Carbon::now()->subDays(5)->diffForHumans(); // 5 days ago
+    }
+
+    public function bibi_test() {
+        // return 'BiBi OK';
+        return view("bibi.test");
+
+        // $html = 'bibi.test';
+        // if (Auth::check()) {
+        //     $user = Auth::user();
+        //     // $data['sel_menu'] = 'help';
+        //     // $user->update($data);
+        //     return view($html, compact('user'));
+        // } else {
+        //     return view($html);
+        // }
+    }
+
+    public function bibi_test2() {
+        // return 'BiBi OK';
+        return view("bibi.test2");
+    }
+
+    public function bibi_test3($uid, $eid) {
+        $ret = 'uid='.$uid.', eid='.$eid;
+        return $ret;
+        // return 'BiBi OK2';
+    }
+
+    public function startevent(Request $request) {
+        // return $request;
+
+        // $event_id = "89886920042531837826";
+        $event_id = $request->uid.time();
+
+        $event = new Event;
+        $event->user_id = $request->uid;
+        $event->event_id = $event_id;
+        $event->status = 1;
+        $event->save();
+
+        $trace = new Trace;
+        $trace->event_id = $event_id;
+        $trace->lat = $request->lat;
+        $trace->lng = $request->lng;
+        $trace->address = $request->addr;
+        $trace->save();
+
+        $ret['result'] = 0;
+        $ret['eid'] = $event_id;
+        // $ret['status'] = 1;
+
+        return $ret;
+    }
+
+    public function stopevent(Request $request) {
+        // return $request;
+        // $event = DB::table('events')->where('event_id', $request->eid)->first();
+        $event = Event::where('event_id', $request->eid)->first();
+        if ($event) {
+            $trace = new Trace;
+            $trace->event_id = $request->eid;
+            $trace->lat = $request->lat;
+            $trace->lng = $request->lng;
+            $trace->address = $request->addr;
+            $trace->save();
+
+            $event->status = 2;
+            $event->update();
+
+            $ret['result'] = 0;
+
+        } else {
+            $ret['result'] = -1;
+        }
+        return $ret;
+    }
+
+    public function uploadposition(Request $request) {
+        // return $request;
+        $trace = new Trace;
+        $trace->event_id = $request->eid;
+        $trace->lat = $request->lat;
+        $trace->lng = $request->lng;
+        $trace->address = $request->addr;
+        $trace->save();
+
+        $ret['result'] = 0;
+        return $ret;
+    }
+
+    public function downloadposition(Request $request) {
+        // $event = DB::table('events')->where('event_id', $request->eid)->first();
+        $event = Event::where('event_id', $request->eid)->first();
+        if ($event) {
+            if ($event->status == 1) {
+                // $traces = Trace::where('event_id', $request->eid)->get();
+                $traces = DB::table('traces')->where('event_id', $request->eid)->get();
+                foreach ($traces as $trace) {
+                    // $t_carbon = new Carbon($trace->created_at);
+                    // $time[] = $t_carbon->timestamp;
+                    $time[] = $trace->created_at; // DB::table('traces') 与 Trace:: 会不一样
+
+                    // $position[] = $t_carbon->timestamp.','.$trace->lat.','.$trace->lng;
+                    $position[] = $trace->lat.','.$trace->lng;
+
+                    $address[] = $trace->address;
+                    // $data[] = $trace;
+                }
+
+                $ret['result'] = 0;
+                $ret['status'] = 1;
+                $ret['sound'] = $event->sound;
+                $ret['time'] = $time;
+                $ret['position'] = $position;
+                $ret['address'] = $address;
+                // $ret['data'] = $data;
+            } else {
+                $ret['result'] = 0;
+                $ret['status'] = $event->status;
+            }
+
+        } else {
+            $ret['result'] = -1;
+        }
+
+        return $ret;
     }
 
 }
