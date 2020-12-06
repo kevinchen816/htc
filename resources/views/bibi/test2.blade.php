@@ -14,7 +14,9 @@
         /////////////////////////  正式服 /////////////////////////////////////
 
         //地图数据地址
-        const WEB_POSITION_URL='http://api.airuize.com:8777/Line/Show';
+        // const WEB_POSITION_URL='http://api.airuize.com:8777/Line/Show';
+        // const WEB_POSITION_URL='https://portal.eztoview.com/api/downloadposition';
+        const WEB_POSITION_URL='http://htc.test/api/downloadposition';
 
         //录音文件上传地址
         const WEB_AUDIO_URL='http://api.airuize.com:8777/uploadDownload/';
@@ -77,10 +79,15 @@
             // goCenter(lastLng, lastLat);
 
 
-            var urlParam = GetRequest();
+            // var urlParam = GetRequest();
+            var urlParam = {
+                "uid":12345,
+                "eid":"123451607073689"
+            };
             console.log(JSON.stringify(urlParam)); // {"sid":"54241","stag":"542411606465080"}
 
-            $.post(WEB_POSITION_URL, JSON.stringify(urlParam), function (data) {
+            // $.post(WEB_POSITION_URL, JSON.stringify(urlParam), function (data) {
+            $.post(WEB_POSITION_URL, urlParam, function (data) {
 
                 data = "{\"Code\":200, \"Data\":{\"AccountId\":54241, \"Status\":1, \"SoundFile\":\"1606465119-1606465080421.amr\", \"Tag\":\"542411606465080\", \"LineShareURL\":\"https://2i1i.cn/MYsu\", \"Point\":[\"120.6455130413344,24.171243848401744\", \"120.6455130413344,24.171243848401744\", \"120.6455130413344,24.171243848401744\"], \"RecordTime\":[\"2020-11-27T16:18:04.25690545+08:00\", \"2020-11-27T16:18:09.240894288+08:00\" ], \"MapName\":[\"台湾省台湾省靠近财团法人惠来里礼拜堂\", \"台湾省台湾省靠近财团法人惠来里礼拜堂\" ] }, \"Msg\":\"请求成功\", \"Path\":\"Line.Show\"}";
 
@@ -88,7 +95,7 @@
                 console.log(data);
                 console.log("B");
 
-                data = JSON.parse(data);
+                // data = JSON.parse(data);
                 console.log("C");
                 console.log(data.Code);
                 console.log("D");

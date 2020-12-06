@@ -7,14 +7,10 @@
     <title>BiBi 位置分享</title>
     <script>var _gaq = [['_setAccount', 'UA-20257902-1'], ['_trackPageview']]; (function (d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.async = 1; g.src = '//www.google-analytics.com/ga.js'; s.parentNode.insertBefore(g, s) }(document, 'script'))</script>
 
-    <!-- <script src="audio.min.js"></script> -->
     <script src="../js/bibi/audio.min.js"></script>
 
-    <!-- <link rel="stylesheet" href="./css/reset.css"> -->
-    <!-- <link rel="stylesheet" href="./css/index.css">     -->
     <link rel="stylesheet" href="/css/bibi/reset.css">
     <link rel="stylesheet" href="/css/bibi/index.css">
-
     <style>
         #map {
             position: fixed;
@@ -105,7 +101,6 @@
     <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
     <!-- <script src="http://api.html5media.info/1.1.8/html5media.min.js"></script> -->
 
-    <!-- <script src="./jquery-2.1.0.js"></script> -->
     <script src="../js/bibi/jquery-2.1.0.js"></script>
 
     <script>
@@ -117,17 +112,22 @@
         /////////////////////////  正式服 /////////////////////////////////////
 
         //地图数据地址
-        const WEB_POSITION_URL='http://api.airuize.com:8777/Line/Show';
+        // const WEB_POSITION_URL='http://api.airuize.com:8777/Line/Show';
+        const WEB_POSITION_URL='{{ route('home') }}/api/downloadposition';
 
         //录音文件上传地址
         const WEB_AUDIO_URL='http://api.airuize.com:8777/uploadDownload/';
+        // const WEB_AUDIO_URL='{{ route('home') }}/api/playaudio/';
         /////////////////////////////////////////////////////////////////////
 
         var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
         var map, geolocation, polyline;
-        var lastLng, lastLat;  //最后的坐标
+        // var lastLng, lastLat;  //最后的坐标
         var isDraged = false;  //是否拖拽
         var countdownTime = 0; //倒计时为0时自动居中定位
+
+        var lastLat = 24.171243848401744;
+        var lastLng = 120.6455130413344;
 
         //默认隐藏安全提示
         $(".map-box").hide();
@@ -138,13 +138,16 @@
         $(".back-center").click(function() {
             isDraged = false;
             // alert(lastLng+" | "+lastLat);
-            goCenter(lastLng, lastLat);
+            // goCenter(lastLng, lastLat);
+            goCenter(lastLat, lastLng);
+
         })
 
         map = new AMap.Map('map', {
             resizeEnable: true,
-            zoom: 16,
-            center: [113.879008, 22.568113]
+            zoom: 18, //16,
+            center: [lastLng, lastLat]
+            // center: [113.879008, 22.568113]
         });
 
         // map.on('mousemove', showInfoMove);
@@ -170,108 +173,42 @@
         }
 
         var urlParam = GetRequest();
-
-        $.post(WEB_POSITION_URL, JSON.stringify(urlParam), function (data) {
-
-data = "{\"Code\":200, \"Data\":{\"AccountId\":54241, \"Status\":1, \"SoundFile\":\"1606465119-1606465080421.amr\", \"Tag\":\"542411606465080\", \"LineShareURL\":\"https://2i1i.cn/MYsu\", \"Point\":[\"120.645923,24.170831\", \"120.645923,24.170831\", \"120.64575,24.170831\"], \"RecordTime\":[\"2020-11-27T16:18:04.25690545+08:00\", \"2020-11-27T16:18:09.240894288+08:00\" ], \"MapName\":[\"台湾省台湾省靠近财团法人惠来里礼拜堂\", \"台湾省台湾省靠近财团法人惠来里礼拜堂\" ] }, \"Msg\":\"请求成功\", \"Path\":\"Line.Show\"}";
-
-// var datax = "{\"Code\":200,\"Data\":{\"AccountId\":54241}}";
-console.log("A");
+        // $.post(WEB_POSITION_URL, JSON.stringify(urlParam), function (data) {
+        $.post(WEB_POSITION_URL, urlParam, function (data) {
+            // data = "{\"Code\":200, \"Data\":{\"AccountId\":54241, \"Status\":1, \"SoundFile\":\"1606465119-1606465080421.amr\", \"Tag\":\"542411606465080\", \"LineShareURL\":\"https://2i1i.cn/MYsu\", \"Point\":[\"120.6455130413344,24.171243848401744\", \"120.6455130413344,24.171243848401744\", \"120.6455130413344,24.171243848401744\"], \"RecordTime\":[\"2020-11-27T16:18:04.25690545+08:00\", \"2020-11-27T16:18:09.240894288+08:00\" ], \"MapName\":[\"台湾省台湾省靠近财团法人惠来里礼拜堂\", \"台湾省台湾省靠近财团法人惠来里礼拜堂\" ] }, \"Msg\":\"请求成功\", \"Path\":\"Line.Show\"}";
             console.log(data);
-console.log("B");
-            data = JSON.parse(data);
-console.log("C");
-console.log(data.Code);
-console.log("D");
 
-            if (data.Code == 200 && data.Data) {
+            // data = JSON.parse(data);
+            if (data.result == 0) {
 
-console.log("KK 1");
-
-                //分享结束
-                // if(data.Data.Status == 2){
-                //     //隐藏地图
-                //     $(".map-box").hide();
-                //     $(".save-content").show();
-                //     return;
-                // }else{
+                if (data.status == 2) { //分享结束
+                    console.log("隐藏地图 (1)");
+                    $(".map-box").hide();
+                    $(".save-content").show();
+                    return;
+                } else {
                     $(".map-box").show();
                     $(".save-content").hide();
-                // }
+                }
 
-                console.log(data);
-                console.log(data.Data.SoundFile);
-
-                if (data.Data.SoundFile && $(".player").css("display") == 'none') {
+                console.log(data.sound);
+                if (data.sound && $(".player").css("display") == 'none') {
                     $(".player").css({ "display": "block" });
-                    $(".player audio").attr("src", WEB_AUDIO_URL + data.Data.SoundFile + '.mp3');
+                    // $(".player audio").attr("src", WEB_AUDIO_URL + data.sound + '.mp3');
+                    $(".player audio").attr("src", 'http://api.airuize.com:8777/uploadDownload/1606465119-1606465080421.amr.mp3');
                     // $(".player audio").attr("src",'http://web-map.oss-cn-shenzhen.aliyuncs.com/test.mp3');
                 }
 
-                // map.setCenter(data.Data.Point[data.Data.Point.length - 1].split(','));
-                var lat = data.Data.Point[data.Data.Point.length - 1].split(',')[1];
-                var lng = data.Data.Point[data.Data.Point.length - 1].split(',')[0];
-                lastLng = lng;
-                lastLat = lat;
-                goCenter(lastLng, lastLat);
-
-                $(".address").text(data.Data.MapName[data.Data.MapName.length - 1]);
-                if (marker) {
-                    map.remove(marker)
-                }
-
-                marker = new AMap.Marker({
-                    position: new AMap.LngLat(lng, lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-                    buttonOffset: new AMap.Pixel(0, 0),
-                    icon: new AMap.Icon({
-                        size: new AMap.Size(35, 50), //图标大小
-                        imageSize: new AMap.Size(35, 50),
-                        image: "../images/person.png",
-                        imageOffset: new AMap.Pixel(0, 0)
-                    })
-                });
-
-                map.add(marker);
-            }
-        })
-
-/*
-        var interval = setInterval(function () {
-            $.post(WEB_POSITION_URL, JSON.stringify(urlParam), function (data) {
-                console.log(data);
-
-                data = JSON.parse(data);
-                if (data.Code == 200 && data.Data) {
-                    //分享结束
-                    if(data.Data.Status == 2){
-                         //隐藏地图
-                        $(".map-box").hide();
-                        $(".save-content").show();
-                        clearInterval(interval);
-                        return;
-                    }
-
-                    //
-                    console.log(data);
-
-                    if (data.Data.SoundFile && $(".player").css("display") == 'none') {
-                        $(".player").css({ "display": "block" });
-                        $(".player audio").attr("src", WEB_AUDIO_URL + data.Data.SoundFile + '.mp3');
-                        // $(".player audio").attr("src",'http://web-map.oss-cn-shenzhen.aliyuncs.com/test.mp3');
-                    }
-
-                    // map.setCenter(data.Data.Point[data.Data.Point.length - 1].split(','));
-                    var lat = data.Data.Point[data.Data.Point.length - 1].split(',')[1];
-                    var lng = data.Data.Point[data.Data.Point.length - 1].split(',')[0]
-                    lastLng = lng;
+                if (data.position) {
+                    var lat = data.position[data.position.length - 1].split(',')[0];
+                    var lng = data.position[data.position.length - 1].split(',')[1];
                     lastLat = lat;
-                    goCenter(lastLng, lastLat);
+                    lastLng = lng;
+                    goCenter(lastLat, lastLng);
 
                     if (marker) {
                         map.remove(marker)
                     }
-
-                    $(".address").text(data.Data.MapName[data.Data.MapName.length - 1]);
                     marker = new AMap.Marker({
                         position: new AMap.LngLat(lng, lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
                         buttonOffset: new AMap.Pixel(0, 0),
@@ -280,69 +217,136 @@ console.log("KK 1");
                             imageSize: new AMap.Size(35, 50),
                             image: "../images/person.png",
                             imageOffset: new AMap.Pixel(0, 0)
-                        }),
-
-                        offset: new AMap.Pixel(-17, -48)
+                        })
                     });
-
                     map.add(marker);
 
-                    //删除轨迹
-                    if(polyline){
-                        map.remove(polyline);
+                    $(".address").text(data.address[data.address.length - 1]);
+                }
+            }
+        })
+
+        /*----------------------------------------------------------------------------------*/
+        var test_flag = 0;
+
+        var interval = setInterval(function () {
+            console.log(".......refresh");
+
+            // if (test_flag == 1) {
+            //     clearInterval(interval);
+            //     return;
+            // } else {
+            //     test_flag = 1;
+            // }
+
+            // $.post(WEB_POSITION_URL, JSON.stringify(urlParam), function (data) {
+            $.post(WEB_POSITION_URL, urlParam, function (data) {
+                // data = "{\"Code\":200, \"Data\":{\"AccountId\":54241, \"Status\":1, \"SoundFile\":\"1606465119-1606465080421.amr\", \"Tag\":\"542411606465080\", \"LineShareURL\":\"https://2i1i.cn/MYsu\", \"Point\":[\"120.6455130413344,24.171243848401744\", \"120.6455130413344,24.171243848401744\", \"120.6455130413344,24.171243848401744\"], \"RecordTime\":[\"2020-11-27T16:18:04.25690545+08:00\", \"2020-11-27T16:18:09.240894288+08:00\" ], \"MapName\":[\"台湾省台湾省靠近财团法人惠来里礼拜堂\", \"台湾省台湾省靠近财团法人惠来里礼拜堂\" ] }, \"Msg\":\"请求成功\", \"Path\":\"Line.Show\"}";
+                console.log(data);
+
+                // data = JSON.parse(data);
+                if (data.result == 0) {
+
+                    if (data.status == 2) { // 分享结束
+                        console.log("隐藏地图 (2)");
+                        clearInterval(interval);
+                        $(".map-box").hide();
+                        $(".save-content").show();
+                        return;
                     }
 
-                    //绘制轨迹
-                    polyline = new AMap.Polyline({
-                        map: map,
-                        path: getPolylineDatas(data),
-                        showDir:true,
-                        strokeColor: "#28F",  //线颜色
-//                          strokeOpacity: 1,     //线透明度
-                        strokeWeight: 6,      //线宽
-                        // strokeStyle: "solid"  //线样式
-                    });
+                    if (data.sound && $(".player").css("display") == 'none') {
+                        $(".player").css({ "display": "block" });
+                        // $(".player audio").attr("src", WEB_AUDIO_URL + data.sound + '.mp3');
+                        $(".player audio").attr("src", 'http://api.airuize.com:8777/uploadDownload/1606465119-1606465080421.amr.mp3');
+                        // $(".player audio").attr("src",'http://web-map.oss-cn-shenzhen.aliyuncs.com/test.mp3');
+                    }
 
-                    function getPolylineDatas(_data){
-                        var resArr = [];
-                        for(var i=0, len=_data.Data.Point.length; i<len; i++){
-                            var d = _data.Data.Point[i].split(',');
-                            if(d[0]==undefined){
-                                alert(_data.Data.Point[i]);
-                            }else if(d[0]==NaN){
-                                alert(_data.Data.Point[i]);
-                            }
+                    if (data.position) {
+                        var lat = data.position[data.position.length - 1].split(',')[0];
+                        var lng = data.position[data.position.length - 1].split(',')[1];
+                        lastLat = lat;
+                        lastLng = lng;
+                        goCenter(lastLat, lastLng);
 
-                            if(d[0]!="undefined" && d[1]!="undefined" && d[0]!=NaN && d[1]!=NaN && d[0]!=0 && d[1]!=0){
-                                resArr.push([d[0], d[1]]);
-                            }
+                        if (marker) {
+                            map.remove(marker)
+                        }
+                        marker = new AMap.Marker({
+                            position: new AMap.LngLat(lng, lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+                            buttonOffset: new AMap.Pixel(0, 0),
+                            icon: new AMap.Icon({
+                                size: new AMap.Size(35, 50), //图标大小
+                                imageSize: new AMap.Size(35, 50),
+                                image: "../images/person.png",
+                                imageOffset: new AMap.Pixel(0, 0)
+                            }),
+
+                            offset: new AMap.Pixel(-17, -48)
+                        });
+                        map.add(marker);
+
+                        $(".address").text(data.address[data.address.length - 1]);
+
+                        //删除轨迹
+                        if (polyline) {
+                            map.remove(polyline);
                         }
 
-                        console.log(resArr)
-                        return resArr;
+                        //绘制轨迹
+                        polyline = new AMap.Polyline({
+                            map: map,
+                            path: getPolylineDatas(data),
+                            showDir:true,
+                            strokeColor: "#28F",  //线颜色
+                            // strokeOpacity: 1,     //线透明度
+                            strokeWeight: 6,      //线宽
+                            // strokeStyle: "solid"  //线样式
+                        });
+
+                        function getPolylineDatas(_data) {
+                            var resArr = [];
+                            for(var i=0, len=_data.position.length; i<len; i++){
+                                var d = _data.position[i].split(',');
+                                if (d[0]==undefined) {
+                                    alert(_data.position[i]);
+                                } else if (d[0]==NaN) {
+                                    alert(_data.position[i]);
+                                }
+
+                                if(d[0]!="undefined" && d[1]!="undefined" && d[0]!=NaN && d[1]!=NaN && d[0]!=0 && d[1]!=0){
+                                    resArr.push([d[1], d[0]]);
+                                }
+                            }
+                            // console.log(resArr)
+                            return resArr;
+                        }
                     }
                 }
 
             })
 
         }, 5000)
-*/
 
         //居中
-        function goCenter(lng, lat){
+        // function goCenter(lng, lat){
+        function goCenter(lat, lng) {
+            console.log(">>goCenter()");
+            console.log('lat='+lat);
+            console.log('lng='+lng);
+
             if(isDraged){
                 return;
             }
 
-            //
-            if(map){
+            if (map) {
                 map.setCenter([lng, lat]);
             }
         }
 
         //鼠标移动事件
         function showInfoDragend(){
-            if(map){
+            if (map) {
                 var center = map.getCenter(); //获取当前地图中心位置
                 // alert(center);
                 isDraged = true;

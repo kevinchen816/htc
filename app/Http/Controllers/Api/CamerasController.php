@@ -6545,6 +6545,20 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
         // return 'BiBi OK2';
     }
 
+    public function bibi_trace() {
+        return view("bibi.trace");
+    }
+
+    public function bibi_tracea() {
+        return view("bibi.trace_amap");
+    }
+
+    public function bibi_traceb() {
+        // return view("bibi.trace_baidu");
+        return view("bibi.trace_bmap");
+        // return view("bibi.xx_baidu");
+    }
+
     public function startevent(Request $request) {
         // return $request;
 
@@ -6640,6 +6654,8 @@ return $carbon->addMonth(1)->timestamp; // 1547781050
 
         } else {
             $ret['result'] = -1;
+            $ret["uid"] = $request->uid;
+            $ret["eid"] = $request->eid;
         }
 
         return $ret;

@@ -19,7 +19,7 @@ class CreateTracesTable extends Migration
             $table->string('event_id')->index();
             $table->string('lat');
             $table->string('lng');
-            $table->string('address');
+            $table->string('address')->nullable();
 
             /*
                 timestamp 的 2038 年问题 :
