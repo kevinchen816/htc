@@ -1,5 +1,14 @@
 <?php
 
+问题：使用 uploadthumb 上传照片到 S3，会出现 以下错误讯息，
+    Error executing "PutObject" on "https://s3.amazonaws.com/gps-photo.org/mykey.txt"; AWS HTTP error: Client error: PUT https://s3.amazonaws.com/gps-photo.org/mykey.txt resulted in a 403 Forbidden response:
+
+    这个问题也会导致在 portal 上存取 S3 照片失败：
+
+解决：重新在 IAM 建立一个新用户（例如 extoview），取得新的 “存取金鑰 ID” 及 “私密存取金鑰”，
+然后在 .env 文件里修改使用新的存取金鑰。（参考如下 AWS访问密钥 第一步）
+
+//-------------------------------------------------------------------------
 AWS访问密钥（Access Key）
 https://www.cloudbility.com/help/aws/access-key.html
 

@@ -1,27 +1,32 @@
+<?php
 Laravel 5.5 Redis 队列基本使用指南
 https://blog.csdn.net/maxsky/article/details/83381853
 
+# 刪除 queue
+            $ redis-cli
+            127.0.0.1:6379> flushall
 
 /*-------------------------------------------------------------------------------*/
 6.9. 使用队列
 https://learnku.com/courses/laravel-intermediate-training/7.x/using-queues/9042
 
 1. 配置队列
-    队列的配置信息储存于 config/queue.php 文件中，在这个文件中你会发现框架所支持的队列驱动的配置连接示例。
+    # 队列的配置信息储存于 config/queue.php 文件中，在这个文件中你会发现框架所支持的队列驱动的配置连接示例。
 
-    本项目中，我们将使用 Redis 来作为我们的队列驱动器，先使用 Composer 安装依赖：
+    # 本项目中，我们将使用 Redis 来作为我们的队列驱动器，先使用 Composer 安装依赖：
         $ composer require "predis/predis:~1.1"     《-- v5.5.45 不确定是否需要
+        $ composer require "predis/predis"          《-- v5.5.45 不确定是否需要
 
         如果安装出现 -》PHP Fatal error:  Allowed memory size of 1610612736 bytes exhausted
         $ COMPOSER_MEMORY_LIMIT=-1 composer require "predis/predis:~1.1"
 
-    修改环境变量 QUEUE_CONNECTION 的值为 redis，并指定我们将使用 predis 作为请求 Redis 的类库：
+    # 修改环境变量 QUEUE_CONNECTION 的值为 redis，并指定我们将使用 predis 作为请求 Redis 的类库：
         .env
             QUEUE_DRIVER=redis          《-- sync 修改为 redis
             #QUEUE_CONNECTION=redis     《-- v5.5.45 不确定是否需要
             #REDIS_CLIENT=predis        《-- v5.5.45 不确定是否需要
 
-    失败任务#
+    # 失败任务#
         - 有时候队列中的任务会失败。
         - Laravel 内置了一个方便的方式来指定任务重试的最大次数。
           当任务超出这个重试次数后，它就会被插入到 failed_jobs 数据表里面。
@@ -29,33 +34,43 @@ https://learnku.com/courses/laravel-intermediate-training/7.x/using-queues/9042
           打开 database/migrations/2019_08_19_000000_create_failed_jobs_table.php 文件，
 
 2. 生成任务类
-    使用以下 Artisan 命令来生成一个新的队列任务：
+    # 使用以下 Artisan 命令来生成一个新的队列任务：
         $ php artisan make:job FileDelete
 
-    该命令会在 app/Jobs 目录下生成一个新的类：
+    # 该命令会在 app/Jobs 目录下生成一个新的类：
         app/Jobs/FileDelete.php
 
 3. 任务分发
-    接下来我们要修改 Topic 模型监控器，将 Slug 翻译的调用修改为队列执行的方式：
+    # 接下来我们要修改 Topic 模型监控器，将 Slug 翻译的调用修改为队列执行的方式：
         dispatch(new FileDelete($year, $month, $day, $limit));
 
 4. 开始测试
-    开始之前，我们需要在命令行启动队列系统，队列在启动完成后会进入监听状态：
-        $ php artisan queue:listen
+    # 开始之前，我们需要在命令行启动队列系统，队列在启动完成后会进入监听状态：
+        $ php artisan queue:listen --timeout=0
+        $ php artisan queue:listen --timeout=0 --tries=1
 
-        问题：The process "'/usr/bin/php7.2' 'artisan' queue:work '' --once --queue='default' --delay=0 -
-          -memory=128 --sleep=3 --tries=0" exceeded the timeout of 60 seconds.
-        参考：https://stackoverflow.com/questions/25877752/laravel-queue-process-timeout-error
+        # --timeout=0 《-- 解决 exceeded the timeout of 60 seconds
+        # 参考：https://stackoverflow.com/questions/25877752/laravel-queue-process-timeout-error
 
-            $ php artisan queue:listen --timeout=0
+** 以上步骤即可进行 “队列” 功能
 
-        补充：
+        # 补充：
             $ php artisan queue:restart
 
             $ php artisan queue:work --daemon --quiet --queue=default --delay=3 --sleep=3 --tries=3
             $ php artisan queue:work --daemon --queue=default --delay=3 --sleep=3 --tries=3
 
-** 以上步骤即可进行 “队列” 功能
+            --quiet     # 不输出任何内容
+
+            --delay=3   # 一个任务失败后，延迟多长时间后再重试，单位是秒。
+                        # 这个值的设定我个人建议不要太短，因为一个任务失败（比如网络原因），
+                        # 重试时间太短可能会出现连续失败的情况。
+
+            --sleep=3   # 去 Redis 中拿任务的时候，发现没有任务，休息多长时间，单位是秒。
+                        # 这个值的设定要看你的任务是否紧急，如果是那种非常紧急的任务，不能等待太长时间。
+
+            --tries=3   # 定义失败任务最多重试次数。
+                        # 这个值的设定根据任务的重要程度来确定，一般 3 次比较适合。
 
 5. 队列监控 Horizon     《-- Laravel v5.5.45 可能不支持
     https://learnku.com/docs/laravel/5.5/horizon/1345

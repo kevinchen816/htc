@@ -1,0 +1,284 @@
+<?php
+/*------------------------------------------------------------------------------*/
+/*                                                                              */
+/*------------------------------------------------------------------------------*/
+【 Laravel 开发环境搭建 - MacOS 】
+# https://learnku.com/docs/laravel-development-environment/8.x/development-environment-macos/9877
+
+** 系统要求
+    苹果 Mac OS X Yosemite 及以上
+
+** 步骤简略
+1. 安装 VirtualBox (目前已安装 v6.0.10)
+    # https://www.virtualbox.org/
+    # https://pan.baidu.com/s/14QQ85KKCU6R6_QRbaq18Qg 提取码: sp35
+
+2. 安装 Vagrant (管理虚拟机的工具)
+    # https://www.vagrantup.com/
+    # https://pan.baidu.com/s/14QQ85KKCU6R6_QRbaq18Qg 提取码: sp35
+
+3. 安装 Git
+    $ xcode-select --install
+    $ git --version
+    # git version 2.25.0 (注：不需要担心你的版本与我不同)
+
+4. 下载/导入 Homestead Box 虚拟机盒子
+    # https://pan.baidu.com/s/1RerTgei3pZPAi18ahqCXbQ 提取码: rn9g
+    # 解压缩 lc-homestead-8.2.1-2019112300.zip (注意：请必须解压到 非中文路径)
+    #    virtualbox.box（教程定制化过的 Homestead 盒子）
+    #    metadata.json（盒子的导入配置文件）
+    ** 在解压目录中 lc-homestead-8.2.1-2019112300 运行以下命令导入 Box：
+        $ vagrant box add metadata.json
+        // Composer 加速，配置了 Composer 中国全量镜像 支持；
+        // 默认集成 Heroku 工具；
+        // 默认集成 Yarn，并为 Yarn 加了淘宝镜像的加速；
+        // 使用 CNPM 对 NPM 进行加速。
+
+    ** 或安装最新版本
+        $ vagrant box add laravel/homestead                         // 或安装最新版本
+        $ vagrant box add laravel/homestead --box-version=0.3.3     // 或安装指定版本
+
+        # $ vagrant box list    // 列出安裝的版本
+        # lc/homestead (virtualbox, 6.1.0)
+        # lc/homestead (virtualbox, 8.2.1)
+
+5. 下载 Homestead 管理脚本
+    $ cd ~
+    $ git clone https://gitee.com/summerblue/homestead.git Homestead.xxx // xxx 可以是版本號（以便安裝多個版本）
+ or $ git clone https://github.com/laravel/homestead.git ~/Homestead.xxx // 或安装原始的管理脚本
+
+    $ cd ~/Homestead.xxx
+    $ git checkout {{homestead_version}}    // git checkout v7.8.0
+        # 注：为了保证后续讲解的流畅性，请注意版本的一致性，这里我们使用 v7.8.0。
+
+    $ bash init.sh
+        # 运行以上命令后，会在 ~/Homestead 目录下生成以下三个文件：
+        #
+        # Homestead.yaml - 主要配置信息文件，我们可以在此文件中配置 Homestead 的站点和数据库等信息；
+        # after.sh - 每一次 Homestead 盒子重置后（provision）会调用的 shell 脚本文件；
+        # aliases - 每一次 Homestead 盒子重置后（provision），会被替换至虚拟机的 ~/.bash_aliases 文件中，aliases 里可以放一些快捷命令的定义。
+
+6. 配置 Homestead.yaml 文件 （参考后面补充说明）
+    # 增加以下內容 (安裝多版本的 Homestead)
+    name: homestead-8.2.1
+    box: lc/homestead
+    version: 8.2.1
+
+7. 启动 Homestead 虚拟机
+    $ cd ~/Homestead
+    $ vagrant up    // 第一次启动时，会新建一台虚拟机后启动
+    $ vagrant ssh   // 登录 Homestead 虚拟机
+
+    # $ vagrant halt                // 关闭 Homestead
+    # $ vagrant reload --provision  // 修改 Homestead.yaml，重启虚拟机
+
+8. 开启 NFS 挂载模式
+    # 使用 Homestead 开发时经常遇到站点龟速响应的问题，解决方案请见：
+    # Wiki：Laravel Homestead：开启 NFS 解决站点响应缓慢
+
+    # Mac 用户默认支持 NFS 挂载
+
+/*----------------------------------------------------------------------------*/
+/* 6. 配置 Homestead.yaml 文件                                                  */
+/*----------------------------------------------------------------------------*/
+Homestead.yaml 里的配置大致可以分为以下几种：
+    * 虚拟机设置；
+        ip: "192.168.10.10"
+        memory: 2048    《-- 可修改为 4096
+        cpus: 1
+        provider: virtualbox
+
+        # 增加以下內容 (安裝多版本的 Homestead)
+        name: homestead-8.2.1
+        box: lc/homestead
+        version: 8.2.1
+
+    * SSH 秘钥登录配置；
+        authorize: ~/.ssh/id_rsa.pub
+        # 虚拟机初始化时，此文件里的内容会被复制存储到虚拟机的 /home/vagrant/.ssh/authorized_keys 文件中，
+        # 从而实现 SSH 免密码登录。在这里我们默认填写即可。
+
+        keys:
+            - ~/.ssh/id_rsa         // SSH 私钥 (Private Key)
+            - ~/.ssh/id_rsa.pub     // SSH 公钥 (Public Key) 《-- 需增加
+        # 虚拟机初始化时，会将此处填写的所有 SSH 私钥文件复制到虚拟机的 /home/vagrant/.ssh/ 文件夹中
+        # 从而使虚拟机能共享主机上的 SSH 私钥文件，使虚拟机具备等同于主机的身份认证。
+        # 此功能为 SSH 授权提供了便利，例如在后面章节中，我们只需要在 GitHub 上配置一个 SSH 公钥，可实现 GitHub 对虚拟机和主机共同认证。
+
+        ** 补充
+        # 如果 ~/.ssh 存在 id_rsa 和 id_rsa.pub 的话，请跳过以下生成 SSH 的步骤继续阅读剩下内容。
+        # 否则使用以下方法来生成 SSH Key，请将 your_email@example.com 替换为你的邮箱：
+        # 全部按 Enter，不需要设置 SSH Key 密码（默认为 empty passphrase）
+            $ ssh-keygen -t rsa -C "your_email@example.com"
+
+    * 共享文件夹配置；
+        folders:
+            - map: ~/Code   《-- 修改为 Code 目录 （原 code）
+              to: /home/vagrant/Code
+              type: "nfs"   《-- 选项：开启 NFS 解决站点响应缓慢 （参考一下说明 8.)
+
+    * 站点配置；
+        sites:
+            - map: homestead.test
+              to: /home/vagrant/Code/sample/public
+            - map: htc.test
+              to: /home/vagrant/Code/htc/public
+            - map: caperplus.test
+              to: /home/vagrant/Code/caperplus/public
+
+        # 另外，主机里直接访问虚拟机站点，必须通过绑定 hosts 来实现。
+              $ subl /etc/hosts
+                192.168.10.10   sample.test
+                192.168.10.10   htc.test
+                192.168.10.10   caperplus.test
+
+    * 数据库配置；
+        databases:
+            - homestead
+            - larabbs
+            - sample
+            - htc
+            - caperplus
+
+    * 自定义变量；
+        variables:
+            - key: APP_ENV
+              value: local
+
+$ vagrant package                   // 將目前使用的環境匯出成系統影像檔(box)
+$ vagrant global-status --prune     // 清除設定的快取資料
+
+/*------------------------------------------------------------------------------*/
+/*                                                                              */
+/*------------------------------------------------------------------------------*/
+[ Laravel Homestead：多版本的 Homestead ]
+# https://learnku.com/laravel/wikis/25549
+
+[ Laravel Homestead：下载虚拟机盒子及安装 ]
+# https://learnku.com/laravel/wikis/25528
+
+[ Laravel Homestead：升级 Homestead ]
+#https://learnku.com/laravel/wikis/25548
+#https://learnku.com/docs/laravel-development-environment/8.x/upgrade-homestead-box/9880
+
+[ Laravel Homestead：删除 Homestead ]
+#https://learnku.com/laravel/wikis/25547
+
+    # 注意：删除操作不可逆，所有虚拟机里信息将会被永久删除，请注意做好备份。
+    # 如果有需要，请备份 Homestead 里的数据库。
+
+    # 删除虚拟机
+    $ cd ~/Homestead.821
+    $ vagrant global-status         // 先找出目前的 box 有那些
+    $ vagrant destroy bbeb066       // 在依據其 id 來刪除，此例中，id 為 bbeb066
+
+    // 補充
+    // id       name            provider   state    directory
+    // ---------------------------------------------------------------------------------
+    // bbeb066  homestead-8.2.1 virtualbox poweroff /Users/kevin/Homestead.821
+
+    # 删除旧盒子
+    $ vagrant box list
+    lc/homestead (virtualbox, 6.1.0)
+    lc/homestead (virtualbox, 8.2.1)
+
+    $ vagrant box remove lc/homestead
+    $ vagrant box remove lc/homestead --box-version x.x.x
+
+[ Laravel Homestead：开启 NFS 解决站点响应缓慢 ]
+# https://learnku.com/laravel/wikis/25550
+
+
+/*------------------------------------------------------------------------------*/
+/*                                                                              */
+/*------------------------------------------------------------------------------*/
+** 不使用 Homestead 虚拟机环境
+https://ithelp.ithome.com.tw/articles/10237873
+
+網頁伺服器：Nginx
+    由於是使用 Linux 開發，因此安裝只要下指令就可以了。
+
+    $ sudo apt update
+    $ sudo apt install nginx
+    $ sudo service nginx start
+
+MySQL 資料庫
+    MariaDB 是 MySQL 被 Oracle 收購後，原作者另外開源的資料庫系統專案，
+    在一般使用上沒有甚麼差異，因此可以照你們想要的資料庫進行安裝。
+
+    $ sudo apt-get install mariadb-server mariadb-client
+    $ sudo service mysql start
+
+    $ sudo mysql_secure_installation      // 資料庫安全設定
+
+        安装完 mysql-server 会提示可以运行 mysql_secure_installation。
+        运行mysql_secure_installation 会执行几个设置：
+        -- 为 root 用户设置密码
+        -- 删除匿名账号
+        -- 取消 root 用户远程登录
+        -- 删除 test 库和对 test 库的访问权限
+        -- 刷新授权表使修改生效
+
+    $ sudo mysql
+    # 或是
+    $ sudo mysql -u root -p{你設定的密碼}
+
+    # 建立資料庫
+    mysql> CREATE DATABASE laravel;
+    # 建立使用者帳號
+    mysql> CREATE USER `user`@`localhost` IDENTIFIED BY 'your_password';
+    # 設定權限
+    mysql> GRANT ALL ON laravel.* TO `user`@`localhost`;
+    # 讓設定生效
+    mysql> FLUSH PRIVILEGES;
+
+    $ sudo service mysql start    // 啟用資料庫
+
+
+PHP 環境
+    PHP 目前最新版本是 7.4，這個月 Laravel 也將版本更新到了 8，
+    建議要用 Laravel 8 開發的人，請一併將 PHP 版本升級到 7.3 以上喔！
+
+    安裝 PHP 需要的套件以及套件管理工具 composer。
+    $ sudo apt install php php-cli php-fpm php-mysql php-zip php-gd php-mbstring php-xml php-pear php-curl php-bcmath php-json php-pdo
+        php-mcrypt 《-- 不确定是否一定需要安装
+    $ sudo apt install composer
+
+    啟用 PHP-fpm
+    sudo service php7.4-fpm start
+
+
+新增 Laravel 專案
+    接下來就可以新增你的第一個 Laravel 專案囉！
+    我們用 composer 將最新的 Laravel 版本下載下來。
+
+    $ sudo composer create-project --prefer-dist laravel/laravel [Project-name]
+
+        $ sudo composer create-project --prefer-dist laravel/laravel laravel
+        Do not run Composer as root/super user! See https://getcomposer.org/root for details
+        Continue as root/super user [yes]? yes
+        Creating a "laravel/laravel" project at "./laravel"
+        Installing laravel/laravel (v8.5.5)
+          - Downloading laravel/laravel (v8.5.5)
+          - Installing laravel/laravel (v8.5.5): Extracting archive
+
+        $ ./artisan --version
+        Laravel Framework 8.18.1
+
+    $ cd [Project-name]
+
+    # 安裝 Laravel 必要的一些套件
+    $ composer install
+
+    簡單運行 Laravel 吧！
+    $ php artisan serve
+
+    就會看到網頁被開在 8000 port
+
+    由於上面這個指令是使用 PHP 內建的 service 啟用的簡單伺服器，因此在開發上容易遇到一些問題，
+    例如純做後端 API 時，前端要用內網連進來會有 CORS 的問題，此外也不建議使用在 public network 上。
+    若是之後有架站需求，建議還是使用正規的方式啟用網頁伺服器，剛剛安裝完的 nginx 就有用處了，
+    因此在明天我會寫一篇 nginx 的簡單設定，讓大家能夠無痛開啟網頁伺服器！
+
+
+/*-------------------------------------------------------------------------------*/

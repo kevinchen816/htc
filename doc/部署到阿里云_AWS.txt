@@ -9,6 +9,14 @@ password: Kevin816
 user: kevin
 password: kevin816
 
+/dev/root        39G  1.6G   38G   5% /
+$ sudo apt-get update
+/dev/root        39G  1.8G   37G   5% /
+php
+/dev/root        39G  1.9G   37G   5% /
+nginx
+/dev/root        39G  1.9G   37G   5% /
+
 //---------------------------------------------------------------------------------
 [ 参考 ]
 Laravel 部署到阿里云 / 腾讯云
@@ -41,6 +49,9 @@ https://www.jianshu.com/p/fb037caf4fff
         - Amazon Linux 2 AMI (HVM), SSD Volume Type - ami-0d7ed3ddb85b521a6   64 位 (x86)
         - Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type - ami-00a5245b4816c38e6   64 位 (x86)
 
+        // Google
+        ** Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-1029-gcp x86_64)
+
     澳大利亚使用:
         Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-1031-aws x86_64)
     日本使用:
@@ -63,65 +74,154 @@ https://www.jianshu.com/p/fb037caf4fff
 	$ sudo apt-get update  // 访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。
 
 [ 安装语言包]
-	$ sudo apt-get install -y language-pack-en-base
+    # 为了解决系统不同语言之间可能发生的冲突，安装之后可以减少许多因语言编码带来的问题。
+	$ sudo apt-get install -y language-pack-en-base    // -y 参数的意思是直接安装无需确认
 
-	$ sudo locale-gen en_US.UTF-8   // 生成需要的 locale 文件,
-                                    // 设定语言编码为 UTF-8 (/etc/default/locale)
-
-    为了解决系统不同语言之间可能发生的冲突，安装之后可以减少许多因语言编码带来的问题。
-    (-y 参数的意思是直接安装无需确认)
+    # 生成需要的 locale 文件,
+    # 设定语言编码为 UTF-8 (/etc/default/locale)，内容为 LANG=C.UTF-8
+    $ sudo locale-gen en_US.UTF-8
+    Generating locales (this might take a while)...
+    en_US.UTF-8... done
+    Generation complete.
 
 [ 安装常用软件 ]
 	$ sudo apt-get install -y vim git zip unzip
 
-    补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
+    # 补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
+/*                                                                                  */
+/*----------------------------------------------------------------------------------*/
 [ 安装 PHP7 ]
 	请确保每一步没有出错，如果有报错，可尝试多安装几次
 
-    采用 ppa 方式安装 php7.1
-    (PPA 是 personal package archive 的缩写，即个人包档案。
-     使用 PPA，软件制作者可以轻松地发布软件，并且能够准确地对用户进行升级。
-     Ubuntu 用户使用 PPA 源将更加方便的获得软件的最新版本。）
+    # 参考：Ubuntu如何安装php7.2、php7.3、php7.4？（方法详解）
+    # https://m.php.cn/article/455811.html
 
+    # 参考：如何在 Ubuntu上 新增與刪除 PPA 儲存庫
+    # https://peterli.website/%E5%A6%82%E4%BD%95%E5%9C%A8ubuntu%E4%B8%8A%E6%96%B0%E5%A2%9E%E8%88%87%E5%88%AA%E9%99%A4ppa%E5%84%B2%E5%AD%98%E5%BA%AB/
+
+    # 更新软件列表
+    # 这个命令，会访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。
+    # 软件包管理器里看到的软件列表，都是通过 update 命令更新的。
+    $ sudo apt-get update
+    # update后，可能需要upgrade一下。
+
+    # 更新软件
+    # 这个命令，会把本地已安装的软件，与刚下载的软件列表里对应软件进行对比，
+    # 如果发现已安装的软件版本太低，就会提示你更新。
+    # 如果你的软件都是最新版本，会提示：
+    $ sudo apt-get upgrade
+
+    # 添加 PHP 存储库 （采用 ppa 方式安装 php）
+    # 要安装PHP 7.4，需要使用第三方存储库。我们将使用以前再次使用的 ondrej/php 的存储库。
+    #
+    # PPA 是 personal package archive 的缩写，即个人包档案。
+    # 使用 PPA，软件制作者可以轻松地发布软件，并且能够准确地对用户进行升级。
+    # Ubuntu 用户使用 PPA 源将更加方便的获得软件的最新版本。
 	$ sudo apt-get install -y software-properties-common
-    (说明：software-properties-common 是 add-apt-repository 所依赖的包)
+    # 说明：software-properties-common 是 add-apt-repository 所依赖的包
 
+    # 使用下列的指令來匯入一個指定的私人 APT 儲存庫，下面以 ondrej/php 為例：
     $ sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
-    (说明：添加 php7 的 ppa，注意 LC_ALL=en_US.UTF-8 参数告诉我们系统语言为 UTF-8，
-     如果没有，可能会出现错误，如阿里云的服务器。)
+    # 说明：添加 php7 的 ppa，注意 LC_ALL=en_US.UTF-8 参数告诉我们系统语言为 UTF-8，
+    # 如果没有，可能会出现错误，如阿里云的服务器。
 
-	$ sudo apt-get update              // 把刚才添加的包拉取下来
-	$ apt-cache search php7.1          // 搜索php7.1开头的包检验是否安装成功
+	$ sudo apt-get update                   // 更新安装包，把刚才添加的包拉取下来
 
+【 安装 php7.4 】
+    $ sudo apt-get install -y php7.4
+    $ php -v                                // 确认是否安装成功 (或 --version)
+    PHP 7.4.15 (cli) (built: Feb 23 2021 15:12:26) ( NTS )
+    Copyright (c) The PHP Group
+    Zend Engine v3.4.0, Copyright (c) Zend Technologies
+        with Zend OPcache v7.4.15, Copyright (c), by Zend Technologies
+
+    # 安装PHP 7.4模块
+    # 根据你的应用程序，你可能需要其他软件包和模块。可以使用以下命令安装最常用的模块：
+    $ sudo apt-get install -y php7.4-mysql  // 这是 php 与 mysql 的通信模块
+    $ sudo apt-get install -y php7.4-fpm    // 这是 Nginx 用来解析 php 文件的
+    $ sudo apt-get install -y php7.4-json php7.4-xml
+    $ sudo apt-get install -y php7.4-curl php7.4-dev php7.4-gd php7.4-mbstring php7.4-zip
+    $ sudo apt-get install -y php-pear php-mcrypt php-bcmath
+    # php-pdo
+
+    **【更新补充 php7.4 】
+        # PHP 目前最新版本是 7.4，這個月 Laravel 也將版本更新到了 8，
+        # 建議要用 Laravel 8 開發的人，請一併將 PHP 版本升級到 7.3 以上喔！
+
+        # 安裝 PHP 需要的套件以及套件管理工具 composer。
+        $ sudo apt install php-bcmath php-pdo
+
+            php-mcrypt 《-- 不确定是否一定需要安装
+
+        # 啟用 PHP-fpm
+        $ sudo service php7.4-fpm start
+
+【 安装 php7.1 】
+	$ apt-cache search php7.1               // 搜索php7.1开头的包检验是否安装成功
     $ sudo apt-get install -y php7.1        // 安装 php7.1，安装成功后运行 php -v 查看是否安装成功
 	$ sudo apt-get install -y php7.1-mysql  // 这是 php7.1 与 mysql 的通信模块
 	$ sudo apt-get install -y php7.1-fpm    // 这是 Nginx 用来解析 php 文件的
 	$ sudo apt-get install -y php7.1-curl php7.1-xml php7.1-mcrypt php7.1-json php7.1-gd php7.1-mbstring
-    （上面为安装其他必备模块）
+    # 上面为安装其他必备模块
 
-    $ php --version                     // 确认是否安装成功
+    $ php -v                                // 确认是否安装成功 (或 --version)
     PHP 7.1.26-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Jan 11 2019 14:13:49) ( NTS )
  or PHP 7.1.27-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Mar  7 2019 20:02:25) ( NTS )
 
+/*----------------------------------------------------------------------------------*/
 [ 安装 Mysql ]
 
 	$ sudo apt-get install -y mysql-server
+    $ mysql --version
+        mysql  Ver 8.0.22-0ubuntu0.20.04.3 for Linux on x86_64 ((Ubuntu))
+        mysql  Ver 8.0.23-0ubuntu0.20.04.1 for Linux on x86_64 ((Ubuntu))
 
-    ** 创建新用户 **
+    # ** 创建新用户 **
     $ sudo mysql
-    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'kevin816';
+    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'your_password';
+    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'Tenware@2008';
     // 参考 https://www.cnblogs.com/xujishou/p/6306765.html
 
-    ** 创建数据库 **
+    # ** 创建数据库 **
     $ sudo mysql
     mysql> CREATE DATABASE sample;  // 数据库名称=sample
     mysql> GRANT all privileges ON sample.* TO 'kevin'@'%';
+    # 或
+    mysql> CREATE DATABASE htc;  // 数据库名称=htc
+    mysql> GRANT all privileges ON htc.* TO 'kevin'@'%';
+    # 或
+    mysql> CREATE DATABASE xble;    // 数据库名称=xble
+    mysql> GRANT all privileges ON xble.* TO 'kevin'@'%';
+
     mysql> FLUSH PRIVILEGES;
     mysql> exit
     // 名字应该和 .env 文件中对应的数据库一致，如 DB_DATABASE=sample
     // Laravel 5.4 默认使用 utf8mb4 字符编码，而不是之前的 utf8 编码。
+
+
+    # ** 重要：需要修改 mysqld.cnf，否则无法使用 Sequel Pro 连接 MySQL **
+    # 测试：使用 mysql -h 52.192.xxx.xxx -P 3306 -uUSERNAME -pPASSWORD
+    $ mysql -h 39.108.97.249 -P 3306
+    # ERROR 2003 (HY000): Can't connect to MySQL server on '39.108.97.249' (111)
+
+    # 修改 /etc/mysql/mysql.conf.d/mysqld.cnf
+    $ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+        bind-address = 127.0.0.1   <-- 把这行注释掉
+
+    # 重启 MySQL
+    # $ sudo /etc/init.d/mysql start
+    # $ sudo /etc/init.d/mysql stop
+    $ sudo /etc/init.d/mysql restart
+
+    # 测试：
+    $ mysql -h 39.108.97.249 -P 3306 -ukevin -pkevin816
+    $ mysql -h 8.134.118.47 -P 3306 -ukevin -pTenware@2008
+
+    # 参考：
+    https://www.cnblogs.com/wangdaijun/p/6024972.html
+
 
         **** 补充：可选 ****
         因为上线的应用为 laravel 5.5 版本开发的，为了之后的兼容性问题，
@@ -140,8 +240,11 @@ https://www.jianshu.com/p/fb037caf4fff
 
         登陆一下mysql看看是否已经升级完毕，成功了进入下一步
 
+
+/*----------------------------------------------------------------------------------*/
 [ 安装 Nginx ]
-	// 安装之前需确认是否安装了apache2，如果已经安装了apache2，需要先停止/卸载 apache2
+
+	// 重要：安装之前需确认是否安装了apache2，如果已经安装了apache2，需要先停止/卸载 apache2
 	// 停止
 	$ sudo service apache2 stop
 	//卸载
@@ -152,44 +255,53 @@ https://www.jianshu.com/p/fb037caf4fff
 	// 安装 nginx
 	$ sudo apt-get install -y nginx
 
-    补充：安装后可在浏览器测试是否没问题（注意：需在 EC2 的安全组入站，加上 HTTP 80）
+    # 补充：安装后可在浏览器测试是否没问题（注意：需在 EC2 的安全组入站，加上 HTTP 80）
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
+/*                                                                                  */
+/*----------------------------------------------------------------------------------*/
 [ 配置 PHP7 ]
-	$ sudo vim /etc/php/7.1/fpm/php.ini
-		-> 修改 cgi.fix_pathinfo=0
+    #$ sudo vim /etc/php/7.1/fpm/php.ini
+	$ sudo vim /etc/php/7.4/fpm/php.ini
+		# 修改
+        cgi.fix_pathinfo=0
 
-	$ sudo vim /etc/php/7.1/fpm/pool.d/www.conf
-		-> 修改 listen = /var/run/php/php7.1-fpm.sock   <-- 前面加上 /var
-		（文章错误： listen = /var/run/php7.1-fpm.sock）
+        # 解决 413-Payload Too Large
+        post_max_size = 101M    // 8M    《-- 注意：post_max_size 需要大于 upload_max_filesize
+        upload_max_filesize = 100M // 2M
+
+    #$ sudo vim /etc/php/7.1/fpm/pool.d/www.conf
+	$ sudo vim /etc/php/7.4/fpm/pool.d/www.conf
+		# 修改
+        #listen = /var/run/php/php7.1-fpm.sock   <-- 前面加上 /var
+        listen = /var/run/php/php7.4-fpm.sock   <-- 前面加上 /var
+        #（文章错误： listen = /var/run/php7.1-fpm.sock）
 
 [ 配置 Nginx ]
     $ sudo vim /etc/nginx/nginx.conf
 
-        --> 解决 413-Request Entity Too Large
+        # 解决 413-Request Entity Too Large
         http {
             # server_tokens off;
 
             client_max_body_size 100m;    #100M 为允许的文件大小
         }
 
-    $ sudo vim /etc/php/7.1/fpm/php.ini
-        --> 解决 413-Payload Too Large
-        post_max_size = 101M    // 8M    《-- 注意：post_max_size 需要大于 upload_max_filesize
-        upload_max_filesize = 100M // 2M
-
 	$ sudo vim /etc/nginx/sites-available/default
 
-    	--> 修改如下，根据自己的项目情况修改对应信息：
+    	# 修改如下，根据自己的项目情况修改对应信息：
         server {
             listen 80 default_server;
             listen [::]:80 default_server;
 
             # root /var/www/html;
-            root /var/www/sample/public;            <-- sample 为 Laravel 项目名称
+            # root /var/www/sample/public;            <-- sample 为 Laravel 项目名称
+            root /var/www/xble/public;            <-- sample 为 Laravel 项目名称
 
             # index index.html index.htm index.nginx-debian.html;
-            index index.php;                        <-- 修改 (注意：第一个一定是要 index)
+            index index.php;                        <-- 要修改 (注意：第一个一定是要 index)
+
+            ** 重要：要增加 index.php，否则浏览器访问时会出现 403 Forbidden
 
             # server_name _;
             server_name 47.106.33.133;              <-- 替换为你的网站域名或IP地址
@@ -203,7 +315,8 @@ https://www.jianshu.com/p/fb037caf4fff
             location ~ \.php$ {
                 try_files $uri /index.php =404;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+                #fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+                fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
                 fastcgi_index index.php;
                 fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                 include fastcgi_params;
@@ -223,28 +336,45 @@ https://www.jianshu.com/p/fb037caf4fff
 
     // 访问 composer 官网 https://getcomposer.org/download/
     // 获取下面四行代码最新版，直接粘贴执行安装 Composer
+
+    重要：不要使用 $ sudo apt install composer 的方式安裝
+    补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
+
+    # old
     $ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     $ php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
     $ php composer-setup.php
     $ php -r "unlink('composer-setup.php');"
 
-    // 然后移动 composer.phar
+    # new (2021/03/05)
+    $ sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    $ sudo php -r "if (hash_file('sha384', 'composer-setup.php') === '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    $ sudo php composer-setup.php
+    $ sudo php -r "unlink('composer-setup.php');"
+
+    // 重要：然后移动 composer.phar
     $ sudo mv composer.phar /usr/local/bin/composer
 
-    补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
-
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
+/*                                                                                  */
+/*----------------------------------------------------------------------------------*/
 [ 创建新站点 - 拉取代码 ]
 	** 建议先将代码上传到云端代码仓库（github, coding）然后再在服务端上拉取
 	$ cd /var/www
 
-    // $ sudo git clone git@github.com:kevinchen816/sample.git (错误)
-    $ sudo git clone https://github.com/kevinchen816/sample.git
+    # 方法 1: 需要正确设定 ssh key
+    # 在实际的 AWS 主机，需要正确设定 ssh key
+    # Homestead 虚拟机会使用电脑里 ~/.ssh 里的设定
+    $ sudo git clone git@github.com:kevinchen816/sample.git
 
+    # 方法 2: 比较简单，不用设定 ssh key，但要输入密码
+    $ sudo git clone https://github.com/kevinchen816/sample.git
     Cloning into 'sample'...
+    Username for 'https://github.com': kevin@10ware.com
+    Password for 'https://kevin@10ware.com@github.com': Tenware@2008
     remote: Enumerating objects: 236, done.
     remote: Total 236 (delta 0), reused 0 (delta 0), pack-reused 236
-    Receiving objects: 100% (236/236), 668.88 KiB | 1.39 MiB/s, done.
+    Receiving objects: 100% (236/236), 668.88 KiB | 942.00 KiB/s, done.
     Resolving deltas: 100% (64/64), done.
 
 	** 进入项目目录
@@ -253,6 +383,10 @@ https://www.jianshu.com/p/fb037caf4fff
     $ sudo cp .env.example .env
     $ sudo vim .env
         // 根据项目实际情况修改 .env 文件
+        // DB_DATABASE=homestead
+        // DB_USERNAME=homestead
+        // DB_PASSWORD=secret
+
         DB_DATABASE=sample
         DB_USERNAME=kevin         // 在安装 MySQL 后，创建用户 kevin
         DB_PASSWORD=kevin816
@@ -261,6 +395,25 @@ https://www.jianshu.com/p/fb037caf4fff
     参考前面说明 (使用 AWS RDS 需要修改 config/database.php，参考后面说明)
 
 	$ sudo composer install
+
+
+        Your lock file does not contain a compatible set of packages. Please run composer update.
+        改为使用 $ composer update
+
+
+            Package caouecs/laravel-lang is abandoned, you should avoid using it. Use https://github.com/Laravel-Lang/lang instead.
+            Package jakub-onderka/php-console-color is abandoned, you should avoid using it. Use php-parallel-lint/php-console-color instead.
+            Package jakub-onderka/php-console-highlighter is abandoned, you should avoid using it. Use php-parallel-lint/php-console-highlighter instead.
+            Package mtdowling/cron-expression is abandoned, you should avoid using it. Use dragonmantank/cron-expression instead.
+            Package fzaninotto/faker is abandoned, you should avoid using it. No replacement was suggested.
+            Package phpunit/php-token-stream is abandoned, you should avoid using it. No replacement was suggested.
+            Package phpunit/phpunit-mock-objects is abandoned, you should avoid using it. No replacement was suggested.
+
+            Carbon 1 is deprecated, see how to migrate to Carbon 2.
+            https://carbon.nesbot.com/docs/#api-carbon-2
+                You can run './vendor/bin/upgrade-carbon' to get help in updating carbon and other frameworks and libraries that depend on it.
+
+
 	$ sudo php artisan key:generate   // 生成密钥，产生的 key 自动加到 .env 的 APP_KEY
     $ sudo php artisan migrate
 
@@ -269,14 +422,23 @@ https://www.jianshu.com/p/fb037caf4fff
     [ 修改权限 ]
     $ sudo chown -R www-data:www-data /var/www/sample
     $ sudo chmod -R 777 /var/www/sample/storage
+或
+    $ sudo chown -R www-data:www-data /var/www/caperplus
+    $ sudo chmod -R 777 /var/www/caperplus/storage
+或
+    $ sudo chown -R www-data:www-data /var/www/xble
+    $ sudo chmod -R 777 /var/www/xble/storage
 
     [ 重启 Nginx 和 PHP7 fpm ]
     $ sudo service nginx restart
-    $ sudo service php7.1-fpm restart
+    // $ sudo service php7.1-fpm restart
+    $ sudo service php7.4-fpm restart
 
 搞定！
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
+/*                                                                                  */
+/*----------------------------------------------------------------------------------*/
 [ 下载配置 htc ]
 
     $ cd /var/www
@@ -314,13 +476,17 @@ https://www.jianshu.com/p/fb037caf4fff
     $ sudo chown -R www-data:www-data /var/www/htc
     $ sudo chmod -R 777 /var/www/htc/storage
 
+    $ sudo chown -R www-data:www-data /var/www/caperplus
+    $ sudo chmod -R 777 /var/www/caperplus/storage
+
     $ sudo vim /etc/nginx/sites-available/default
         server {
             root /var/www/htc/public;   <-- 修改为 htc
         }
 
     $ sudo service nginx restart
-    $ sudo service php7.1-fpm restart
+    // $ sudo service php7.1-fpm restart
+    $ sudo service php7.4-fpm restart
 
 [ 配置 laravel-admin ]
     //$ sudo composer require encore/laravel-admin  // 不需要

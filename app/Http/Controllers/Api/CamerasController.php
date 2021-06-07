@@ -14,6 +14,7 @@ use App\Models\Firmware;
 use App\Models\LogApi;
 use App\Models\Event;
 use App\Models\Trace;
+use App\Models\Account; // 鱼乐世界（删除无用的推送 ID）
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ use App\Mail\NotificationSend;
 
 use App\Services\OSS;
 use App\Jobs\FileDelete;
+use App\Jobs\PushCheck;
 
 use Carbon\Carbon;
 use JPush\Client as JPush;
@@ -36,6 +38,8 @@ use Browser;
 
 use Illuminate\Support\Facades\App;
 use Debugbar;
+
+use \Exception;
 
 /*
 ICCID:
@@ -6050,6 +6054,7 @@ return $request;
         // $master_secret = 'c37f1c5cc7a509af1033de9c';
         // $android_push_id = '190e35f7e005b796d3b';
         // $ios_push_id = '13165ffa4e282202377';
+
         $app_key = env('JPUSH_KEY');
         $master_secret = env('JPUSH_SECRET');
         $android_push_id = env('JPUSH_TESTID'); // 190e35f7e005b796d3b
@@ -6117,6 +6122,143 @@ return 'OK';
         $push->message('Hello JPush');
         $ret = $push->send();
         return dd($ret);
+    }
+
+    /*
+        $ php artisan queue:listen --timeout=0 --tries=1
+
+        $ redis-cli
+        127.0.0.1:6379> flushall
+    */
+    public function push_check($limit) {
+        // $app_key = env('JPUSH_KEY');
+        // $master_secret = env('JPUSH_SECRET');
+        // $push_id = env('JPUSH_TESTID'); // 190e35f7e005b796d3b
+        $app_key = '3f5a52de66b60b36ff0417df'; // 鱼乐世界
+        $master_secret = '14b1cba7bfeb9354e18e3482';
+        $push_id = '';
+
+        $title = '鱼乐世界';
+        $body = '测试';
+        // $url = 'http://portal.kmcampro.com/uploads/7/1547295213_xLuPXhn5fe.JPG';
+
+        $query = Account::query();
+        $query->select('mobile'); // 注意: 使用 groupBy 必须加上 select，且栏位名称要一样
+        // $query->where('account', '18664933085');
+        // $query->where('mobile', '13065ffa4e694f9d6dd'); // OK
+        // $query->where('mobile', '1507bfd3f7bbd7fe06d'); // NG
+        $query->where('flag', 0);
+        $query->groupBy('mobile'); // 注意: 使用 groupBy 必须加上 select，且栏位名称要一样
+        $query->limit($limit);
+        $db = $query->get();
+
+        foreach ($db as $item) {
+            try {
+                $push_id = $item->mobile;
+
+                $client = new JPush($app_key, $master_secret);
+                $ret = $client->push()
+                    // ->setPlatform('all')
+                    ->setPlatform(['ios', 'android'])
+                    ->options(['apns_production'=>true]) // IMPORTANT !! must for iOS
+                    // ->addAllAudience()
+                    // ->addAlias('alias')
+                    // ->addTag(array('tag1', 'tag2'))
+                    ->addRegistrationId($push_id)
+                    // ->addRegistrationId($ios_push_id)
+                    ->setNotificationAlert('Hello')
+                    ->androidNotification($body, array(
+                        'title' => $title,
+                        // 'extras' => array(
+                        //     'url' => $url,
+                        // ),
+                    ))
+                    ->iosNotification(array(
+                        'title' => $title,
+                        // 'subtitle' => 'subtitle',
+                        'body' => $body
+                    ), array(
+                        // // 'sound' => 'sound.caf',
+                        // // // 'badge' => '+1',
+                        // // // 'content-available' => true,
+                        // // // 'mutable-content' => true,
+                        // // 'category' => 'jiguang',
+                        // // 'title' => 'Cam #1', // NG
+                        // 'extras' => array(
+                        //     // 'title' => 'Cam #1',
+                        //     'url' => $url,
+                        // ),
+                    ))
+                    ->send();
+
+                // $item->flag = 0;
+                // $item->flag = 1;
+                // $bool = $item->save();
+
+                $num = Account::where('mobile','=', $push_id)->update(['flag'=>1]);
+
+                echo 'OK -> ';
+                echo $item->ver.', ';
+                echo $item->account.', ';
+                echo $item->mobile.', ';
+                echo $item->os.', ';
+                echo $item->did.' ';
+                echo '<br>';
+                // return dd($ret);
+
+            } catch (Exception $e) { // 注意：代码在最开头使用 use \Exception;
+                // print $e->getMessage();
+
+                // $item->flag = 2;
+                // $bool = $item->save();
+
+                // $num = Account::where('mobile','=', $push_id)->update(['flag'=>2]);
+                // $num = Account::where('mobile','=', $push_id)
+                //     ->update(array(
+                //         'flag' => 2,
+                //         'push' => 0
+                //     ));
+                $new_data = array('flag' => 2, 'push' => 0);
+                $num = Account::where('mobile', $push_id)->update($new_data);
+
+                echo 'NG -> ';
+                echo $item->ver.', ';
+                echo $item->account.', ';
+                echo $item->mobile.', ';
+                echo $item->os.', ';
+                echo $item->did.' ';
+                echo '<br>';
+
+                // exit();
+                // return 'NG';
+            }
+        }
+
+        return 'OK';
+    }
+
+    public function push_check2() {
+//         dispatch(new PushCheck());
+// return 'OK';
+
+        $count = 0; //10;
+        $limit = 500; //10000; //5; //10;
+
+        $query = Account::query();
+        // $query->where('account', '18664933085');
+        // $query->where('mobile', '13065ffa4e694f9d6dd'); // OK
+        // $query->where('mobile', '1507bfd3f7bbd7fe06d'); // NG
+        // $query->where('os', $os);
+        $query->where('flag', 0);
+        $query->groupBy('mobile');
+        $query->limit($limit);
+        $db = $query->get();
+
+        foreach ($db as $item) {
+            $count++;
+            dispatch(new PushCheck($count, $item->mobile));
+        }
+        return 'OK';
     }
 
     /*----------------------------------------------------------------------------------*/

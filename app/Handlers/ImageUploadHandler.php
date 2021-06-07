@@ -177,6 +177,7 @@ class ImageUploadHandler
         $fileName = $photo_id.'_thumb.'.$extension;
         $filePath = 'media/'.$fileName;
         $result = $s3->put($filePath, file_get_contents($file)); // "result": true
+
         return $result;
     }
 

@@ -314,6 +314,10 @@ Route::get('/delx/{start}/{end}', 'Api\CamerasController@kk_delx');
 // Route::get('/email/test', 'Api\CamerasController@email_test')->name('email.test');
 // Route::get('/push', 'Api\CamerasController@push_test');
 Route::get('/push2', 'Api\CamerasController@push_test2');
+// Route::get('/push_check', 'Api\CamerasController@push_check');
+// Route::get('/push_check/{os}/{limit}', 'Api\CamerasController@push_check');
+Route::get('/push_check/{limit}', 'Api\CamerasController@push_check');
+Route::get('/push_check2', 'Api\CamerasController@push_check2');
 
 Route::get('/download/log/{camera_id}/{filename}', 'Api\CamerasController@download_log')->name('camera.download.log');
 
