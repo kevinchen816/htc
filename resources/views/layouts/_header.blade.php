@@ -22,7 +22,8 @@
 @elseif (env('APP_REGION') == 'cn')
                     <!-- <h2>{{ env('APP_NAME') }}</h2> -->
                     <!-- <img class="main-logo" style="padding-top: 8px;" width="200" src="{{ route('home') }}/images/logo-eztoview_en.png" alt="logo" /> -->
-                    <img class="main-logo" style="padding-top: 0px;" src="{{ route('home') }}/images/logo-vigilmax.png" alt="logo" />
+                    <!-- <img class="main-logo" style="padding-top: 0px;" src="{{ route('home') }}/images/logo-vigilmax.png" alt="logo" /> -->
+                    <img class="main-logo" style="padding-top: 8px;" width="200" src="{{ route('home') }}/images/logo-eztoview_en.png" alt="logo" />
 @endif
                 </a>
             </div>
