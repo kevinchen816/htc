@@ -95,6 +95,8 @@ https://www.jianshu.com/p/fb037caf4fff
 [ 安装 PHP7 ]
 	请确保每一步没有出错，如果有报错，可尝试多安装几次
 
+    参考下面的【 在 Ubuntu 18.04 上安装 PHP 7.2 】
+
     # 参考：Ubuntu如何安装php7.2、php7.3、php7.4？（方法详解）
     # https://m.php.cn/article/455811.html
 
@@ -158,6 +160,16 @@ https://www.jianshu.com/p/fb037caf4fff
         # 啟用 PHP-fpm
         $ sudo service php7.4-fpm start
 
+【 在 Ubuntu 18.04 上安装 PHP 7.2 】
+    $ apt-get update && apt-get upgrade
+    #安装 PHP 7.2
+    $ apt-get install php
+    $ php -v
+    #安装 PHP 7.2 模块
+    $ apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php
+    # 检查 Ubuntu 中所有可用的PHP模块
+    $ apt-cache search --names-only ^php
+
 【 安装 php7.1 】
 	$ apt-cache search php7.1               // 搜索php7.1开头的包检验是否安装成功
     $ sudo apt-get install -y php7.1        // 安装 php7.1，安装成功后运行 php -v 查看是否安装成功
@@ -169,16 +181,6 @@ https://www.jianshu.com/p/fb037caf4fff
     $ php -v                                // 确认是否安装成功 (或 --version)
     PHP 7.1.26-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Jan 11 2019 14:13:49) ( NTS )
  or PHP 7.1.27-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Mar  7 2019 20:02:25) ( NTS )
-
-【 在 Ubuntu 18.04 上安装PHP 7.2 】
-$ apt-get update && apt-get upgrade
-#安装PHP 7.2
-$ apt-get install php
-$ php -v
-#安装PHP 7.2模块
-$ apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php
-# 检查Ubuntu中所有可用的PHP模块
-$ apt-cache search --names-only ^php
 
 /*----------------------------------------------------------------------------------*/
 [ 安装 Mysql ]
@@ -380,8 +382,12 @@ $ apt-cache search --names-only ^php
     $ sudo git clone git@github.com:kevinchen816/sample.git
 
     # 方法 2: 比较简单，不用设定 ssh key，但要输入密码
-    $ sudo git clone https://github.com/kevinchen816/sample.git
-    $ sudo git clone https://github.com/kevinchen816/htc.git
+    #$ sudo git clone https://github.com/kevinchen816/sample.git
+    #$ sudo git clone https://github.com/kevinchen816/htc.git
+    #
+    # 使用 http 代替 https:
+    #
+    $ sudo git clone http://github.com/kevinchen816/htc.git
     Cloning into 'sample'...
     Username for 'https://github.com': kevin@10ware.com
     Password for 'https://kevin@10ware.com@github.com': Tenware@2008
@@ -459,7 +465,8 @@ $ apt-cache search --names-only ^php
 [ 下载配置 htc ]
 
     $ cd /var/www
-    $ sudo git clone https://github.com/kevinchen816/htc.git
+    //$ sudo git clone https://github.com/kevinchen816/htc.git
+    $ sudo git clone http://github.com/kevinchen816/htc.git
     $ cd /var/www/htc
     $ sudo cp .env.example .env
     $ sudo vim .env

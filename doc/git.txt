@@ -12,8 +12,9 @@ Password for 'https://kevin@10ware.com@github.com': Tenware@2008
 $ git pull
 fatal: unable to access 'https://github.com/kevinchen816/htc.git/': gnutls_handshake() failed: The TLS connection was non-properly terminated.
 
-#解决
-$ git config --global --unset http.https://github.com.proxy
+# 解决: 使用 http 代替 https:
+$ sudo git clone https://github.com/kevinchen816/htc.git
+$ sudo git clone http://github.com/kevinchen816/htc.git
 
 /*------------------------------------------------------------------------------*/
 /*                                                                              */

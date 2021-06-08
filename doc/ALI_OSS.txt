@@ -2,7 +2,7 @@
 http://www.panwenbin.com/%E7%8E%B0%E6%9C%89%E6%94%AF%E6%8C%81flysystem%E7%9A%84aliyunoss%E7%BB%84%E4%BB%B6%E6%95%B4%E7%90%86
 
 /*----------------------------------------------------------------------------------*/
-【 Laravel 错误 Class 'AppServicesOSS' not found的解决方法 】
+【 Laravel 错误 Class 'AppServicesOSS' not found 的解决方法 】
 http://www.edbiji.com/doccenter/showdoc/209/nav/3290.html
 
 
