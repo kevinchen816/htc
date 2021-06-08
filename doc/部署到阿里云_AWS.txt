@@ -170,6 +170,16 @@ https://www.jianshu.com/p/fb037caf4fff
     PHP 7.1.26-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Jan 11 2019 14:13:49) ( NTS )
  or PHP 7.1.27-1+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Mar  7 2019 20:02:25) ( NTS )
 
+【 在 Ubuntu 18.04 上安装PHP 7.2 】
+$ apt-get update && apt-get upgrade
+#安装PHP 7.2
+$ apt-get install php
+$ php -v
+#安装PHP 7.2模块
+$ apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php
+# 检查Ubuntu中所有可用的PHP模块
+$ apt-cache search --names-only ^php
+
 /*----------------------------------------------------------------------------------*/
 [ 安装 Mysql ]
 
@@ -262,6 +272,7 @@ https://www.jianshu.com/p/fb037caf4fff
 /*----------------------------------------------------------------------------------*/
 [ 配置 PHP7 ]
     #$ sudo vim /etc/php/7.1/fpm/php.ini
+    #$ sudo vim /etc/php/7.2/fpm/php.ini
 	$ sudo vim /etc/php/7.4/fpm/php.ini
 		# 修改
         cgi.fix_pathinfo=0
@@ -271,6 +282,7 @@ https://www.jianshu.com/p/fb037caf4fff
         upload_max_filesize = 100M // 2M
 
     #$ sudo vim /etc/php/7.1/fpm/pool.d/www.conf
+    #$ sudo vim /etc/php/7.2/fpm/pool.d/www.conf
 	$ sudo vim /etc/php/7.4/fpm/pool.d/www.conf
 		# 修改
         #listen = /var/run/php/php7.1-fpm.sock   <-- 前面加上 /var
@@ -369,6 +381,7 @@ https://www.jianshu.com/p/fb037caf4fff
 
     # 方法 2: 比较简单，不用设定 ssh key，但要输入密码
     $ sudo git clone https://github.com/kevinchen816/sample.git
+    $ sudo git clone https://github.com/kevinchen816/htc.git
     Cloning into 'sample'...
     Username for 'https://github.com': kevin@10ware.com
     Password for 'https://kevin@10ware.com@github.com': Tenware@2008
@@ -423,6 +436,9 @@ https://www.jianshu.com/p/fb037caf4fff
     $ sudo chown -R www-data:www-data /var/www/sample
     $ sudo chmod -R 777 /var/www/sample/storage
 或
+    $ sudo chown -R www-data:www-data /var/www/htc
+    $ sudo chmod -R 777 /var/www/htc/storage
+或
     $ sudo chown -R www-data:www-data /var/www/caperplus
     $ sudo chmod -R 777 /var/www/caperplus/storage
 或
@@ -432,6 +448,7 @@ https://www.jianshu.com/p/fb037caf4fff
     [ 重启 Nginx 和 PHP7 fpm ]
     $ sudo service nginx restart
     // $ sudo service php7.1-fpm restart
+    // $ sudo service php7.2-fpm restart
     $ sudo service php7.4-fpm restart
 
 搞定！
