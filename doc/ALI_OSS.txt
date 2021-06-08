@@ -2,6 +2,30 @@
 http://www.panwenbin.com/%E7%8E%B0%E6%9C%89%E6%94%AF%E6%8C%81flysystem%E7%9A%84aliyunoss%E7%BB%84%E4%BB%B6%E6%95%B4%E7%90%86
 
 /*----------------------------------------------------------------------------------*/
+【 Laravel 错误 Class 'AppServicesOSS' not found的解决方法 】
+http://www.edbiji.com/doccenter/showdoc/209/nav/3290.html
+
+
+对于 PSR-4 自动加载程序用户（composer.json），
+在 classmap 数组内增加 App/Services，不要将其包含在自动加载的psr-4对象中。例如;
+
+"autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories",
+            "app/Services"  <-- 增加（文章 App/Services 错误）
+
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        },
+
+然后运行：
+$ php artisan clear-compiled      # 首先清除所有编译的文件
+$ composer dump-autoload          # 更新 autoload_psr4.php 和几乎清空 autoload_classmap.php
+$ php artisan optimize            # 更新autoload_classmap.php
+
+/*----------------------------------------------------------------------------------*/
 /*
     问题：在 Postman 调用 uploadthumb API，response 出现以下错误
     原因：表示 .env 里的 OSS_ACCESS_KEY_ID 无效
