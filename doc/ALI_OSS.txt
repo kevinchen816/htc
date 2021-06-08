@@ -1,12 +1,29 @@
 [ 现有支持Flysystem的AliyunOss组件整理 ]
 http://www.panwenbin.com/%E7%8E%B0%E6%9C%89%E6%94%AF%E6%8C%81flysystem%E7%9A%84aliyunoss%E7%BB%84%E4%BB%B6%E6%95%B4%E7%90%86
 
-//-----------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
+/*
+    问题：在 Postman 调用 uploadthumb API，response 出现以下错误
+    原因：表示 .env 里的 OSS_ACCESS_KEY_ID 无效
+    （查询一下阿里云 OSS 的 AccessKey 是否被禁用）
+*/
+{
+    "status_code": 500,
+    "debug": {
+        "line": 97,
+        "file": "/home/vagrant/Code/htc/vendor/aliyuncs/oss-sdk-php/src/OSS/Result/Result.php",
+        "class": "OSS\\Core\\OssException",
+        "trace": [
+            "#0 /home/vagrant/Code/htc/vendor/aliyuncs/oss-sdk-php/src/OSS/Result/Result.php(28):
+
+/*----------------------------------------------------------------------------------*/
 [ Laravel 阿里云OSS图片上传 ]
 https://blog.csdn.net/qq292913477/article/details/80896402
 
     1. 安装
     $ composer require "johnlui/aliyun-oss"
+
+        ** 补充: $ sudo composer update "johnlui/aliyun-oss"
 
         ** 补充: 发生 memory 不足时，增加 swap 空间
         https://www.linuxidc.com/Linux/2017-07/145673.htm
