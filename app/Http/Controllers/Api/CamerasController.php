@@ -32,6 +32,7 @@ use App\Services\OSS;
 use App\Jobs\FileDelete;
 use App\Jobs\PushCheck;
 
+use DateTime;
 use Carbon\Carbon;
 use JPush\Client as JPush;
 use Browser;
@@ -2747,7 +2748,8 @@ return $ret;
     }
 
     public function oss_file_url($filename) {
-        $expire_time = Carbon::now()->addDay();
+        // $expire_time = Carbon::now()->addDay();
+        $expire_time = new DateTime();
         $url = OSS::getPrivateObjectURLWithExpireTime(config('oss.bucketName'), $filename, $expire_time);
         return $url;
     }
