@@ -2748,9 +2748,7 @@ return $ret;
 
     public function oss_file_url($filename) {
         $expire_time = Carbon::now()->addDay();
-        // $expire_time = new DateTime();
-        // $url = OSS::getPrivateObjectURLWithExpireTime(config('oss.bucketName'), $filename, $expire_time);
-        $url = $expire_time;
+        $url = OSS::getPrivateObjectURLWithExpireTime(config('oss.bucketName'), $filename, $expire_time);
         return $url;
     }
 
