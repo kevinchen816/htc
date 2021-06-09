@@ -12,13 +12,25 @@ PHP 7.4.20 (cli) (built: Jun  4 2021 21:24:37) ( NTS )
 $ mysql --version
 mysql  Ver 14.14 Distrib 5.7.34, for Linux (x86_64) using  EditLine wrapper
 
-/dev/root        39G  1.6G   38G   5% /
-$ sudo apt-get update
-/dev/root        39G  1.8G   37G   5% /
-php
-/dev/root        39G  1.9G   37G   5% /
-nginx
-/dev/root        39G  1.9G   37G   5% /
+/*----------------------------------------------------------------------------------*/
+Filesystem      Size  Used Avail Use% Mounted on
+udev            923M     0  923M   0% /dev
+tmpfs           189M  2.8M  187M   2% /run
+/dev/vda1        40G  3.3G   35G   9% /
+tmpfs           945M     0  945M   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+tmpfs           945M     0  945M   0% /sys/fs/cgroup
+tmpfs           189M     0  189M   0% /run/user/0
+
+/dev/vda1        40G  3.3G   35G   9% /
+/dev/vda1        40G  3.7G   34G  10% /     # sudo apt-get update
+/dev/vda1        40G  3.7G   34G  10% /     # vim git zip unzip
+/dev/vda1        40G  3.7G   34G  10% /     # php 7.4
+/dev/vda1        40G  3.8G   34G  10% /     # php 相关工具
+/dev/vda1        40G  4.1G   34G  11% /     # mysql
+/dev/vda1        40G  4.1G   34G  11% /     # remove apache2
+/dev/vda1        40G  4.1G   34G  11% /     # nginx
+/dev/vda1        40G  4.1G   34G  11% /     # composer
 
 /*----------------------------------------------------------------------------------*/
 [ 参考 ]
@@ -150,12 +162,13 @@ https://www.jianshu.com/p/fb037caf4fff
 
     # 安装PHP 7.4模块
     # 根据你的应用程序，你可能需要其他软件包和模块。可以使用以下命令安装最常用的模块：
-    $ sudo apt-get install -y php7.4-mysql  // 这是 php 与 mysql 的通信模块
-    $ sudo apt-get install -y php7.4-fpm    // 这是 Nginx 用来解析 php 文件的
-    $ sudo apt-get install -y php7.4-json php7.4-xml
+    #$ sudo apt-get install -y php7.4-mysql  // 这是 php 与 mysql 的通信模块
+    #$ sudo apt-get install -y php7.4-fpm    // 这是 Nginx 用来解析 php 文件的
+    #$ sudo apt-get install -y php7.4-json php7.4-xml
+    $ sudo apt-get install -y php7.4-mysql php7.4-fpm php7.4-json php7.4-xml
     $ sudo apt-get install -y php7.4-curl php7.4-dev php7.4-gd php7.4-mbstring php7.4-zip
-    $ sudo apt-get install -y php-pear php-mcrypt php-bcmath
-    # php-pdo
+    #$ sudo apt-get install -y php7.4-mcrypt php7.4-bcmath
+    #$ sudo apt-get install -y php-pear
 
     **【更新补充 php7.4 】
         # PHP 目前最新版本是 7.4，這個月 Laravel 也將版本更新到了 8，
@@ -186,13 +199,13 @@ https://www.jianshu.com/p/fb037caf4fff
 
 	$ sudo apt-get install -y mysql-server
     $ mysql --version
-        mysql  Ver 8.0.22-0ubuntu0.20.04.3 for Linux on x86_64 ((Ubuntu))
-        mysql  Ver 8.0.23-0ubuntu0.20.04.1 for Linux on x86_64 ((Ubuntu))
+        #mysql  Ver 8.0.22-0ubuntu0.20.04.3 for Linux on x86_64 ((Ubuntu))
+        #mysql  Ver 8.0.23-0ubuntu0.20.04.1 for Linux on x86_64 ((Ubuntu))
         mysql  Ver 14.14 Distrib 5.7.34, for Linux (x86_64) using  EditLine wrapper
 
     # ** 创建新用户 **
     $ sudo mysql
-    mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'your_password';
+    #mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'your_password';
     mysql> CREATE USER 'kevin'@'%' IDENTIFIED BY 'Tenware@2008';
     // 参考 https://www.cnblogs.com/xujishou/p/6306765.html
 
