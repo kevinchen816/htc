@@ -1,13 +1,16 @@
 <?php
 
-阿里云
-47.106.33.133
+/*----------------------------------------------------------------------------------*/
+Ubuntu 18.04.5 LTS (GNU/Linux 4.15.0-143-generic x86_64)
 
-user: root
-password: Kevin816
+$ php artisan --version
+Laravel Framework 5.5.50
 
-user: kevin
-password: kevin816
+$ php -v
+PHP 7.4.20 (cli) (built: Jun  4 2021 21:24:37) ( NTS )
+
+$ mysql --version
+mysql  Ver 14.14 Distrib 5.7.34, for Linux (x86_64) using  EditLine wrapper
 
 /dev/root        39G  1.6G   38G   5% /
 $ sudo apt-get update
@@ -17,7 +20,7 @@ php
 nginx
 /dev/root        39G  1.9G   37G   5% /
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
 [ 参考 ]
 Laravel 部署到阿里云 / 腾讯云
 https://laravel-china.org/articles/8983/laravel-deploys-to-the-ali-cloud-tencent-cloud
@@ -69,7 +72,7 @@ https://www.jianshu.com/p/fb037caf4fff
 示例：
     ssh -i "mykey.pem" ubuntu@ec2-13-237-165-208.ap-southeast-2.compute.amazonaws.com
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
 [ 更新列表 ]
 	$ sudo apt-get update  // 访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。
 
@@ -165,24 +168,6 @@ https://www.jianshu.com/p/fb037caf4fff
 
         # 啟用 PHP-fpm
         $ sudo service php7.4-fpm start
-
-【 在 Ubuntu 18.04 上安装 PHP 7.2 】
-    $ apt-get update && apt-get upgrade
-    #安装 PHP 7.2
-    #$ apt-get install php  # 会变成 v8.0.7
-    $ apt-get install php7.2
-    $ php -v
-
-        # 会变成 v8.0.7
-        PHP 8.0.7 (cli) (built: Jun  4 2021 21:25:51) ( NTS )
-        Copyright (c) The PHP Group
-        Zend Engine v4.0.7, Copyright (c) Zend Technologies
-            with Zend OPcache v8.0.7, Copyright (c), by Zend Technologies
-
-    #安装 PHP 7.2 模块
-    $ apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php
-    # 检查 Ubuntu 中所有可用的PHP模块
-    $ apt-cache search --names-only ^php
 
 【 安装 php7.1 】
 	$ apt-cache search php7.1               // 搜索php7.1开头的包检验是否安装成功
@@ -360,7 +345,7 @@ https://www.jianshu.com/p/fb037caf4fff
         include fastcgi_params;
             - 没有此设定，在浏览器访问会是空白页面
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
 [ 安装 Composer 并使用 Composer 安装代码依赖 ]
 
     // 访问 composer 官网 https://getcomposer.org/download/
@@ -368,12 +353,6 @@ https://www.jianshu.com/p/fb037caf4fff
 
     重要：不要使用 $ sudo apt install composer 的方式安裝
     补充：使用 composer 可能有坑，比如缺少应用造成错误，如缺少 zip unzip 包
-
-    # old
-    $ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    $ php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    $ php composer-setup.php
-    $ php -r "unlink('composer-setup.php');"
 
     # new (2021/03/05)
     $ sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -430,10 +409,9 @@ https://www.jianshu.com/p/fb037caf4fff
 
 	$ sudo composer install
 
-
+        # 出现以下讯息先不管
         Your lock file does not contain a compatible set of packages. Please run composer update.
         改为使用 $ composer update
-
 
             Package caouecs/laravel-lang is abandoned, you should avoid using it. Use https://github.com/Laravel-Lang/lang instead.
             Package jakub-onderka/php-console-color is abandoned, you should avoid using it. Use php-parallel-lint/php-console-color instead.
@@ -550,7 +528,7 @@ https://www.jianshu.com/p/fb037caf4fff
     http://xxx.xxx.xxx.xxx/adminxx/plan/products/build/1   <-- 创建 plan product
     //http://xxx.xxx.xxx.xxx/adminxx/plan/products/build/2   <-- 创建 plan product for Stripe
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
 [ 修改 config/database.php ]
     'mysql' => [
         'driver' => 'mysql',
@@ -582,7 +560,7 @@ https://www.jianshu.com/p/fb037caf4fff
     ** 补充: 远端数据库测试
     $ sudo mysql -h htc-db-instance.caieb0likkhe.ap-southeast-2.rds.amazonaws.com -ukevin -pkevin816
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
 Ubuntu 14/16 下的 Laravel LNMP 线上环境自动部署脚本
 https://laravel-china.org/topics/2814/ubuntu-1416-under-the-laravel-lnmp-online-environment-automatically-deploy-scripts
 
@@ -597,7 +575,7 @@ https://laravel-china.org/articles/4715/ali-cloud-ecs-deployment-nginxmysqllarav
 
 我在阿里上用centos7部署的小水管，用宝塔面板管理（安装了php7，mysql5.6，nginx1.12），自己安装和git，composer，如果你想还可以安装npm，yarn，注意将库连接改成国内的，然后pull自己代码，也运行成功了，其实那个环境是一个合集，我们能用到的基本就是我说的这些，主要是国内是centos流行啊。。。。
 
-//---------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------*/
 在AWS上安装laravel框架
 https://www.cnblogs.com/ImYZF/p/3566295.html
 
