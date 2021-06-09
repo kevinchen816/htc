@@ -17,14 +17,14 @@ $ sudo apt-get install vsftpd
 # 配置 vsftpd.conf文件 (要有root权限)
 $ sudo vi /etc/vsftpd.conf
 
-    anonymous_enable=YES
-    #anon_root=/home/ftp
-    anon_root=/
-    anon_upload_enable=YES
-    anon_mkdir_write_enable=YES
-    write_enable=YES
+#anon_root=/home/ftp
+anonymous_enable=YES
+anon_root=/
+anon_upload_enable=YES
+anon_mkdir_write_enable=YES
+write_enable=YES
 
-    allow_writeable_chroot=YES
+allow_writeable_chroot=YES
 
 # 重启服务器
 $ sudo /etc/init.d/vsftpd restart

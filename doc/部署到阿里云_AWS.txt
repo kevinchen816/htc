@@ -31,6 +31,7 @@ tmpfs           189M     0  189M   0% /run/user/0
 /dev/vda1        40G  4.1G   34G  11% /     # remove apache2
 /dev/vda1        40G  4.1G   34G  11% /     # nginx
 /dev/vda1        40G  4.1G   34G  11% /     # composer
+/dev/vda1        40G  4.4G   34G  12% /     # git htc
 
 /*----------------------------------------------------------------------------------*/
 [ 参考 ]
