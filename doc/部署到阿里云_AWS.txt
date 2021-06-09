@@ -95,6 +95,12 @@ https://www.jianshu.com/p/fb037caf4fff
 [ 安装 PHP7 ]
 	请确保每一步没有出错，如果有报错，可尝试多安装几次
 
+    # 如何切换 php 版本
+    $ sudo update-alternatives --config php
+
+    # 检查 Ubuntu 中所有可用的PHP模块
+    $ apt-cache search --names-only ^php
+
     参考下面的【 在 Ubuntu 18.04 上安装 PHP 7.2 】
 
     # 参考：Ubuntu如何安装php7.2、php7.3、php7.4？（方法详解）
@@ -134,10 +140,10 @@ https://www.jianshu.com/p/fb037caf4fff
 【 安装 php7.4 】
     $ sudo apt-get install -y php7.4
     $ php -v                                // 确认是否安装成功 (或 --version)
-    PHP 7.4.15 (cli) (built: Feb 23 2021 15:12:26) ( NTS )
+    PHP 7.4.20 (cli) (built: Jun  4 2021 21:24:37) ( NTS )
     Copyright (c) The PHP Group
     Zend Engine v3.4.0, Copyright (c) Zend Technologies
-        with Zend OPcache v7.4.15, Copyright (c), by Zend Technologies
+        with Zend OPcache v7.4.20, Copyright (c), by Zend Technologies
 
     # 安装PHP 7.4模块
     # 根据你的应用程序，你可能需要其他软件包和模块。可以使用以下命令安装最常用的模块：
@@ -163,8 +169,16 @@ https://www.jianshu.com/p/fb037caf4fff
 【 在 Ubuntu 18.04 上安装 PHP 7.2 】
     $ apt-get update && apt-get upgrade
     #安装 PHP 7.2
-    $ apt-get install php
+    #$ apt-get install php  # 会变成 v8.0.7
+    $ apt-get install php7.2
     $ php -v
+
+        # 会变成 v8.0.7
+        PHP 8.0.7 (cli) (built: Jun  4 2021 21:25:51) ( NTS )
+        Copyright (c) The PHP Group
+        Zend Engine v4.0.7, Copyright (c) Zend Technologies
+            with Zend OPcache v8.0.7, Copyright (c), by Zend Technologies
+
     #安装 PHP 7.2 模块
     $ apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php
     # 检查 Ubuntu 中所有可用的PHP模块
@@ -189,6 +203,7 @@ https://www.jianshu.com/p/fb037caf4fff
     $ mysql --version
         mysql  Ver 8.0.22-0ubuntu0.20.04.3 for Linux on x86_64 ((Ubuntu))
         mysql  Ver 8.0.23-0ubuntu0.20.04.1 for Linux on x86_64 ((Ubuntu))
+        mysql  Ver 14.14 Distrib 5.7.34, for Linux (x86_64) using  EditLine wrapper
 
     # ** 创建新用户 **
     $ sudo mysql
@@ -252,7 +267,6 @@ https://www.jianshu.com/p/fb037caf4fff
 
         登陆一下mysql看看是否已经升级完毕，成功了进入下一步
 
-
 /*----------------------------------------------------------------------------------*/
 [ 安装 Nginx ]
 
@@ -309,8 +323,9 @@ https://www.jianshu.com/p/fb037caf4fff
             listen [::]:80 default_server;
 
             # root /var/www/html;
-            # root /var/www/sample/public;            <-- sample 为 Laravel 项目名称
-            root /var/www/xble/public;            <-- sample 为 Laravel 项目名称
+            # root /var/www/sample/public;          <-- sample 为 Laravel 项目名称
+            root /var/www/htc/public;
+            # root /var/www/xble/public;
 
             # index index.html index.htm index.nginx-debian.html;
             index index.php;                        <-- 要修改 (注意：第一个一定是要 index)
@@ -326,10 +341,10 @@ https://www.jianshu.com/p/fb037caf4fff
             }
 
             ** 重要：需加上以下内容，否则浏览器访问时会出现 403 Forbidden
+            ** 注意：php 版本 /var/run/php/php7.2-fpm.sock;
             location ~ \.php$ {
                 try_files $uri /index.php =404;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                #fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
                 fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
                 fastcgi_index index.php;
                 fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
